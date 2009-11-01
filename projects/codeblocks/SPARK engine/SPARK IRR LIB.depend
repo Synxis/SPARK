@@ -1,0 +1,134 @@
+# depslib dependency file v1.0
+1256274066 source:c:\dev\spark_1_04_00\src\spk_irr_all.cpp
+	"RenderingAPIs/Irrlicht/SPK_IRRBuffer.cpp"
+	"RenderingAPIs/Irrlicht/SPK_IRRSystem.cpp"
+	"RenderingAPIs/Irrlicht/SPK_IRRRenderer.cpp"
+	"RenderingAPIs/Irrlicht/SPK_IRRPointRenderer.cpp"
+	"RenderingAPIs/Irrlicht/SPK_IRRLineRenderer.cpp"
+	"RenderingAPIs/Irrlicht/SPK_IRRQuadRenderer.cpp"
+
+1256500215 c:\dev\spark_1_04_00\src\renderingapis\irrlicht\spk_irrbuffer.cpp
+	"RenderingAPIs/Irrlicht/SPK_IRRBuffer.h"
+
+1256406464 c:\dev\spark_1_04_00\include\renderingapis\irrlicht\spk_irrbuffer.h
+	"RenderingAPIs/Irrlicht/SPK_IRR_DEF.h"
+	"Core/SPK_Buffer.h"
+
+1256406159 c:\dev\spark_1_04_00\include\renderingapis\irrlicht\spk_irr_def.h
+	<irrlicht.h>
+	"Core/SPK_Vector3D.h"
+
+1255205408 c:\dev\spark_1_04_00\include\core\spk_vector3d.h
+	"Core/SPK_DEF.h"
+
+1254679742 c:\dev\spark_1_04_00\include\core\spk_def.h
+	<cstdlib>
+	<cmath>
+	<algorithm>
+	<deque>
+	<list>
+	<iostream>
+	<vector>
+	<limits>
+	<map>
+	<set>
+	<string>
+
+1249444506 c:\dev\spark_1_04_00\include\core\spk_buffer.h
+
+1256410199 c:\dev\spark_1_04_00\src\renderingapis\irrlicht\spk_irrsystem.cpp
+	"RenderingAPIs/Irrlicht/SPK_IRRSystem.h"
+	"Core/SPK_Group.h"
+
+1256412687 c:\dev\spark_1_04_00\include\renderingapis\irrlicht\spk_irrsystem.h
+	"RenderingAPIs/Irrlicht/SPK_IRR_DEF.h"
+	"Core/SPK_System.h"
+
+1255824375 c:\dev\spark_1_04_00\include\core\spk_system.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Registerable.h"
+	"Core/SPK_Transformable.h"
+	"Core/SPK_Vector3D.h"
+
+1255365689 c:\dev\spark_1_04_00\include\core\spk_registerable.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Vector3D.h"
+
+1256412126 c:\dev\spark_1_04_00\include\core\spk_transformable.h
+	"Core/SPK_Vector3D.h"
+
+1256769228 c:\dev\spark_1_04_00\include\core\spk_group.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Vector3D.h"
+	"Core/SPK_Pool.h"
+	"Core/SPK_Particle.h"
+
+1254685265 c:\dev\spark_1_04_00\include\core\spk_pool.h
+	"Core/SPK_DEF.h"
+
+1256003469 c:\dev\spark_1_04_00\include\core\spk_particle.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Vector3D.h"
+	"Core/SPK_Pool.h"
+	"Core/SPK_Model.h"
+
+1256412903 c:\dev\spark_1_04_00\include\core\spk_model.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Registerable.h"
+
+1256777416 c:\dev\spark_1_04_00\src\renderingapis\irrlicht\spk_irrrenderer.cpp
+	"RenderingAPIs/Irrlicht/SPK_IRRRenderer.h"
+
+1256496237 c:\dev\spark_1_04_00\include\renderingapis\irrlicht\spk_irrrenderer.h
+	"RenderingAPIs/Irrlicht/SPK_IRR_DEF.h"
+	"RenderingAPIs/Irrlicht/SPK_IRRBuffer.h"
+	"Core/SPK_Renderer.h"
+	"Core/SPK_Group.h"
+
+1256412858 c:\dev\spark_1_04_00\include\core\spk_renderer.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Registerable.h"
+	"Core/SPK_BufferHandler.h"
+
+1256411077 c:\dev\spark_1_04_00\include\core\spk_bufferhandler.h
+	"Core/SPK_DEF.h"
+
+1256273991 c:\dev\spark_1_04_00\src\renderingapis\irrlicht\spk_irrpointrenderer.cpp
+	"RenderingAPIs/Irrlicht/SPK_IRRPointRenderer.h"
+	"RenderingAPIs/Irrlicht/SPK_IRRBuffer.h"
+
+1256412240 c:\dev\spark_1_04_00\include\renderingapis\irrlicht\spk_irrpointrenderer.h
+	"RenderingAPIs/Irrlicht/SPK_IRRRenderer.h"
+	"Extensions/Renderers/SPK_PointRendererInterface.h"
+
+1255907604 c:\dev\spark_1_04_00\include\extensions\renderers\spk_pointrendererinterface.h
+	"Core/SPK_DEF.h"
+
+1256274438 c:\dev\spark_1_04_00\src\renderingapis\irrlicht\spk_irrlinerenderer.cpp
+	"RenderingAPIs/Irrlicht/SPK_IRRLineRenderer.h"
+	"RenderingAPIs/Irrlicht/SPK_IRRBuffer.h"
+
+1256500096 c:\dev\spark_1_04_00\include\renderingapis\irrlicht\spk_irrlinerenderer.h
+	"RenderingAPIs/Irrlicht/SPK_IRRRenderer.h"
+	"Extensions/Renderers/SPK_LineRendererInterface.h"
+
+1255535456 c:\dev\spark_1_04_00\include\extensions\renderers\spk_linerendererinterface.h
+	"Core/SPK_DEF.h"
+
+1256273668 c:\dev\spark_1_04_00\src\renderingapis\irrlicht\spk_irrquadrenderer.cpp
+	"RenderingAPIs/Irrlicht/SPK_IRRQuadRenderer.h"
+	"RenderingAPIs/Irrlicht/SPK_IRRBuffer.h"
+
+1256917943 c:\dev\spark_1_04_00\include\renderingapis\irrlicht\spk_irrquadrenderer.h
+	"RenderingAPIs/Irrlicht/SPK_IRRRenderer.h"
+	"Extensions/Renderers/SPK_QuadRendererInterface.h"
+	"Extensions/Renderers/SPK_Oriented3DRendererInterface.h"
+
+1256250010 c:\dev\spark_1_04_00\include\extensions\renderers\spk_quadrendererinterface.h
+	"Core/SPK_DEF.h"
+	"Core/SPK_Particle.h"
+
+1255907576 c:\dev\spark_1_04_00\include\extensions\renderers\spk_oriented3drendererinterface.h
+	"Core/SPK_Vector3D.h"
+	"Core/SPK_Group.h"
+
