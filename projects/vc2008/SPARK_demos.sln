@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo Basic", "SPARK demos\SPARK Demo Basic.vcproj", "{5DCBEFF6-44D3-41FB-AEB4-8C11E1D58710}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo Collision", "SPARK demos\SPARK Demo Collision.vcproj", "{507E9E28-B62B-428F-A1CB-5D4EF8FF9B57}"
@@ -26,6 +26,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo Irrlicht Basic", "SPARK demos\SPARK Demo Irrlicht.vcproj", "{95537842-C79A-4DBE-9B78-EA2A3A3BB993}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo Irrlicht Fire", "SPARK demos\SPARK Demo Irrlicht2.vcproj", "{47220A3C-5A5E-466B-ADCB-A6A30B67B3A4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo DX9 Basic", "SPARK demos\SPARK Demo DX9 Basic.vcproj", "{8A7D7C9B-430F-45E7-B015-F4F04D25CE0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{47220A3C-5A5E-466B-ADCB-A6A30B67B3A4}.Debug|Win32.Build.0 = Debug|Win32
 		{47220A3C-5A5E-466B-ADCB-A6A30B67B3A4}.Release|Win32.ActiveCfg = Release|Win32
 		{47220A3C-5A5E-466B-ADCB-A6A30B67B3A4}.Release|Win32.Build.0 = Release|Win32
+		{8A7D7C9B-430F-45E7-B015-F4F04D25CE0B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8A7D7C9B-430F-45E7-B015-F4F04D25CE0B}.Debug|Win32.Build.0 = Debug|Win32
+		{8A7D7C9B-430F-45E7-B015-F4F04D25CE0B}.Release|Win32.ActiveCfg = Release|Win32
+		{8A7D7C9B-430F-45E7-B015-F4F04D25CE0B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
