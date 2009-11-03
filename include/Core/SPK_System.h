@@ -36,14 +36,15 @@ namespace SPK
 
 
 	/**
-	* @enum StepType
+	* @enum StepMode
+	* @brief Enumeration defining how to handle the step time of particle systems
 	* @since 1.04.01
 	*/
-	enum StepType
+	enum StepMode
 	{
-		STEP_REAL,
-		STEP_CONSTANT,
-		STEP_ADAPTIVE,
+		STEP_REAL,			/**< The step time is the deltatime passed by the user */
+		STEP_CONSTANT,		/**< The step time is a constant time therefore 0 to many updates may occur in a call */
+		STEP_ADAPTIVE,		/**< The step time is a range between 2 values therefore 0 to many updates may occur in a call */
 	};
 
 	/**
@@ -95,23 +96,62 @@ namespace SPK
 		static void setCameraPosition(const Vector3D& cameraPosition);
 
 		/**
-		* 
+		* @brief Enables or not the clamping on the deltaTime when updating systems
+		*
+		* This allows to limit too big deltaTime which may spoil your particle systems.<br>
+		* Basically if the deltaTime is higher than the clamp value, the clamp calue is used as the deltaTime.<br>
+		* <br>
+		* It allows in real step mode to avoid having too big deltaTimes and in the other 2 modes to avoid having too
+		* many updates that may slow down the application.<br>
+		* <br>
+		* Note that setting the clamp value too low may slow down your systems
+		*
+		* @param useClampStep : true to use a clamp value on the step, false not to
+		* @param clamp : the clamp value
 		* @since 1.04.01
 		*/
 		static void setClampStep(bool useClampStep,float clamp = 1.0f);
 
 		/**
+		* @brief Uses a constant step to update the systems
+		*
+		* This tells the system to be updated with a constant time.<br>
+		* Depending on the deltaTime passed for the update, 0 to many updates can occur.<br>
+		* For example if the delta time is 1.0 and the constant step is 0.1 then 10 updates of time 0.1 will occur.<br>
+		* <br>
+		* This mode is useful when the update must be constant (accurate collisions...) but be aware it can be very computationnaly intensive.
 		* 
+		* @param constantStep : the value of the step
 		* @since 1.04.01
 		*/
 		static void useConstantStep(float constantStep);
 
 		/**
+		* @brief Uses an adaptive step to update the systems
+		*
+		* This tells the system to be updated with a time between min and max.<br>
+		* If the deltaTime passed is higher than maxStep or lower than minStep then this mode operates like the constant step mode with
+		* either constant time being maxStep or minStep (respectivally).<br>
+		* If the deltaTime lies between minStep and maxStep then this mode performs like the real step mode.<br>
+		* <br>
+		* This mode is a good alternative between the other two.<br>
+		* Combined with the clamp step, it allows to correctly handle the step time without being to much frame rate dependant.
+		*
+		* @param minStep : the minimal time step
+		* @param maxStep : the maximal time step
 		* @since 1.04.01
 		*/
 		static void useAdaptiveStep(float minStep,float maxStep);
 
 		/**
+		* @brief Uses the real step to update the systems
+		*
+		* This is the basic mode (and the mode per default) to update the systems.<br>
+		* One call to update means one update of time deltaTime.<br>
+		* <br>
+		* This mode is the simpler and the one that allows best performance on low end systems.<br>
+		* However the update may be inaccurate (due to too big deltaTime) and it performs badly with frame rate variation.
+		*
 		* @since 1.04.01
 		*/
 		static void useRealStep();
@@ -138,6 +178,12 @@ namespace SPK
 		* @return the camera position
 		*/
 		static const Vector3D& getCameraPosition();
+
+		/**
+		* @Gets the current step mode
+		* @return the current step mode
+		*/
+		static StepMode getStepMode();
 
 		/**
 		* @brief Gets the number of active particles in this system
@@ -332,7 +378,7 @@ namespace SPK
 
 		static Vector3D cameraPosition;
 
-		static StepType stepType;
+		static StepMode stepMode;
 		static float constantStep;
 		static float minStep;
 		static float maxStep;

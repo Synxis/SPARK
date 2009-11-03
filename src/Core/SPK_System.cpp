@@ -30,7 +30,7 @@ namespace SPK
 {
 	Vector3D System::cameraPosition;
 
-	StepType System::stepType(STEP_REAL);
+	StepMode System::stepMode(STEP_REAL);
 	float System::constantStep(0.0f);
 	float System::minStep(0.0f);
 	float System::maxStep(0.0f);
@@ -153,12 +153,12 @@ namespace SPK
 		if ((clampStepEnabled)&&(deltaTime > clampStep))
 			deltaTime = clampStep;
 
-		if (stepType != STEP_REAL)
+		if (stepMode != STEP_REAL)
 		{
 			deltaTime += deltaStep;
 
 			float updateStep;
-			if (stepType == STEP_ADAPTIVE)
+			if (stepMode == STEP_ADAPTIVE)
 			{
 				if (deltaTime > maxStep)
 					updateStep = maxStep;
@@ -227,25 +227,30 @@ namespace SPK
 
 	void System::useConstantStep(float constantStep)
 	{
-		stepType = STEP_CONSTANT;
+		stepMode = STEP_CONSTANT;
 		System::constantStep = constantStep;
 	}
 
 	void System::useAdaptiveStep(float minStep,float maxStep)
 	{
-		stepType = STEP_ADAPTIVE;
+		stepMode = STEP_ADAPTIVE;
 		System::minStep = minStep;
 		System::maxStep = maxStep;
 	}
 
 	void System::useRealStep()
 	{
-		stepType = STEP_REAL;
+		stepMode = STEP_REAL;
 	}
 
 	const Vector3D& System::getCameraPosition()
 	{
 		return cameraPosition;
+	}
+
+	StepMode System::getStepMode()
+	{
+		return stepMode;
 	}
 
 	void System::sortParticles()
