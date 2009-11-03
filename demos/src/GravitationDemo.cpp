@@ -280,6 +280,10 @@ int main(int argc, char *argv[])
 	// random seed
 	randomSeed = static_cast<unsigned int>(time(NULL));
 
+	// Sets the update step
+	System::setClampStep(true,0.01f);			// clamp the step to 10 ms
+	System::useRealStep();
+
 	SDL_Event event;
 
 	// inits SDL
@@ -483,10 +487,13 @@ int main(int argc, char *argv[])
 			// If the number of particles in the mass group is 0 (at init or when the system is reinitialized),
 			// a number of particles equal to NB_POINT_MASS is added
 			if (massGroup->getNbParticles() == 0)
+			{
 				for (int i = 0; i < NB_POINT_MASS; ++i)
 					massGroup->addParticles(1,
 						Vector3D(2.0f,0.0f,0.0f),
 						Vector3D(random(-1.0f,0.0f),random(-0.5f,0.5f),random(-0.5f,0.5f)));
+				massGroup->flushAddedParticles(); // to ensure particles are added
+			}
 
 			// Updates particle system
 			particleSystem->update(deltaTime * 0.001f); // 1 defined as a second

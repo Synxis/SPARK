@@ -30,6 +30,14 @@ namespace SPK
 {
 	Vector3D System::cameraPosition;
 
+	StepType System::stepType(STEP_REAL);
+	float System::constantStep(0.0f);
+	float System::minStep(0.0f);
+	float System::maxStep(0.0f);
+
+	bool System::clampStepEnabled(false);
+	float System::clampStep(1.0f);
+
 	System::System() :
 		Registerable(),
 		Transformable(false), // dont check if updated cause it has transformable children
@@ -37,7 +45,8 @@ namespace SPK
 		nbParticles(0),
 		boundingBoxEnabled(false),
 		AABBMin(),
-		AABBMax()
+		AABBMax(),
+		deltaStep(0.0f)
 	{}
 
 	void System::registerChildren(bool registerAll)
@@ -92,7 +101,7 @@ namespace SPK
 		return nbParticles;
 	}
 
-	bool System::update(float deltaTime)
+	bool System::innerUpdate(float deltaTime)
 	{
 		nbParticles = 0;
 		bool isAlive = false;
@@ -139,6 +148,46 @@ namespace SPK
 		return isAlive;
 	}
 
+	bool System::update(float deltaTime)
+	{
+		if ((clampStepEnabled)&&(deltaTime > clampStep))
+			deltaTime = clampStep;
+
+		if (stepType != STEP_REAL)
+		{
+			deltaTime += deltaStep;
+
+			float updateStep;
+			if (stepType == STEP_ADAPTIVE)
+			{
+				if (deltaTime > maxStep)
+					updateStep = maxStep;
+				else if (deltaTime < minStep)
+					updateStep = minStep;
+				else
+				{
+					deltaStep = 0.0f;
+					return innerUpdate(deltaTime);
+				}
+			}
+			else
+				updateStep = constantStep;
+
+			bool isAlive = true;
+			while(deltaTime >= updateStep)
+			{
+				if ((isAlive)&&(!innerUpdate(updateStep)))
+					isAlive = false;
+				deltaTime -= updateStep;
+			}
+			deltaStep = deltaTime;
+			return isAlive;
+
+		}	
+		else
+			return innerUpdate(deltaTime);
+	}
+
 	void System::render() const
 	{
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
@@ -168,6 +217,30 @@ namespace SPK
 	void System::setCameraPosition(const Vector3D& cameraPosition)
 	{
 		System::cameraPosition = cameraPosition;
+	}
+
+	void System::setClampStep(bool enableClampStep,float clamp)
+	{
+		clampStepEnabled = enableClampStep;
+		clampStep = clamp;
+	}
+
+	void System::useConstantStep(float constantStep)
+	{
+		stepType = STEP_CONSTANT;
+		System::constantStep = constantStep;
+	}
+
+	void System::useAdaptiveStep(float minStep,float maxStep)
+	{
+		stepType = STEP_ADAPTIVE;
+		System::minStep = minStep;
+		System::maxStep = maxStep;
+	}
+
+	void System::useRealStep()
+	{
+		stepType = STEP_REAL;
 	}
 
 	const Vector3D& System::getCameraPosition()

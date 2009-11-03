@@ -198,6 +198,9 @@ int main(int argc, char *argv[])
 
 	// random seed
 	randomSeed = device->getTimer()->getRealTime();
+	// Sets the update step
+	System::setClampStep(true,0.1f);			// clamp the step to 100 ms
+	System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
 	// Inits Particle Engine
 	// Those vectors are inverted gravity so that the fire and smoke will rise up

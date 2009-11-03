@@ -36,6 +36,17 @@ namespace SPK
 
 
 	/**
+	* @enum StepType
+	* @since 1.04.01
+	*/
+	enum StepType
+	{
+		STEP_REAL,
+		STEP_CONSTANT,
+		STEP_ADAPTIVE,
+	};
+
+	/**
 	* @class System
 	* @brief A whole system of particles
 	*
@@ -82,6 +93,28 @@ namespace SPK
 		* @param cameraPosition the camera position
 		*/
 		static void setCameraPosition(const Vector3D& cameraPosition);
+
+		/**
+		* 
+		* @since 1.04.01
+		*/
+		static void setClampStep(bool useClampStep,float clamp = 1.0f);
+
+		/**
+		* 
+		* @since 1.04.01
+		*/
+		static void useConstantStep(float constantStep);
+
+		/**
+		* @since 1.04.01
+		*/
+		static void useAdaptiveStep(float minStep,float maxStep);
+
+		/**
+		* @since 1.04.01
+		*/
+		static void useRealStep();
 
 		/**
 		* @brief Enables or disables the computation of the axis aligned Vector for this System
@@ -299,11 +332,23 @@ namespace SPK
 
 		static Vector3D cameraPosition;
 
+		static StepType stepType;
+		static float constantStep;
+		static float minStep;
+		static float maxStep;
+
+		static bool clampStepEnabled;
+		static float clampStep;
+
+		float deltaStep;
+
 		size_t nbParticles;
 
 		bool boundingBoxEnabled;
 		Vector3D AABBMin;
 		Vector3D AABBMax;
+
+		bool innerUpdate(float deltaTime);
 	};
 
 

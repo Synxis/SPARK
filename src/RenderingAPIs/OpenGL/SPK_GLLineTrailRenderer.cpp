@@ -143,7 +143,7 @@ namespace GL
 			const Particle& particle = group.getParticle(i);
 			float age = particle.getAge();
 
-			if (age == 0.0f) // If the particle is new, buffers for it are reinitialized
+			if ((age == 0.0f)||(age < valueIterator[nbSamples - 1])) // If the particle is new, buffers for it are reinitialized
 				init(particle,0.0f);
 			else
 			{

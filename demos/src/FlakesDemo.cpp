@@ -259,6 +259,10 @@ int main(int argc, char *argv[])
 {
 	// random seed
 	randomSeed = static_cast<unsigned int>(time(NULL));
+	
+	// Sets the update step
+	System::setClampStep(true,0.01f);			// clamp the step to 10 ms
+	System::useRealStep();
 
 	SDL_Event event;
 
