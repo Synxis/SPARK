@@ -233,6 +233,7 @@ namespace IRR
 			x - quadSide().x + quadUp().x,
 			y - quadSide().y + quadUp().y,
 			z - quadSide().z + quadUp().z);
+		currentBuffer->getVertexBuffer()[offset].Color = color;
 
 		// bottom right vertex
 		currentBuffer->getVertexBuffer()[++offset].Pos.set(
@@ -246,6 +247,7 @@ namespace IRR
 			x + quadSide().x - quadUp().x,
 			y + quadSide().y - quadUp().y,
 			z + quadSide().z - quadUp().z);
+		currentBuffer->getVertexBuffer()[offset].Color = color;
 	}
 
 	inline void IRRQuadRenderer::FillBufferTextureAtlas(const Particle& particle) const

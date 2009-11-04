@@ -75,15 +75,17 @@ namespace IRR
 		{
 			const Particle& particle = group.getParticle(t >> 1);
 
+			irr::video::SColor color(spk2irr(
+			 particle.getParamCurrentValue(PARAM_ALPHA),
+			 particle.getR(),
+			 particle.getG(),
+			 particle.getB()));
+
             currentBuffer->getVertexBuffer()[t].Pos = spk2irr(particle.position());
-            currentBuffer->getVertexBuffer()[t + 1].Pos = spk2irr(particle.position() + particle.velocity() * length);
+			currentBuffer->getVertexBuffer()[t].Color = color;
             
-			// as the shading is forced to flat, only the first color is needed
-			currentBuffer->getVertexBuffer()[t].Color = spk2irr(
-				particle.getParamCurrentValue(PARAM_ALPHA),
-				particle.getR(),
-				particle.getG(),
-				particle.getB());
+			currentBuffer->getVertexBuffer()[t + 1].Pos = spk2irr(particle.position() + particle.velocity() * length);
+			currentBuffer->getVertexBuffer()[t + 1].Color = color;
 		}
 		currentBuffer->getMeshBuffer().setDirty(irr::scene::EBT_VERTEX);
 
