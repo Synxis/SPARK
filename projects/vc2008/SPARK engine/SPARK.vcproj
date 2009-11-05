@@ -401,6 +401,30 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="DX9"
+					>
+					<File
+						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9Info.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9LineRenderer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9PointRenderer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9QuadRenderer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9Renderer.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -700,6 +724,42 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\RenderingAPIs\Irrlicht\SPK_IRRSystem.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="DX9"
+					>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9_DEF.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9IndexBuffer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9Info.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9LineRenderer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9PointRenderer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9QuadRenderer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9Renderer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9VertexBuffer.h"
 						>
 					</File>
 				</Filter>
