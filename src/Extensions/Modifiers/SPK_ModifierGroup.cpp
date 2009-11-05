@@ -58,6 +58,22 @@ namespace SPK
 		Modifier::destroyChildren(keepChildren);
 	}
 
+	Registerable* ModifierGroup::findByName(const std::string& name)
+	{
+		Registerable* object = Modifier::findByName(name);
+		if (object != NULL)
+			return object;
+
+		for (std::vector<Modifier*>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+		{
+			object = (*it)->findByName(name);
+			if (object != NULL)
+				return object;
+		}
+
+		return NULL;
+	}
+
 	void ModifierGroup::addModifier(Modifier* modifier)
 	{
 		if (modifier == NULL)

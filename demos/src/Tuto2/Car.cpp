@@ -356,9 +356,11 @@ void Car::loadBaseParticleSystem(Image& smoke)
 	// Creates the emitters
 	SphericEmitter* leftSmokeEmitter = SphericEmitter::create(Vector3D(0.0f,0.0f,1.0f),0.0f,1.1f * PI);
 	leftSmokeEmitter->setZone(leftTire);
+	leftSmokeEmitter->setName("left wheel emitter");
 	
 	SphericEmitter* rightSmokeEmitter = SphericEmitter::create(Vector3D(0.0f,0.0f,1.0f),0.0f,1.1f * PI);
 	rightSmokeEmitter->setZone(rightTire);
+	rightSmokeEmitter->setName("right wheel emitter");
 
 	// Creates the Group
 	Group* smokeGroup = Group::create(smokeModel,500);
@@ -391,10 +393,12 @@ void Car::updateParticleSystem(float deltaTime,float angle,float power)
 	float forceMax = power * 0.08f;
 	float flow = power * 0.20f;
 
-	particleSystem->getGroup(0)->getEmitter(0)->setForce(forceMin,forceMax);
-	particleSystem->getGroup(0)->getEmitter(1)->setForce(forceMin,forceMax);
-	particleSystem->getGroup(0)->getEmitter(0)->setFlow(flow);
-	particleSystem->getGroup(0)->getEmitter(1)->setFlow(flow);
+	Emitter* leftWheelEmitter = dynamic_cast<Emitter*>(particleSystem->findByName("left wheel emitter"));
+	Emitter* rightWheelEmitter = dynamic_cast<Emitter*>(particleSystem->findByName("right wheel emitter"));
+	leftWheelEmitter->setForce(forceMin,forceMax);
+	rightWheelEmitter->setForce(forceMin,forceMax);
+	leftWheelEmitter->setFlow(flow);
+	rightWheelEmitter->setFlow(flow);
 
 	particleSystem->SetPosition(pos);
 	particleSystem->SetRotation(angle * 180.0f / PI);

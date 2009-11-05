@@ -802,7 +802,9 @@ namespace SPK
 		* @return a pointer to the buffer, or NULL if not found
 		* @since 1.03.02
 		*/
-		Buffer* getBuffer(const std::string& ID) const; 
+		Buffer* getBuffer(const std::string& ID) const;
+
+		virtual Registerable* findByName(const std::string& name);
 
 	protected :
 

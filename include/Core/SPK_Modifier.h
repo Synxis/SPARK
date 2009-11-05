@@ -178,6 +178,12 @@ namespace SPK
 		*/
 		inline bool isLocalToSystem() const;
 
+		///////////////
+		// Interface //
+		///////////////
+
+		virtual Registerable* findByName(const std::string& name);
+
 	protected :
 
 		/** @brief the Vector3D that holds the intersection coordinates */

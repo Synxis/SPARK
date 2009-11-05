@@ -108,6 +108,15 @@ namespace SPK
 			unregisterObject(it,true);
 	}
 
+	Registerable* SPKFactory::findByName(const std::string& name)
+	{
+		for (std::map<SPK_ID,Registerable*>::const_iterator it = SPKRegister.begin(); it != SPKRegister.end(); ++it)
+			if (it->second->getName().compare(name) == 0)
+				return it->second;
+
+		return NULL;
+	}
+
 	void SPKFactory::trace(SPK_ID ID)
 	{
 		std::map<SPK_ID,Registerable*>::iterator it = SPKRegister.find(ID);
@@ -135,13 +144,13 @@ namespace SPK
 		Registerable* object = it->second;
 		std::cout << object 
 			<< " ID:" << ID
-			<< " type:" << object->getName().c_str()
+			<< " type:" << object->getClassName().c_str()
 			<< " nbRef:" << object->getNbReferences()
 			<< " flag:";
 		if (object->isShared()) std::cout << "S";
 		if (object->isDestroyable()) std::cout << "D";
-		if (nextLine)
-			std::cout << std::endl;
+		if (object->getName().length() > 0) std::cout << " \"" << object->getName() << "\"";
+		if (nextLine) std::cout << std::endl;
 	}
 
 	Registerable* SPKFactory::registerObject(Registerable* object)

@@ -306,6 +306,22 @@ namespace SPK
 		}
 	}
 
+	Registerable* System::findByName(const std::string& name)
+	{
+		Registerable* object = Registerable::findByName(name);
+		if (object != NULL)
+			return object;
+
+		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		{
+			object = (*it)->findByName(name);
+			if (object != NULL)
+				return object;
+		}
+
+		return NULL;
+	}
+
 	void System::innerUpdateTransform()
 	{
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)

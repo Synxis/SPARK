@@ -57,6 +57,15 @@ namespace SPK
 		Registerable::destroyChildren(keepChildren);
 	}
 
+	Registerable* Emitter::findByName(const std::string& name)
+	{
+		Registerable* object = Registerable::findByName(name);
+		if (object != NULL)
+			return object;
+
+		return zone->findByName(name);
+	}
+
 	void Emitter::changeTank(int deltaTank)
 	{
 		if (tank >= 0)

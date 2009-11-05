@@ -25,20 +25,23 @@
 
 namespace SPK
 {
-	const SPK_ID NO_ID = 0;
+	const SPK_ID NO_ID(0);
+	const std::string NO_NAME; 
 
 	Registerable::Registerable() :
 		ID(NO_ID),
 		nbReferences(0),
 		shared(false),
-		destroyable(true)
+		destroyable(true),
+		name(NO_NAME)
 	{}
 
 	Registerable::Registerable(const Registerable& registerable) :
 		ID(NO_ID),
 		nbReferences(0),
 		shared(registerable.shared),
-		destroyable(registerable.destroyable)
+		destroyable(registerable.destroyable),
+		name(registerable.name)
 	{}
 
 	Registerable::~Registerable(){}

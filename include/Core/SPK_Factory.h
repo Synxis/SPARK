@@ -223,6 +223,18 @@ namespace SPK
 		/** @brief Trace information on all the registered Registerable within the SPKFactory */
 		void traceAll();
 
+		/**
+		* @brief Finds a registerable by name in the factory
+		*
+		* Note that this method only checks registerables in the SPKFactory.<br>
+		* This method does not call the Registerable::findByName(const string&) of the registerables to check recursively.
+		*
+		* @param name : the name of the registerable to find in the factory
+		* @return the first registerable with that name or NULL of none is found
+		* @since 1.04.01
+		*/
+		Registerable* findByName(const std::string& name);
+
 	private : 
 
 		static SPKFactory* instance;

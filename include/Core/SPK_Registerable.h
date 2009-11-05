@@ -39,7 +39,7 @@ virtual ClassName* clone(bool createBase) const \
 } \
 \
 public : \
-virtual std::string getName() const {return #ClassName;}
+virtual std::string getClassName() const {return #ClassName;}
 
 
 namespace SPK
@@ -49,6 +49,9 @@ namespace SPK
 	
 	/** @brief the ID constant value for unregistered Registerable */
 	extern SPK_PREFIX const SPK_ID NO_ID;
+
+	/** @brief an empty string defining the name of an object with no name */
+	extern SPK_PREFIX const std::string NO_NAME;
 
 	/**
 	* @class Registerable
@@ -85,15 +88,6 @@ namespace SPK
 	friend class SPKFactory;
 
 	public :
-	
-		/**
-		* @brief Gets the name of the class of the object
-		*
-		* This method is implemented in non abstract derived class of Registerable with the macro SPK_IMPLEMENT_REGISTERABLE(ClassName).
-		*
-		* @return the name of the class of the object as a std::string
-		*/
-		virtual std::string getName() const = 0;
 
 		//////////////////
 		// Constructors //
@@ -137,6 +131,19 @@ namespace SPK
 		*/
 		inline void setDestroyable(bool destroyable);
 
+		/**
+		* @brief Sets the name of this Registerable
+		*
+		* The name is an easy to find registerable in a tree.<br>
+		* See getName() and findByName(const std::string&)
+		*
+		* A constant NO_NAME exists to give no name to the registerable (an empty string)
+		*
+		* @param name : the name of this registerable
+		* @since 1.04.01
+		*/
+		inline void setName(const std::string& name);
+
 		/////////////
 		// Getters //
 		/////////////
@@ -179,7 +186,45 @@ namespace SPK
 		* @brief Tells whether this Registerable is destroyable or not
 		* @return true if this Registerable is destroyable, false if not
 		*/
-		inline bool isDestroyable() const;	
+		inline bool isDestroyable() const;
+
+		/**
+		* @brief Gets the name of this registerable
+		* 
+		* The name is an easy to find registerable in a tree.<br>
+		* See setName(const std::string&) and findByName(const std::string&)
+		*
+		* @return the name of this registerable
+		* @since 1.04.01
+		*/
+		inline const std::string& getName() const;
+
+		/**
+		* @brief Gets the name of the class of the object
+		*
+		* This method is implemented in non abstract derived class of Registerable with the macro SPK_IMPLEMENT_REGISTERABLE(ClassName).
+		*
+		* @return the name of the class of the object as a std::string
+		*/
+		virtual std::string getClassName() const = 0;
+
+		///////////////
+		// Interface //
+		///////////////
+
+		/**
+		* @brief Finds a registerable with its name recursively from this registerable
+		*
+		* If the name is not found, NULL is returned.<br>
+		* If the several objects with the same name exists, only the first one is returned.<br>
+		* <br>
+		* Note that the name of the registerable itself is already tested.
+		*
+		* @param name : the name of the registerable to find
+		* @return : the first registerable with that name within this registerable or NULL if none is found
+		* @since 1.04.01
+		*/
+		inline virtual Registerable* findByName(const std::string& name);
 
 	protected :
 
@@ -301,6 +346,8 @@ namespace SPK
 		SPK_ID ID;
 		unsigned int nbReferences;
 
+		std::string name;
+
 		bool shared;
 		bool destroyable;
 
@@ -336,6 +383,11 @@ namespace SPK
 		this->destroyable = destroyable;
 	}
 
+	inline void Registerable::setName(const std::string& name)
+	{
+		this->name = name;
+	}
+
 	inline SPK_ID Registerable::getID() const
 	{
 		return ID;
@@ -359,6 +411,16 @@ namespace SPK
 	inline bool Registerable::isDestroyable() const
 	{
 		return destroyable;
+	}
+
+	inline const std::string& Registerable::getName() const
+	{
+		return name;
+	}
+
+	inline Registerable* Registerable::findByName(const std::string& name)
+	{
+		return getName().compare(name) == 0 ? this : NULL;
 	}
 
 	inline void Registerable::incrementReference()

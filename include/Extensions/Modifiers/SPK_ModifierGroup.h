@@ -206,6 +206,8 @@ namespace SPK
 		virtual void createBuffers(const Group& group);
 		virtual void destroyBuffers(const Group& group);
 
+		virtual Registerable* findByName(const std::string& name);
+
 	protected :
 
 		virtual void registerChildren(bool registerAll);

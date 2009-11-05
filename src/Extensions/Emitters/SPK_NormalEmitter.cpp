@@ -49,6 +49,15 @@ namespace SPK
 		Emitter::destroyChildren(keepChildren);
 	}
 
+	Registerable* NormalEmitter::findByName(const std::string& name)
+	{
+		Registerable* object = Emitter::findByName(name);
+		if ((object != NULL)||(normalZone == NULL))
+			return object;
+
+		return normalZone->findByName(name);
+	}
+
 	void NormalEmitter::setNormalZone(Zone* zone)
 	{
 		decrementChildReference(normalZone);

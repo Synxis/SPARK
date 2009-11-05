@@ -59,6 +59,15 @@ namespace SPK
 		Registerable::destroyChildren(keepChildren);
 	}
 
+	Registerable* Modifier::findByName(const std::string& name)
+	{
+		Registerable* object = Registerable::findByName(name);
+		if ((object != NULL)||(zone == NULL))
+			return object;
+
+		return zone->findByName(name);
+	}
+
 	void Modifier::setZone(Zone* zone,bool full)
 	{
 		decrementChildReference(this->zone);

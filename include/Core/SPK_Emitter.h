@@ -210,6 +210,8 @@ namespace SPK
 		*/
 		inline void generateVelocity(Particle& particle) const;
 
+		virtual Registerable* findByName(const std::string& name);
+
 	protected :
 
 		virtual void registerChildren(bool registerAll);

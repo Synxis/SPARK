@@ -99,6 +99,12 @@ namespace SPK
 		*/
 		inline Zone* getNormalZone() const;
 
+		///////////////
+		// Interface //
+		///////////////
+
+		virtual Registerable* findByName(const std::string& name);
+
 	protected :
 
 		virtual void registerChildren(bool registerAll);

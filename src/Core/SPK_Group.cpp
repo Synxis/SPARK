@@ -154,6 +154,40 @@ namespace SPK
 		Registerable::destroyChildren(keepChildren);
 	}
 
+	Registerable* Group::findByName(const std::string& name)
+	{
+		Registerable* object = Registerable::findByName(name);
+		if (object != NULL)
+			return object;
+
+		object = model->findByName(name);
+		if (object != NULL)
+			return object;
+
+		if (renderer != NULL)
+		{
+			object = renderer->findByName(name);
+			if (object != NULL)
+				return object;
+		}
+
+		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+		{
+			object = (*it)->findByName(name);
+			if (object != NULL)
+				return object;
+		}
+
+		for (std::vector<Modifier*>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+		{
+			object = (*it)->findByName(name);
+			if (object != NULL)
+				return object;
+		}
+
+		return NULL;
+	}
+
 	void Group::setRenderer(Renderer* renderer)
 	{
 		decrementChildReference(this->renderer);

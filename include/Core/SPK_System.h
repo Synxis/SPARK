@@ -364,6 +364,8 @@ namespace SPK
 		*/
 		void computeAABB();
 
+		virtual Registerable* findByName(const std::string& name);
+
 	protected :
 
 		std::vector<Group*> groups;
