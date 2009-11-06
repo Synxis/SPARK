@@ -89,23 +89,15 @@ namespace DX9
 			{
 				const Particle& particle = group.getParticle(i);
 
+				D3DCOLOR c = D3DCOLOR_COLORVALUE(particle.getR(), particle.getG(), particle.getB(), particle.getParamCurrentValue(PARAM_ALPHA));
+
 				Assign((gpuIterator)->position, particle.position());
 
-				(gpuIterator++)->color = D3DCOLOR_COLORVALUE(
-					particle.getParamCurrentValue(PARAM_RED),
-					particle.getParamCurrentValue(PARAM_GREEN),
-					particle.getParamCurrentValue(PARAM_BLUE),
-					particle.getParamCurrentValue(PARAM_ALPHA)
-				);
+				(gpuIterator++)->color = c;
 
 				Assign((gpuIterator)->position, (particle.position() + particle.velocity() * length));
 
-				(gpuIterator++)->color = D3DCOLOR_COLORVALUE(
-					particle.getParamCurrentValue(PARAM_RED),
-					particle.getParamCurrentValue(PARAM_GREEN),
-					particle.getParamCurrentValue(PARAM_BLUE),
-					particle.getParamCurrentValue(PARAM_ALPHA)
-				);
+				(gpuIterator++)->color = c;
 			}
 
 			gpuBuffer->Unlock();
