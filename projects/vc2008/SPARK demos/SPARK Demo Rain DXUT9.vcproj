@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="SPARK Demo Basic DX9"
-	ProjectGUID="{8A7D7C9B-430F-45E7-B015-F4F04D25CE0B}"
-	RootNamespace="SPARKDemoDX9Basic"
+	Name="SPARK Demo Rain DXUT9"
+	ProjectGUID="{24212F84-4200-49FB-8F2C-D6BA65C5A0C8}"
+	RootNamespace="SPARKDemoDX9Rain"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -20,7 +20,7 @@
 			OutputDirectory="..\..\..\demos\bin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -59,8 +59,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SPARK_debug.lib SPARK_DX9_debug.lib"
-				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic"
+				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Core\Debug&quot;;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Optional\Debug&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -131,8 +130,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SPARK.lib SPARK_DX9.lib"
-				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic"
+				AdditionalDependencies="DXUT.lib DXUTOpt.lib SPARK.lib SPARK_DX9.lib"
+				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Core\Release&quot;;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Optional\Release&quot;"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -170,11 +169,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\demos\src\DX9\BasicDemoDX9.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\demos\src\DX9\CCamera.cpp"
+				RelativePath="..\..\..\demos\src\DX9\RainDemoDXUT9.cpp"
 				>
 			</File>
 		</Filter>

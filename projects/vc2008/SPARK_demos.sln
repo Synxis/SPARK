@@ -27,9 +27,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo Irrlicht Basic",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo Irrlicht Fire", "SPARK demos\SPARK Demo Irrlicht2.vcproj", "{47220A3C-5A5E-466B-ADCB-A6A30B67B3A4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo DX9 Basic", "SPARK demos\SPARK Demo DX9 Basic.vcproj", "{8A7D7C9B-430F-45E7-B015-F4F04D25CE0B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo Basic DX9", "SPARK demos\SPARK Demo DX9 Basic.vcproj", "{8A7D7C9B-430F-45E7-B015-F4F04D25CE0B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Basic Demo DXUT9", "SPARK demos\SPARK Demo Basic DXUT9.vcproj", "{3FA0B5CA-C0AC-478B-8EC3-9483EE2AE298}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Demo Rain DXUT9", "SPARK demos\SPARK Demo Rain DXUT9.vcproj", "{24212F84-4200-49FB-8F2C-D6BA65C5A0C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,10 @@ Global
 		{3FA0B5CA-C0AC-478B-8EC3-9483EE2AE298}.Debug|Win32.Build.0 = Debug|Win32
 		{3FA0B5CA-C0AC-478B-8EC3-9483EE2AE298}.Release|Win32.ActiveCfg = Release|Win32
 		{3FA0B5CA-C0AC-478B-8EC3-9483EE2AE298}.Release|Win32.Build.0 = Release|Win32
+		{24212F84-4200-49FB-8F2C-D6BA65C5A0C8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{24212F84-4200-49FB-8F2C-D6BA65C5A0C8}.Debug|Win32.Build.0 = Debug|Win32
+		{24212F84-4200-49FB-8F2C-D6BA65C5A0C8}.Release|Win32.ActiveCfg = Release|Win32
+		{24212F84-4200-49FB-8F2C-D6BA65C5A0C8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
