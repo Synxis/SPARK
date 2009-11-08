@@ -77,6 +77,18 @@ inline void Assign( SPK::Vector3D& Destination, const D3DXVECTOR3& Source )
 	Destination.z = Source.z;
 }
 
+D3DXINLINE D3DXVECTOR3* D3DXVec3ProjectNormal( D3DXVECTOR3 *pOut, CONST D3DXVECTOR3 *pV, CONST D3DXVECTOR3 *pN )
+{
+#ifdef D3DX_DEBUG
+	if(!pOut || !pV1 || !pV2)
+		return NULL;
+#endif
+
+	D3DXVec3Cross(pOut, pV, pN);
+	D3DXVec3Cross(pOut, pN, pOut);
+	return D3DXVec3Normalize(pOut, pOut);
+}
+
 #endif
 
 // Defines the APIENTRY if not already done
