@@ -165,12 +165,14 @@ namespace DX9
 		D3DXMATRIX view;
 		DX9Info::getDevice()->GetTransform(D3DTS_VIEW, &view);
 		D3DXVECTOR3 r(-view._11, view._12, view._13);
-		//D3DXVECTOR3 d(view._31, view._32, view._33);
+		D3DXVECTOR3 d(-view._31, view._32, view._33);
 
 		D3DXVECTOR3 right;
 		//D3DXVECTOR3 direction;
+		D3DXVECTOR3 vel;
+		D3DCOLOR c;
 
-		float w2 = this->getWidth() / 20.0f;
+		float w2 = this->getWidth() / 2.0f;
 
 		if( group.getNbParticles() != 0 )
 		{
@@ -180,12 +182,13 @@ namespace DX9
 			{
 				const Particle& particle = group.getParticle(i);
 
-				D3DCOLOR c = D3DCOLOR_COLORVALUE(particle.getR(), particle.getG(), particle.getB(), particle.getParamCurrentValue(PARAM_ALPHA));
-
-				D3DXVECTOR3 vel;
+				c = D3DCOLOR_COLORVALUE(particle.getR(), particle.getG(), particle.getB(), particle.getParamCurrentValue(PARAM_ALPHA));
+				
 				Assign(vel, particle.velocity());
 
-				D3DXVec3ProjectNormal(&right, &r, &vel);
+				//D3DXVec3ProjectNormal(&right, &r, &vel);
+				D3DXVec3Cross(&right, &vel, &d);
+				D3DXVec3Normalize(&right, &right);
 
 				Assign((gpuIterator)->position, particle.position());
 				(gpuIterator)->position += right * w2;
