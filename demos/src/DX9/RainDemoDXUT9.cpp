@@ -152,6 +152,9 @@ float g_fRainRatio = 0.5f;
 bool recompute = true;
 float g_fElapsedTime = 0.0f;
 
+// the size ratio is used with renderers whose size are defined in pixels. This is to adapt to any resolution
+float fSizeRatio = 1.0f;
+
 #include "CCamera.h"
 //CGlobalCamera *g_pCamera;
 POINT g_ptSourisPosition;
@@ -689,11 +692,13 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
     pd3dDevice->SetTransform( D3DTS_WORLD, &matWorld );
 
     // Setup the camera with view & projection matrix
-    D3DXVECTOR3 vecEye( 0.0f, 0.0f, -5.0f );
+    /*D3DXVECTOR3 vecEye( 0.0f, 0.0f, -5.0f );
     D3DXVECTOR3 vecAt ( 0.0f, 0.0f, 0.0f );
-    g_Camera.SetViewParams( &vecEye, &vecAt );
+    g_Camera.SetViewParams( &vecEye, &vecAt );*/
     float fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT )pBackBufferSurfaceDesc->Height;
     g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 0.01f, 100.0f );
+
+	fSizeRatio = static_cast<float>(pBackBufferSurfaceDesc->Width) / 100440.0f;
 
 	// Floor texture
 	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/paving.bmp", &texturePaving);
@@ -752,7 +757,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 		g_pDropEmitter->setForce(param(0.1f,1.0f),param(0.2f,2.0f));
 
 		g_pDropRenderer->setSize(param(1.0f,3.0f));
-		g_pRainRenderer->setWidth(param(1.0f,4.0f));
+		g_pRainRenderer->setWidth(param(1.0f,4.0f) * fSizeRatio);
 		recompute = false;
 	}
 
