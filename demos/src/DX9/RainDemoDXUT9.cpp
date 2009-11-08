@@ -698,7 +698,8 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
     float fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT )pBackBufferSurfaceDesc->Height;
     g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 0.01f, 100.0f );
 
-	fSizeRatio = static_cast<float>(pBackBufferSurfaceDesc->Width) / 100440.0f;
+	//fSizeRatio = static_cast<float>(pBackBufferSurfaceDesc->Width) / 100440.0f;
+	fSizeRatio = 2.0f / 724.0f;
 
 	// Floor texture
 	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/paving.bmp", &texturePaving);
