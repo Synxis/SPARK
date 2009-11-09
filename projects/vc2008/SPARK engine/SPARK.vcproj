@@ -441,6 +441,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\SPK_DX9.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\SPK_GL.h"
 				>
 			</File>
