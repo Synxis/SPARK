@@ -50,6 +50,7 @@
 #include "Extensions/Zones/SPK_Sphere.h"
 #include "Extensions/Zones/SPK_Plane.h"
 #include "Extensions/Zones/SPK_Line.h" // 1.01
+#include "Extensions/Zones/SPK_Ring.h" // 1.05
 
 // Emitters
 #include "Extensions/Emitters/SPK_StraightEmitter.h"

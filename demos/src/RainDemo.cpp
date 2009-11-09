@@ -393,6 +393,7 @@ int main(int argc, char *argv[])
 	splashRenderer->setTexturingMode(TEXTURE_2D);
 	splashRenderer->setTexture(textureSplash);
 	splashRenderer->enableBlending(true);
+	splashRenderer->enableRenderingHint(DEPTH_WRITE,false);
 	
 	// Models
 	// rain model
@@ -419,7 +420,8 @@ int main(int argc, char *argv[])
 	splashModel->setParam(PARAM_ALPHA,1.0f,0.0f);
 
 	// rain emitter
-	AABox* rainZone = AABox::create(Vector3D(0.0f,5.0f,0.0f));
+	//AABox* rainZone = AABox::create(Vector3D(0.0f,5.0f,0.0f));
+	Ring* rainZone = Ring::create(Vector3D(0.0f,5.0f,0.0f));
 	SphericEmitter* rainEmitter = SphericEmitter::create(Vector3D(0.0f,-1.0f,0.0f),0.0f,0.03f * PI);
 	rainEmitter->setZone(rainZone);
 
@@ -428,7 +430,7 @@ int main(int argc, char *argv[])
 
 	// Groups
 	// rain group
-	rainGroup = Group::create(rainModel,10000);
+	rainGroup = Group::create(rainModel,8000);
 	rainGroup->setCustomUpdate(&killRain);
 	rainGroup->setRenderer(rainRenderer);
 	rainGroup->addEmitter(rainEmitter);
@@ -436,13 +438,13 @@ int main(int argc, char *argv[])
 	rainGroup->setGravity(gravity);
 
 	// drop group
-	dropGroup = Group::create(dropModel,22000);
+	dropGroup = Group::create(dropModel,16000);
 	dropGroup->setRenderer(dropRenderer);
 	dropGroup->setFriction(0.7f);
 	dropGroup->setGravity(gravity);
 
 	// splash group
-	splashGroup = Group::create(splashModel,3000);
+	splashGroup = Group::create(splashModel,2400);
 	splashGroup->setRenderer(splashRenderer);
 
 	// System
@@ -641,9 +643,10 @@ int main(int argc, char *argv[])
 				splashModel->setParam(PARAM_SIZE,0.0f,0.0f,param(0.375f,2.25f),param(0.75f,3.78f));
 				splashModel->setLifeTime(param(0.2f,0.3f),param(0.4f,0.5f));
 
-				rainEmitter->setFlow(param(0.0f,6000.0f));
+				rainEmitter->setFlow(param(0.0f,4800.0f));
 				rainEmitter->setForce(param(3.0f,5.0f),param(6.0f,10.0f));
-				rainZone->setDimension(Vector3D(param(40.0f,10.0f),0.0f,param(40.0f,10.0f)));
+				rainZone->setRadius(0.0f,param(20.0f,5.0f));
+				//rainZone->setDimension(Vector3D(param(40.0f,10.0f),0.0f,param(40.0f,10.0f)));
 
 				dropEmitter->setForce(param(0.1f,1.0f),param(0.2f,2.0f));
 

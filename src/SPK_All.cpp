@@ -55,6 +55,7 @@
 #include "Extensions/Zones/SPK_Sphere.cpp"
 #include "Extensions/Zones/SPK_Plane.cpp"
 #include "Extensions/Zones/SPK_Line.cpp" // 1.01
+#include "Extensions/Zones/SPK_Ring.cpp" // 1.05
 
 // Emitters
 #include "Extensions/Emitters/SPK_StraightEmitter.cpp"
