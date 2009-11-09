@@ -81,6 +81,6 @@ namespace SPK
 
 	void Transformable::transformDir(Vector3D& tDir,const Vector3D& dir)
 	{
-		rotate(tDir,dir,world);
+		rotate(tDir,dir,world); // To transform a direction, the translation is ignored
 	}
 }
