@@ -119,7 +119,7 @@ namespace SPK
 	void Ring::innerUpdateTransform()
 	{
 		Zone::innerUpdateTransform();
-		transformDir(tNormal,normal,this);
+		transformDir(tNormal,normal);
 		tNormal.normalize();
 	}
 }

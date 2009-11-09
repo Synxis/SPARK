@@ -79,22 +79,8 @@ namespace SPK
 		multiply(tPos,pos,world);
 	}
 
-	void Transformable::transformDir(Vector3D& tDir,const Vector3D& dir,const Zone* zone)
+	void Transformable::transformDir(Vector3D& tDir,const Vector3D& dir)
 	{
-		Vector3D tmp(dir);
-
-		if (zone != NULL)
-		{
-			tmp += zone->getPosition();
-			multiply(tDir,tmp,world);	
-			tDir -= zone->getTransformedPosition();
-		}
-		else
-		{
-			Vector3D tPos;
-			multiply(tPos,Vector3D(),world);
-			multiply(tDir,tmp,world);
-			tDir -= tPos;
-		}
+		rotate(tDir,dir,world);
 	}
 }

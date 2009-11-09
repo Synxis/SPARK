@@ -117,7 +117,7 @@ namespace SPK
 	void SphericEmitter::innerUpdateTransform()
 	{
 		Emitter::innerUpdateTransform();
-		transformDir(tDirection,direction,getZone());
+		transformDir(tDirection,direction);
 		computeMatrix();
 	}
 }

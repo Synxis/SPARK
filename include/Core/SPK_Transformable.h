@@ -163,9 +163,8 @@ namespace SPK
 		* @brief A helper method to transform a direction from local to world coordinates
 		* @param tDir : the resulting transformed direction
 		* @param dir : the direction in local coordinates
-		* @param zone : the zone whose position is used to compute the transformed direction
 		*/
-		void transformDir(Vector3D& tDir,const Vector3D& dir,const Zone* zone);
+		void transformDir(Vector3D& tDir,const Vector3D& dir);
 
 		/**
 		* @brief Tells whether this Transformable needs update or not
@@ -213,6 +212,11 @@ namespace SPK
 			const float* src1);
 
 		inline static void multiply(
+			Vector3D& dest,
+			const Vector3D& v,
+			const float* m);
+
+		inline static void rotate(
 			Vector3D& dest,
 			const Vector3D& v,
 			const float* m);
@@ -285,6 +289,18 @@ namespace SPK
 		dest.x = v.x * m[0] + v.y * m[4] + v.z * m[8] + m[12];
 		dest.y = v.x * m[1] + v.y * m[5] + v.z * m[9] + m[13];
 		dest.z = v.x * m[2] + v.y * m[6] + v.z * m[10] + m[14];
+	}
+
+	void Transformable::rotate(
+		Vector3D& dest,
+		const Vector3D& v,
+		const float* m)
+	{
+		// warning : no self assignment !
+		// w coord of vectors is implicitely 1
+		dest.x = v.x * m[0] + v.y * m[4] + v.z * m[8];
+		dest.y = v.x * m[1] + v.y * m[5] + v.z * m[9];
+		dest.z = v.x * m[2] + v.y * m[6] + v.z * m[10];
 	}
 }
 

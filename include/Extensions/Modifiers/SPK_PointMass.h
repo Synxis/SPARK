@@ -192,7 +192,7 @@ namespace SPK
 	inline void PointMass::innerUpdateTransform()
 	{
 		Modifier::innerUpdateTransform();
-		transformDir(tPosition,position,getZone()); // the delta position is actually a direction not a position
+		transformDir(tPosition,position); // the delta position is actually a direction not a position
 	}
 }
 

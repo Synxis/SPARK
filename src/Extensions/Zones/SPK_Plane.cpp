@@ -78,7 +78,7 @@ namespace SPK
 	void Plane::innerUpdateTransform()
 	{
 		Zone::innerUpdateTransform();
-		transformDir(tNormal,normal,this);
+		transformDir(tNormal,normal);
 		tNormal.normalize();
 	}
 }

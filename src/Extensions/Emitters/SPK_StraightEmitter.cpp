@@ -42,7 +42,7 @@ namespace SPK
 	void StraightEmitter::innerUpdateTransform()
 	{
 		Emitter::innerUpdateTransform();
-		transformDir(tDirection,direction,getZone());
+		transformDir(tDirection,direction);
 		tDirection.normalize();
 	}
 }

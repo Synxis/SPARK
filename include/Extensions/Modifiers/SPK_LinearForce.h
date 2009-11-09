@@ -205,7 +205,7 @@ namespace SPK
 	inline void LinearForce::innerUpdateTransform()
 	{
 		Modifier::innerUpdateTransform();
-		transformDir(tForce,force,getZone());
+		transformDir(tForce,force);
 	}
 }
 
