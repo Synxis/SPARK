@@ -24,7 +24,7 @@
 
 namespace SPK
 {
-	Plane::Plane(const Vector3D& normal,const Vector3D& position) :
+	Plane::Plane(const Vector3D& position,const Vector3D& normal) :
 		Zone(position)
 	{
 		setNormal(normal);

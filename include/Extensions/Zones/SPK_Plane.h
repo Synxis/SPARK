@@ -54,18 +54,18 @@ namespace SPK
 
 		/**
 		* @brief Constructor of Plane
-		* @param normal : the normal of the Plane
 		* @param position : the position of the Plane
+		* @param normal : the normal of the Plane
 		*/
-		Plane(const Vector3D& normal = Vector3D(0.0f,0.0f,-1.0f),const Vector3D& position = Vector3D(0.0f,0.0f,0.0f));
+		Plane(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));
 
 		/**
 		* @brief Creates and registers a new Plane
-		* @param normal : the normal of the Plane
 		* @param position : the position of the Plane
+		* @param normal : the normal of the Plane
 		* @since 1.04.00
 		*/
-		static inline Plane* create(const Vector3D& normal = Vector3D(0.0f,0.0f,-1.0f),const Vector3D& position = Vector3D(0.0f,0.0f,0.0f));
+		static inline Plane* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));
 
 		/////////////
 		// Setters //
@@ -118,9 +118,9 @@ namespace SPK
 	};
 
 
-	inline Plane* Plane::create(const Vector3D& normal,const Vector3D& position)
+	inline Plane* Plane::create(const Vector3D& position,const Vector3D& normal)
 	{
-		Plane* obj = new Plane(normal,position);
+		Plane* obj = new Plane(position,normal);
 		registerObject(obj);
 		return obj;
 	}
