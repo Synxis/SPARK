@@ -27,6 +27,16 @@
 namespace SPK
 {
 	/**
+	* @brief A ZOne defining a flat ring in the universe
+	*
+	* A ring is defined by :
+	* <ul>
+	* <li>The position of its center</li>
+	* <li>The normal of the plane on which it lies</li>
+	* <li>A minimum and maximum radius</li>
+	* </li>
+	* Note that by having the minimum radius equal to 0, the ring becomes a disk in the universe.<br>
+	* Note that the normal does not have to be normalized as it is normalized internally when set.
 	*
 	* @since 1.05.00
 	*/
@@ -40,25 +50,75 @@ namespace SPK
 		// Constructors //
 		//////////////////
 
+		/**
+		* @brief Constructor of ring
+		* @param position : the position of the ring
+		* @param normal : the normal of the plane on which lies the ring
+		* @param minRadius : the minimum radius of the ring
+		* @param maxRadius : the maximum radius of the ring
+		*/
 		Ring(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f),float minRadius = 0.0f,float maxRadius = 1.0f);
 
+		/**
+		* @brief Creates and registers a new Ring
+		* @param position : the position of the ring
+		* @param normal : the normal of the plane on which lies the ring
+		* @param minRadius : the minimum radius of the ring
+		* @param maxRadius : the maximum radius of the ring
+		* @return a new registered ring
+		*/
 		static inline Ring* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f),float minRadius = 0.0f,float maxRadius = 1.0f);
 
 		/////////////
 		// Setters //
 		/////////////
 
+		/**
+		* @brief Sets the normal of the plane on which lies this ring
+		*
+		* Note that the normal is normalized internally
+		*
+		* @param normal : the normal of the plane on which lies the ring
+		*/
 		inline void setNormal(const Vector3D& normal);
+
+		/**
+		* @brief Sets the min and max radius of this ring
+		* 
+		* A radius cannot be negative.<br>
+		* Note that negative radius are inverted internally
+		*
+		* @param minRadius : the minimum radius of this ring
+		* @param maxRadius : the maximum radius of this ring
+		*/
 		void setRadius(float minRadius,float maxRadius);
 
 		/////////////
 		// Getters //
 		/////////////
 
+		/**
+		* @brief Gets the normal of this ring
+		* @return the normal of this ring
+		*/
 		inline const Vector3D& getNormal() const;
+
+		/**
+		* @brief Gets the transformed normal of this ring
+		* @return the transformed normal of this ring
+		*/
 		inline const Vector3D& getTransformedNormal() const;
 
+		/**
+		* @brief Gets the minimum radius of this ring
+		* @return the minimum radius of this ring
+		*/
 		inline float getMinRadius() const;
+
+		/**
+		* @brief Gets the maximum radius of this ring
+		* @return the maximum radius of this ring
+		*/
 		inline float getMaxRadius() const;
 
 		///////////////

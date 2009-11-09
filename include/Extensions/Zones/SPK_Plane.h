@@ -63,6 +63,7 @@ namespace SPK
 		* @brief Creates and registers a new Plane
 		* @param position : the position of the Plane
 		* @param normal : the normal of the Plane
+		* @return a new registered plane
 		* @since 1.04.00
 		*/
 		static inline Plane* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));
