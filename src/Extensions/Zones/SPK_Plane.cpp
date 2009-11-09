@@ -32,8 +32,8 @@ namespace SPK
 
 	bool Plane::intersects(const Vector3D& v0,const Vector3D& v1,Vector3D* intersection,Vector3D* normal) const
 	{
-		float dist0 = dotProduct(this->normal,v0 - getTransformedPosition());
-		float dist1 = dotProduct(this->normal,v1 - getTransformedPosition());
+		float dist0 = dotProduct(tNormal,v0 - getTransformedPosition());
+		float dist1 = dotProduct(tNormal,v1 - getTransformedPosition());
 
 		if ((dist0 <= 0.0f) == (dist1 <= 0.0f)) // both points are on the same side
 			return false;
@@ -41,17 +41,12 @@ namespace SPK
 		if (intersection != NULL)
 		{
 			if (dist0 <= 0.0f)
-			{
 				dist0 = -dist0;
-				if (normal != NULL)
-					*normal = this->normal;
-			}
 			else
-			{
 				dist1 = -dist1;
-				if (normal != NULL)
-					*normal = this->normal;
-			}
+
+			if (normal != NULL)
+				*normal = tNormal;
 
 			float ti = dist0 / (dist0 + dist1);
 
@@ -70,14 +65,14 @@ namespace SPK
 
 	void Plane::moveAtBorder(Vector3D& v,bool inside) const
 	{
-		float dist = dotProduct(this->normal,v - getTransformedPosition());
+		float dist = dotProduct(tNormal,v - getTransformedPosition());
 
 		if ((dist <= 0.0f) == inside)
 			inside ? dist += APPROXIMATION_VALUE : dist -= APPROXIMATION_VALUE;
 		else
 			inside ? dist -= APPROXIMATION_VALUE : dist += APPROXIMATION_VALUE;
 
-		v += normal * -dist;
+		v += tNormal * -dist;
 	}
 
 	void Plane::innerUpdateTransform()

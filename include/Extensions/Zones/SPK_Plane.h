@@ -90,6 +90,13 @@ namespace SPK
 		*/
 		inline const Vector3D& getNormal() const;
 
+		/**
+		* @brief Gets the transformed normal of this Plane
+		* @return the transformed normal of this Plane
+		* @since 1.04.01
+		*/
+		inline const Vector3D& getTransformedNormal() const;
+
 		///////////////
 		// Interface //
 		///////////////
@@ -131,6 +138,11 @@ namespace SPK
 		return normal;
 	}
 
+	inline const Vector3D& Plane::getTransformedNormal() const
+	{
+		return tNormal;
+	}
+
 	inline void Plane::generatePosition(Particle& particle,bool full) const
 	{
 		particle.position() = getTransformedPosition();
@@ -143,7 +155,7 @@ namespace SPK
 
 	inline Vector3D Plane::computeNormal(const Vector3D& point) const
 	{
-		return normal;
+		return tNormal;
 	}
 }
 
