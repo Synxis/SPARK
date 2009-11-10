@@ -70,6 +70,7 @@
 #include "Extensions/Modifiers/SPK_ModifierGroup.cpp" // 1.02
 #include "Extensions/Modifiers/SPK_LinearForce.cpp" // 1.03
 #include "Extensions/Modifiers/SPK_Collision.cpp" // 1.04
+#include "Extensions/Modifiers/SPK_Vortex.cpp" // 1.05
 
 // Renderer Interfaces
 #include "Extensions/Renderers/SPK_QuadRendererInterface.cpp" // 1.04

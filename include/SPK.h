@@ -65,6 +65,7 @@
 #include "Extensions/Modifiers/SPK_ModifierGroup.h" // 1.02
 #include "Extensions/Modifiers/SPK_LinearForce.h" // 1.03
 #include "Extensions/Modifiers/SPK_Collision.h" // 1.04
+#include "Extensions/Modifiers/SPK_Vortex.h" // 1.05
 
 // Renderer Interfaces
 #include "Extensions/Renderers/SPK_PointRendererInterface.h" // 1.04

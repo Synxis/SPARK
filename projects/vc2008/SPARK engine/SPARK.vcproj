@@ -256,6 +256,10 @@
 						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_PointMass.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_Vortex.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Emitters"
@@ -560,6 +564,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_PointMass.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_Vortex.h"
 						>
 					</File>
 				</Filter>
