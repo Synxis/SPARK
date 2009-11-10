@@ -126,13 +126,17 @@ namespace DX9
 		static LPDIRECT3DVERTEXBUFFER9 gpuBuffer;
 		static LineVertex* gpuIterator;
 
+#define DX9LINERENDERER_AS_LINELIST
+#ifndef DX9LINERENDERER_AS_LINELIST
 		static LPDIRECT3DINDEXBUFFER9 indexBuffer;
 		static short* indexIterator;
+#endif
 
 		// buffers names
 		static const std::string GPU_BUFFER_NAME;
-
+#ifndef DX9LINERENDERER_AS_LINELIST
 		static const std::string INDEX_BUFFER_NAME;
+#endif
 
 		virtual bool checkBuffers(const Group& group);
 	};

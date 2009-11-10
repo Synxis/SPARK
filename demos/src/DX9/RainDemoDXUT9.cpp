@@ -28,6 +28,8 @@
 #include "SDKmesh.h"
 #include <ctime>
 
+#include <strsafe.h>
+
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 #pragma comment(lib, "dxerr9.lib")
@@ -466,11 +468,22 @@ void UnInitApp()
 //--------------------------------------------------------------------------------------
 void RenderText()
 {
+	wchar_t sz[256];
+	StringCchPrintfW(sz,
+		256,
+		L"%s: %f; %s: %i\0",
+		L"Rain Intensity",
+		g_fRainRatio,
+		L"Nb Particles",
+		g_particleSystem.getNbParticles()
+	);
+
     g_pTxtHelper->Begin();
     g_pTxtHelper->SetInsertionPos( 5, 5 );
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
     g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
     g_pTxtHelper->DrawTextLine( DXUTGetDeviceStats() );
+	g_pTxtHelper->DrawTextLine( sz );
     g_pTxtHelper->End();
 }
 
@@ -699,7 +712,7 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
     g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 0.01f, 100.0f );
 
 	//fSizeRatio = static_cast<float>(pBackBufferSurfaceDesc->Width) / 100440.0f;
-	fSizeRatio = 2.0f / 724.0f;
+	fSizeRatio = 10.0f / 579.0f;
 
 	// Floor texture
 	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/paving.bmp", &texturePaving);
