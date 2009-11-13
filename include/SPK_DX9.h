@@ -29,5 +29,6 @@
 #include "RenderingAPIs/DX9/SPK_DX9PointRenderer.h"
 #include "RenderingAPIs/DX9/SPK_DX9LineRenderer.h"
 #include "RenderingAPIs/DX9/SPK_DX9QuadRenderer.h"
+#include "RenderingAPIs/DX9/SPK_DX9LineTrailRenderer.h"
 
 #endif

@@ -56,6 +56,7 @@ namespace SPK
 	*/
 	enum ModelParamFlag
 	{
+		FLAG_NONE = 0,
 		FLAG_SIZE = 1 << PARAM_SIZE,					/**< the flag bit for PARAM_SIZE */
 		FLAG_MASS = 1 << PARAM_MASS,					/**< the flag bit for PARAM_MASS */
 		FLAG_RED = 1 << PARAM_RED,						/**< the flag bit for PARAM_RED */

@@ -20,7 +20,7 @@
 			OutputDirectory="..\..\..\demos\bin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -59,6 +59,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="DXUT.lib DXUTOpt.lib SPARK_debug.lib SPARK_DX9_debug.lib"
+				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
 				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Core\Debug&quot;;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Optional\Debug&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"

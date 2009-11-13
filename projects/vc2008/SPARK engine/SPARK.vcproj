@@ -421,6 +421,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9LineTrailRenderer.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9PointRenderer.cpp"
 						>
 					</File>
@@ -764,6 +768,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9LineRenderer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9LineTrailRenderer.h"
 						>
 					</File>
 					<File

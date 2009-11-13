@@ -39,6 +39,8 @@
 //#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders 
 //#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders 
 
+#include <strsafe.h>
+
 #define CONSOLE
 #ifdef CONSOLE
 #include <iostream>
@@ -112,16 +114,21 @@ using namespace SPK::DX9;
 //-----------------------------------------------------------------------------
 
 // SPARK variables
-Group* particleGroupPtr = NULL;
-SPK::System particleSystem;
-DX9PointRenderer *basicRenderer = NULL;
-DX9PointRenderer *pointRenderer = NULL;
-DX9QuadRenderer *quadRenderer = NULL;
-DX9Renderer* particleRenderer = NULL;
-Model *particleModel;
-Point *point;
-Group *particleGroup;
-SphericEmitter *particleEmitter;
+Group* particleGroup = NULL;
+Group* massGroup = NULL;
+System* particleSystem = NULL;
+DX9PointRenderer* basicRenderer = NULL;
+DX9LineTrailRenderer* trailRenderer = NULL;
+Model* massModel = NULL;
+Model* particleModel = NULL;
+RandomEmitter* particleEmitter = NULL;
+PointMass* centerPointMass = NULL;
+
+const size_t NB_SEGMENTS = 32;
+
+// the number of point masses
+const unsigned int NB_POINT_MASS = 2;
+PointMass* pointMasses[NB_POINT_MASS];
 
 LPDIRECT3DTEXTURE9	g_pTextureParticle = NULL;
 
@@ -130,6 +137,33 @@ LPDIRECT3DTEXTURE9	g_pTextureParticle = NULL;
 POINT g_ptSourisPosition;
 D3DLIGHT9 g_light;
 //-----------------------------------------------------------------------------
+
+// Converts a HSV color to RGB
+// h E [0,360]
+// s E [0,1]
+// v E [0,1]
+Vector3D convertHSV2RGB(const Vector3D& hsv)
+{
+	float h = hsv.x;
+	float s = hsv.y;
+	float v = hsv.z;
+
+	int hi = static_cast<int>(h / 60.0f) % 6;
+	float f = h / 60.0f - hi;
+	float p = v * (1.0f - s);
+	float q = v * (1.0f - f * s);
+	float t = v * (1.0f - (1.0f - f) * s);
+
+	switch(hi)
+	{
+	case 0 : return Vector3D(v,t,p);
+	case 1 : return Vector3D(q,v,p);
+	case 2 : return Vector3D(p,v,t);
+	case 3 : return Vector3D(p,q,v);
+	case 4 : return Vector3D(t,p,v);
+	default : return Vector3D(v,p,q);
+	}
+}
 
 // Calls back function to have particle bounce on the floor
 bool bounceOnFloor(Particle& particle, float deltaTime)
@@ -188,6 +222,10 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	// random seed
 	randomSeed = static_cast<unsigned int>(time(NULL));
 
+	// Sets the update step
+	System::setClampStep(true,0.01f);			// clamp the step to 10 ms
+	System::useRealStep();
+
     // DXUT will create and use the best device (either D3D9 or D3D10) 
     // that is available on the system depending on which D3D callbacks are set below
 
@@ -208,7 +246,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     InitApp();
     DXUTInit( true, true, NULL ); // Parse the command line, show msgboxes on error, no extra command line params
     DXUTSetCursorSettings( true, true );
-    DXUTCreateWindow( L"BasicDemoDXUT9" );
+    DXUTCreateWindow( L"Gravitation Demo DXUT9" );
     DXUTCreateDevice( true, 640, 480 );
     DXUTMainLoop(); // Enter into the DXUT render loop
 
@@ -251,59 +289,56 @@ void InitApp()
 	g_light.Diffuse.a = 1.0f;
 	g_light.Direction = Vdir;
 
-	// Inits Particle Engine
-	Vector3D gravity(0.0f,-0.8f,0.0f);
 
 	// Renderers
-	//DX9PointRenderer basicRenderer(g_pD3DDevice);
+	basicRenderer = DX9PointRenderer::create();
 
-	pointRenderer = new DX9PointRenderer();
-	basicRenderer = new DX9PointRenderer();
-	quadRenderer = new DX9QuadRenderer();
-	particleRenderer = NULL;
+	trailRenderer = DX9LineTrailRenderer::create();
+	trailRenderer->setBlending(BLENDING_ADD);
+	trailRenderer->setDuration(2.0);
+	trailRenderer->setNbSamples(NB_SEGMENTS);
+	trailRenderer->enableRenderingHint(DEPTH_TEST, false);
 
-	{
-		pointRenderer->setType(POINT_SPRITE);
-		pointRenderer->enableBlending(true);
-		pointRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-		//pointRenderer->setTexture(g_pTextureParticle);
-		pointRenderer->setTextureBlending(D3DTOP_MODULATE);
-		pointRenderer->enableWorldSize(true);
-		DX9PointRenderer::setPixelPerUnit(45.0f * D3DX_PI / 180.f, 600);
-		pointRenderer->setSize(0.05f);
-		particleRenderer = pointRenderer;
-	}
-	{
-		quadRenderer->enableBlending(true);
-		quadRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-		quadRenderer->setTexturingMode(TEXTURE_2D);
-		//quadRenderer->setTexture(g_pTextureParticle);
-		quadRenderer->setTextureBlending(D3DTOP_MODULATE);
-		quadRenderer->setScale(0.05f,0.05f);
-		//particleRenderer = quadRenderer;
-	}
+	// Models
+	massModel = Model::create();
+	massModel->setImmortal(true);
 
-	// Model
-	particleModel = new Model(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA);
-	particleModel->setParam(PARAM_ALPHA,0.8f); // constant alpha
-	particleModel->setLifeTime(8.0f,8.0f);
+	particleModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA,
+		FLAG_ALPHA,
+		FLAG_RED | FLAG_GREEN | FLAG_BLUE);
+	particleModel->setParam(PARAM_ALPHA, 0.1f, 0.0f);
+	particleModel->setLifeTime(5.0f,8.0f);
 
 	// Emitter
-	point = new Point(Vector3D(0.0f,0.016f,0.0f));
-	particleEmitter = new SphericEmitter(Vector3D(0.0f,1.0f,0.0f), 0.1f * D3DX_PI, 0.1f * D3DX_PI);
-	particleEmitter->setZone(point);
-	particleEmitter->setFlow(250);
-	particleEmitter->setForce(1.5f,1.5f);
+	particleEmitter = RandomEmitter::create();
+	particleEmitter->setFlow(400);
+	particleEmitter->setForce(0.0f,0.1f);
 
-	// Group
-	particleGroup = new Group(particleModel, 2100);
+	// This is the point mass that will attract the other point masses to make them move
+	centerPointMass = PointMass::create();
+	centerPointMass->setMass(0.6f);
+	centerPointMass->setMinDistance(0.01f);
+
+	// Groups
+	particleGroup = Group::create(particleModel,4100);
 	particleGroup->addEmitter(particleEmitter);
-	//particleGroup->setRenderer(particleRenderer);
-	particleGroup->setCustomUpdate(&bounceOnFloor);
-	particleGroup->setGravity(gravity);
-	
-	particleSystem.addGroup(particleGroup);
-	particleGroupPtr = particleGroup;
+
+	massGroup = Group::create(massModel, NB_POINT_MASS);
+	massGroup->addModifier(centerPointMass);
+
+	// Creates the point masses that will atract the particles
+	for (int i = 0; i < NB_POINT_MASS; ++i)
+	{
+		pointMasses[i] = PointMass::create();
+		pointMasses[i]->setMass(3.0f);
+		pointMasses[i]->setMinDistance(0.05f);
+		particleGroup->addModifier(pointMasses[i]);
+	}
+
+	// System
+	particleSystem = System::create();
+	particleSystem->addGroup(massGroup);
+	particleSystem->addGroup(particleGroup);
 }
 
 void UnInitApp()
@@ -312,20 +347,7 @@ void UnInitApp()
 	std::cout << "UnInitApp" << std::endl;
 #endif
 
-	SAFE_DELETE( pointRenderer );
-	SAFE_DELETE( basicRenderer );
-	SAFE_DELETE( quadRenderer );
-	particleRenderer = NULL;
 
-	// Model
-	SAFE_DELETE( particleModel );
-
-	// Emitter
-	SAFE_DELETE( point );
-	SAFE_DELETE( particleEmitter );
-
-	// Group
-	SAFE_DELETE( particleGroup );
 }
 
 
@@ -335,11 +357,20 @@ void UnInitApp()
 //--------------------------------------------------------------------------------------
 void RenderText()
 {
+	wchar_t sz[64];
+	StringCchPrintfW(sz,
+		64,
+		L"%s: %i\0",
+		L"Nb Particles",
+		particleSystem->getNbParticles()
+	);
+
     g_pTxtHelper->Begin();
     g_pTxtHelper->SetInsertionPos( 5, 5 );
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
     g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
     g_pTxtHelper->DrawTextLine( DXUTGetDeviceStats() );
+	g_pTxtHelper->DrawTextLine( sz );
     g_pTxtHelper->End();
 }
 
@@ -469,14 +500,10 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 		cout << "erreur chargement texture" << endl;
 
 	basicRenderer->OnD3D9CreateDevice();
-	pointRenderer->OnD3D9CreateDevice();
-	quadRenderer->OnD3D9CreateDevice();
+	trailRenderer->OnD3D9CreateDevice();
 
-	// /!\ obligatoirement après la création du device, car créé les buffers dans certaines conditions
-	particleGroup->setRenderer(particleRenderer);
-
-	pointRenderer->setTexture(g_pTextureParticle);
-	quadRenderer->setTexture(g_pTextureParticle);
+	particleGroup->setRenderer(trailRenderer);
+	massGroup->setRenderer(NULL);
 
     return S_OK;
 }
@@ -508,18 +535,18 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
     g_HUD.SetSize( 170, 170 );
     g_SampleUI.SetLocation( pBackBufferSurfaceDesc->Width - 170, pBackBufferSurfaceDesc->Height - 350 );
     g_SampleUI.SetSize( 170, 300 );
-
+/*
 	pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
     pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
     pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
     pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
-
-    pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
+*/
+//    pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
     //pd3dDevice->SetRenderState( D3DRS_DITHERENABLE, TRUE );
-    pd3dDevice->SetRenderState( D3DRS_SPECULARENABLE, TRUE );
+//    pd3dDevice->SetRenderState( D3DRS_SPECULARENABLE, TRUE );
     pd3dDevice->SetRenderState( D3DRS_LIGHTING, false );
-    pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x80808080 );
+//    pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x80808080 );
 	D3DLIGHT9 light;
     D3DXVECTOR3 vecLightDirUnnormalized( 10.0f, -10.0f, 10.0f );
     ZeroMemory( &light, sizeof( D3DLIGHT9 ) );
@@ -532,8 +559,8 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
     light.Position.y = -10.0f;
     light.Position.z = 10.0f;
     light.Range = 1000.0f;
-    pd3dDevice->SetLight( 0, &light );
-    pd3dDevice->LightEnable( 0, TRUE );
+//    pd3dDevice->SetLight( 0, &light );
+//    pd3dDevice->LightEnable( 0, TRUE );
 
 	// Set the transform matrices
     D3DXMATRIXA16 matWorld;
@@ -545,7 +572,7 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
     D3DXVECTOR3 vecAt ( 0.0f, 0.0f, 0.0f );
     g_Camera.SetViewParams( &vecEye, &vecAt );
     float fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT )pBackBufferSurfaceDesc->Height;
-    g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 1.0f, 1000.0f );
+    g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 1.0f, 100.0f );
 
     return S_OK;
 }
@@ -561,14 +588,30 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     g_Camera.FrameMove( fElapsedTime );
 	//g_pCamera->Move();
 
-	// Updates particle system
-	particleSystem.update( fElapsedTime );
-
 	// Changes the color of the model over time
-	step += fElapsedTime * 0.5f;
-	particleModel->setParam(PARAM_RED,0.6f + 0.4f * sin(step));
-	particleModel->setParam(PARAM_GREEN,0.6f + 0.4f * sin(step + D3DX_PI * 2.0f / 3.0f));
-	particleModel->setParam(PARAM_BLUE,0.6f + 0.4f * sin(step + D3DX_PI * 4.0f / 3.0f));
+	step += fElapsedTime * 0.2f;
+	Vector3D color(0.6f + 0.4f * sin(step),0.6f + 0.4f * sin(step + D3DX_PI * 2.0f / 3.0f),0.6f + 0.4f * sin(step + D3DX_PI * 4.0f / 3.0f));
+	particleModel->setParam(PARAM_RED,max(0.0f,color.x - 0.25f),min(1.0f,color.x + 0.25f));
+	particleModel->setParam(PARAM_GREEN,max(0.0f,color.y - 0.25f),min(1.0f,color.y + 0.25f));
+	particleModel->setParam(PARAM_BLUE,max(0.0f,color.z - 0.25f),min(1.0f,color.z + 0.25f));
+
+	// If the number of particles in the mass group is 0 (at init or when the system is reinitialized),
+	// a number of particles equal to NB_POINT_MASS is added
+	if (massGroup->getNbParticles() == 0)
+	{
+		for (int i = 0; i < NB_POINT_MASS; ++i)
+			massGroup->addParticles(1,
+			Vector3D(2.0f,0.0f,0.0f),
+			Vector3D(random(-1.0f,0.0f),random(-0.5f,0.5f),random(-0.5f,0.5f)));
+		massGroup->flushAddedParticles(); // to ensure particles are added
+	}
+
+	// Updates particle system
+	particleSystem->update(fElapsedTime); // 1 defined as a second
+
+	// the point masses are attached one by one to the particles in the massGroup so that they follow their moves
+	for (int i = 0; i < NB_POINT_MASS; ++i)
+		pointMasses[i]->setPosition(massGroup->getParticle(i).position());
 }
 
 
@@ -624,13 +667,13 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
         V( g_pEffect9->SetMatrix( "g_mWorld", &mWorld ) );
         V( g_pEffect9->SetFloat( "g_fTime", ( float )fTime ) );
 		*/
-
+/*
 		pd3dDevice->SetRenderState( D3DRS_AMBIENT, D3DCOLOR_COLORVALUE( 0.8f, 0.8f, 0.8f, 1.0f ));
 		pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, false );
 		pd3dDevice->SetRenderState( D3DRS_COLORVERTEX, true );
-
+//*/
 		DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"Draw scene" );
-		particleSystem.render();
+		particleSystem->render();
 		DXUT_EndPerfEvent();
 
         DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"HUD / Stats" ); // These events are to help PIX identify what the code is doing
@@ -688,25 +731,20 @@ void CALLBACK OnKeyboard( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserC
         {
 			case VK_F4:
 				{
-					renderValue = (renderValue + 1) % 4;
+					renderValue = (renderValue + 1) % 3;
 
 					switch (renderValue)
 					{
 						case 0 :
-							particleRenderer = pointRenderer;
-							particleGroup->setRenderer(particleRenderer);
+							particleGroup->setRenderer(trailRenderer);
+							trailRenderer->init(*particleGroup);
 							break;
 
 						case 1 :
-							particleRenderer = quadRenderer;
-							particleGroup->setRenderer(particleRenderer);
-							break;
-
-						case 2 :
 							particleGroup->setRenderer(basicRenderer);
 							break;
 
-						case 3 :
+						case 2 :
 							particleGroup->setRenderer(NULL);
 							break;
 					}

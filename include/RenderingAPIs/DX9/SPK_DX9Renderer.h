@@ -149,8 +149,10 @@ namespace DX9
 
 	protected :
 
-		/** @brief Inits the blending of this GLRenderer */
+		/** @brief Inits the blending of this DX9Renderer */
 		inline void initBlending() const;
+
+		inline void initRenderingHints() const;
 
 		bool reinit;
 
@@ -212,6 +214,27 @@ namespace DX9
 		}
 		else
 			DX9Info::getDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+	}
+
+	inline void DX9Renderer::initRenderingHints() const
+	{
+		// alpha test
+		if (isRenderingHintEnabled(ALPHA_TEST))
+		{
+			//glAlphaFunc(GL_GEQUAL,getAlphaTestThreshold());
+			DX9Info::getDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, true);
+		}
+		else
+			DX9Info::getDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
+
+		// depth test
+		if (isRenderingHintEnabled(DEPTH_TEST))
+			DX9Info::getDevice()->SetRenderState(D3DRS_ZENABLE, true);
+		else
+			DX9Info::getDevice()->SetRenderState(D3DRS_ZENABLE, false);
+
+		// depth write
+		DX9Info::getDevice()->SetRenderState(D3DRS_ZWRITEENABLE, isRenderingHintEnabled(DEPTH_WRITE));
 	}
 }}
 

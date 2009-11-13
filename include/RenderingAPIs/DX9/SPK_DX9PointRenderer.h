@@ -79,6 +79,8 @@ namespace DX9
 		*/
 		DX9PointRenderer(float size = 1.0f);
 
+		static inline DX9PointRenderer* create(float size = 1.0f);
+
 		/////////////
 		// Setters //
 		/////////////
@@ -226,6 +228,12 @@ namespace DX9
 		static const float QUADRATIC_SCREEN[3];
 	};
 
+	inline DX9PointRenderer* DX9PointRenderer::create(float size)
+	{
+		DX9PointRenderer* obj = new DX9PointRenderer(size);
+		registerObject(obj);
+		return obj;
+	}
 
 	inline void DX9PointRenderer::setSize(float size)
 	{
