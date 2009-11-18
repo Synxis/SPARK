@@ -182,7 +182,7 @@ namespace DX9
 					c0 *= ratio0;
 					c1 *= ratio1;
 					c0 += c1;
-					colorIterator[colorDelta] = D3DCOLOR_COLORVALUE(c0.r, c0.g, c0.b, c0.a);
+					colorIterator[colorDelta] = c0;
 
 					valueIterator[count] = age - duration;
 
@@ -209,7 +209,7 @@ namespace DX9
 					c.a *= 1.0f - (age - valueIterator[nbSamples - 1]) / (valueIterator[i] + duration - valueIterator[nbSamples - 1]);
 					//c.a *= 2.0f;
 					//c.a = (c.a > 1.0f) ? (1.0f) : (c.a);
-					colorIterator[i] = D3DCOLOR_COLORVALUE(c.r, c.g, c.b, c.a);
+					colorIterator[i] = c;
 				}
 
 				// pre degenerated vertex

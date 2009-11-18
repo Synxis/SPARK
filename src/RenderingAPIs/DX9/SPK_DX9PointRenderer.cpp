@@ -123,7 +123,9 @@ namespace DX9
 			vertexBuffer->Lock(0, (group.getNbParticles())*sizeof(PointVertex), &ptr, 0);
 			for(size_t i = 0; i < group.getNbParticles(); i++)
 			{
-				Assign(((PointVertex*)ptr)[i].position, group.getParticle(i).position());
+				const Particle& particle = group.getParticle(i);
+
+				Assign(((PointVertex*)ptr)[i].position, particle.position());
 
 				/*
 				if( group.getModel()->isEnabled(PARAM_ALPHA) )
@@ -143,11 +145,13 @@ namespace DX9
 						1.0f);
 				}
 				*/
-				((PointVertex*)ptr)[i].color = D3DCOLOR_COLORVALUE(
+				D3DXCOLOR c(particle.getR(), particle.getG(), particle.getB(), particle.getParamCurrentValue(PARAM_ALPHA));
+				((PointVertex*)ptr)[i].color = c;
+				/*((PointVertex*)ptr)[i].color = D3DCOLOR_COLORVALUE(
 					group.getParticle(i).getR(),
 					group.getParticle(i).getG(),
 					group.getParticle(i).getB(),
-					group.getParticle(i).getParamCurrentValue(PARAM_ALPHA));
+					group.getParticle(i).getParamCurrentValue(PARAM_ALPHA));*/
 			}
 			vertexBuffer->Unlock();
 
