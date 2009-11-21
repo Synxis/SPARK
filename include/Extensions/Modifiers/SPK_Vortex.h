@@ -24,7 +24,6 @@
 #define H_SPK_VORTEX
 
 #include "Core/SPK_Modifier.h"
-#include "Core/SPK_ArrayBuffer.h"
 
 namespace SPK
 {
