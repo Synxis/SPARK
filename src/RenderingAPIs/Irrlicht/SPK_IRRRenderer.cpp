@@ -31,7 +31,7 @@ namespace IRR
 		device(d),
 		currentBuffer(NULL)
 	{
-		material.GouraudShading = true;									// fix 1.04.01 for ATI cards
+		material.GouraudShading = true;									// fix 1.05.00 for ATI cards
 		material.Lighting = false;										// No lights per default
 		material.BackfaceCulling = false;								// Deactivates backface culling
 		material.MaterialType = irr::video::EMT_ONETEXTURE_BLEND;		// To allow complex blending functions

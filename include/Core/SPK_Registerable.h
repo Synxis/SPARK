@@ -140,7 +140,7 @@ namespace SPK
 		* A constant NO_NAME exists to give no name to the registerable (an empty string)
 		*
 		* @param name : the name of this registerable
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		inline void setName(const std::string& name);
 
@@ -195,7 +195,7 @@ namespace SPK
 		* See setName(const std::string&) and findByName(const std::string&)
 		*
 		* @return the name of this registerable
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		inline const std::string& getName() const;
 
@@ -222,7 +222,7 @@ namespace SPK
 		*
 		* @param name : the name of the registerable to find
 		* @return : the first registerable with that name within this registerable or NULL if none is found
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		inline virtual Registerable* findByName(const std::string& name);
 

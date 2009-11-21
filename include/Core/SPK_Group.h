@@ -38,7 +38,6 @@ namespace SPK
 	class Model;
 	class Buffer;
 	class BufferCreator;
-	enum ModelParam;
 	
 	/**
 	* @class Group

@@ -27,7 +27,6 @@
 
 namespace SPK
 {
-	enum ModelParam;
 	class Particle;
 
 	/**

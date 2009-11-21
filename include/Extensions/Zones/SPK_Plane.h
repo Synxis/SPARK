@@ -94,7 +94,7 @@ namespace SPK
 		/**
 		* @brief Gets the transformed normal of this Plane
 		* @return the transformed normal of this Plane
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		inline const Vector3D& getTransformedNormal() const;
 

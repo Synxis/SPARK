@@ -231,7 +231,7 @@ namespace SPK
 		*
 		* @param name : the name of the registerable to find in the factory
 		* @return the first registerable with that name or NULL of none is found
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		Registerable* findByName(const std::string& name);
 

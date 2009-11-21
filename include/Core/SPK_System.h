@@ -38,7 +38,7 @@ namespace SPK
 	/**
 	* @enum StepMode
 	* @brief Enumeration defining how to handle the step time of particle systems
-	* @since 1.04.01
+	* @since 1.05.00
 	*/
 	enum StepMode
 	{
@@ -108,7 +108,7 @@ namespace SPK
 		*
 		* @param useClampStep : true to use a clamp value on the step, false not to
 		* @param clamp : the clamp value
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		static void setClampStep(bool useClampStep,float clamp = 1.0f);
 
@@ -122,7 +122,7 @@ namespace SPK
 		* This mode is useful when the update must be constant (accurate collisions...) but be aware it can be very computationnaly intensive.
 		* 
 		* @param constantStep : the value of the step
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		static void useConstantStep(float constantStep);
 
@@ -139,7 +139,7 @@ namespace SPK
 		*
 		* @param minStep : the minimal time step
 		* @param maxStep : the maximal time step
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		static void useAdaptiveStep(float minStep,float maxStep);
 
@@ -152,7 +152,7 @@ namespace SPK
 		* This mode is the simpler and the one that allows best performance on low end systems.<br>
 		* However the update may be inaccurate (due to too big deltaTime) and it performs badly with frame rate variation.
 		*
-		* @since 1.04.01
+		* @since 1.05.00
 		*/
 		static void useRealStep();
 

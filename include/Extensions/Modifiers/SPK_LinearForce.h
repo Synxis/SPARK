@@ -29,9 +29,6 @@
 
 namespace SPK
 {
-	enum ModelParam;
-
-
 	/**
 	* @enum ForceFactor
 	* @brief An enum defining the way a factor is applied to a force

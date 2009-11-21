@@ -31,25 +31,6 @@
 namespace SPK
 {
 	/**
-	* @enum ModelParam
-	* @brief Constants for the Model parameters
-	*/
-	enum ModelParam
-	{
-		PARAM_RED = 0,				/**< The red component of the Particle */
-		PARAM_GREEN = 1,			/**< The green component of the Particle */
-		PARAM_BLUE = 2,				/**< The blue component of the Particle */
-		PARAM_ALPHA = 3,			/**< The alpha component of the Particle */
-		PARAM_SIZE = 4,				/**< The size of the Particle */
-		PARAM_MASS = 5,				/**< The mass of the Particle */
-		PARAM_ANGLE = 6,			/**< The angle of the texture of the Particle */
-		PARAM_TEXTURE_INDEX = 7,	/**< the index of texture of the Particle */
-		PARAM_CUSTOM_0 = 8,			/**< Reserved for a user custom parameter. This is not used by SPARK */
-		PARAM_CUSTOM_1 = 9,			/**< Reserved for a user custom parameter. This is not used by SPARK */
-		PARAM_CUSTOM_2 = 10,		/**< Reserved for a user custom parameter. This is not used by SPARK */
-	};
-
-	/**
 	* @enum ModelParamFlag
 	* @brief Constants used to set bits in Model flags
 	*
