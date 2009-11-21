@@ -42,6 +42,25 @@ namespace SPK
 	};
 
 	/**
+    *
+	* @since 1.05.00
+	*/
+	struct InterpolatorEntry
+	{
+		float x;	/**< x value of this entry */
+		float y0;	/**< y first value of this entry */
+		float y1;	/**< y second value of this entry */
+
+		InterpolatorEntry() : x(0.0f),y0(0.0f),y1(0.0f) {}
+		InterpolatorEntry(float x) : x(x) {}
+		InterpolatorEntry(float x,float y) : x(x),y0(y),y1(y) {}
+		InterpolatorEntry(float x,float y0,float y1) : x(x),y0(y0),y1(y1) {}
+	};
+
+    // forward declaration to allow the set of entries in interpolator to be constructed
+    inline bool operator<(const InterpolatorEntry& entry0,const InterpolatorEntry& entry1);
+
+	/**
 	*
 	* @since 1.05.00
 	*/
@@ -50,22 +69,6 @@ namespace SPK
 	friend class Particle;
 
 	public :
-
-		/**
-		*
-		* @since 1.05.00
-		*/
-		struct Entry
-		{
-			float x;	/**< x value of this entry */
-			float y0;	/**< y first value of this entry */
-			float y1;	/**< y second value of this entry */
-
-			Entry() : x(0.0f),y0(0.0f),y1(0.0f) {}
-			Entry(float x) : x(x) {}
-			Entry(float x,float y) : x(x),y0(y),y1(y) {}
-			Entry(float x,float y0,float y1) : x(x),y0(y0),y1(y1) {}
-		};
 
 		/////////////////
 		// Constructor //
@@ -92,14 +95,14 @@ namespace SPK
 		inline float getScaleXVariation() const;
 		inline float getOffsetXVariation() const;
 
-		inline std::set<Entry>& getGraph();
-		inline const std::set<Entry>& getGraph() const;
+		inline std::set<InterpolatorEntry>& getGraph();
+		inline const std::set<InterpolatorEntry>& getGraph() const;
 
 		///////////////
 		// Interface //
 		///////////////
 
-		inline bool addEntry(const Entry& entry);
+		inline bool addEntry(const InterpolatorEntry& entry);
 		inline bool addEntry(float x,float y);
 		inline bool addEntry(float x,float y0,float y1);
 		inline void clearGraph();
@@ -109,7 +112,7 @@ namespace SPK
 
 	private :
 
-		std::set<Entry> graph;
+		std::set<InterpolatorEntry> graph;
 
 		InterpolationType type;
 		ModelParam param;
@@ -119,7 +122,7 @@ namespace SPK
 		float offsetXVariation;
 
 		float interpolate(const Particle& particle,ModelParam interpolatedParam,float ratioY,float offsetX,float scaleX);
-		inline float interpolateY(const Entry& entry,float ratio); 
+		inline float interpolateY(const InterpolatorEntry& entry,float ratio);
 
 		// methods to compute X
 		typedef float (Interpolator::*computeXFn)(const Particle&) const;
@@ -131,7 +134,7 @@ namespace SPK
 		float computeXVelocity(const Particle& particle) const;
 	};
 
-	
+
 	inline void Interpolator::setType(InterpolationType type,ModelParam param)
 	{
 		this->type = type;
@@ -178,29 +181,29 @@ namespace SPK
 		return offsetXVariation;
 	}
 
-	inline std::set<Interpolator::Entry>& Interpolator::getGraph()
+	inline std::set<InterpolatorEntry>& Interpolator::getGraph()
 	{
 		return graph;
 	}
 
-	inline const std::set<Interpolator::Entry>& Interpolator::getGraph() const
+	inline const std::set<InterpolatorEntry>& Interpolator::getGraph() const
 	{
 		return graph;
 	}
 
-	inline bool Interpolator::addEntry(const Entry& entry)
+	inline bool Interpolator::addEntry(const InterpolatorEntry& entry)
 	{
 		return graph.insert(entry).second;
 	}
 
 	inline bool Interpolator::addEntry(float x,float y)
 	{
-		return addEntry(Entry(x,y));
+		return addEntry(InterpolatorEntry(x,y));
 	}
 
 	inline bool Interpolator::addEntry(float x,float y0,float y1)
 	{
-		return addEntry(Entry(x,y0,y1));
+		return addEntry(InterpolatorEntry(x,y0,y1));
 	}
 
 	inline void Interpolator::clearGraph()
@@ -208,24 +211,25 @@ namespace SPK
 		graph.clear();
 	}
 
-	inline float Interpolator::interpolateY(const Entry& entry,float ratio)
+	inline float Interpolator::interpolateY(const InterpolatorEntry& entry,float ratio)
 	{
 		return entry.y0 + (entry.y1 - entry.y0) * ratio;
 	}
 
-	/////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////
 	// Functions to sort the entries on the interpolator graph //
 	/////////////////////////////////////////////////////////////
 
-	inline bool operator<(const Interpolator::Entry& entry0,const Interpolator::Entry& entry1)
+	inline bool operator<(const InterpolatorEntry& entry0,const InterpolatorEntry& entry1)
 	{
 		return entry0.x < entry1.x;
 	}
 
-	inline bool operator==(const Interpolator::Entry& entry0,const Interpolator::Entry& entry1)
+	inline bool operator==(const InterpolatorEntry& entry0,const InterpolatorEntry& entry1)
 	{
 		return entry0.x == entry1.x;
 	}
+
 }
 
 #endif

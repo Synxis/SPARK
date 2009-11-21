@@ -27,14 +27,14 @@
 
 namespace SPK
 {
-	Interpolator::computeXFn Interpolator::COMPUTE_X_FN[4] = 
+	Interpolator::computeXFn Interpolator::COMPUTE_X_FN[4] =
 	{
-		&computeXLifeTime,
-		&computeXAge,
-		&computeXParam,
-		&computeXVelocity,
+		&Interpolator::computeXLifeTime,
+		&Interpolator::computeXAge,
+		&Interpolator::computeXParam,
+		&Interpolator::computeXVelocity,
 	};
-	
+
 	Interpolator::Interpolator() :
 		graph(),
 		type(INTERPOLATOR_LIFETIME),
@@ -67,7 +67,7 @@ namespace SPK
 	float Interpolator::interpolate(const Particle& particle,ModelParam interpolatedParam,float ratioY,float offsetX,float scaleX)
 	{
 		// First finds the current X of the particle
-		Entry currentKey((this->*Interpolator::COMPUTE_X_FN[type])(particle));
+		InterpolatorEntry currentKey((this->*Interpolator::COMPUTE_X_FN[type])(particle));
 		currentKey.x += offsetX; // Offsets it
 		currentKey.x *= scaleX;  // Scales it
 
@@ -91,7 +91,7 @@ namespace SPK
 		}
 
 		// Gets the entry that is immediatly after the current X
-		std::set<Entry>::const_iterator nextIt = graph.upper_bound(currentKey);
+		std::set<InterpolatorEntry>::const_iterator nextIt = graph.upper_bound(currentKey);
 
 		// If the current X is higher than the one of the last entry
 		if (nextIt == graph.end())
@@ -107,8 +107,8 @@ namespace SPK
 		}
 		else	// Else interpolated between the entries before and after the current X
 		{
-			const Entry& nextEntry = *nextIt;
-			const Entry& previousEntry = *(--nextIt);
+			const InterpolatorEntry& nextEntry = *nextIt;
+			const InterpolatorEntry& previousEntry = *(--nextIt);
 			float y0 = interpolateY(previousEntry,ratioY);
 			float y1 = interpolateY(nextEntry,ratioY);
 
