@@ -307,14 +307,19 @@ int main(int argc, char *argv[])
 
 	// Model
 	Model* galaxyModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA | FLAG_SIZE, // enable
-		FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA, // mutable
-		FLAG_RED | FLAG_GREEN | FLAG_ALPHA | FLAG_SIZE); // random
+		FLAG_RED | FLAG_GREEN | FLAG_BLUE, // mutable
+		FLAG_RED | FLAG_GREEN | FLAG_SIZE, // random
+		FLAG_ALPHA);  // interpolated
 	galaxyModel->setParam(PARAM_RED,0.0f,0.3f,0.5f,0.5f);
 	galaxyModel->setParam(PARAM_GREEN,0.0f,0.3f,0.5f,0.5f);
 	galaxyModel->setParam(PARAM_BLUE,1.0f,0.1f);
-	galaxyModel->setParam(PARAM_ALPHA,0.0f,0.0f,0.6f,1.0f);
 	galaxyModel->setParam(PARAM_SIZE,0.1f,5.0f);
 	galaxyModel->setLifeTime(35.0f,40.0f);
+
+	Interpolator* alphaInterpolator = galaxyModel->getInterpolator(PARAM_ALPHA);
+	alphaInterpolator->addEntry(0.0f,0.0f);			// first the alpha is at 0
+	alphaInterpolator->addEntry(0.95f,0.6f,1.0f);	// then ot reaches its values between 0.6 and 1 (slow fade in)
+	alphaInterpolator->addEntry(1.0f,0.0f);			// At the end of the particle life, it quickly fades out
 
 	Model* starModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA | FLAG_SIZE,
 		FLAG_NONE,
@@ -456,7 +461,7 @@ int main(int argc, char *argv[])
 				if (event.button.button == SDL_BUTTON_WHEELDOWN)
 					camPosZ = min(15.0f,camPosZ + 0.5f);
 				if (event.button.button == SDL_BUTTON_WHEELUP)
-					camPosZ = max(2.5f,camPosZ - 0.5f);
+					camPosZ = max(3.0f,camPosZ - 0.5f);
 			}
 		}
 
