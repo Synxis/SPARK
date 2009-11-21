@@ -43,6 +43,7 @@
 #include "Core/SPK_System.cpp"
 #include "Core/SPK_Particle.cpp"
 #include "Core/SPK_Zone.cpp"
+#include "Core/SPK_Interpolator.cpp" // 1.05
 #include "Core/SPK_Model.cpp"
 #include "Core/SPK_Emitter.cpp"
 #include "Core/SPK_Modifier.cpp"

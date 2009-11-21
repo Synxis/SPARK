@@ -40,8 +40,8 @@ namespace SPK
 		gravity(Vector3D()),
 		pool(Pool<Particle>(capacity)),
 		particleData(new Particle::ParticleData[capacity]),
-		particleEnableParams(new float[capacity * model->getNbValuesInParticleEnableArray()]),
-		particleMutableParams(new float[capacity * model->getNbValuesInParticleMutableArray()]),
+		particleCurrentParams(new float[capacity * model->getSizeOfParticleCurrentArray()]),
+		particleExtendedParams(new float[capacity * model->getSizeOfParticleExtendedArray()]),
 		sortingEnabled(false),
 		distanceComputationEnabled(false),
 		creationBuffer(),
@@ -78,19 +78,19 @@ namespace SPK
 		emitterRemoval(group.emitterRemoval)
 	{
 		particleData = new Particle::ParticleData[pool.getNbReserved()];
-		particleEnableParams = new float[pool.getNbReserved() * model->getNbValuesInParticleEnableArray()];
-		particleMutableParams = new float[pool.getNbReserved() * model->getNbValuesInParticleMutableArray()];
+		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
+		particleExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
 		
 		memcpy(particleData,group.particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
-		memcpy(particleEnableParams,group.particleEnableParams,pool.getNbTotal() * sizeof(float) * model->getNbValuesInParticleEnableArray());
-		memcpy(particleMutableParams,group.particleMutableParams,pool.getNbTotal() * sizeof(float) * model->getNbValuesInParticleMutableArray());
+		memcpy(particleCurrentParams,group.particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
+		memcpy(particleExtendedParams,group.particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
 
 		for (Pool<Particle>::iterator it = pool.begin(); it != pool.endInactive(); ++it)
 		{
 			it->group = this;
 			it->data = particleData + it->index;
-			it->enableParams = particleEnableParams + it->index * model->getNbValuesInParticleEnableArray();
-			it->mutableParams = particleMutableParams + it->index * model->getNbValuesInParticleMutableArray();
+			it->currentParams = particleCurrentParams + it->index * model->getSizeOfParticleCurrentArray();
+			it->extendedParams = particleExtendedParams + it->index * model->getSizeOfParticleExtendedArray();
 		}
 
 		// copy additional buffers
@@ -104,8 +104,8 @@ namespace SPK
 	Group::~Group()
 	{
 		delete[] particleData;
-		delete[] particleEnableParams;
-		delete[] particleMutableParams;
+		delete[] particleCurrentParams;
+		delete[] particleExtendedParams;
 
 		// destroys additional buffers
 		destroyAllBuffers();
@@ -412,6 +412,10 @@ namespace SPK
 		// Resets old position (fix 1.04.00)
 		p.oldPosition() = p.position();
 
+		// first parameter interpolation 
+		// must be here so that the velocity has already been initialized
+		p.interpolateParameters();
+
 		if (fbirth != NULL)
 			(*fbirth)(p);
 
@@ -559,20 +563,20 @@ namespace SPK
 			pool.reallocate(capacity);
 
 			Particle::ParticleData* newData = new Particle::ParticleData[pool.getNbReserved()];
-			float* newEnableParams = new float[pool.getNbReserved() * model->getNbValuesInParticleEnableArray()];
-			float* newMutableParams = new float[pool.getNbReserved() * model->getNbValuesInParticleMutableArray()];
+			float* newCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
+			float* newExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
 
 			memcpy(newData,particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
-			memcpy(newEnableParams,particleEnableParams,pool.getNbTotal() * sizeof(float) * model->getNbValuesInParticleEnableArray());
-			memcpy(newMutableParams,particleMutableParams,pool.getNbTotal() * sizeof(float) * model->getNbValuesInParticleMutableArray());
+			memcpy(newCurrentParams,particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
+			memcpy(newExtendedParams,particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
 
 			delete[] particleData;
-			delete[] particleEnableParams;
-			delete[] particleMutableParams;
+			delete[] particleCurrentParams;
+			delete[] particleExtendedParams;
 
 			particleData = newData;
-			particleEnableParams = newEnableParams;
-			particleMutableParams = newMutableParams;
+			particleCurrentParams = newCurrentParams;
+			particleExtendedParams = newExtendedParams;
 
 			// Destroys all the buffers
 			destroyAllBuffers();
@@ -607,12 +611,12 @@ namespace SPK
 
 	const void* Group::getParamAddress(ModelParam param) const
 	{
-		return particleEnableParams + model->getParameterEnableOffset(param);
+		return particleCurrentParams + model->getParameterOffset(param);
 	}
 
 	size_t Group::getParamStride() const
 	{
-		return model->getNbValuesInParticleEnableArray() * sizeof(float);
+		return model->getSizeOfParticleCurrentArray() * sizeof(float);
 	}
 
 	Buffer* Group::createBuffer(const std::string& ID,const BufferCreator& creator,unsigned int flag,bool swapEnabled) const

@@ -25,6 +25,7 @@
 
 #include "Core/SPK_DEF.h"
 #include "Core/SPK_Registerable.h"
+#include "Core/SPK_Interpolator.h"
 
 
 namespace SPK
@@ -38,9 +39,9 @@ namespace SPK
 		PARAM_RED = 0,				/**< The red component of the Particle */
 		PARAM_GREEN = 1,			/**< The green component of the Particle */
 		PARAM_BLUE = 2,				/**< The blue component of the Particle */
-		PARAM_SIZE = 3,				/**< The size of the Particle */
-		PARAM_MASS = 4,				/**< The mass of the Particle */
-		PARAM_ALPHA = 5,			/**< The alpha component of the Particle */
+		PARAM_ALPHA = 3,			/**< The alpha component of the Particle */
+		PARAM_SIZE = 4,				/**< The size of the Particle */
+		PARAM_MASS = 5,				/**< The mass of the Particle */
 		PARAM_ANGLE = 6,			/**< The angle of the texture of the Particle */
 		PARAM_TEXTURE_INDEX = 7,	/**< the index of texture of the Particle */
 		PARAM_CUSTOM_0 = 8,			/**< Reserved for a user custom parameter. This is not used by SPARK */
@@ -56,13 +57,13 @@ namespace SPK
 	*/
 	enum ModelParamFlag
 	{
-		FLAG_NONE = 0,
-		FLAG_SIZE = 1 << PARAM_SIZE,					/**< the flag bit for PARAM_SIZE */
-		FLAG_MASS = 1 << PARAM_MASS,					/**< the flag bit for PARAM_MASS */
+		FLAG_NONE = 0,									/**< the flag bit for no parameter */
 		FLAG_RED = 1 << PARAM_RED,						/**< the flag bit for PARAM_RED */
 		FLAG_GREEN = 1 << PARAM_GREEN,					/**< the flag bit for PARAM_GREEN */
 		FLAG_BLUE = 1 << PARAM_BLUE,					/**< the flag bit for PARAM_BLUE */
 		FLAG_ALPHA = 1 << PARAM_ALPHA,					/**< the flag bit for PARAM_ALPHA */
+		FLAG_SIZE = 1 << PARAM_SIZE,					/**< the flag bit for PARAM_SIZE */
+		FLAG_MASS = 1 << PARAM_MASS,					/**< the flag bit for PARAM_MASS */
 		FLAG_ANGLE = 1 << PARAM_ANGLE,					/**< the flag bit for PARAM_ANGLE */
 		FLAG_TEXTURE_INDEX = 1 << PARAM_TEXTURE_INDEX,	/**< the flag bit for PARAM_TEXTURE_INDEX */
 		FLAG_CUSTOM_0 = 1 << PARAM_CUSTOM_0,			/**< the flag bit for PARAM_CUSTOM_0 */
@@ -78,23 +79,25 @@ namespace SPK
 	* A Particle is generated under a Model that cannot be changed during its life time.
 	* A Particle Model can however be changed but it will reinitialize the Particle parameters and life.<br>
 	* <br>
-	* A Model defines which parameters to use/update for a Particle. To do that an Model holds 3 flags that are :
+	* A Model defines which parameters to use/update for a Particle. To do that an Model holds 4 flags that are :
 	* <ul>
 	* <li>Enabled : The parameter is enabled and can be set. Otherwise its default value is used.</li>
 	* <li>Mutable : The parameter will vary linearly over the life time of the Particle.</li>
 	* <li>Random : The parameter will be randomly generated for the Particle.</li>
+	* <li>Interpolated : The parameter will be interpolated by an object Interpolator to allow flexible variations.</li>
 	* </ul>
 	* The life time of a particle and immortality is also defined by the Model.<br>
 	* <br>
 	* The default values for the parameters are the following :
 	* <ul>
-	* <li>PARAM_SIZE : 1.0</li>
-	* <li>PARAM_MASS : 1.0</li>
 	* <li>PARAM_RED : 1.0</li>
 	* <li>PARAM_GREEN : 1.0</li>
 	* <li>PARAM_BLUE : 1.0</li>
 	* <li>PARAM_ALPHA : 1.0</li>
+	* <li>PARAM_SIZE : 1.0</li>
+	* <li>PARAM_MASS : 1.0</li>
 	* <li>PARAM_ANGLE : 0.0</li>
+	* <li>PARAM_TEXTURE_INDEX : 0.0</li>
 	* <li>PARAM_CUSTOM_0 : 0.0</li>
 	* <li>PARAM_CUSTOM_1 : 0.0</li>
 	* <li>PARAM_CUSTOM_2 : 0.0</li>
@@ -115,9 +118,9 @@ namespace SPK
 		/**
 		* @brief The constructor for Model
 		*
-		* The user have to pass the Model flags that can not be changed after.<br>
+		* The user have to pass the Model flags that cannot be changed afterwards.<br>
 		* To set up flags enumerators from ModelParamFlag can be used in a OR way.<br>
-		* For instance, <i>Model(FLAG_RED | FLAG_GREEN | FLAG_BLUE,0,0)</i>
+		* For instance, <i>Model(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA,FLAG_NONE,FLAG_NONE,FLAG_NONE)</i>
 		* constructs a Model that will generate Particles with a defined color that will not change over time.<br>
 		* <br>
 		* Since 1.03.00, PARAM_RED, PARAM_GREEN and PARAM_BLUE are enabled by default. 
@@ -127,8 +130,9 @@ namespace SPK
 		* @param enableFlag : the enable flag
 		* @param mutableFlag : the mutable flag
 		* @param randomFlag : the random flag
+		* @param interpolatedFlag : the interpolated flag
 		*/
-		Model(int enableFlag = FLAG_RED | FLAG_GREEN | FLAG_BLUE,int mutableFlag = 0,int randomFlag = 0);
+		Model(int enableFlag = FLAG_RED | FLAG_GREEN | FLAG_BLUE,int mutableFlag = FLAG_NONE,int randomFlag = FLAG_NONE,int interpolatedFlag = FLAG_NONE);
 
 		/**
 		* @brief The copy constructor for Model
@@ -141,10 +145,11 @@ namespace SPK
 		* @param enableFlag : the enable flag
 		* @param mutableFlag : the mutable flag
 		* @param randomFlag : the random flag
+		* @param interpolatedFlag : the interpolated flag
 		* @return A new registered Model
 		* @since 1.04.00
 		*/
-		static inline Model* create(int enableFlag = FLAG_RED | FLAG_GREEN | FLAG_BLUE,int mutableFlag = 0,int randomFlag = 0);
+		static inline Model* create(int enableFlag = FLAG_RED | FLAG_GREEN | FLAG_BLUE,int mutableFlag = FLAG_NONE,int randomFlag = FLAG_NONE,int interpolatedFlag = FLAG_NONE);
 
 		////////////////
 		// Destructor //
@@ -215,6 +220,9 @@ namespace SPK
 		*
 		* This method will only set parameters that are enabled and <b>neither</b> mutable or random.<br>
 		* If not nothing will happen and the method will return false.<br>
+		* <br>
+		* Note that to set the value of an interpolated parameter cannot be set with this function,
+		* you must used the interpolator object associated to the parameter to control its value.
 		*
 		* @param type : the parameter to set
 		* @param value : the value of the parameter
@@ -266,6 +274,14 @@ namespace SPK
 		inline int isRandom(ModelParam type) const;
 
 		/**
+		* @brief Checks whether a parameter is interpolated or not
+		* @param type : the parameter
+		* @return 0 is the parameter is not interpolated, a flag with the parameter bit set otherwise
+		* @since 1.05.00
+		*/
+		inline int isInterpolated(ModelParam type) const;
+
+		/**
 		* @brief Gets a parameter value
 		*
 		* If index is superior or equal to the number of values for the parameter, the default value of the parameter is returned.<br>
@@ -298,6 +314,9 @@ namespace SPK
 		* </li>
 		* </ul>
 		*
+		* Note that in case of an interpolated parameter, the default value is always returned.<br>
+		* The user has to use the interpolator object associated to the parameter to get its values.
+		*
 		* @param type : the parameter
 		* @param index : the index of the value to get
 		* @return the value
@@ -312,6 +331,7 @@ namespace SPK
 		* <li>Enabled parameter : 1</li>
 		* <li>Mutable <b>or</b> random parameter : 2</li>
 		* <li>Mutable <b>and</b> random parameter : 4</li>
+		* <li>Interpolated parameter : 0</li>
 		* <li>Not Enabled : 0</li>
 		* </ul>
 		* @param type : the parameter
@@ -320,53 +340,91 @@ namespace SPK
 		unsigned int getNbValues(ModelParam type) const;
 
 		/**
-		* @brief Gets the number of float values in the particle enable array
-		*
-		* The particle enable array holds the current values of enabled parameters.
-		*
-		* @return the number of float values in the particle enable array
-		* @since 1.02.00
+		* @brief Gets the number of enabled parameters
+		* @return the number of enabled parameters in the model
+		* @since 1.05.00
 		*/
-		inline size_t getNbValuesInParticleEnableArray() const;
+		inline size_t getNbEnabled() const;
 
 		/**
-		* @brief Gets the number of float values in the particle mutable array
+		* @brief Gets the number of mutable parameters
+		* @return the number of mutable parameters in the model
+		* @since 1.05.00
+		*/
+		inline size_t getNbMutable() const;
+
+
+		/**
+		* @brief Gets the number of random parameters
+		* @return the number of random parameters in the model
+		* @since 1.05.00
+		*/
+		inline size_t getNRandom() const;
+
+		/**
+		* @brief Gets the interpolator for the given parameter
+		* @return a pointer to the interpolator of the given parameter or NULL if the parameter is not interpolated
+		* @since 1.05.00
+		*/
+		inline Interpolator* getInterpolator(ModelParam param);
+
+		/**
+		* @brief Gets the number of interpolated parameters
+		* @return the number of interpolated parameters in the model
+		* @since 1.05.00
+		*/
+		inline size_t getNbInterpolated() const;
+
+		/**
+		* @brief Gets the number of float values in the particle current array
 		*
-		* The particle mutable array holds the final values of mutable parameters.
+		* The particle current array holds the current values of enabled parameters for a particle.<br>
+		* This is used internally and should not be needed by the user.
 		*
-		* @return the number of float values in the particle mutable array
+		* @return the number of float values in the particle current array
+		* @since 1.02.00
+		*/
+		inline size_t getSizeOfParticleCurrentArray() const;
+
+		/**
+		* @brief Gets the number of float values in the particle extended array
+		*
+		* The particle extended array holds the extended values needed for parameters interpolation for a particle.<br>
+		* This is used internally and should not be needed by the user.
+		*
+		* @return the number of float values in the particle extended array
 		* @since 1.03.00
 		*/
-		inline size_t getNbValuesInParticleMutableArray() const;
+		inline size_t getSizeOfParticleExtendedArray() const;
 
 		/**
 		* @brief Gets the number of float values in the model array
+		*
+		* This is used internally and should not be needed by the user.
+		*
 		* @return the number of float values in the model array
 		* @since 1.02.00
 		*/
-		inline size_t getNbValuesInModelArray() const;
+		inline size_t getSizeOfModelArray() const;
 
 		/**
-		* @brief Gets the offset of the given parameter in the enable array
+		* @brief Gets the offset of the given parameter in the current array
 		*
 		* This methods is used internally by the engine
 		*
 		* @param param : the parameter
-		* @return the offset of the given parameter in the enable array
+		* @return the offset of the given parameter in the current array
 		* @since 1.03.00
 		*/
-		inline size_t getParameterEnableOffset(ModelParam param) const;
+		inline size_t getParameterOffset(ModelParam param) const;
 
 		/**
-		* @brief Gets the offset of the given parameter in the mutable array
-		*
-		* This methods is used internally by the engine
-		*
-		* @param param : the parameter
-		* @return the offset of the given parameter in the mutable array
-		* @since 1.03.00
+		* @brief Gets the default value of the parameter
+		* @param param : the parameter to get the default value from
+		* @return the default value of the parameter
+		* @since 1.05.00
 		*/
-		inline size_t getParameterMutableOffset(ModelParam param) const;
+		static float getDefaultValue(ModelParam param);
 
 	private :
 
@@ -375,29 +433,42 @@ namespace SPK
 		// default values for the parameters
 		static const float DEFAULT_VALUES[NB_PARAMS];
 
-		// arrays storing the parameters for the model following that form :
+		// arrays storing the values of parameters for the model following that form :
+		// enable : 1 value -> value
+		// mutable : 2 values -> start value | end value 
+		// random : 2 values -> min value | max value
+		// mutable and random : 4 values -> start min value | start max value | end min value | end max value
+		// interpolated : 0 value
 		float* params;
 		size_t paramsSize;
 
 		// array storing the parameters that are enabled
-		size_t enableParamsSize;
+		size_t nbEnableParams;
 		int* enableParams;
 
 		// array storing the parameters that are mutable
-		size_t mutableParamsSize;
+		size_t nbMutableParams;
 		int* mutableParams;
+
+		// array storing the parameters that are interpolated
+		size_t nbInterpolatedParams;
+		int* interpolatedParams;
+
+		// nb of random parameters
+		size_t nbRandomParams;
+
+		// array of interpolators
+		Interpolator* interpolators[NB_PARAMS]; 
 
 		// the flags of the model
 		int enableFlag;
 		int mutableFlag;
 		int randomFlag;
+		int interpolatedFlag;
 
-		// array storing the index of a parameter in the enableParams array
-		int particleEnableIndices[NB_PARAMS];
-		// array storing the index of a parameter in the mutableParams array
-		int particleMutableIndices[NB_PARAMS];
-		// array storing the index of a parameter in the model param array
-		int indices[NB_PARAMS];
+		int particleEnableIndices[NB_PARAMS]; // array storing the index of a parameter in the enableParams array
+		int particleMutableIndices[NB_PARAMS]; // array storing the index of a parameter in the mutableParams array
+		int indices[NB_PARAMS]; // array storing the index of a parameter in the model param array
 
 		float lifeTimeMin;
 		float lifeTimeMax;
@@ -417,9 +488,9 @@ namespace SPK
 	extern SPK_PREFIX Model defaultModel;
 
 
-	inline Model* Model::create(int enableFlag,int mutableFlag,int randomFlag)
+	inline Model* Model::create(int enableFlag,int mutableFlag,int randomFlag,int interpolatedFlag)
 	{
-		Model* obj = new Model(enableFlag,mutableFlag,randomFlag);
+		Model* obj = new Model(enableFlag,mutableFlag,randomFlag,interpolatedFlag);
 		registerObject(obj);
 		return obj;
 	}
@@ -465,29 +536,54 @@ namespace SPK
 		return randomFlag & (1 << type);
 	}
 
-	inline size_t Model::getNbValuesInParticleEnableArray() const
+	inline int Model::isInterpolated(ModelParam type) const
 	{
-		return enableParamsSize;
+		return interpolatedFlag & (1 << type);
 	}
 
-	inline size_t Model::getNbValuesInParticleMutableArray() const
+	inline size_t Model::getNbEnabled() const
 	{
-		return mutableParamsSize;
+		return nbEnableParams;
 	}
 
-	inline size_t Model::getNbValuesInModelArray() const
+	inline size_t Model::getNbMutable() const
+	{
+		return nbMutableParams;
+	}
+
+	inline size_t Model::getNRandom() const
+	{
+		return nbRandomParams;
+	}
+
+	inline Interpolator* Model::getInterpolator(ModelParam param)
+	{
+		return interpolators[param];
+	}
+
+	inline size_t Model::getNbInterpolated() const
+	{
+		return nbInterpolatedParams;
+	}
+
+	inline size_t Model::getSizeOfParticleCurrentArray() const
+	{
+		return nbEnableParams;
+	}
+
+	inline size_t Model::getSizeOfParticleExtendedArray() const
+	{
+		return nbMutableParams + (nbInterpolatedParams << 1) + nbInterpolatedParams; // nbMutable + nbInterpolated * 3
+	}
+
+	inline size_t Model::getSizeOfModelArray() const
 	{
 		return paramsSize;
 	}
 
-	inline size_t Model::getParameterEnableOffset(ModelParam param) const
+	inline size_t Model::getParameterOffset(ModelParam param) const
 	{
 		return particleEnableIndices[param];
-	}
-
-	inline size_t Model::getParameterMutableOffset(ModelParam param) const
-	{
-		return particleMutableIndices[param];
 	}
 }
 

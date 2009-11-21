@@ -190,6 +190,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\Core\SPK_Interpolator.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\Core\SPK_Model.cpp"
 					>
 				</File>
@@ -493,6 +497,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\Core\SPK_Group.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\Core\SPK_Interpolator.h"
 					>
 				</File>
 				<File

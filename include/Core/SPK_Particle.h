@@ -292,9 +292,9 @@ namespace SPK
 		inline void kill();
 
 		// As we know the color component are always enabled, we optimizes it a bit for access
-		inline float getR() const { return enableParams[PARAM_RED]; }
-		inline float getG() const { return enableParams[PARAM_GREEN]; }
-		inline float getB() const { return enableParams[PARAM_BLUE]; }
+		inline float getR() const { return currentParams[PARAM_RED]; }
+		inline float getG() const { return currentParams[PARAM_GREEN]; }
+		inline float getB() const { return currentParams[PARAM_BLUE]; }
 
 	private :
 
@@ -312,13 +312,15 @@ namespace SPK
 		size_t index;
 
 		ParticleData* data;
-		float* enableParams;
-		float* mutableParams;
+		float* currentParams;
+		float* extendedParams;
 
 		Particle(Group* group,size_t index);
 
 		bool update(float timeDelta);
 		void computeSqrDist();
+
+		void interpolateParameters();
 	};
 
 

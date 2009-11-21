@@ -21,7 +21,7 @@
 
 
 #include "Core/SPK_Model.h"
-
+#include "Core/SPK_Interpolator.h"
 
 namespace SPK
 {
@@ -34,7 +34,7 @@ namespace SPK
 		1.0f,	// BLUE
 		1.0f,	// ALPHA
 		1.0f,	// SIZE
-		1.0f,	// WEIGHT
+		1.0f,	// MASS
 		0.0f,	// ANGLE
 		0.0f,	// TEXTURE_INDEX
 		0.0f,	// CUSTOM_0
@@ -42,51 +42,69 @@ namespace SPK
 		0.0f,	// CUSTOM_2
 	};
 
-	Model::Model(int enableFlag,int mutableFlag,int randomFlag) :
+	Model::Model(int enableFlag,int mutableFlag,int randomFlag,int interpolatedFlag) :
 		Registerable(),
 		lifeTimeMin(1.0f),
 		lifeTimeMax(1.0f),
 		immortal(false),
 		paramsSize(0),
-		enableParamsSize(0),
-		mutableParamsSize(0)
+		nbEnableParams(0),
+		nbMutableParams(0),
+		nbRandomParams(0),
+		nbInterpolatedParams(0)
 	{
-		// Adds the color parameters to the enable flag
-		enableFlag |= FLAG_RED | FLAG_GREEN | FLAG_BLUE;
-		// masks the enable flag with the existing parameters
-		this->enableFlag = enableFlag & ((1 << (NB_PARAMS + 1)) - 1);
-		// masks the mutable flag with the enable flag
-		this->mutableFlag = mutableFlag & this->enableFlag;
-		// masks the random flag with the enable flag
-		this->randomFlag = randomFlag & this->enableFlag;
+		enableFlag |= FLAG_RED | FLAG_GREEN | FLAG_BLUE; // Adds the color parameters to the enable flag
+		this->enableFlag = enableFlag & ((1 << (NB_PARAMS + 1)) - 1); // masks the enable flag with the existing parameters
+		this->interpolatedFlag = interpolatedFlag & this->enableFlag; // masks the interpolated flag with the enable flag
+		this->mutableFlag = mutableFlag & this->enableFlag; // masks the mutable flag with the enable flag
+		this->mutableFlag &= ~this->interpolatedFlag; // a param cannot be both interpolated and mutable
+		this->randomFlag = randomFlag & this->enableFlag; // masks the random flag with the enable flag
+		this->randomFlag &= ~this->interpolatedFlag; // a param cannot be both interpolated and random
 
 		int particleEnableParamsSize = 0;
 		int particleMutableParamsSize = 0;
 		for (size_t i = 0; i < NB_PARAMS; ++i)
 		{
-			// computes the size of the array of params stored by the particle template
-			// 1 if the param is enable
-			int paramSize = isEnabled(static_cast<ModelParam>(i)) >> i;
-			enableParamsSize += paramSize;
-			// *2 if the param is mutable along the time
-			paramSize <<= isMutable(static_cast<ModelParam>(i)) >> i;
-			mutableParamsSize += paramSize >> 1;
-			// *2 if the param is randomly generated
-			paramSize <<= isRandom(static_cast<ModelParam>(i)) >> i;
+			ModelParam param = static_cast<ModelParam>(i);
 
-			// computes the size of the array of params stored by a single particle
+			int paramSize = 0;
+			if (isEnabled(param))
+			{
+				++nbEnableParams;
+				if (!isInterpolated(param))
+				{	
+					interpolators[i] = NULL;
+					paramSize = 1;
+					if (isMutable(param))
+					{
+						paramSize = 2;
+						++nbMutableParams;
+					}
+					if (isRandom(param))
+					{
+						paramSize <<= 1;
+						++nbRandomParams;
+					}
+				}
+				else
+				{
+					interpolators[i] = new Interpolator(); // Creates the interpolator
+					++nbInterpolatedParams;
+				}
+			}
+			else
+				interpolators[i] = NULL;
+
 			particleEnableIndices[i] = particleEnableParamsSize;
 			particleMutableIndices[i] = particleMutableParamsSize;
-			// 1 if the param is enable
-			particleEnableParamsSize += isEnabled(static_cast<ModelParam>(i)) >> i;
-			// 1 if the param is mutable
-			particleMutableParamsSize += isMutable(static_cast<ModelParam>(i)) >> i;
+			particleEnableParamsSize += isEnabled(param) >> i;
+			particleMutableParamsSize += isMutable(param) >> i;
 
 			indices[i] = paramsSize;
 			paramsSize += paramSize;
 		}
 
-		// creates the array of params for this ParticleTemplate
+		// creates the array of params for this model
 		if (paramsSize > 0)
 		{
 			params = new float[paramsSize];
@@ -104,9 +122,9 @@ namespace SPK
 		else
 			params = NULL;
 
-		if (enableParamsSize > 0)
+		if (nbEnableParams > 0)
 		{
-			enableParams = new int[enableParamsSize];;
+			enableParams = new int[nbEnableParams];
 			size_t index = 0;
 			for (size_t i = 0; i < NB_PARAMS; ++i)
 				if (isEnabled(static_cast<ModelParam>(i)))
@@ -115,9 +133,9 @@ namespace SPK
 		else
 			enableParams = NULL;
 
-		if (mutableParamsSize > 0)
+		if (nbMutableParams > 0)
 		{
-			mutableParams = new int[mutableParamsSize];
+			mutableParams = new int[nbMutableParams];
 			size_t index = 0;
 			for (size_t i = 0; i < NB_PARAMS; ++i)
 				if (isMutable(static_cast<ModelParam>(i)))
@@ -126,40 +144,16 @@ namespace SPK
 		else
 			mutableParams = NULL;
 
-		// DEBUG
-		/*std::cout << "enable : " << enableFlag << std::endl;
-		std::cout << "mutable : " << mutableFlag << std::endl;
-		std::cout << "random : " << randomFlag << std::endl;
-
-		std::cout << "params : " << params << std::endl;
-		for (int i = 0; i < paramsSize; ++i)
-			std::cout << params[i] << " ";
-		std::endl;
-
-		std::cout << "enableParams : " << enableParams << std::endl;
-		for (int i = 0; i < enableParamsSize; ++i)
-			std::cout << enableParams[i] << " ";
-		std::endl;
-
-		std::cout << "mutableParams : " << mutableParams << std::endl;
-		for (int i = 0; i < mutableParamsSize; ++i)
-			std::cout << mutableParams[i] << " ";
-		std::endl;
-
-		std::cout << "indices"
-		for (int i = 0; i < NB_PARAMS; ++i)
-			std::cout << indices[i] << " ";
-		std::endl;
-
-		std::cout << "particleEnableIndices"
-		for (int i = 0; i < NB_PARAMS; ++i)
-			std::cout << particleEnableIndices[i] << " ";
-		std::endl;
-
-		std::cout << "particleMutableIndices"
-		for (int i = 0; i < NB_PARAMS; ++i)
-			std::cout << particleMutableIndices[i] << " ";
-		std::endl;*/
+		if (nbInterpolatedParams > 0)
+		{
+			interpolatedParams = new int[nbInterpolatedParams];
+			size_t index = 0;
+			for (size_t i = 0; i < NB_PARAMS; ++i)
+				if (isInterpolated(static_cast<ModelParam>(i)))
+					interpolatedParams[index++] = i;
+		}
+		else
+			interpolatedParams = NULL;
 	}
 
 	Model::Model(const Model& model) :
@@ -168,26 +162,17 @@ namespace SPK
 		lifeTimeMax(model.lifeTimeMax),
 		immortal(model.immortal),
 		paramsSize(model.paramsSize),
-		enableParamsSize(model.enableParamsSize),
-		mutableParamsSize(model.mutableParamsSize),
+		nbEnableParams(model.nbEnableParams),
+		nbMutableParams(model.nbMutableParams),
+		nbRandomParams(model.nbRandomParams),
+		nbInterpolatedParams(model.nbInterpolatedParams),
 		enableFlag(model.enableFlag),
 		mutableFlag(model.mutableFlag),
 		randomFlag(model.randomFlag),
 		params(NULL),
 		enableParams(NULL),
-		mutableParams(NULL)
-	{
-		initParamArrays(model);
-	}
-
-	Model::~Model()
-	{
-		delete[] enableParams;
-		delete[] mutableParams;
-		delete[] params;
-	}
-
-	void Model::initParamArrays(const Model& model)
+		mutableParams(NULL),
+		interpolatedParams(NULL)
 	{
 		if (paramsSize > 0)
 		{
@@ -196,26 +181,48 @@ namespace SPK
 				params[i] = model.params[i];
 		}
 
-		if (enableParamsSize > 0)
+		if (nbEnableParams > 0)
 		{
-			enableParams = new int[enableParamsSize];
-			for (size_t i = 0; i < enableParamsSize; ++i)
+			enableParams = new int[nbEnableParams];
+			for (size_t i = 0; i < nbEnableParams; ++i)
 				enableParams[i] = model.enableParams[i];
 		}
 
-		if (mutableParamsSize > 0)
+		if (nbMutableParams > 0)
 		{
-			mutableParams = new int[mutableParamsSize];
-			for (size_t i = 0; i < mutableParamsSize; ++i)
+			mutableParams = new int[nbMutableParams];
+			for (size_t i = 0; i < nbMutableParams; ++i)
 				mutableParams[i] = model.mutableParams[i];
+		}
+
+		if (nbInterpolatedParams > 0)
+		{
+			interpolatedParams = new int[nbMutableParams];
+			for (size_t i = 0; i < nbInterpolatedParams; ++i)
+				interpolatedParams[i] = model.interpolatedParams[i];
 		}
 
 		for (size_t i = 0; i < NB_PARAMS; ++i)
 		{
 			indices[i] = model.indices[i];
 			particleEnableIndices[i] = model.particleEnableIndices[i];
-			particleMutableIndices[i] = model.particleMutableIndices[i];	
+			particleMutableIndices[i] = model.particleMutableIndices[i];
+			if (model.interpolators[i] != NULL)
+				interpolators[i] = new Interpolator(*model.interpolators[i]);
+			else
+				interpolators[i] = NULL;
 		}
+	}
+
+	Model::~Model()
+	{
+		delete[] enableParams;
+		delete[] mutableParams;
+		delete[] interpolatedParams;
+		delete[] params;
+
+		for (size_t i = 0; i < NB_PARAMS; ++i)
+			delete interpolators[i];
 	}
 
 	bool Model::setParam(ModelParam type,float startMin,float startMax,float endMin,float endMax)
@@ -264,10 +271,7 @@ namespace SPK
 	{
 		unsigned int nbValues = getNbValues(type);
 
-		if (nbValues == 0)
-			return DEFAULT_VALUES[type];
-
-		if (nbValues - 1 > index)
+		if ((nbValues - 1 > index)&&(nbValues != 0))
 			return params[indices[type] + index];
 
 		return DEFAULT_VALUES[type];
@@ -276,7 +280,7 @@ namespace SPK
 	unsigned int Model::getNbValues(ModelParam type) const
 	{
 		int value = 1 << type;
-		if (!(enableFlag & value))
+		if (!(enableFlag & value) || (interpolatedFlag & value))
 			return 0;
 
 		if (!(mutableFlag & value) && !(randomFlag & value))
@@ -286,5 +290,10 @@ namespace SPK
 			return 4;
 
 		return 2;
+	}
+
+	float Model::getDefaultValue(ModelParam param)
+	{
+		return DEFAULT_VALUES[param];
 	}
 }

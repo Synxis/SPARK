@@ -28,14 +28,12 @@
 #include "Core/SPK_Registerable.h"
 #include "Core/SPK_BufferHandler.h"
 #include "Core/SPK_Zone.h"
+#include "Core/SPK_Particle.h"
 
 
 namespace SPK
 {
-	class Zone;
-	class Particle;
 	class ModifierGroup;
-
 
 	/**
 	* @enum ModifierTrigger

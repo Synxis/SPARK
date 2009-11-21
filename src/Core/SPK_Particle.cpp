@@ -25,6 +25,7 @@
 #include "Core/SPK_Modifier.h"
 #include "Core/SPK_System.h"
 #include "Core/SPK_Buffer.h"
+#include "Core/SPK_Interpolator.h"
 
 
 namespace SPK
@@ -33,8 +34,8 @@ namespace SPK
 		group(group),
 		index(index),
 		data(group->particleData + index),
-		enableParams(group->particleEnableParams + index * group->model->getNbValuesInParticleEnableArray()),
-		mutableParams(group->particleMutableParams + index * group->model->getNbValuesInParticleMutableArray())
+		currentParams(group->particleCurrentParams + index * group->model->getSizeOfParticleCurrentArray()),
+		extendedParams(group->particleExtendedParams + index * group->model->getSizeOfParticleExtendedArray())
 	{
 		init();
 	}
@@ -46,28 +47,57 @@ namespace SPK
 		data->life = random(model->lifeTimeMin,model->lifeTimeMax);
 
 		// creates pseudo-iterators to parse arrays
-		float* particleEnableIt = enableParams;
-		float* particleMutableIt = mutableParams;
+		float* particleCurrentIt = currentParams;
+		float* particleMutableIt = extendedParams;
+		float* particleInterpolatedIt = extendedParams + model->nbMutableParams;
 		const int* paramIt = model->enableParams;
 
 		// initializes params
-		for (size_t i = model->enableParamsSize; i != 0; --i)
+		for (size_t i = model->nbEnableParams; i != 0; --i)
 		{
-			const float* templateIt = &model->params[model->indices[*paramIt]];
+			ModelParam param = static_cast<ModelParam>(*paramIt);
+			const float* templateIt = &model->params[model->indices[param]];
 
-			if (!model->isRandom(static_cast<ModelParam>(*paramIt)))
+			if (model->isInterpolated(param))
 			{
-				*particleEnableIt++ = *templateIt;
-				if (model->isMutable(static_cast<ModelParam>(*paramIt)))
-					*particleMutableIt++ = *(templateIt + 1);
+				*particleCurrentIt++ = Model::DEFAULT_VALUES[param];
+				*particleInterpolatedIt++ = random(0.0f,1.0f); // ratioY
+
+				Interpolator* interpolator = model->interpolators[param];
+				float offsetVariation = interpolator->getOffsetXVariation();
+				float scaleVariation = interpolator->getScaleXVariation();
+
+				*particleInterpolatedIt++ = random(-offsetVariation,offsetVariation); // offsetX
+				*particleInterpolatedIt++ = 1.0f + random(-scaleVariation,scaleVariation); // scaleX
 			}
-			else
+			else if (model->isRandom(param))
 			{
-				*particleEnableIt++ = random(*templateIt,*(templateIt + 1));
-				if (model->isMutable(static_cast<ModelParam>(*paramIt)))
+				*particleCurrentIt++ = random(*templateIt,*(templateIt + 1));
+				if (model->isMutable(param))
 					*particleMutableIt++ = random(*(templateIt + 2),*(templateIt + 3));
 			}
+			else 
+			{
+					*particleCurrentIt++ = *templateIt;
+				if (model->isMutable(param))
+					*particleMutableIt++ = *(templateIt + 1);
+			}
+
 			++paramIt;
+		}
+	}
+
+	void Particle::interpolateParameters()
+	{
+		const Model* model = group->getModel();
+
+		float* interpolatedIt = extendedParams + model->nbMutableParams;
+		for (size_t i = 0; i < model->nbInterpolatedParams; ++i)
+		{
+			size_t index = model->interpolatedParams[i];
+			size_t enableIndex = model->particleEnableIndices[index];
+			currentParams[enableIndex] = model->interpolators[index]->interpolate(*this,static_cast<ModelParam>(index),interpolatedIt[0],interpolatedIt[1],interpolatedIt[2]);
+			interpolatedIt += 3;
 		}
 	}
 
@@ -82,14 +112,17 @@ namespace SPK
 			float ratio = std::min(1.0f,deltaTime / data->life);
 			data->life -= deltaTime;
 			
-			// update mutable parameters
-			for (size_t i = 0; i < model->mutableParamsSize; ++i)
+			// updates mutable parameters
+			for (size_t i = 0; i < model->nbMutableParams; ++i)
 			{
 				size_t index = model->mutableParams[i];
 				size_t enableIndex = model->particleEnableIndices[index];
-				enableParams[enableIndex] += (mutableParams[model->particleMutableIndices[index]] - enableParams[enableIndex]) * ratio;
+				currentParams[enableIndex] += (extendedParams[i] - currentParams[enableIndex]) * ratio;
 			}
 		}
+
+		// updates interpolated parameters
+		interpolateParameters();
 
 		// updates position
 		oldPosition() = position();
@@ -113,7 +146,7 @@ namespace SPK
 		const Model* const model = group->getModel();
 		if (model->isEnabled(type))
 		{
-			enableParams[model->particleEnableIndices[type]] = value;
+			currentParams[model->particleEnableIndices[type]] = value;
 			return true;
 		}
 
@@ -125,7 +158,7 @@ namespace SPK
 		const Model* const model = group->getModel();
 		if (model->isMutable(type))
 		{
-			mutableParams[model->particleMutableIndices[type]] = value;
+			extendedParams[model->particleMutableIndices[type]] = value;
 			return true;
 		}
 
@@ -137,7 +170,7 @@ namespace SPK
 		const Model* const model = group->getModel();
 		if (model->isEnabled(type))
 		{
-			enableParams[model->particleEnableIndices[type]] += delta;
+			currentParams[model->particleEnableIndices[type]] += delta;
 			return true;
 		}
 
@@ -149,7 +182,7 @@ namespace SPK
 		const Model* const model = group->getModel();
 		if (model->isMutable(type))
 		{
-			mutableParams[model->particleMutableIndices[type]] += delta;
+			extendedParams[model->particleMutableIndices[type]] += delta;
 			return true;
 		}
 
@@ -160,7 +193,7 @@ namespace SPK
 	{
 		const Model* const model = group->getModel();
 		if (model->isEnabled(type))
-			return enableParams[model->particleEnableIndices[type]];
+			return currentParams[model->particleEnableIndices[type]];
 
 		return Model::DEFAULT_VALUES[type];
 	}
@@ -171,8 +204,8 @@ namespace SPK
 		if (model->isEnabled(type))
 		{
 			if (model->isMutable(type))
-				return mutableParams[model->particleMutableIndices[type] + 1];
-			return enableParams[model->particleEnableIndices[type]];
+				return extendedParams[model->particleMutableIndices[type] + 1];
+			return currentParams[model->particleEnableIndices[type]];
 		}
 
 		return Model::DEFAULT_VALUES[type];
@@ -192,10 +225,10 @@ namespace SPK
 	{
 		//std::swap(a.index,b.index);
 		std::swap(*a.data,*b.data);
-		for (size_t i = 0; i < a.getModel()->getNbValuesInParticleEnableArray(); ++i)
-			std::swap(a.enableParams[i],b.enableParams[i]);
-		for (size_t i = 0; i < a.getModel()->getNbValuesInParticleMutableArray(); ++i)
-			std::swap(a.mutableParams[i],b.mutableParams[i]);
+		for (size_t i = 0; i < a.getModel()->getSizeOfParticleCurrentArray(); ++i)
+			std::swap(a.currentParams[i],b.currentParams[i]);
+		for (size_t i = 0; i < a.getModel()->getSizeOfParticleExtendedArray(); ++i)
+			std::swap(a.extendedParams[i],b.extendedParams[i]);
 		
 		// swap additional data (groups are assumed to be the same)
 		for (std::map<std::string,Buffer*>::iterator it = a.group->additionalBuffers.begin(); it != a.group->additionalBuffers.end(); ++it)

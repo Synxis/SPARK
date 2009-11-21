@@ -843,8 +843,8 @@ namespace SPK
 		// particles data
 		Pool<Particle> pool;		
 		Particle::ParticleData* particleData;
-		float* particleEnableParams;
-		float* particleMutableParams;
+		float* particleCurrentParams; // Stores the current parameters values of the particles
+		float* particleExtendedParams; // Stores the extended parameters values of the particles (final values and interpolated data)
 
 		// sorting
 		bool sortingEnabled;

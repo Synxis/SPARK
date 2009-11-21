@@ -38,6 +38,7 @@
 #include "Core/SPK_Particle.h"
 #include "Core/SPK_Pool.h"
 #include "Core/SPK_Zone.h"
+#include "Core/SPK_Interpolator.h" // 1.05
 #include "Core/SPK_Model.h"
 #include "Core/SPK_Emitter.h"
 #include "Core/SPK_Modifier.h"
