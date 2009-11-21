@@ -27,11 +27,11 @@ namespace SPK
 {
 namespace SFML
 {
-	SFMLSystem::SFMLSystem(bool worldTransform,sf::RenderTarget* renderTarget) :
+	SFMLSystem::SFMLSystem(bool worldTransformed,sf::RenderTarget* renderTarget) :
 		System(),
 		sf::Drawable(),
-		target(renderTarget),
-		worldTransformed(worldTransformed)
+		worldTransformed(worldTransformed),
+		target(renderTarget)
 	{}
 
 	bool SFMLSystem::update(float deltaTime)

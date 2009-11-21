@@ -60,11 +60,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib sfml-system.lib sfml-window.lib sfml-graphics.lib SPARK.lib SPARK_GL.lib SPARK_SFML.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib sfml-system-d.lib sfml-window-d.lib sfml-graphics-d.lib SPARK_debug.lib SPARK_GL_debug.lib SPARK_SFML_debug.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic"
-				GenerateDebugInformation="false"
+				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				SubSystem="1"
 				TargetMachine="1"
