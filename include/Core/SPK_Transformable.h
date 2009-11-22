@@ -115,6 +115,104 @@ namespace SPK
 		*/
 		void setTransformNC(const float* transform);
 
+		/**
+		* @brief Sets the position of the local transform
+		*
+		* The orientation is left untouched.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param pos : the position of the local transform
+		* @since 1.05.00
+		*/
+		void setTransformPosition(const Vector3D& pos);
+
+		/**
+		* @brief Sets the orientation of the local transform in a right-handed system
+		*
+		* The position is left untouched.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param look : the look vector of the transformable
+		* @param up : the up vector of the transformable
+		* @since 1.05.00
+		*/
+		void setTransformOrientationRH(Vector3D look,Vector3D up);
+
+		/**
+		* @brief Sets the orientation of the local transform in a left-handed system
+		*
+		* The position is left untouched.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param look : the look vector of the transformable
+		* @param up : the up vector of the transformable
+		* @since 1.05.00
+		*/
+		void setTransformOrientationLH(Vector3D look,Vector3D up);
+
+		/**
+		* @brief Sets the orientation of the local transform
+		*
+		* This method allows to set the orientation around an arbitrary axis.<br>
+		* The position is left untouched.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param axis : the axis of rotation
+		* @param angle : the angle of rotation around the axis
+		* @since 1.05.00
+		*/
+		void setTransformOrientation(Vector3D axis,float angle);
+
+		/**
+		* @brief Sets the orientation of the local transform
+		*
+		* This method allows to set the orientation around an the x axis.<br>
+		* The position is left untouched.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param angle : the angle of rotation around the x axis
+		* @since 1.05.00
+		*/
+		void setTransformOrientationX(float angle);
+
+		/**
+		* @brief Sets the orientation of the local transform
+		*
+		* This method allows to set the orientation around an the y axis.<br>
+		* The position is left untouched.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param angle : the angle of rotation around the y axis
+		* @since 1.05.00
+		*/
+		void setTransformOrientationY(float angle);
+
+		/**
+		* @brief Sets the orientation of the local transform
+		*
+		* This method allows to set the orientation around an the z axis.<br>
+		* The position is left untouched.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param angle : the angle of rotation around the z axis
+		* @since 1.05.00
+		*/
+		void setTransformOrientationZ(float angle);
+
 		/////////////
 		// Getters //
 		/////////////
@@ -131,12 +229,112 @@ namespace SPK
 		*/
 		inline const float* getWorldTransform() const;
 
+		/**
+		* @brief Gets the position of the local transform
+		* @return the position of the local transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getLocalTransformPos() const;
+
+		/**
+		* @brief Gets the side vector of the local transform
+		* @return the side vector of the local transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getLocalTransformSide() const;
+
+		/**
+		* @brief Gets the up vector of the local transform
+		* @return the up vector of the local transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getLocalTransformUp() const;
+
+		/**
+		* @brief Gets the look vector of the local transform in a right-handed system
+		* @return the look vector of the local transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getLocalTransformLookRH() const;
+
+		/**
+		* @brief Gets the look vector of the local transform in a left-handed system
+		* @return the look vector of the local transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getLocalTransformLookLH() const;
+
+		/**
+		* @brief Gets the position of the world transform
+		* @return the position of the world transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getWorldTransformPos() const;
+
+		/**
+		* @brief Gets the side vector of the world transform
+		* @return the side vector of the world transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getWorldTransformSide() const;
+
+		/**
+		* @brief Gets the up vector of the world transform
+		* @return the up vector of the world transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getWorldTransformUp() const;
+
+		/**
+		* @brief Gets the look vector of the world transform  in a right-handed system
+		* @return the look vector of the world transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getWorldTransformLookRH() const;
+
+		/**
+		* @brief Gets the look vector of the world transform  in a left-handed system
+		* @return the look vector of the world transform
+		* @since 1.05.00
+		*/
+		inline Vector3D getWorldTransformLookLH() const;
+
 		///////////////
 		// Interface //
 		///////////////
 
 		/**
-		* @brief Updated the world transform of this Transformable
+		* @brief lookAt method for a right-handed system
+		*
+		* The vectors are normalized internally.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param target : the point the transformable is looking at
+		* @param up : the up vector of the transformable
+		* @param pos : the position of the transformable
+		* @since 1.05.00
+		*/
+		inline void lookAtRH(const Vector3D& target,Vector3D up,const Vector3D& pos);
+
+		/**
+		* @brief lookAt method for a left-handed system
+		*
+		* The vectors are normalized internally.<br>
+		* <br>
+		* Note that this methods sets the local transform.
+		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
+		* 
+		* @param target : the point the transformable is looking at
+		* @param up : the up vector of the transformable
+		* @param pos : the position of the transformable
+		* @since 1.05.00
+		*/
+		inline void lookAtLH(const Vector3D& target,Vector3D up,const Vector3D& pos);
+
+		/**
+		* @brief Updates the world transform of this Transformable
 		*
 		* The parent transform and the local transform is used to derive the world transform.<br>
 		* If parent is NULL, the local transform is simply copied to the world transform.<br>
@@ -237,6 +435,68 @@ namespace SPK
 	inline const float* Transformable::getWorldTransform() const
 	{
 		return world;
+	}
+
+	inline Vector3D Transformable::getLocalTransformPos() const
+	{
+		return Vector3D(local[12],local[13],local[14]);
+	}
+
+	inline Vector3D Transformable::getLocalTransformSide() const
+	{
+		return Vector3D(local[0],local[1],local[2]);
+	}
+
+	inline Vector3D Transformable::getLocalTransformUp() const
+	{
+		return Vector3D(local[4],local[5],local[6]);
+	}
+
+	inline Vector3D Transformable::getLocalTransformLookRH() const
+	{
+		return Vector3D(-local[8],-local[9],-local[10]);
+	}
+
+	inline Vector3D Transformable::getLocalTransformLookLH() const
+	{
+		return Vector3D(local[8],local[9],local[10]);
+	}
+
+	inline Vector3D Transformable::getWorldTransformPos() const
+	{
+		return Vector3D(world[12],world[13],world[14]);
+	}
+
+	inline Vector3D Transformable::getWorldTransformSide() const
+	{
+		return Vector3D(world[0],world[1],world[2]);
+	}
+
+	inline Vector3D Transformable::getWorldTransformUp() const
+	{
+		return Vector3D(world[4],world[5],world[6]);
+	}
+
+	inline Vector3D Transformable::getWorldTransformLookRH() const
+	{
+		return Vector3D(-world[8],-world[9],-world[10]);
+	}
+
+	inline Vector3D Transformable::getWorldTransformLookLH() const
+	{
+		return Vector3D(world[8],world[9],world[10]);
+	}
+
+	inline void Transformable::lookAtRH(const Vector3D& target,Vector3D up,const Vector3D& pos)
+	{
+		setTransformOrientationRH(target - pos,up);
+		setTransformPosition(pos);
+	}
+
+	inline void Transformable::lookAtLH(const Vector3D& target,Vector3D up,const Vector3D& pos)
+	{
+		setTransformOrientationLH(target - pos,up);
+		setTransformPosition(pos);
 	}
 
 	inline void Transformable::resetTransform()

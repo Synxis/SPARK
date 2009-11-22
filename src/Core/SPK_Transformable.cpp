@@ -51,6 +51,118 @@ namespace SPK
 		notifyForUpdate();
 	}
 
+	void Transformable::setTransformPosition(const Vector3D& pos)
+	{
+		local[12] = pos.x;
+		local[13] = pos.y;
+		local[14] = pos.z;
+	}
+
+	void Transformable::setTransformOrientationRH(Vector3D look,Vector3D up)
+	{
+		look.normalize();
+		up.normalize();
+
+		Vector3D side = crossProduct(look,up);
+		side.normalize();
+
+		local[0] = side.x;
+		local[1] = side.y;
+		local[2] = side.z;
+		local[4] = up.x;
+		local[5] = up.y;
+		local[6] = up.z;
+		local[8] = -look.x;
+		local[9] = -look.y;
+		local[10] = -look.z;
+	}
+
+	void Transformable::setTransformOrientationLH(Vector3D look,Vector3D up)
+	{
+		look.normalize();
+		up.normalize();
+
+		Vector3D side = crossProduct(look,up);
+		side.normalize();
+
+		local[0] = side.x;
+		local[1] = side.y;
+		local[2] = side.z;
+		local[4] = up.x;
+		local[5] = up.y;
+		local[6] = up.z;
+		local[8] = look.x;
+		local[9] = look.y;
+		local[10] = look.z;
+	}
+
+	void Transformable::setTransformOrientation(Vector3D axis,float angle)
+	{
+		axis.normalize();
+		float c = std::cos(angle);
+		float s = std::cos(angle);
+		float a = 1 - c;
+		Vector3D axis2(axis.x * axis.x,axis.y * axis.y,axis.z * axis.z);
+
+		local[0] = axis2.x + (1 - axis2.x) * c;
+		local[1] = axis.x * axis.y * a + axis.z * s;
+		local[2] = axis.x * axis.z * a - axis.y * s;
+		local[4] = axis.x * axis.y * a - axis.z * s;
+		local[5] = axis2.y + (1 - axis2.y) * c;
+		local[6] = axis.y * axis.z * a + axis.x * s;
+		local[8] = axis.x * axis.z * a + axis.y * s;
+		local[9] = axis.y * axis.z * a - axis.x * s;
+		local[10] = axis2.z + (1 - axis2.z) * c;
+	}
+
+	void Transformable::setTransformOrientationX(float angle)
+	{
+		float cosA = std::cos(angle);
+		float sinA = std::cos(angle);
+
+		local[0] = 1.0f;
+		local[1] = 0.0f;
+		local[2] = 0.0f;
+		local[4] = 0.0f;
+		local[5] = cosA;
+		local[6] = sinA;
+		local[8] = 0.0f;
+		local[9] = -sinA;
+		local[10] = cosA;
+	}
+
+	void Transformable::setTransformOrientationY(float angle)
+	{
+		float cosA = std::cos(angle);
+		float sinA = std::cos(angle);
+
+		local[0] = cosA;
+		local[1] = 0.0f;
+		local[2] = -sinA;
+		local[4] = 0.0f;
+		local[5] = 1.0f;
+		local[6] = 0.0f;
+		local[8] = sinA;
+		local[9] = 0.0f;
+		local[10] = cosA;
+	}
+
+	void Transformable::setTransformOrientationZ(float angle)
+	{
+		float cosA = std::cos(angle);
+		float sinA = std::cos(angle);
+
+		local[0] = cosA;
+		local[1] = sinA;
+		local[2] = 0.0f;
+		local[4] = -sinA;
+		local[5] = cosA;
+		local[6] = 0.0f;
+		local[8] = 0.0f;
+		local[9] = 0.0f;
+		local[10] = 1.0f;
+	}
+
 	void Transformable::updateTransform(const Transformable* parent)
 	{
 		if (!CHECK_UPDATED ||							// The transformable updates even if its transform has not been updated
@@ -70,7 +182,7 @@ namespace SPK
 			}
 
 			lastUpdate = currentUpdate;
-			innerUpdateTransform();	;
+			innerUpdateTransform();
 		}
 	}
 
