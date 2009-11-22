@@ -67,6 +67,12 @@ namespace SPK
 	* <li>Random : The parameter will be randomly generated for the Particle.</li>
 	* <li>Interpolated : The parameter will be interpolated by an object Interpolator to allow flexible variations.</li>
 	* </ul>
+	* The flags are processed when building up a model so that they are consistent :
+	* <ul>
+	* <li>All flags are masked so that they have not bit set at a higher position than the number of parameters.</li>
+	* <li>The mutable,random and interpolated flags are masked with the enabled flag : a parameter must be enabled to be either random, mutable or interpolated.</li>
+	* <li>An interpolated parameter cannot be mutable or/and random as well. The interpolated flag has the priority.</li>
+	* </ul>
 	* The life time of a particle and immortality is also defined by the Model.<br>
 	* <br>
 	* The default values for the parameters are the following :
@@ -344,6 +350,7 @@ namespace SPK
 
 		/**
 		* @brief Gets the interpolator for the given parameter
+		* @param param : the parameter whose intepolator must be retrieved
 		* @return a pointer to the interpolator of the given parameter or NULL if the parameter is not interpolated
 		* @since 1.05.00
 		*/

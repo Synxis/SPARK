@@ -140,7 +140,7 @@ namespace SPK
 		*
 		* Note that an negative radius is inverted internally
 		*
-		* @param the eye radius
+		* @param eyeRadius : the eye radius
 		*/
 		inline void setEyeRadius(float eyeRadius);
 

@@ -34,7 +34,7 @@ namespace SPK
 	* <li>The position of its center</li>
 	* <li>The normal of the plane on which it lies</li>
 	* <li>A minimum and maximum radius</li>
-	* </li>
+	* </ul>
 	* Note that by having the minimum radius equal to 0, the ring becomes a disk in the universe.<br>
 	* Note that the normal does not have to be normalized as it is normalized internally when set.
 	*

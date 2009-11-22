@@ -180,7 +180,7 @@ namespace SPK
 		static const Vector3D& getCameraPosition();
 
 		/**
-		* @Gets the current step mode
+		* @brief Gets the current step mode
 		* @return the current step mode
 		*/
 		static StepMode getStepMode();
