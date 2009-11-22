@@ -58,6 +58,7 @@
 #include "Extensions/Emitters/SPK_SphericEmitter.h"
 #include "Extensions/Emitters/SPK_NormalEmitter.h" // 1.02
 #include "Extensions/Emitters/SPK_RandomEmitter.h" // 1.02
+#include "Extensions/Emitters/SPK_StaticEmitter.h" // 1.05
 
 // Modifiers
 #include "Extensions/Modifiers/SPK_Obstacle.h"

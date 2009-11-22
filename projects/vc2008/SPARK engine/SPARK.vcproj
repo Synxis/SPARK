@@ -599,6 +599,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\include\Extensions\Emitters\SPK_StaticEmitter.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\Extensions\Emitters\SPK_StraightEmitter.h"
 						>
 					</File>
