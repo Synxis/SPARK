@@ -452,7 +452,7 @@ int main(int argc, char *argv[])
 
 		if (!paused)
 		{
-			particleGroup->setGravity(Vector3D(-1.5f * sinZ * cosX,-1.5f * cosZ * cosX,1.5f * sinX));;
+			particleGroup->setGravity(Vector3D(-1.5f * sinZ * cosX,-1.5f * cosZ * cosX,1.5f * sinX));
 
 			particleSystem->update(deltaTime * 0.001f);	// 1 defined as a second
 

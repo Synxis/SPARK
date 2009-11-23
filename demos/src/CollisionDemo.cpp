@@ -549,7 +549,6 @@ int main(int argc, char *argv[])
 	else // we use quads
 	{
 		GLQuadRenderer* quadRenderer = GLQuadRenderer::create();
-		quadRenderer->setTexture(textureParticle);
 		quadRenderer->setTexturingMode(TEXTURE_2D);
 		quadRenderer->setTexture(textureParticle);
 		quadRenderer->setScale(0.05f,0.05f);
