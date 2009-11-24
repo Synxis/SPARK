@@ -194,7 +194,6 @@ SPK_ID createParticleSystemBase(Image* texture)
 	sparkGroup->addEmitter(sparkEmitter);
 	sparkGroup->setGravity(Vector3D(0.0f,0.0f,-200.0f));
 	sparkGroup->setFriction(2.0f);
-	sparkGroup->enableEmittersRemoval(true);
 
 	// Creates the System
 	SFMLSystem* sparkSystem = SFMLSystem::create();

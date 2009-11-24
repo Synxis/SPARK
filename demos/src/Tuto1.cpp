@@ -265,7 +265,6 @@ SPK_ID createParticleSystemBase(GLuint textureIndex)
 	group->setGravity(Vector3D(0.0f,-1.0f,0.0f));
 	group->setFriction(2.0f);
 	group->setRenderer(renderer);
-	group->enableEmittersRemoval(true); // This deletes the emitters as soon as they are sleeping
 
 	// Creates the System
 	System* system = System::create();

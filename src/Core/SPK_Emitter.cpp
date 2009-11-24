@@ -35,8 +35,8 @@ namespace SPK
 		flow(0.0f),
 		forceMin(0.0f),
 		forceMax(0.0f),
-		nbBorn(0),
-		fraction(random(0.0f,1.0f))
+		fraction(random(0.0f,1.0f)),
+		active(true)
 	{}
 
 	void Emitter::registerChildren(bool registerAll)
@@ -100,6 +100,7 @@ namespace SPK
 
 	unsigned int Emitter::updateNumber(float deltaTime)
 	{
+		int nbBorn;
 		if (flow < 0.0f)
 		{
 			nbBorn = std::max(0,tank);
@@ -111,27 +112,11 @@ namespace SPK
 			nbBorn = static_cast<int>(fraction);
 			if (tank >= 0)
 			{
-				nbBorn = std::min(tank,static_cast<int>(nbBorn));
+				nbBorn = std::min(tank,nbBorn);
 				tank -= nbBorn;
 			}
 			fraction -= nbBorn;
 		}
 		return static_cast<unsigned int>(nbBorn);
-	}
-
-	unsigned int Emitter::updateNumber(float deltaTime) const
-	{
-		unsigned int nbBorn;
-		if (flow < 0.0f)
-			nbBorn = std::max(0,tank);
-		else
-		{
-			fraction += flow * deltaTime;
-			nbBorn = static_cast<int>(fraction);
-			if (tank >= 0)
-				nbBorn = std::min(tank,static_cast<int>(nbBorn));
-			fraction -= nbBorn;
-		}
-		return nbBorn;
 	}
 }

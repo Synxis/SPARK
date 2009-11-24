@@ -231,19 +231,6 @@ namespace SPK
 		inline void enableAABBComputing(bool AABB);
 
 		/**
-		* @brief Enables or not the automatic sleeping Emitters removal for this Group
-		*
-		* If the emitters removal is enabled, then any <b>registered</b> Emitter which enters in a sleeping states will be deleted.<br>
-		* This works only for registered emitters and if the Group is registered.<br>
-		* <br>
-		* By default, the sleeping emitters removal is disable.
-		*
-		* @param remove : true to enable sleeping emitter removal, false to disable it
-		* @since 1.03.00
-		*/
-		inline void enableEmittersRemoval(bool remove);
-
-		/**
 		* @brief Enables or not Renderer buffers management in a statix way
 		*
 		* If the buffer management is enabled, then a call to setRenderer(Renderer*) will destroy the existing buffers of the previous Renderer
@@ -452,16 +439,6 @@ namespace SPK
 		inline size_t getPositionStride() const;
 
 		/**
-		* @brief Tells whether sleeping emitters removal is enabled or not
-		*
-		* see enableEmittersRemoval(bool) for more information.
-		*
-		* @return true if sleeping emitters removal is enabled, false if it is disable
-		* @since 1.03.00
-		*/
-		inline bool isEmittersRemovalEnabled();
-
-		/**
 		* @brief Tells whether renderers buffer management is enabled or not
 		*
 		* see enableBuffersManagement(bool) for more information.
@@ -511,7 +488,7 @@ namespace SPK
 		* @param emitter : the Emitter that will be used to generate the velocity
 		* @param full : true to generate a position within the whole Zonz, false only at its borders
 		*/
-		void addParticles(unsigned int nb,const Zone* zone,const Emitter* emitter,bool full = true);
+		void addParticles(unsigned int nb,const Zone* zone,Emitter* emitter,bool full = true);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -534,7 +511,7 @@ namespace SPK
 		* @param position : the position where the Particles will be added
 		* @param emitter : the Emitter that will be used to generate the velocity
 		*/
-		inline void addParticles(unsigned int nb,const Vector3D& position,const Emitter* emitter);
+		inline void addParticles(unsigned int nb,const Vector3D& position,Emitter* emitter);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -544,7 +521,7 @@ namespace SPK
 		* @param nb : the number of Particles to add
 		* @param emitter : the Emitter that will be used to generate the velocity and whose Zone will be used to generate the position
 		*/
-		void addParticles(unsigned int nb,const Emitter* emitter);
+		void addParticles(unsigned int nb,Emitter* emitter);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -556,7 +533,7 @@ namespace SPK
 		* @param deltaTime : the step time that will be used to determine how many particles to generate
 		* @param full : true to generate a position within the whole Zonz, false only at its borders
 		*/
-		void addParticles(const Zone* zone,const Emitter* emitter,float deltaTime,bool full = true);
+		void addParticles(const Zone* zone,Emitter* emitter,float deltaTime,bool full = true);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -567,7 +544,7 @@ namespace SPK
 		* @param emitter : the Emitter that will be used to generate the velocity
 		* @param deltaTime : the step time that will be used to determine how many particles to generate
 		*/
-		void addParticles(const Vector3D& position,const Emitter* emitter,float deltaTime);
+		void addParticles(const Vector3D& position,Emitter* emitter,float deltaTime);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -577,7 +554,7 @@ namespace SPK
 		* @param emitter : the Emitter that will be used to generate the velocity and whose Zone will be used to generate the position
 		* @param deltaTime : the step time that will be used to determine how many particles to generate
 		*/
-		void addParticles(const Emitter* emitter,float deltaTime);
+		void addParticles(Emitter* emitter,float deltaTime);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -597,7 +574,7 @@ namespace SPK
 		* @param offset : the starting distance of the beginning of the line
 		* @return the new offset at the end of the line
 		*/
-		float addParticles(const Vector3D& start,const Vector3D& end,const Emitter* emitter,float step,float offset = 0.0f);
+		float addParticles(const Vector3D& start,const Vector3D& end,Emitter* emitter,float step,float offset = 0.0f);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -819,8 +796,14 @@ namespace SPK
 			Vector3D position;
 			Vector3D velocity;
 			const Zone* zone;
-			const Emitter* emitter;
+			Emitter* emitter;
 			bool full;
+		};
+
+		struct EmitterData
+		{
+			Emitter* emitter;
+			unsigned int nbParticles;
 		};
 
 		// statics
@@ -831,8 +814,8 @@ namespace SPK
 		Renderer* renderer;
 		std::vector<Emitter*> emitters;
 		std::vector<Modifier*> modifiers;
-		bool emitterRemoval;
 
+		mutable std::vector<EmitterData> activeEmitters;
 		mutable std::vector<Modifier*> activeModifiers; // Vector of active modifiers to optimise the parsing when updating
 
 		// physics parameters
@@ -866,10 +849,10 @@ namespace SPK
 		// additional buffers
 		mutable std::map<std::string,Buffer*> additionalBuffers;
 
-		void pushParticle(std::vector<Emitter*>::iterator& emitterIt,unsigned int& nbManualBorn);
-		void launchParticle(Particle& p,std::vector<Emitter*>::iterator& emitterIt,unsigned int& nbManualBorn);
+		void pushParticle(std::vector<EmitterData>::iterator& emitterIt,unsigned int& nbManualBorn);
+		void launchParticle(Particle& p,std::vector<EmitterData>::iterator& emitterIt,unsigned int& nbManualBorn);
 
-		void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,const Zone* zone,const Emitter* emitter,bool full = false);
+		void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,const Zone* zone,Emitter* emitter,bool full = false);
 
 		void popNextManualAdding(unsigned int& nbManualBorn);
 
@@ -926,11 +909,6 @@ namespace SPK
 	inline void Group::enableAABBComputing(bool AABB)
 	{
 		boundingBoxEnabled = AABB;
-	}
-
-	inline void Group::enableEmittersRemoval(bool remove)
-	{
-		emitterRemoval = remove;
 	}
 
 	inline const Pool<Particle>& Group::getParticles() const
@@ -1028,17 +1006,12 @@ namespace SPK
 		return AABBMax;
 	}
 
-	inline bool Group::isEmittersRemovalEnabled()
-	{
-		return emitterRemoval;
-	}
-
 	inline void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity)
 	{
 		addParticles(nb,position,velocity,NULL,NULL);
 	}
 
-	inline void Group::addParticles(unsigned int nb,const Zone* zone,const Emitter* emitter,bool full)
+	inline void Group::addParticles(unsigned int nb,const Zone* zone,Emitter* emitter,bool full)
 	{
 		addParticles(nb,Vector3D(),Vector3D(),zone,emitter,full);
 	}
@@ -1048,7 +1021,7 @@ namespace SPK
 		addParticles(nb,Vector3D(),velocity,zone,NULL,full);
 	}
 
-	inline void Group::addParticles(unsigned int nb,const Vector3D& position,const Emitter* emitter)
+	inline void Group::addParticles(unsigned int nb,const Vector3D& position,Emitter* emitter)
 	{
 		addParticles(nb,position,Vector3D(),NULL,emitter);
 	}

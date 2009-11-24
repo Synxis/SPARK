@@ -53,8 +53,7 @@ namespace SPK
 		emitters(),
 		modifiers(),
 		activeModifiers(),
-		additionalBuffers(),
-		emitterRemoval(false)
+		additionalBuffers()
 	{}
 
 	Group::Group(const Group& group) :
@@ -74,8 +73,7 @@ namespace SPK
 		emitters(group.emitters),
 		modifiers(group.modifiers),
 		activeModifiers(group.activeModifiers.capacity()),
-		additionalBuffers(group.additionalBuffers),
-		emitterRemoval(group.emitterRemoval)
+		additionalBuffers(group.additionalBuffers)
 	{
 		particleData = new Particle::ParticleData[pool.getNbReserved()];
 		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
@@ -258,21 +256,27 @@ namespace SPK
 		unsigned int nbManualBorn = nbBufferedParticles;
 		unsigned int nbAutoBorn = 0;
 
-		bool hasActiveEmitters = false;
-		bool hasSleepingEmitters = false;
-		std::vector<Emitter*>::const_iterator endIt = emitters.end();
+		bool hasActiveEmitters = false;	
 
 		// Updates emitters
-		std::vector<Emitter*>::iterator emitterIt = emitters.begin();
+		activeEmitters.clear();
+		std::vector<Emitter*>::const_iterator endIt = emitters.end();
 		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != endIt; ++it)
 		{
-			int nb = (*it)->updateNumber(deltaTime);
-			if ((nb == 0)&&(it == emitterIt))
-				++emitterIt;
-			nbAutoBorn += nb;
+			if ((*it)->isActive())
+			{
+				int nb = (*it)->updateNumber(deltaTime);
+				if (nb > 0)
+				{
+					EmitterData data = {*it,nb};
+					activeEmitters.push_back(data);
+					nbAutoBorn += nb;
+				}
+			}
+
 			hasActiveEmitters |= !((*it)->isSleeping());
-			hasSleepingEmitters |= (*it)->isSleeping();
 		}
+		std::vector<EmitterData>::iterator emitterIt = activeEmitters.begin();
 
 		unsigned int nbBorn = nbAutoBorn + nbManualBorn;
 
@@ -342,24 +346,10 @@ namespace SPK
 			AABBMax.set(0.0f,0.0f,0.0f);
 		}
 
-		// Removes sleeping emitters
-		if ((hasSleepingEmitters)&&(emitterRemoval)&&(isRegistered()))
-		{
-			std::vector<Emitter*>::iterator it = emitters.begin();
-			while(it != emitters.end())
-				if (((*it)->isSleeping())&&((*it)->isRegistered())&&((*it)->isDestroyable()))
-				{
-					decrementChildReference(*it);
-					SPKFactory::getInstance().destroy((*it)->getID());
-					it = emitters.erase(it);
-				}
-				else ++it;
-		}
-
 		return (hasActiveEmitters)||(pool.getNbActive() > 0);
 	}
 
-	void Group::pushParticle(std::vector<Emitter*>::iterator& emitterIt,unsigned int& nbManualBorn)
+	void Group::pushParticle(std::vector<EmitterData>::iterator& emitterIt,unsigned int& nbManualBorn)
 	{
 		Particle* ptr = pool.makeActive();
 		if (ptr == NULL)
@@ -372,13 +362,6 @@ namespace SPK
 			}
 			else if (nbManualBorn > 0)
 				popNextManualAdding(nbManualBorn);
-			else if (--((*emitterIt)->nbBorn) <= 0)
-			{
-				++emitterIt;
-				std::vector<Emitter*>::const_iterator lastEmitterIt = emitters.end() - 1;
-				while((emitterIt < lastEmitterIt)&&((*emitterIt)->nbBorn <= 0))
-					++emitterIt;
-			}
 		}
 		else
 		{
@@ -387,17 +370,13 @@ namespace SPK
 		}
 	}
 
-	void Group::launchParticle(Particle& p,std::vector<Emitter*>::iterator& emitterIt,unsigned int& nbManualBorn)
+	void Group::launchParticle(Particle& p,std::vector<EmitterData>::iterator& emitterIt,unsigned int& nbManualBorn)
 	{
 		if (nbManualBorn == 0)
 		{
-			if ((*emitterIt)->launchParticle(p) <= 0)
-			{
+			emitterIt->emitter->emit(p);
+			if (--emitterIt->nbParticles == 0)
 				++emitterIt;
-				std::vector<Emitter*>::const_iterator lastEmitterIt = emitters.end() - 1;
-				while((emitterIt < lastEmitterIt)&&((*emitterIt)->nbBorn <= 0))
-					++emitterIt;
-			}
 		}
 		else
 		{
@@ -454,12 +433,12 @@ namespace SPK
 	void Group::flushAddedParticles()
 	{
 		unsigned int nbManualBorn = nbBufferedParticles;
-		std::vector<Emitter*>::iterator emitterIt;
+		std::vector<EmitterData>::iterator emitterIt; // dummy emitterIt because we dont care
 		while(nbManualBorn > 0)
 			pushParticle(emitterIt,nbManualBorn);
 	}
 
-	float Group::addParticles(const Vector3D& start,const Vector3D& end,const Emitter* emitter,float step,float offset)
+	float Group::addParticles(const Vector3D& start,const Vector3D& end,Emitter* emitter,float step,float offset)
 	{
 		if ((step <= 0.0f)||(offset < 0.0f))
 			return 0.0f;
@@ -497,7 +476,7 @@ namespace SPK
 		return offset - totalDist;
 	}
 
-	void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,const Zone* zone,const Emitter* emitter,bool full)
+	void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,const Zone* zone,Emitter* emitter,bool full)
 	{
 		if (nb == 0)
 			return;
@@ -507,22 +486,22 @@ namespace SPK
 		nbBufferedParticles += nb;
 	}
 
-	void Group::addParticles(unsigned int nb,const Emitter* emitter)
+	void Group::addParticles(unsigned int nb,Emitter* emitter)
 	{
 		addParticles(nb,Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
 	}
 
-	void Group::addParticles(const Zone* zone,const Emitter* emitter,float deltaTime,bool full)
+	void Group::addParticles(const Zone* zone,Emitter* emitter,float deltaTime,bool full)
 	{
 		addParticles(emitter->updateNumber(deltaTime),Vector3D(),Vector3D(),zone,emitter,full);
 	}
 
-	void Group::addParticles(const Vector3D& position,const Emitter* emitter,float deltaTime)
+	void Group::addParticles(const Vector3D& position,Emitter* emitter,float deltaTime)
 	{
 		addParticles(emitter->updateNumber(deltaTime),position,Vector3D(),NULL,emitter);
 	}
 
-	void Group::addParticles(const Emitter* emitter,float deltaTime)
+	void Group::addParticles(Emitter* emitter,float deltaTime)
 	{
 		addParticles(emitter->updateNumber(deltaTime),Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
 	}

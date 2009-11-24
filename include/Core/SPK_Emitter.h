@@ -68,6 +68,17 @@ namespace SPK
 		/////////////
 
 		/**
+		* @brief Sets this Emitter active or not.
+		*
+		* An inactive Emitter will not emit in its parent Group during update.<br>
+		* However it can still be used manually by the user.
+		*
+		* @param active : true to activate this Emitter, false to deactivate it
+		* @since 1.05.00
+		*/
+		inline void setActive(bool active);
+
+		/**
 		* @brief Sets the number of particles in this Emitter's tank
 		*
 		* Each time the Emitter is updated, the number of particles emitted is deduced from the Emitter tank.
@@ -136,6 +147,13 @@ namespace SPK
 		/////////////
 		// Getters //
 		/////////////
+
+		/**
+		* @brief Tells whether this Emitter is active or not
+		* @return true if this Emitter is active, false if is is inactive
+		* @since 1.05.00
+		*/
+		inline bool isActive() const;
 
 		/**
 		* @brief Gets the number of particles in this Emitter's tank
@@ -225,18 +243,17 @@ namespace SPK
 		Zone* zone;
 		bool full;
 
+		bool active;
+
 		int tank;
 		float flow;
 
 		float forceMin;
 		float forceMax;
 
-		mutable int nbBorn;
 		mutable float fraction;
 
 		unsigned int updateNumber(float deltaTime);
-		unsigned int updateNumber(float deltaTime) const;
-		inline int launchParticle(Particle& particle) const;
 
 		/////////////////////////
 		// pure virtual method //
@@ -257,6 +274,11 @@ namespace SPK
 	};
 
 
+	inline void Emitter::setActive(bool active)
+	{
+		this->active = active;
+	}
+	
 	inline void Emitter::setTank(int tank)
 	{
 		this->tank = tank;
@@ -271,6 +293,11 @@ namespace SPK
 	{
 		forceMin = min;
 		forceMax = max;
+	}
+
+	inline bool Emitter::isActive() const
+	{
+		return active;
 	}
 
 	inline int Emitter::getTank() const
@@ -317,12 +344,6 @@ namespace SPK
 	void Emitter::generateVelocity(Particle& particle) const
 	{
 		generateVelocity(particle,random(forceMin,forceMax) / particle.getParamCurrentValue(PARAM_MASS));
-	}
-
-	inline int Emitter::launchParticle(Particle& particle) const
-	{
-		emit(particle);
-		return --nbBorn;
 	}
 
 	inline void Emitter::innerUpdateTransform()
