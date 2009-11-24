@@ -372,6 +372,13 @@ namespace SPK
 			}
 			else if (nbManualBorn > 0)
 				popNextManualAdding(nbManualBorn);
+			else if (--((*emitterIt)->nbBorn) <= 0)
+			{
+				++emitterIt;
+				std::vector<Emitter*>::const_iterator lastEmitterIt = emitters.end() - 1;
+				while((emitterIt < lastEmitterIt)&&((*emitterIt)->nbBorn <= 0))
+					++emitterIt;
+			}
 		}
 		else
 		{
