@@ -74,6 +74,12 @@ namespace IRR
 		*/
 		static inline IRRSystem* create(irr::scene::ISceneNode* parent,irr::scene::ISceneManager* mgr,bool worldTransformed = true,irr::s32 id=-1);
 
+		////////////////
+		// Destructor //
+		////////////////
+
+		~IRRSystem();
+
 		/////////////
 		// Setters //
 		/////////////
@@ -186,6 +192,8 @@ namespace IRR
 
         mutable irr::core::aabbox3d<irr::f32> BBox;
 
+		virtual inline void onRegister();
+
 		// This sets the right camera position if distance computation is enabled for a group of the system
 		void updateCameraPosition() const;
     };
@@ -234,6 +242,11 @@ namespace IRR
 	inline void IRRSystem::render()
 	{
 		const_cast<const IRRSystem*>(this)->render();
+	}
+
+	inline void IRRSystem::onRegister()
+	{
+		grab(); // when the factory registers a system, it grabs it so that it will not be destroyed by Irrlicht
 	}
 }}
 

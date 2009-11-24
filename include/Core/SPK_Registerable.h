@@ -351,6 +351,10 @@ namespace SPK
 		bool shared;
 		bool destroyable;
 
+		// Those methods allow specific behavior when registering and unregistering in the SPKFactory
+		virtual inline void onRegister() {}		// Called when a registerable is registered in the SPKFactory
+		virtual inline void onUnregister() {}	// Called when a registerable is unregistered from the SPKFactory
+
 		inline void incrementReference();
 		inline void decrementReference();
 

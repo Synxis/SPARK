@@ -155,6 +155,7 @@ namespace SPK
 
 	Registerable* SPKFactory::registerObject(Registerable* object)
 	{
+		object->onRegister();
 		object->ID = ++currentID;
 		
 		// optimisation at the insertion to get an amortized constant complexity instead of a logarithmic complexity
@@ -175,6 +176,7 @@ namespace SPK
 	void SPKFactory::unregisterObject(std::map<SPK_ID,Registerable*>::iterator& it,bool keepChildren)
 	{
 		Registerable* object = it->second;
+		object->onUnregister();
 
 		// traces desallocations
 #ifdef SPK_DEBUG
