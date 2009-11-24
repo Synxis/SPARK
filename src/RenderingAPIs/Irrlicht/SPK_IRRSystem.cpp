@@ -36,11 +36,6 @@ namespace IRR
 		AlwaysUpdate(false)
     {}
 
-	IRRSystem::~IRRSystem()
-	{
-		remove(); // Removes the IRRSystem from the scene
-	}
-
     void IRRSystem::OnRegisterSceneNode()
     {
         if(IsVisible)
