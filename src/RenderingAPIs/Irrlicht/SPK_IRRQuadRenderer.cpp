@@ -122,6 +122,13 @@ namespace IRR
 				renderParticle = &IRRQuadRenderer::renderBasic;
 		}
 
+		// At the first frame we pass the full buffer so that VBOs are correctly initialised
+		// Then at next frames we pass only what is needed to be rendered
+		if (currentBuffer->areVBOInitialized())
+			currentBuffer->setUsed(group.getNbParticles());
+		else
+			currentBuffer->setUsed(group.getParticles().getNbReserved());
+
 		bool globalOrientation = precomputeOrientation3D(
 			group,
 			Vector3D(invModelView[8],invModelView[9],invModelView[10]),
@@ -145,13 +152,6 @@ namespace IRR
 			}
 		}
 		currentBuffer->getMeshBuffer().setDirty(irr::scene::EBT_VERTEX);
-
-		// At the first frame we pass the full buffer so that VBOs are correctly initialised
-		// Then at next frames we pass only what is needed to be rendered
-		if (currentBuffer->areVBOInitialized())
-			currentBuffer->setUsed(group.getNbParticles());
-		else
-			currentBuffer->setUsed(group.getParticles().getNbReserved());
 
 		driver->setMaterial(material);
 		driver->drawMeshBuffer(&currentBuffer->getMeshBuffer()); // this draw call is used in order to be able to use VBOs
