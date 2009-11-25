@@ -71,16 +71,8 @@ namespace SPK
 		// Constructor //
 		/////////////////
 
-		/**
-		* @brief Constructor of Transformable
-		*
-		* the CHECK_UPDATED parameter tells if the Transformable has to check for updates needs or not.
-		* Typically, the CHECK_UPDATED is only set to false if the Transformable is used as a parent for other Transformable and
-		* may therefore needs updates.
-		*
-		* @param CHECK_UPDATED : true to check for updates before updating, false not to
-		*/
-		Transformable(bool CHECK_UPDATED = true);
+		/** @brief Constructor of Transformable */
+		Transformable();
 
 		/////////////
 		// Setters //
@@ -230,6 +222,12 @@ namespace SPK
 		inline const float* getWorldTransform() const;
 
 		/**
+		* @brief Tells whether the local transform is the identity or not
+		* @return true if the local transform is identity, false if not
+		*/
+		inline bool isLocalIdentity() const;
+
+		/**
 		* @brief Gets the position of the local transform
 		* @return the position of the local transform
 		* @since 1.05.00
@@ -339,7 +337,7 @@ namespace SPK
 		* The parent transform and the local transform is used to derive the world transform.<br>
 		* If parent is NULL, the local transform is simply copied to the world transform.<br>
 		* <br>
-		* Note that this method only updates the transform if needed (if CHECK_UPDATED is true)
+		* Note that this method only updates the transform if needed
 		*
 		* @param parent : the parent node of this Transformable or NULL
 		*/
@@ -386,14 +384,22 @@ namespace SPK
 		/**
 		* @brief Updates all the parameters in the world coordinates
 		* 
-		* This method has to be called in derived classes of Transformable.<br>
+		* This method can be overriden in derived classes of Transformable (By default it does nothing).<br>
 		* It is this method task to compute all parameters of the class that are dependent of the world transform.
 		*/
 		virtual inline void innerUpdateTransform() {}
 
-	private :
+		/**
+		* @brief Propagates the update of the transform to transformable children of this transformable
+		*
+		* This method can be overriden in derived classes of Transformable (By default it does nothing).<br>
+		* It is this method task to call the updateTransform method of transformable children of this transformable.
+		*
+		* @since 1.05.00
+		*/
+		virtual inline void propagateUpdateTransform() {}
 
-		const bool CHECK_UPDATED;
+	private :
 
 		float local[TRANSFORM_LENGTH];
 		float world[TRANSFORM_LENGTH];
@@ -401,6 +407,7 @@ namespace SPK
 		unsigned long int currentUpdate;
 		unsigned long int lastUpdate;
 		unsigned long int lastParentUpdate;
+		bool localIdentity;
 
 		const Transformable* parent;
 
@@ -424,6 +431,7 @@ namespace SPK
 	inline void Transformable::setTransform(const float* transform)
 	{
 		std::memcpy(local,transform,sizeof(float) * TRANSFORM_LENGTH);
+		localIdentity = false;
 		notifyForUpdate();
 	}
 
@@ -435,6 +443,11 @@ namespace SPK
 	inline const float* Transformable::getWorldTransform() const
 	{
 		return world;
+	}
+
+	inline bool Transformable::isLocalIdentity() const
+	{
+		return localIdentity;
 	}
 
 	inline Vector3D Transformable::getLocalTransformPos() const
@@ -502,6 +515,7 @@ namespace SPK
 	inline void Transformable::resetTransform()
 	{
 		setTransform(IDENTITY);
+		localIdentity = true;
 	}
 
 	inline bool Transformable::isUpdateNotified() const

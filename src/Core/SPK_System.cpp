@@ -40,7 +40,7 @@ namespace SPK
 
 	System::System() :
 		Registerable(),
-		Transformable(false), // dont check if updated cause it has transformable children
+		Transformable(),
 		groups(),
 		nbParticles(0),
 		boundingBoxEnabled(false),
@@ -322,7 +322,7 @@ namespace SPK
 		return NULL;
 	}
 
-	void System::innerUpdateTransform()
+	void System::propagateUpdateTransform()
 	{
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 		{

@@ -236,7 +236,7 @@ namespace SPK
 		virtual void copyChildren(const Emitter& emitter,bool createBase);
 		virtual void destroyChildren(bool keepChildren);
 
-		virtual inline void innerUpdateTransform();
+		virtual inline void propagateUpdateTransform();
 
 	private :
 
@@ -346,9 +346,9 @@ namespace SPK
 		generateVelocity(particle,random(forceMin,forceMax) / particle.getParamCurrentValue(PARAM_MASS));
 	}
 
-	inline void Emitter::innerUpdateTransform()
+	inline void Emitter::propagateUpdateTransform()
 	{
-		zone->updateTransform(getParent());
+		zone->updateTransform(this);
 	}
 }
 

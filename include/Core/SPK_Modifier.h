@@ -206,7 +206,7 @@ namespace SPK
 		virtual void copyChildren(const Modifier& modifier,bool createBase);
 		virtual void destroyChildren(bool keepChildren);
 
-		virtual inline void innerUpdateTransform();
+		virtual inline void propagateUpdateTransform();
 
 	private :
 
@@ -293,10 +293,10 @@ namespace SPK
 		return local;
 	}
 
-	inline void Modifier::innerUpdateTransform()
+	inline void Modifier::propagateUpdateTransform()
 	{
 		if (zone != NULL)
-			zone->updateTransform(getParent());
+			zone->updateTransform(this);
 	}
 
 	inline void Modifier::endProcess(Group& group)

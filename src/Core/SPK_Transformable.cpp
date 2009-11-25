@@ -33,12 +33,12 @@ namespace SPK
 		0.0f,	0.0f,	0.0f,	1.0f,
 	};
 
-	Transformable::Transformable(bool CHECK_UPDATED) :
-		CHECK_UPDATED(CHECK_UPDATED),
+	Transformable::Transformable() :
 		currentUpdate(0),
 		lastUpdate(0),
 		lastParentUpdate(0),
-		parent(NULL)
+		parent(NULL),
+		localIdentity(true)
 	{
 		std::memcpy(local,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
 		std::memcpy(world,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
@@ -47,7 +47,9 @@ namespace SPK
 	void Transformable::setTransformNC(const float* transform)
 	{
 		for (size_t i = 0; i < TRANSFORM_LENGTH; ++i)
-			local[i] = transform[(i >> 2) + ((i & 3) << 2)];	// conversion from column major to row major matrix
+			local[i] = transform[(i >> 2) + ((i & 3) << 2)];	// conversion
+		
+		localIdentity = false;
 		notifyForUpdate();
 	}
 
@@ -56,6 +58,9 @@ namespace SPK
 		local[12] = pos.x;
 		local[13] = pos.y;
 		local[14] = pos.z;
+
+		localIdentity = false;
+		notifyForUpdate();
 	}
 
 	void Transformable::setTransformOrientationRH(Vector3D look,Vector3D up)
@@ -75,6 +80,9 @@ namespace SPK
 		local[8] = -look.x;
 		local[9] = -look.y;
 		local[10] = -look.z;
+
+		localIdentity = false;
+		notifyForUpdate();
 	}
 
 	void Transformable::setTransformOrientationLH(Vector3D look,Vector3D up)
@@ -94,6 +102,9 @@ namespace SPK
 		local[8] = look.x;
 		local[9] = look.y;
 		local[10] = look.z;
+
+		localIdentity = false;
+		notifyForUpdate();
 	}
 
 	void Transformable::setTransformOrientation(Vector3D axis,float angle)
@@ -113,6 +124,9 @@ namespace SPK
 		local[8] = axis.x * axis.z * a + axis.y * s;
 		local[9] = axis.y * axis.z * a - axis.x * s;
 		local[10] = axis2.z + (1 - axis2.z) * c;
+
+		localIdentity = false;
+		notifyForUpdate();
 	}
 
 	void Transformable::setTransformOrientationX(float angle)
@@ -129,6 +143,9 @@ namespace SPK
 		local[8] = 0.0f;
 		local[9] = -sinA;
 		local[10] = cosA;
+
+		localIdentity = false;
+		notifyForUpdate();
 	}
 
 	void Transformable::setTransformOrientationY(float angle)
@@ -145,6 +162,9 @@ namespace SPK
 		local[8] = sinA;
 		local[9] = 0.0f;
 		local[10] = cosA;
+
+		localIdentity = false;
+		notifyForUpdate();
 	}
 
 	void Transformable::setTransformOrientationZ(float angle)
@@ -161,29 +181,36 @@ namespace SPK
 		local[8] = 0.0f;
 		local[9] = 0.0f;
 		local[10] = 1.0f;
+
+		localIdentity = false;
+		notifyForUpdate();
 	}
 
 	void Transformable::updateTransform(const Transformable* parent)
 	{
-		if (!CHECK_UPDATED ||							// The transformable updates even if its transform has not been updated
-			isUpdateNotified() ||						// the local transform or instance param have been updated
-			parent != this->parent ||					// the parent has changed
-			(parent != NULL &&
-			lastParentUpdate != parent->currentUpdate))	// the parent transform has been modified
+		if (isUpdateNotified() ||											// the local transform or instance param have been updated
+			parent != this->parent ||										// the parent has changed
+			(parent != NULL && lastParentUpdate != parent->currentUpdate))	// the parent transform has been modified
 		{
-			this->parent = parent;
-
 			if (parent == NULL)
 				memcpy(world,local,sizeof(float) * TRANSFORM_LENGTH);
+			else if (isLocalIdentity())
+			{
+				memcpy(world,parent->world,sizeof(float) * TRANSFORM_LENGTH);
+				lastParentUpdate = parent->lastUpdate;
+			}
 			else
 			{
 				multiply(world,parent->world,local);
-				lastParentUpdate = parent->currentUpdate;
+				lastParentUpdate = parent->lastUpdate;
 			}
 
-			lastUpdate = currentUpdate;
+			this->parent = parent;
+			lastUpdate = ++currentUpdate;
 			innerUpdateTransform();
 		}
+
+		propagateUpdateTransform();
 	}
 
 	void Transformable::transformPos(Vector3D& tPos,const Vector3D& pos)

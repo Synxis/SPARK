@@ -374,7 +374,7 @@ namespace SPK
 		virtual void copyChildren(const System& system,bool keepChildren);
 		virtual void destroyChildren(bool createBase);
 
-		virtual void innerUpdateTransform();
+		virtual void propagateUpdateTransform();
 
 	private :
 
