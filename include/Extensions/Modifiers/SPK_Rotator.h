@@ -69,7 +69,7 @@ namespace SPK
 
 	inline Rotator* Rotator::create()
 	{
-		Destroyer* obj = new Rotator;
+		Rotator* obj = new Rotator;
 		registerObject(obj);
 		return obj;
 	}
@@ -77,7 +77,7 @@ namespace SPK
 	inline void Rotator::modify(Particle& particle,float deltaTime) const
 	{
 		float angle = particle.getParamCurrentValue(PARAM_ANGLE) + deltaTime * particle.getParamCurrentValue(PARAM_ROTATION_SPEED);
-		particle.setParamCurrentValue(angle);
+		particle.setParamCurrentValue(PARAM_ANGLE,angle);
 	}
 }
 
