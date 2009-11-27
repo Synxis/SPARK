@@ -37,6 +37,7 @@ namespace SPK
 		1.0f,	// MASS
 		0.0f,	// ANGLE
 		0.0f,	// TEXTURE_INDEX
+		0.0f,	// ROTATION_SPEED
 		0.0f,	// CUSTOM_0
 		0.0f,	// CUSTOM_1
 		0.0f,	// CUSTOM_2

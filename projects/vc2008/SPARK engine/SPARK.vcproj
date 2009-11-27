@@ -579,6 +579,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_Rotator.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_Vortex.h"
 						>
 					</File>

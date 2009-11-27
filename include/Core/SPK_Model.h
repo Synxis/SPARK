@@ -38,18 +38,19 @@ namespace SPK
 	*/
 	enum ModelParamFlag
 	{
-		FLAG_NONE = 0,									/**< the flag bit for no parameter */
-		FLAG_RED = 1 << PARAM_RED,						/**< the flag bit for PARAM_RED */
-		FLAG_GREEN = 1 << PARAM_GREEN,					/**< the flag bit for PARAM_GREEN */
-		FLAG_BLUE = 1 << PARAM_BLUE,					/**< the flag bit for PARAM_BLUE */
-		FLAG_ALPHA = 1 << PARAM_ALPHA,					/**< the flag bit for PARAM_ALPHA */
-		FLAG_SIZE = 1 << PARAM_SIZE,					/**< the flag bit for PARAM_SIZE */
-		FLAG_MASS = 1 << PARAM_MASS,					/**< the flag bit for PARAM_MASS */
-		FLAG_ANGLE = 1 << PARAM_ANGLE,					/**< the flag bit for PARAM_ANGLE */
-		FLAG_TEXTURE_INDEX = 1 << PARAM_TEXTURE_INDEX,	/**< the flag bit for PARAM_TEXTURE_INDEX */
-		FLAG_CUSTOM_0 = 1 << PARAM_CUSTOM_0,			/**< the flag bit for PARAM_CUSTOM_0 */
-		FLAG_CUSTOM_1 = 1 << PARAM_CUSTOM_1,			/**< the flag bit for PARAM_CUSTOM_1 */
-		FLAG_CUSTOM_2 = 1 << PARAM_CUSTOM_2,			/**< the flag bit for PARAM_CUSTOM_2 */
+		FLAG_NONE = 0,										/**< the flag bit for no parameter */
+		FLAG_RED = 1 << PARAM_RED,							/**< the flag bit for PARAM_RED */
+		FLAG_GREEN = 1 << PARAM_GREEN,						/**< the flag bit for PARAM_GREEN */
+		FLAG_BLUE = 1 << PARAM_BLUE,						/**< the flag bit for PARAM_BLUE */
+		FLAG_ALPHA = 1 << PARAM_ALPHA,						/**< the flag bit for PARAM_ALPHA */
+		FLAG_SIZE = 1 << PARAM_SIZE,						/**< the flag bit for PARAM_SIZE */
+		FLAG_MASS = 1 << PARAM_MASS,						/**< the flag bit for PARAM_MASS */
+		FLAG_ANGLE = 1 << PARAM_ANGLE,						/**< the flag bit for PARAM_ANGLE */
+		FLAG_TEXTURE_INDEX = 1 << PARAM_TEXTURE_INDEX,		/**< the flag bit for PARAM_TEXTURE_INDEX */
+		FLAG_ROTATION_SPEED = 1 << PARAM_ROTATION_SPEED,	/**< the flag bit for PARAM_ROTATION_SPEED */
+		FLAG_CUSTOM_0 = 1 << PARAM_CUSTOM_0,				/**< the flag bit for PARAM_CUSTOM_0 */
+		FLAG_CUSTOM_1 = 1 << PARAM_CUSTOM_1,				/**< the flag bit for PARAM_CUSTOM_1 */
+		FLAG_CUSTOM_2 = 1 << PARAM_CUSTOM_2,				/**< the flag bit for PARAM_CUSTOM_2 */
 	};
 
 	/**
@@ -85,6 +86,7 @@ namespace SPK
 	* <li>PARAM_MASS : 1.0</li>
 	* <li>PARAM_ANGLE : 0.0</li>
 	* <li>PARAM_TEXTURE_INDEX : 0.0</li>
+	* <li>PARAM_ROTATION_SPEED : 0.0</li>
 	* <li>PARAM_CUSTOM_0 : 0.0</li>
 	* <li>PARAM_CUSTOM_1 : 0.0</li>
 	* <li>PARAM_CUSTOM_2 : 0.0</li>
@@ -417,7 +419,7 @@ namespace SPK
 	private :
 
 		// total number of parameters
-		static const size_t NB_PARAMS = 11;
+		static const size_t NB_PARAMS = 12;
 		// default values for the parameters
 		static const float DEFAULT_VALUES[NB_PARAMS];
 

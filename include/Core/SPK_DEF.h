@@ -147,9 +147,10 @@ namespace SPK
 		PARAM_MASS = 5,				/**< The mass of the Particle */
 		PARAM_ANGLE = 6,			/**< The angle of the texture of the Particle */
 		PARAM_TEXTURE_INDEX = 7,	/**< the index of texture of the Particle */
-		PARAM_CUSTOM_0 = 8,			/**< Reserved for a user custom parameter. This is not used by SPARK */
-		PARAM_CUSTOM_1 = 9,			/**< Reserved for a user custom parameter. This is not used by SPARK */
-		PARAM_CUSTOM_2 = 10,		/**< Reserved for a user custom parameter. This is not used by SPARK */
+		PARAM_ROTATION_SPEED = 8,	/**< the rotation speed of the particle (must be used with a rotator modifier) */
+		PARAM_CUSTOM_0 = 9,			/**< Reserved for a user custom parameter. This is not used by SPARK */
+		PARAM_CUSTOM_1 = 10,		/**< Reserved for a user custom parameter. This is not used by SPARK */
+		PARAM_CUSTOM_2 = 11,		/**< Reserved for a user custom parameter. This is not used by SPARK */
 	};
 }
 
