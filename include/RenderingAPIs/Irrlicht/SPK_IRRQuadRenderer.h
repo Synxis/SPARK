@@ -55,8 +55,6 @@ namespace IRR
 											public QuadRendererInterface,
 											public Oriented3DRendererInterface
 	{
-		using QuadRendererInterface::setAtlasDimensions;
-
 		SPK_IMPLEMENT_REGISTERABLE(IRRQuadRenderer)
 
 	public :
@@ -104,6 +102,7 @@ namespace IRR
 		* @param dim : the atlas dimension of the texture
 		*/
 		inline void setAtlasDimensions(irr::core::dimension2du dim);
+		using QuadRendererInterface::setAtlasDimensions;
 
 		/////////////
 		// Getters //
