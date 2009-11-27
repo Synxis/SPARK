@@ -63,13 +63,6 @@ scene::ICameraSceneNode* cam = NULL;
 
 bool smokeEnabled = true;
 
-// Callback function to create smoke when a fire particle dies (1 chance out of 4)
-void createSmoke(Particle& particle)
-{
-	if (random(0,4) == 0)
-		smokeGroup->addParticles(1,particle.position(),smokeEmitter);
-}
-
 // Input Receiver
 class MyEventReceiver : public IEventReceiver
 {
@@ -90,10 +83,7 @@ class MyEventReceiver : public IEventReceiver
                 if(event.KeyInput.Key == KEY_SPACE && event.KeyInput.PressedDown==false)
                 {
                     smokeEnabled=!smokeEnabled;
-                    if(!smokeEnabled)
-                        fireGroup->setCustomDeath(NULL);
-                    else
-                        fireGroup->setCustomDeath(&createSmoke);
+                    smokeGroup->getEmitter(0)->setActive(smokeEnabled);
                     return true;
                 }
                 if(event.KeyInput.Key == KEY_DELETE && event.KeyInput.PressedDown==false)
@@ -203,87 +193,106 @@ int main(int argc, char *argv[])
 	System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
 	// Inits Particle Engine
-	// Those vectors are inverted gravity so that the fire and smoke will rise up
-	Vector3D fireForce(0.0f,0.8f,0.0f);
-	Vector3D smokeForce(0.0f,0.4f,0.0f);
 
 	// Renderers
 	IRRQuadRenderer* fireRenderer = IRRQuadRenderer::create(device);
 	fireRenderer->setScale(0.3f,0.3f);
-	fireRenderer->setTexture(driver->getTexture("res\\fire.bmp"));
+	fireRenderer->setTexture(driver->getTexture("res\\fire2.bmp"));
 	fireRenderer->setTexturingMode(TEXTURE_2D);
 	fireRenderer->setBlending(BLENDING_ADD);
 	fireRenderer->enableRenderingHint(DEPTH_WRITE,false);
+	fireRenderer->setAtlasDimensions(2,2);
 
 	IRRQuadRenderer* smokeRenderer = IRRQuadRenderer::create(device);
 	smokeRenderer->setScale(0.3f,0.3f);
-	smokeRenderer->setTexture(driver->getTexture("res\\smoke.bmp"));
+	smokeRenderer->setTexture(driver->getTexture("res\\explosion.png"));
 	smokeRenderer->setTexturingMode(TEXTURE_2D);
 	smokeRenderer->setBlending(BLENDING_ALPHA);
 	smokeRenderer->enableRenderingHint(DEPTH_WRITE,false);
+	smokeRenderer->setAtlasDimensions(2,2);
 
 	// Models
-	Model* fireModel = Model::create(FLAG_ALPHA | FLAG_SIZE | FLAG_ANGLE,
-		FLAG_ALPHA | FLAG_ANGLE,
-		FLAG_SIZE | FLAG_ANGLE);
+	Model* fireModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA | FLAG_SIZE | FLAG_ANGLE | FLAG_TEXTURE_INDEX,
+		FLAG_RED | FLAG_GREEN | FLAG_ALPHA | FLAG_ANGLE,
+		FLAG_RED | FLAG_GREEN | FLAG_TEXTURE_INDEX | FLAG_ANGLE,
+		FLAG_SIZE);
+	fireModel->setParam(PARAM_RED,0.8f,0.9f,0.8f,0.9f);
+	fireModel->setParam(PARAM_GREEN,0.5f,0.6f,0.5f,0.6f);
+	fireModel->setParam(PARAM_BLUE,0.3f);
 	fireModel->setParam(PARAM_ALPHA,0.4f,0.0f);
-	fireModel->setParam(PARAM_SIZE,0.4f,1.2f);
-	fireModel->setParam(PARAM_ANGLE,0.0f,2.0f * PI,0.0f,2.0f * PI); // the texture is rotated over time
-	fireModel->setLifeTime(0.2f,2.0f);
+	fireModel->setParam(PARAM_ANGLE,0.0f,2.0f * PI,0.0f,2.0f * PI);
+	fireModel->setParam(PARAM_TEXTURE_INDEX,0.0f,4.0f);
+	fireModel->setLifeTime(1.0f,1.5f);
 
-	Model* smokeModel = Model::create(FLAG_ALPHA | FLAG_SIZE | FLAG_ANGLE,
-		FLAG_ALPHA | FLAG_SIZE,
-		FLAG_SIZE | FLAG_ANGLE);
-	smokeModel->setParam(PARAM_ALPHA,0.075f,0.0f);
-	smokeModel->setParam(PARAM_SIZE,0.2f,0.8f,4.8f,4.8f);
-	smokeModel->setParam(PARAM_ANGLE,0.0f,2.0f * PI);
-	smokeModel->setLifeTime(3.0f,6.0f);
+	Interpolator* interpolator = fireModel->getInterpolator(PARAM_SIZE);
+	interpolator->addEntry(0.5f,2.0f,5.0f);
+	interpolator->addEntry(1.0f,0.0f);
+
+	Model* smokeModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA | FLAG_SIZE | FLAG_ANGLE | FLAG_TEXTURE_INDEX,
+		FLAG_RED | FLAG_GREEN | FLAG_SIZE | FLAG_ANGLE,
+		FLAG_TEXTURE_INDEX | FLAG_ANGLE,
+		FLAG_ALPHA);
+	smokeModel->setParam(PARAM_RED,0.3f,0.2f);
+	smokeModel->setParam(PARAM_GREEN,0.25f,0.2f);
+	smokeModel->setParam(PARAM_BLUE,0.2f);
+	smokeModel->setParam(PARAM_ALPHA,0.2f,0.0f);
+	smokeModel->setParam(PARAM_SIZE,5.0,10.0f);
+	smokeModel->setParam(PARAM_TEXTURE_INDEX,0.0f,4.0f);
+	smokeModel->setParam(PARAM_ANGLE,0.0f,2.0f * PI,0.0f,2.0f * PI);
+	smokeModel->setLifeTime(5.0f,5.0f);
+
+	interpolator = smokeModel->getInterpolator(PARAM_ALPHA);
+	interpolator->addEntry(0.0f,0.0f);
+	interpolator->addEntry(0.2f,0.2f);
+	interpolator->addEntry(1.0f,0.0f);
 
 	// Emitters
 	// The emitters are arranged so that the fire looks realistic
-	StraightEmitter* fireEmitter1 = StraightEmitter::create(Vector3D(1.0f,0.2f,0.0f));
-	fireEmitter1->setZone(Sphere::create(Vector3D(0.15f,-1.2f,0.075f),0.1f));
-	fireEmitter1->setFlow(100);
-	fireEmitter1->setForce(0.1f,0.5f);
+	StraightEmitter* fireEmitter1 = StraightEmitter::create(Vector3D(0.0f,1.0f,0.0f));
+	fireEmitter1->setZone(Sphere::create(Vector3D(0.0f,-1.0f,0.0f),0.5f));
+	fireEmitter1->setFlow(40);
+	fireEmitter1->setForce(1.0f,2.5f);
 
-	StraightEmitter* fireEmitter2 = StraightEmitter::create(Vector3D(0.0f,1.0f,0.0f));
-	fireEmitter2->setZone(Sphere::create(Vector3D(0.0f,-1.0f,0.0f),0.5f));
-	fireEmitter2->setFlow(500);
-	fireEmitter2->setForce(0.1f,0.8f);
+	StraightEmitter* fireEmitter2 = StraightEmitter::create(Vector3D(1.0f,0.6f,0.0f));
+	fireEmitter2->setZone(Sphere::create(Vector3D(0.15f,-1.2f,0.075f),0.1f));
+	fireEmitter2->setFlow(15);
+	fireEmitter2->setForce(0.5f,1.5f);
 
-	StraightEmitter* fireEmitter3 = StraightEmitter::create(Vector3D(-0.6f,0.4f,-0.8f));
+	StraightEmitter* fireEmitter3 = StraightEmitter::create(Vector3D(-0.6f,0.8f,-0.8f));
 	fireEmitter3->setZone(Sphere::create(Vector3D(-0.375f,-1.15f,-0.375f),0.3f));
-	fireEmitter3->setFlow(300);
-	fireEmitter3->setForce(0.1f,0.6f);
+	fireEmitter3->setFlow(15);
+	fireEmitter3->setForce(0.5f,1.5f);
 
-	StraightEmitter* fireEmitter4 = StraightEmitter::create(Vector3D(-0.8f,0.2f,0.2f));
+	StraightEmitter* fireEmitter4 = StraightEmitter::create(Vector3D(-0.8f,0.5f,0.2f));
 	fireEmitter4->setZone(Sphere::create(Vector3D(-0.255f,-1.2f,0.225f),0.2f));
-	fireEmitter4->setFlow(100);
-	fireEmitter4->setForce(0.1f,0.5f);
+	fireEmitter4->setFlow(10);
+	fireEmitter4->setForce(0.5f,1.5f);
 
-	StraightEmitter* fireEmitter5 = StraightEmitter::create(Vector3D(0.1f,0.2f,-1.0f));
+	StraightEmitter* fireEmitter5 = StraightEmitter::create(Vector3D(0.1f,0.8f,-1.0f));
 	fireEmitter5->setZone(Sphere::create(Vector3D(-0.075f,-1.2f,-0.3f),0.2f));
-	fireEmitter5->setFlow(100);
-	fireEmitter5->setForce(0.1f,0.5f);
+	fireEmitter5->setFlow(10);
+	fireEmitter5->setForce(0.5f,1.5f);
 
 	smokeEmitter = SphericEmitter::create(Vector3D(0.0f,1.0f,0.0f),0.0f,0.5f * PI);
+	smokeEmitter->setZone(Sphere::create(Vector3D(),1.2f));
+	smokeEmitter->setFlow(25);
 	smokeEmitter->setForce(0.5f,1.0f);
 
 	// Groups
-	fireGroup = Group::create(fireModel,1400);
-	fireGroup->addEmitter(fireEmitter2);
+	fireGroup = Group::create(fireModel,135);
 	fireGroup->addEmitter(fireEmitter1);
+	fireGroup->addEmitter(fireEmitter2);
 	fireGroup->addEmitter(fireEmitter3);
 	fireGroup->addEmitter(fireEmitter4);
 	fireGroup->addEmitter(fireEmitter5);
 	fireGroup->setRenderer(fireRenderer);
-	fireGroup->setCustomDeath(&createSmoke);
-	fireGroup->setGravity(fireForce);
+	fireGroup->setGravity(Vector3D(0.0f,3.0f,0.0f));
 	fireGroup->enableAABBComputing(true);
 
-	smokeGroup = Group::create(smokeModel,1800);
+	smokeGroup = Group::create(smokeModel,135);
+	smokeGroup->addEmitter(smokeEmitter);
 	smokeGroup->setRenderer(smokeRenderer);
-	smokeGroup->setGravity(smokeForce);
+	smokeGroup->setGravity(Vector3D(0.0f,0.4f,0.0f));
 	smokeGroup->enableAABBComputing(true);
 	
 	// System
