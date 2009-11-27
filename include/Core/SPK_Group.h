@@ -24,6 +24,8 @@
 #define H_SPK_GROUP
 
 #include "Core/SPK_DEF.h"
+#include "Core/SPK_Registerable.h"
+#include "Core/SPK_Transformable.h"
 #include "Core/SPK_Vector3D.h"
 #include "Core/SPK_Pool.h"
 #include "Core/SPK_Particle.h"
@@ -48,7 +50,7 @@ namespace SPK
 	* <br>
 	* This class is the spine of the SPARK engine.
 	*/
-	class SPK_PREFIX Group : public Registerable
+	class SPK_PREFIX Group : public Registerable, public Transformable
 	{
 		friend class Renderer;
 		friend class Particle;
@@ -787,6 +789,8 @@ namespace SPK
 		virtual void registerChildren(bool registerAll);
 		virtual void copyChildren(const Group& group,bool createBase);
 		virtual void destroyChildren(bool keepChildren);
+
+		virtual void propagateUpdateTransform();
 
 	private :
 

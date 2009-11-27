@@ -325,12 +325,6 @@ namespace SPK
 	void System::propagateUpdateTransform()
 	{
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-		{
-			for (std::vector<Emitter*>::const_iterator emitterIt = (*it)->getEmitters().begin(); emitterIt != (*it)->getEmitters().end(); ++emitterIt)
-				(*emitterIt)->updateTransform(this);
-			for (std::vector<Modifier*>::const_iterator modifierIt = (*it)->getModifiers().begin(); modifierIt != (*it)->getModifiers().end(); ++modifierIt)
-				if ((*modifierIt)->isLocalToSystem())
-					(*modifierIt)->updateTransform(this);
-		}
+			(*it)->updateTransform(this);
 	}
 }

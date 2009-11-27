@@ -34,6 +34,7 @@ namespace SPK
 
 	Group::Group(Model* model,size_t capacity) :
 		Registerable(),
+		Transformable(),
 		model(model != NULL ? model : &defaultModel),
 		renderer(NULL),
 		friction(0.0f),
@@ -58,6 +59,7 @@ namespace SPK
 
 	Group::Group(const Group& group) :
 		Registerable(group),
+		Transformable(group),
 		model(group.model),
 		renderer(group.renderer),
 		friction(group.friction),
@@ -688,5 +690,14 @@ namespace SPK
 			sortParticles(start,j);
 			sortParticles(j + 1,end);
 		}
+	}
+
+	void Group::propagateUpdateTransform()
+	{
+		for (std::vector<Emitter*>::const_iterator emitterIt = emitters.begin(); emitterIt != emitters.end(); ++emitterIt)
+			(*emitterIt)->updateTransform(this);
+		for (std::vector<Modifier*>::const_iterator modifierIt = modifiers.begin(); modifierIt != modifiers.end(); ++modifierIt)
+			if ((*modifierIt)->isLocalToSystem())
+				(*modifierIt)->updateTransform(this);
 	}
 }
