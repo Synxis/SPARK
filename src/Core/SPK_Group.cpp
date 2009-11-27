@@ -72,6 +72,7 @@ namespace SPK
 		fupdate(group.fupdate),
 		fbirth(group.fbirth),
 		fdeath(group.fdeath),
+		boundingBoxEnabled(group.boundingBoxEnabled),
 		emitters(group.emitters),
 		modifiers(group.modifiers),
 		activeModifiers(group.activeModifiers.capacity()),
