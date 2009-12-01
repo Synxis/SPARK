@@ -54,11 +54,13 @@ using namespace SPK::DX9;
 
 float step = 0.0f;
 
-Group* particleGroupPtr = NULL;
+SPK::System* particleSystem = NULL;
+SPK::Group* particleGroup = NULL;
+SPK::Model* particleModel = NULL;
 
-//FTGLTextureFont* fontPtr;
-
-SPK::System particleSystem;
+SPK::DX9::DX9PointRenderer* basicRenderer = NULL;
+SPK::DX9::DX9PointRenderer* pointRenderer = NULL;
+SPK::DX9::DX9QuadRenderer* quadRenderer = NULL;
 
 const string STR_NB_PARTICLES = "NB PARTICLES : ";
 const string STR_FPS = "FPS : ";
@@ -71,15 +73,6 @@ int screenHeight;
 float screenRatio;
 
 int drawText = 2;
-
-DX9PointRenderer *basicRenderer = NULL;
-DX9PointRenderer *pointRenderer = NULL;
-DX9QuadRenderer *quadRenderer = NULL;
-DX9Renderer* particleRenderer = NULL;
-Model *particleModel;
-Point *point;
-Group *particleGroup;
-SphericEmitter *particleEmitter;
 
 HWND g_hWnd;
 HINSTANCE g_hInst;
@@ -216,90 +209,95 @@ string int2Str(int a)
     return stm.str();
 }
 
-// Calls back function to have particle bounce on the floor
-bool bounceOnFloor(Particle& particle, float deltaTime)
-{
-	if (particle.position().y < 0.015f)
-	{
-		particle.position().y = 0.015f;
-		particle.velocity().y = -particle.velocity().y * 0.6f;
-	}
-	return false;
-}
-
 void Init()
 {
+	/////////////////////////
+	// SPARK initial setup //
+	/////////////////////////
+
+	// random seed
+	randomSeed = static_cast<unsigned int>(time(NULL));
+
+	// Sets the update step
+	System::setClampStep(true,0.1f);			// clamp the step to 100 ms
+	System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
+
+	// Sets the device for SPARK DX9 rendering
 	DX9Info::setDevice( g_pD3DDevice );
 	DX9Info::setPool( D3DPOOL_MANAGED );
 
-	// Loads particle texture
+	////////////////////////////
+	// Loads particle texture //
+	////////////////////////////
+
 	LPDIRECT3DTEXTURE9 textureParticle = NULL;
 	hr = D3DXCreateTextureFromFile(g_pD3DDevice, L"res/point.bmp", &textureParticle);
 	if( FAILED(hr) )
 		cout << "erreur chargement texture" << endl;
 
-	g_pCamera = new CGlobalCamera();
-
-	// Inits Particle Engine
-	Vector3D gravity(0.0f,-0.8f,0.0f);
+	/////////////////////////////
+	// Creates particle system //
+	/////////////////////////////
 
 	// Renderers
-	//DX9PointRenderer basicRenderer(g_pD3DDevice);
+	basicRenderer = DX9PointRenderer::create(); // basic renderer used for debug
 
-	pointRenderer = new DX9PointRenderer();
-	basicRenderer = new DX9PointRenderer();
-	quadRenderer = new DX9QuadRenderer();
-	particleRenderer = NULL;
+	DX9PointRenderer::setPixelPerUnit(45.0f * D3DX_PI / 180.f, screenHeight);
+	pointRenderer = DX9PointRenderer::create(); // point sprite renderer
+	pointRenderer->setType(POINT_SPRITE);
+	pointRenderer->enableBlending(true);
+	pointRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
+	pointRenderer->setTexture(textureParticle);
+	pointRenderer->setTextureBlending(D3DTOP_MODULATE);
+	pointRenderer->enableWorldSize(true);
+	pointRenderer->setSize(0.05f);
 
-	//*
-	//if( false )
-	{
-		pointRenderer->setType(POINT_SPRITE);
-		pointRenderer->enableBlending(true);
-		pointRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-		pointRenderer->setTexture(textureParticle);
-		pointRenderer->setTextureBlending(D3DTOP_MODULATE);
-		pointRenderer->enableWorldSize(true);
-		DX9PointRenderer::setPixelPerUnit(45.0f * D3DX_PI / 180.f, screenHeight);
-		pointRenderer->setSize(0.05f);
-		particleRenderer = pointRenderer;
-	}
-	//else // we use quads
-	//*/
-	//*
-	{
-		quadRenderer->OnD3D9CreateDevice();
-		quadRenderer->enableBlending(true);
-		quadRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-		quadRenderer->setTexturingMode(TEXTURE_2D);
-		quadRenderer->setTexture(textureParticle);
-		quadRenderer->setTextureBlending(D3DTOP_MODULATE);
-		quadRenderer->setScale(0.05f,0.05f);
-		//particleRenderer = quadRenderer;
-	}
-	//*/
+	quadRenderer = DX9QuadRenderer::create(); // quad renderer
+	quadRenderer->OnD3D9CreateDevice();
+	quadRenderer->enableBlending(true);
+	quadRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
+	quadRenderer->setTexturingMode(TEXTURE_2D);
+	quadRenderer->setTexture(textureParticle);
+	quadRenderer->setTextureBlending(D3DTOP_MODULATE);
+	quadRenderer->setScale(0.05f,0.05f);
 
 	// Model
-	particleModel = new Model(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA);
+	particleModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA);
 	particleModel->setParam(PARAM_ALPHA,0.8f); // constant alpha
 	particleModel->setLifeTime(8.0f,8.0f);
 
 	// Emitter
-	point = new Point(Vector3D(0.0f,0.016f,0.0f));
-	particleEmitter = new SphericEmitter(Vector3D(0.0f,1.0f,0.0f),0.1f * D3DX_PI,0.1f * D3DX_PI);
-	particleEmitter->setZone(point);
+	SphericEmitter* particleEmitter = SphericEmitter::create(Vector3D(0.0f,1.0f,0.0f),0.1f * D3DX_PI,0.1f * D3DX_PI);
+	particleEmitter->setZone(Point::create(Vector3D(0.0f,0.016f,0.0f)));
 	particleEmitter->setFlow(250);
 	particleEmitter->setForce(1.5f,1.5f);
 
+	// Modifier
+	Obstacle* groundObstacle = Obstacle::create(Plane::create(),INTERSECT_ZONE,0.6f,1.0f);
+
 	// Group
-	particleGroup = new Group(particleModel, 2100);
+	particleGroup = Group::create(particleModel, 2100);
 	particleGroup->addEmitter(particleEmitter);
-	particleGroup->setRenderer(particleRenderer);
-	particleGroup->setCustomUpdate(&bounceOnFloor);
-	particleGroup->setGravity(gravity);
+	particleGroup->addModifier(groundObstacle);
+	particleGroup->setRenderer(pointRenderer);
+	particleGroup->setGravity(Vector3D(0.0f,-0.8f,0.0f));
 	
-	particleSystem.addGroup(particleGroup);
-	particleGroupPtr = particleGroup;
+	// System
+	particleSystem = System::create();
+	particleSystem->addGroup(particleGroup);
+
+	/////////////////////////////////////
+	// Traces SPARK registered objects //
+	/////////////////////////////////////
+
+	cout << "\nSPARK FACTORY AFTER INIT :" << endl;
+	SPKFactory::getInstance().traceAll();
+
+	///////////////
+	// D3D Setup //
+	///////////////
+
+	g_pCamera = new CGlobalCamera();
 
 	D3DXMATRIX mWorld;
 	D3DXMatrixIdentity(&mWorld);
@@ -323,19 +321,20 @@ void Move()
 {
 	g_pCamera->Move();
 	float deltaTime = float(g_timerDemo.GetElapsedTime());
-	// Updates particle system
-	particleSystem.update(deltaTime);	// 1 defined as a second
 
 	// Changes the color of the model over time
 	step += deltaTime * 0.5f;
 	particleModel->setParam(PARAM_RED,0.6f + 0.4f * sin(step));
 	particleModel->setParam(PARAM_GREEN,0.6f + 0.4f * sin(step + D3DX_PI * 2.0f / 3.0f));
 	particleModel->setParam(PARAM_BLUE,0.6f + 0.4f * sin(step + D3DX_PI * 4.0f / 3.0f));
+
+	// Updates particle system
+	particleSystem->update(deltaTime);	// 1 defined as a second
 }
 
 void Draw()
 {
-	g_pD3DDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_COLORVALUE(0.5f,0.5f,0.5f,1.0f), 1.0f, 0 );
+	g_pD3DDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_COLORVALUE(0.0f,0.0f,0.0f,1.0f), 1.0f, 0 );
 
 	g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &g_pCamera->m_mProj);
 	g_pD3DDevice->SetTransform(D3DTS_VIEW, &g_pCamera->m_mView);
@@ -358,7 +357,7 @@ void Draw()
 
 	//g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	//g_pMesh->DrawSubset(0);
-	particleSystem.render();
+	particleSystem->render();
 
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present( NULL, NULL, NULL, NULL );
@@ -381,6 +380,12 @@ int Run()
 			Draw();
 		}
 	}
+
+	cout << "\nSPARK FACTORY BEFORE DESTRUCTION :" << endl;
+	SPKFactory::getInstance().traceAll();
+	SPKFactory::getInstance().destroyAll();
+	cout << "\nSPARK FACTORY AFTER DESTRUCTION :" << endl;
+	SPKFactory::getInstance().traceAll();
 
 	g_pD3DDevice->Release();
 	g_pD3D->Release();
@@ -417,9 +422,6 @@ void InitializeConsoleStdIO()
 // Main function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	// random seed
-	randomSeed = static_cast<unsigned int>(time(NULL));
-
 	::AllocConsole();
 	InitializeConsoleStdIO();
 
@@ -447,13 +449,11 @@ LRESULT CALLBACK MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						switch (renderValue)
 						{
 							case 0 :
-								particleRenderer = pointRenderer;
-								particleGroup->setRenderer(particleRenderer);
+								particleGroup->setRenderer(pointRenderer);
 								break;
 
 							case 1 :
-								particleRenderer = quadRenderer;
-								particleGroup->setRenderer(particleRenderer);
+								particleGroup->setRenderer(quadRenderer);
 								break;
 
 							case 2 :
