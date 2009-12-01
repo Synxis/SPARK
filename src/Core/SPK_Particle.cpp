@@ -231,11 +231,7 @@ namespace SPK
 			std::swap(a.extendedParams[i],b.extendedParams[i]);
 		
 		// swap additional data (groups are assumed to be the same)
-		for (std::map<std::string,Buffer*>::iterator it = a.group->additionalBuffers.begin(); it != a.group->additionalBuffers.end(); ++it)
-		{
-			Buffer* buffer = it->second;
-			if (buffer->isSwapEnabled())
-				buffer->swap(a.index,b.index);
-		}
+		for (std::set<Buffer*>::iterator it = a.group->swappableBuffers.begin(); it != a.group->swappableBuffers.end(); ++it)
+			(*it)->swap(a.index,b.index);
 	}
 }

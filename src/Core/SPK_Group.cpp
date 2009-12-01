@@ -54,7 +54,8 @@ namespace SPK
 		emitters(),
 		modifiers(),
 		activeModifiers(),
-		additionalBuffers()
+		additionalBuffers(),
+		swappableBuffers()
 	{}
 
 	Group::Group(const Group& group) :
@@ -76,7 +77,8 @@ namespace SPK
 		emitters(group.emitters),
 		modifiers(group.modifiers),
 		activeModifiers(group.activeModifiers.capacity()),
-		additionalBuffers(group.additionalBuffers)
+		additionalBuffers(group.additionalBuffers),
+		swappableBuffers()
 	{
 		particleData = new Particle::ParticleData[pool.getNbReserved()];
 		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
@@ -99,6 +101,9 @@ namespace SPK
 		{
 			Buffer* buffer = it->second;
 			it->second = buffer->clone();
+
+			if (it->second->isSwapEnabled())
+				swappableBuffers.insert(it->second);
 		}
 	}
 
@@ -618,6 +623,8 @@ namespace SPK
 		buffer->swapEnabled = swapEnabled;
 
 		additionalBuffers.insert(std::pair<std::string,Buffer*>(ID,buffer));
+		if (swapEnabled)
+			swappableBuffers.insert(buffer);
 
 		return buffer;
 	}
@@ -628,8 +635,11 @@ namespace SPK
 
 		if (it != additionalBuffers.end())
 		{
+			if (it->second->isSwapEnabled())
+				swappableBuffers.erase(it->second);
 			delete it->second;
 			additionalBuffers.erase(it);
+
 		}
 	}
 
@@ -638,6 +648,7 @@ namespace SPK
 		for (std::map<std::string,Buffer*>::const_iterator it = additionalBuffers.begin(); it != additionalBuffers.end(); ++it)
 			delete it->second;
 		additionalBuffers.clear();
+		swappableBuffers.clear();
 	}
 
 	Buffer* Group::getBuffer(const std::string& ID,unsigned int flag) const

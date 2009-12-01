@@ -852,6 +852,7 @@ namespace SPK
 
 		// additional buffers
 		mutable std::map<std::string,Buffer*> additionalBuffers;
+		mutable std::set<Buffer*> swappableBuffers;
 
 		void pushParticle(std::vector<EmitterData>::iterator& emitterIt,unsigned int& nbManualBorn);
 		void launchParticle(Particle& p,std::vector<EmitterData>::iterator& emitterIt,unsigned int& nbManualBorn);
