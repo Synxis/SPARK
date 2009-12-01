@@ -64,6 +64,7 @@
 				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Core\Debug&quot;;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Optional\Debug&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"

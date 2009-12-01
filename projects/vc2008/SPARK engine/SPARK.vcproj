@@ -417,6 +417,10 @@
 					Name="DX9"
 					>
 					<File
+						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9BufferHandler.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\RenderingAPIs\DX9\SPK_DX9Info.cpp"
 						>
 					</File>
@@ -772,6 +776,10 @@
 					>
 					<File
 						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9_DEF.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9BufferHandler.h"
 						>
 					</File>
 					<File

@@ -136,7 +136,7 @@ namespace DX9
 	{
 		HRESULT hr;
 		
-		if (!prepareBuffers(group))
+		if (!DX9PrepareBuffers(group))
 			return;
 
 		initBlending();

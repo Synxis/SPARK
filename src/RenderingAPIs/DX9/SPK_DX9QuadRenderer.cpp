@@ -228,7 +228,7 @@ namespace DX9
 		HRESULT hr = 0;
 		int nb_part = group.getNbParticles();
 
-		if (!prepareBuffers(group))
+		if (!DX9PrepareBuffers(group))
 			return;
 
 		D3DXMATRIX view;

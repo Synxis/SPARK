@@ -28,4 +28,10 @@ namespace DX9
 {
 	LPDIRECT3DDEVICE9 DX9Info::device = NULL;
 	D3DPOOL DX9Info::pool = (D3DPOOL)-1;
+
+	bool DX9Info::lost = false;
+	bool DX9Info::destroyed = false;
+
+	std::vector<Group *> DX9Info::groups = std::vector<Group *>();
+	std::vector<IUnknown **> DX9Info::resources = std::vector<IUnknown **>();
 }}

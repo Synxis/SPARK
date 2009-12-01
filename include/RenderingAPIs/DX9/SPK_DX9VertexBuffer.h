@@ -46,6 +46,8 @@ namespace DX9
 		*/
 		inline LPDIRECT3DVERTEXBUFFER9 getData() const;
 
+		inline LPDIRECT3DVERTEXBUFFER9 *getDataAddr();
+
 		/**
 		* @brief Gets the number of elements for a single particle
 		* @return the number of elements for a single particle
@@ -136,6 +138,12 @@ namespace DX9
 	}
 
 	template<class T>
+	LPDIRECT3DVERTEXBUFFER9 *DX9VertexBuffer<T>::getDataAddr()
+	{
+		return &data;
+	}
+
+	template<class T>
 	inline const size_t DX9VertexBuffer<T>::getParticleSize() const
 	{
 		return particleSize;
@@ -156,8 +164,10 @@ namespace DX9
 	template<class T>
 	void DX9VertexBuffer<T>::swap(size_t index0,size_t index1)
 	{
+		if( data == NULL )
+			return;
 		//*
-		void *ptr;
+		void *ptr = NULL;
 		data->Lock(0, dataSize*sizeof(T), &ptr, 0);
 		T* address0 = ((T*)ptr) + index0 * particleSize;
 		T* address1 = ((T*)ptr) + index1 * particleSize;

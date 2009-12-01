@@ -46,6 +46,8 @@ namespace DX9
 		*/
 		inline LPDIRECT3DINDEXBUFFER9 getData() const;
 
+		inline LPDIRECT3DINDEXBUFFER9 *getDataAddr();
+
 		/**
 		* @brief Gets the number of elements for a single particle
 		* @return the number of elements for a single particle
@@ -133,6 +135,12 @@ namespace DX9
 	LPDIRECT3DINDEXBUFFER9 DX9IndexBuffer<T>::getData() const
 	{
 		return data;
+	}
+
+	template<class T>
+	LPDIRECT3DINDEXBUFFER9 *DX9IndexBuffer<T>::getDataAddr()
+	{
+		return &data;
 	}
 
 	template<class T>

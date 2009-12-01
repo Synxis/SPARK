@@ -22,6 +22,7 @@
 
 // DX9
 #include "RenderingAPIs/DX9/SPK_DX9Info.cpp"
+//#include "RenderingAPIs/DX9/SPK_DX9BufferHandler.cpp"
 #include "RenderingAPIs/DX9/SPK_DX9Renderer.cpp"
 #include "RenderingAPIs/DX9/SPK_DX9LineRenderer.cpp"
 #include "RenderingAPIs/DX9/SPK_DX9PointRenderer.cpp"

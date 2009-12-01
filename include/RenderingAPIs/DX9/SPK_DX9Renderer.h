@@ -108,7 +108,7 @@ namespace DX9
 		*/
 		inline int getTextureBlending() const;
 
-		//*
+		/*
 		//--------------------------------------------------------------------------------------
 		// Create any D3D9 resources that will live through a device reset (D3DPOOL_MANAGED)
 		// and aren't tied to the back buffer size
@@ -146,6 +146,8 @@ namespace DX9
 			reinit = true;
 			return S_OK;
 		}
+
+		bool DX9PrepareBuffers(const Group& group);
 
 	protected :
 

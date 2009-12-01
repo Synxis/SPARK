@@ -73,7 +73,7 @@ namespace DX9
 		void init(const Group& group);
 		virtual void render(const Group& group);
 
-		virtual HRESULT OnD3D9CreateDevice();
+		//virtual HRESULT OnD3D9CreateDevice();
 
 	protected :
 

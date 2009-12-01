@@ -103,6 +103,8 @@ void InitApp();
 void UnInitApp();
 void RenderText();
 
+void InitSpark();
+
 
 // SPARK lib
 #include <SPK.h>
@@ -243,11 +245,15 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCallbackD3D9FrameRender( OnD3D9FrameRender );
 	DXUTSetCallbackMouse( MouseProc );
 
-    InitApp();
+	InitApp();
+    
     DXUTInit( true, true, NULL ); // Parse the command line, show msgboxes on error, no extra command line params
     DXUTSetCursorSettings( true, true );
     DXUTCreateWindow( L"Gravitation Demo DXUT9" );
     DXUTCreateDevice( true, 640, 480 );
+
+	InitSpark();
+
     DXUTMainLoop(); // Enter into the DXUT render loop
 
 	UnInitApp();
@@ -262,6 +268,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
+	OutputDebugString( L"InitApp\n" );
 #ifdef CONSOLE
 	std::cout << "InitApp" << std::endl;
 #endif
@@ -290,6 +297,21 @@ void InitApp()
 	g_light.Direction = Vdir;
 
 
+	
+}
+
+void UnInitApp()
+{
+	OutputDebugString( L"UnInitApp\n" );
+#ifdef CONSOLE
+	std::cout << "UnInitApp" << std::endl;
+#endif
+
+
+}
+
+void InitSpark()
+{
 	// Renderers
 	basicRenderer = DX9PointRenderer::create();
 
@@ -322,9 +344,11 @@ void InitApp()
 	// Groups
 	particleGroup = Group::create(particleModel,4100);
 	particleGroup->addEmitter(particleEmitter);
+	DX9Info::addGroup(particleGroup);
 
 	massGroup = Group::create(massModel, NB_POINT_MASS);
 	massGroup->addModifier(centerPointMass);
+	DX9Info::addGroup(massGroup);
 
 	// Creates the point masses that will atract the particles
 	for (int i = 0; i < NB_POINT_MASS; ++i)
@@ -339,15 +363,13 @@ void InitApp()
 	particleSystem = System::create();
 	particleSystem->addGroup(massGroup);
 	particleSystem->addGroup(particleGroup);
-}
-
-void UnInitApp()
-{
-#ifdef CONSOLE
-	std::cout << "UnInitApp" << std::endl;
-#endif
 
 
+	basicRenderer->OnD3D9CreateDevice();
+	//trailRenderer->OnD3D9CreateDevice();
+
+	particleGroup->setRenderer(trailRenderer);
+	massGroup->setRenderer(NULL);
 }
 
 
@@ -381,6 +403,7 @@ void RenderText()
 bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
                                       D3DFORMAT BackBufferFormat, bool bWindowed, void* pUserContext )
 {
+	OutputDebugString( L"IsD3D9DeviceAcceptable\n" );
 #ifdef CONSOLE
 	std::cout << "IsD3D9DeviceAcceptable" << std::endl;
 #endif
@@ -401,6 +424,7 @@ bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
+	OutputDebugString( L"ModifyDeviceSettings\n" );
 #ifdef CONSOLE
 	std::cout << "ModifyDeviceSettings" << std::endl;
 #endif
@@ -459,6 +483,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
                                      void* pUserContext )
 {
+	OutputDebugString( L"OnD3D9CreateDevice\n" );
 #ifdef CONSOLE
 	std::cout << "OnD3D9CreateDevice" << std::endl;
 #endif
@@ -498,13 +523,13 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/point.bmp", &g_pTextureParticle);
 	if( FAILED(hr) )
 		cout << "erreur chargement texture" << endl;
-
+/*
 	basicRenderer->OnD3D9CreateDevice();
 	trailRenderer->OnD3D9CreateDevice();
 
 	particleGroup->setRenderer(trailRenderer);
 	massGroup->setRenderer(NULL);
-
+*/
     return S_OK;
 }
 
@@ -516,6 +541,7 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
                                     const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
 {
+	OutputDebugString( L"OnD3D9ResetDevice\n" );
 #ifdef CONSOLE
 	std::cout << "OnD3D9ResetDevice" << std::endl;
 #endif
@@ -583,6 +609,10 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
+	OutputDebugString( L"OnFrameMove\n" );
+#ifdef CONSOLE
+	std::cout << "OnFrameMove" << std::endl;
+#endif
 //	g_fElapsedTime = fElapsedTime;
     // Update the camera's position based on user input 
     g_Camera.FrameMove( fElapsedTime );
@@ -777,6 +807,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
+	OutputDebugString( L"OnD3D9LostDevice\n" );
 #ifdef CONSOLE
 	std::cout << "OnD3D9LostDevice" << std::endl;
 #endif
@@ -787,6 +818,8 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
     if( g_pEffect9 ) g_pEffect9->OnLostDevice();
     SAFE_RELEASE( g_pSprite9 );
     SAFE_DELETE( g_pTxtHelper );
+
+	DX9Info::OnD3D9LostDevice();
 }
 
 
@@ -795,6 +828,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {
+	OutputDebugString( L"OnD3D9DestroyDevice\n" );
 #ifdef CONSOLE
 	std::cout << "OnD3D9DestroyDevice" << std::endl;
 #endif
@@ -805,6 +839,8 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
     SAFE_RELEASE( g_pFont9 );
 
 	// SPARK destroy
+	DX9Info::OnD3D9DestroyDevice();
+
 	SAFE_RELEASE( g_pTextureParticle );
 	//-------------------------------------------------------------------------
 }

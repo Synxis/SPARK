@@ -61,4 +61,19 @@ namespace DX9
 			break;
 		}
 	}
+
+	bool DX9Renderer::DX9PrepareBuffers(const Group& group)
+	{
+		if (!checkBuffers(group))
+		{
+			if (isBuffersCreationEnabled())
+			{
+				destroyBuffers(group);
+				createBuffers(group);
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
 }}
