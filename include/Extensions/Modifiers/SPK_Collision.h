@@ -52,7 +52,7 @@ namespace SPK
 	* <br>
 	* The accuracy of the collisions is better with small update steps.
 	* Therefore try to keep the update time small by for instance multiplying the number of updates per frame.
-	* 
+	*
 	* @since 1.04.00
 	*/
 	class SPK_PREFIX Collision : public Modifier
@@ -124,11 +124,11 @@ namespace SPK
 
 		float elasticity;
 		float scale;
-	
+
 		virtual void modify(Particle& particle,float deltaTime) const;
 
 		static inline void getMinMax(const Vector3D& v0,const Vector3D& v1,Vector3D& min,Vector3D& max);
-		static inline bool Collision::checkBoundingRect(const Vector3D& min1,const Vector3D& max1,const Vector3D& min2,const Vector3D& max2);
+		static inline bool checkBoundingRect(const Vector3D& min1,const Vector3D& max1,const Vector3D& min2,const Vector3D& max2);
 	};
 
 
@@ -138,7 +138,7 @@ namespace SPK
 		registerObject(obj);
 		return obj;
 	}
-		
+
 	inline void Collision::setElasticity(float elasticity)
 	{
 		if (elasticity >= 0.0f)

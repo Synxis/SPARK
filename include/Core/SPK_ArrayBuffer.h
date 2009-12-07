@@ -119,7 +119,7 @@ namespace SPK
 		particleSize(buffer.particleSize)
 	{
 		data = new T[dataSize];
-		std::memcpy(data,buffer.data,dataSize * sizeof(T));
+		memcpy(data,buffer.data,dataSize * sizeof(T));
 	}
 
 	template<class T>

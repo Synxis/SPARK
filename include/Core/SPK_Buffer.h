@@ -26,6 +26,7 @@
 namespace SPK
 {
 	class Particle;
+	class Group;
 
 	/**
 	* @brief An abstract class that defines the interface for the additional buffers of Group

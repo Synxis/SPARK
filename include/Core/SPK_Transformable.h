@@ -77,7 +77,7 @@ namespace SPK
 		/////////////
 		// Setters //
 		/////////////
-		
+
 		/**
 		* @brief Sets the local transform of this Transformable
 		*
@@ -114,7 +114,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param pos : the position of the local transform
 		* @since 1.05.00
 		*/
@@ -127,7 +127,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param look : the look vector of the transformable
 		* @param up : the up vector of the transformable
 		* @since 1.05.00
@@ -141,7 +141,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param look : the look vector of the transformable
 		* @param up : the up vector of the transformable
 		* @since 1.05.00
@@ -156,7 +156,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param axis : the axis of rotation
 		* @param angle : the angle of rotation around the axis
 		* @since 1.05.00
@@ -171,7 +171,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param angle : the angle of rotation around the x axis
 		* @since 1.05.00
 		*/
@@ -185,7 +185,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param angle : the angle of rotation around the y axis
 		* @since 1.05.00
 		*/
@@ -199,7 +199,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param angle : the angle of rotation around the z axis
 		* @since 1.05.00
 		*/
@@ -208,7 +208,7 @@ namespace SPK
 		/////////////
 		// Getters //
 		/////////////
-	
+
 		/**
 		* @brief Gets the local transform of this Transformable
 		* @return a pointer to the local transform of this Transformable
@@ -308,7 +308,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param target : the point the transformable is looking at
 		* @param up : the up vector of the transformable
 		* @param pos : the position of the transformable
@@ -323,7 +323,7 @@ namespace SPK
 		* <br>
 		* Note that this methods sets the local transform.
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
-		* 
+		*
 		* @param target : the point the transformable is looking at
 		* @param up : the up vector of the transformable
 		* @param pos : the position of the transformable
@@ -344,7 +344,7 @@ namespace SPK
 		void updateTransform(const Transformable* parent = NULL);
 
 		/** @brief Resets the transform to identity */
-		inline void resetTransform();	
+		inline void resetTransform();
 
 	protected :
 
@@ -383,7 +383,7 @@ namespace SPK
 
 		/**
 		* @brief Updates all the parameters in the world coordinates
-		* 
+		*
 		* This method can be overriden in derived classes of Transformable (By default it does nothing).<br>
 		* It is this method task to compute all parameters of the class that are dependent of the world transform.
 		*/
@@ -430,7 +430,7 @@ namespace SPK
 
 	inline void Transformable::setTransform(const float* transform)
 	{
-		std::memcpy(local,transform,sizeof(float) * TRANSFORM_LENGTH);
+		memcpy(local,transform,sizeof(float) * TRANSFORM_LENGTH);
 		localIdentity = false;
 		notifyForUpdate();
 	}
