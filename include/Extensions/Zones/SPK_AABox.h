@@ -106,7 +106,7 @@ namespace SPK
 		registerObject(obj);
 		return obj;
 	}
-	
+
 	inline const Vector3D& AABox::getDimension() const
 	{
 		return dimension;
@@ -138,13 +138,13 @@ namespace SPK
 		if (t0 > tEnter)
 		{
 			tEnter = t0;
-			firstAxis = firstAxis & 0xF0 | axis & 0x0F;
+			firstAxis = (firstAxis & 0xF0) | (axis & 0x0F);
 		}
 
 		if (t1 < tExit)
 		{
 			tExit = t1;
-			firstAxis = firstAxis & 0x0F | (axis << 4) & 0xF0;
+			firstAxis = (firstAxis & 0x0F) | ((axis << 4) & 0xF0);
 		}
 
 		return true;

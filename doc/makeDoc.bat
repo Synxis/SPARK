@@ -1,6 +1,8 @@
 cd doxygen
 doxygen doxygen.cfg
 @echo off
+@echo Creating doc shortcut...
+MakeShortcut "..\html\index.html" "" "..\DocIndex.lnk" ""
 @echo ##############################
 @echo ### NOTE ON CHM GENERATION ###
 @echo ##############################
@@ -10,7 +12,7 @@ doxygen doxygen.cfg
 @echo C:\Program Files\HTML Help Workshop\
 @echo You can change this folder by modifying the
 @echo directory of the value HHC_LOCATION
-@echo in mkdoc/doxygen.cgf
+@echo in mkdoc/doxygen.cfg
 @echo ##############################
 @echo ##############################
 @echo on
