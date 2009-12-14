@@ -142,7 +142,7 @@ namespace SPK
 		*
 		* @return the atlas dimension on the X axis
 		*/
-		inline unsigned int getAtlasDimensionX() const;
+		inline size_t getAtlasDimensionX() const;
 
 		/**
 		* @brief Gets the atlas dimension on the Y axis
@@ -151,7 +151,7 @@ namespace SPK
 		*
 		* @return the atlas dimension on the Y axis
 		*/
-		inline unsigned int getAtlasDimensionY() const;
+		inline size_t getAtlasDimensionY() const;
 
 		/**
 		* @brief Gets the scale of the width of this GLQuadRenderer
