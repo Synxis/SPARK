@@ -196,13 +196,16 @@ namespace DX9
 		virtual void createBuffers(const Group& group);
 		virtual void destroyBuffers(const Group& group);
 
-		virtual void render(const Group& group);
+		virtual bool DX9CreateBuffers(const Group& group);
+		virtual bool DX9DestroyBuffers(const Group& group);
 
-		virtual HRESULT OnD3D9CreateDevice();
+		virtual void render(const Group& group);
 
 	private :
 
 		virtual bool checkBuffers(const Group& group);
+
+		virtual bool DX9CheckBuffers(const Group& group);
 
 		PointType type;
 		float size;
@@ -213,7 +216,10 @@ namespace DX9
 		static const std::string VERTEX_BUFFER_NAME;
 
 		// vertex buffer
-		static LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
+		static PointVertex* vertexBuffer;
+		static PointVertex* vertexIterator;
+
+		static LPDIRECT3DVERTEXBUFFER9 DX9VertexBuffer;
 
 		//////////////////////
 		// Point Parameters //
@@ -232,6 +238,7 @@ namespace DX9
 	{
 		DX9PointRenderer* obj = new DX9PointRenderer(size);
 		registerObject(obj);
+		DX9Info::DX9RegisterRenderer(obj);
 		return obj;
 	}
 

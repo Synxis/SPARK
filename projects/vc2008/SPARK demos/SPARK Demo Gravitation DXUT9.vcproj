@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;SPK_IMPORT"
+				PreprocessorDefinitions="WIN32;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -177,6 +177,14 @@
 			>
 			<File
 				RelativePath="..\..\..\demos\src\DX9\GravitationDemoDXUT9.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SPK_All.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SPK_DX9_All.cpp"
 				>
 			</File>
 		</Filter>

@@ -58,6 +58,9 @@
 
 #ifdef SPK_DEBUG
 #define SPK_TRACE(text) std::cout << text << std::endl;
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#define new new(_CLIENT_BLOCK,__FILE__,__LINE__)
 #else
 #define SPK_TRACE(text)
 #endif

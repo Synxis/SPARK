@@ -25,6 +25,7 @@
 
 #include "RenderingAPIs/DX9/SPK_DX9_DEF.h"
 #include "RenderingAPIs/DX9/SPK_DX9Info.h"
+#include "RenderingAPIs/DX9/SPK_DX9BufferHandler.h"
 #include "RenderingAPIs/DX9/SPK_DX9Renderer.h"
 #include "RenderingAPIs/DX9/SPK_DX9PointRenderer.h"
 #include "RenderingAPIs/DX9/SPK_DX9LineRenderer.h"

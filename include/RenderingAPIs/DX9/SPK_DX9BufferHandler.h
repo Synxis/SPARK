@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2009 - foulon matthieu - stardeath@wanadoo.fr					//
+// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -20,45 +20,42 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-#include "RenderingAPIs/DX9/SPK_DX9Renderer.h"
+#ifndef H_SPK_DX9BUFFERHANDLER
+#define H_SPK_DX9BUFFERHANDLER
+
+#include "RenderingAPIs/DX9/SPK_DX9_DEF.h"
+#include "RenderingAPIs/DX9/SPK_DX9Info.h"
+
 
 namespace SPK
 {
 namespace DX9
 {
-	bool DX9Renderer::statesSaved = false;
-
-	DX9Renderer::DX9Renderer() :
-		Renderer(),
-		blendingEnabled(false),
-		srcBlending(D3DBLEND_SRCALPHA),
-		destBlending(D3DBLEND_INVSRCALPHA),
-		textureBlending(D3DTOP_MODULATE)
-	{}
-
-	DX9Renderer::~DX9Renderer() {DX9Info::DX9ReleaseRenderer(this);}
-
-	void DX9Renderer::setBlending(BlendingMode blendMode)
+	class SPK_DX9_PREFIX DX9BufferHandler
 	{
-		switch(blendMode)
-		{
-		case BLENDING_NONE :
-			srcBlending = D3DBLEND_ONE;
-			destBlending = D3DBLEND_ZERO;
-			blendingEnabled = false;
-			break;
+	public :
 
-		case BLENDING_ADD :
-			srcBlending = D3DBLEND_SRCALPHA;
-			destBlending = D3DBLEND_ONE;
-			blendingEnabled = true;
-			break;
+		virtual ~DX9BufferHandler() {}
 
-		case BLENDING_ALPHA :
-			srcBlending = D3DBLEND_SRCALPHA;
-			destBlending = D3DBLEND_INVSRCALPHA;
-			blendingEnabled = true;
-			break;
-		}
+		virtual inline bool DX9CreateBuffers(const Group& group) {return true;};
+
+		virtual inline bool DX9DestroyBuffers(const Group& group) {return true;};
+
+	protected :
+
+		// The constructor is private so that the class is not instanciable
+		DX9BufferHandler() {}
+
+		bool DX9PrepareBuffers(const Group& group);
+
+		virtual inline bool DX9CheckBuffers(const Group& group);
+
+	};
+
+	inline bool DX9BufferHandler::DX9CheckBuffers(const Group& group)
+	{
+		return true;
 	}
 }}
+
+#endif

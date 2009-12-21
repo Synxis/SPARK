@@ -126,6 +126,8 @@ namespace SPK
 		*/
 		static SPKFactory& getInstance();
 
+		static void destroyInstance();
+
 		/**
 		* @brief Returns the number of Regiterable objects registered in the SPKFactory
 		* @return the number of Regiterable objects registered in the SPKFactoty
@@ -256,6 +258,7 @@ namespace SPK
 		// private constructors
 		SPKFactory(){};
 		SPKFactory(const SPKFactory&){};
+		~SPKFactory(){this->destroyAll();}
 
 #ifdef SPK_DEBUG
 		size_t nbAlloc;

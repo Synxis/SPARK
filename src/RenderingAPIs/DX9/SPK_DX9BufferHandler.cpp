@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2009 - foulon matthieu - stardeath@wanadoo.fr					//
+// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -20,45 +20,30 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-#include "RenderingAPIs/DX9/SPK_DX9Renderer.h"
+#include "RenderingAPIs/DX9/SPK_DX9BufferHandler.h"
 
 namespace SPK
 {
 namespace DX9
 {
-	bool DX9Renderer::statesSaved = false;
-
-	DX9Renderer::DX9Renderer() :
-		Renderer(),
-		blendingEnabled(false),
-		srcBlending(D3DBLEND_SRCALPHA),
-		destBlending(D3DBLEND_INVSRCALPHA),
-		textureBlending(D3DTOP_MODULATE)
-	{}
-
-	DX9Renderer::~DX9Renderer() {DX9Info::DX9ReleaseRenderer(this);}
-
-	void DX9Renderer::setBlending(BlendingMode blendMode)
+	bool DX9BufferHandler::DX9PrepareBuffers(const Group& group)
 	{
-		switch(blendMode)
+//		std::cout << "DX9BufferHandler::DX9PrepareBuffers" << std::endl;
+		if(!DX9CheckBuffers(group))
 		{
-		case BLENDING_NONE :
-			srcBlending = D3DBLEND_ONE;
-			destBlending = D3DBLEND_ZERO;
-			blendingEnabled = false;
-			break;
-
-		case BLENDING_ADD :
-			srcBlending = D3DBLEND_SRCALPHA;
-			destBlending = D3DBLEND_ONE;
-			blendingEnabled = true;
-			break;
-
-		case BLENDING_ALPHA :
-			srcBlending = D3DBLEND_SRCALPHA;
-			destBlending = D3DBLEND_INVSRCALPHA;
-			blendingEnabled = true;
-			break;
+//			std::cout << "DX9CheckBuffers echec" << std::endl;
+			//if (isBuffersCreationEnabled())
+			{
+				DX9DestroyBuffers(group);
+				if( !DX9CreateBuffers(group) )
+				{
+//					std::cout << "DX9CreateBuffers echec" << std::endl;
+					return false;
+				}
+				return true;
+			}
+			//return false;
 		}
+		return true;
 	}
 }}

@@ -19,6 +19,10 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#define USE_SPARK
+
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
 
 #include <cmath>
 #include <iostream>
@@ -43,24 +47,49 @@ CTimer g_timerDemo;
 #include "CCamera.h"
 CGlobalCamera *g_pCamera;
 
+#ifndef SAFE_DELETE
+#define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=NULL; } }
+#endif    
+#ifndef SAFE_DELETE_ARRAY
+#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=NULL; } }
+#endif    
+#ifndef SAFE_RELEASE
+#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=NULL; } }
+#endif
+
+//#define new new(_CLIENT_BLOCK,__FILE__,__LINE__)
+
+#ifdef USE_SPARK
 // SPARK lib
 #include <SPK.h>
+//#define new new(_CLIENT_BLOCK,__FILE__,__LINE__)
 #include <SPK_DX9.h>
+#endif // USE_SPARK
 
 using namespace std;
+
+#ifdef USE_SPARK
 using namespace SPK;
 using namespace SPK::DX9;
+#endif // USE_SPARK
 
 
 float step = 0.0f;
 
+#ifdef USE_SPARK
 SPK::System* particleSystem = NULL;
 SPK::Group* particleGroup = NULL;
 SPK::Model* particleModel = NULL;
 
+//*
 SPK::DX9::DX9PointRenderer* basicRenderer = NULL;
 SPK::DX9::DX9PointRenderer* pointRenderer = NULL;
 SPK::DX9::DX9QuadRenderer* quadRenderer = NULL;
+//*/
+
+SphericEmitter *particleEmitter = NULL;
+Obstacle* groundObstacle = NULL;
+#endif // USE_SPARK
 
 const string STR_NB_PARTICLES = "NB PARTICLES : ";
 const string STR_FPS = "FPS : ";
@@ -90,12 +119,17 @@ HRESULT hr;
 POINT g_ptSourisPosition;
 bool g_bSourisDroite;
 
+LPDIRECT3DTEXTURE9 textureParticle = NULL;
+
 // renderValue :
 // 0 : points sprite
 // 1 : quad
 // 2 : basic render
 // 3 : no render
 unsigned int renderValue = 0;
+
+void Init();
+void UnInit();
 
 LRESULT CALLBACK MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -190,8 +224,7 @@ HRESULT InitDX(int largeur, int hauteur, bool bPleinEcran)
     g_D3Dpp.AutoDepthStencilFormat = D3DFMT_D16;
     g_D3Dpp.PresentationInterval   = D3DPRESENT_INTERVAL_IMMEDIATE;
 
-	if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, DeviceType, g_hWnd,
-		dwBehaviorFlags, &g_D3Dpp, &g_pD3DDevice ) ) )
+	if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, DeviceType, g_hWnd, dwBehaviorFlags, &g_D3Dpp, &g_pD3DDevice ) ) )
 	{
 		// TO DO: Respond to failure of CreateDevice
 		cout << "CreateDevice fails" << endl;
@@ -201,6 +234,7 @@ HRESULT InitDX(int largeur, int hauteur, bool bPleinEcran)
 	return S_OK;
 }
 
+
 // Converts an int into a string
 string int2Str(int a)
 {
@@ -209,8 +243,10 @@ string int2Str(int a)
     return stm.str();
 }
 
+
 void Init()
 {
+#ifdef USE_SPARK
 	/////////////////////////
 	// SPARK initial setup //
 	/////////////////////////
@@ -224,13 +260,12 @@ void Init()
 
 	// Sets the device for SPARK DX9 rendering
 	DX9Info::setDevice( g_pD3DDevice );
-	DX9Info::setPool( D3DPOOL_MANAGED );
 
 	////////////////////////////
 	// Loads particle texture //
 	////////////////////////////
 
-	LPDIRECT3DTEXTURE9 textureParticle = NULL;
+	
 	hr = D3DXCreateTextureFromFile(g_pD3DDevice, L"res/point.bmp", &textureParticle);
 	if( FAILED(hr) )
 		cout << "erreur chargement texture" << endl;
@@ -238,7 +273,7 @@ void Init()
 	/////////////////////////////
 	// Creates particle system //
 	/////////////////////////////
-
+//*
 	// Renderers
 	basicRenderer = DX9PointRenderer::create(); // basic renderer used for debug
 
@@ -253,13 +288,13 @@ void Init()
 	pointRenderer->setSize(0.05f);
 
 	quadRenderer = DX9QuadRenderer::create(); // quad renderer
-	quadRenderer->OnD3D9CreateDevice();
 	quadRenderer->enableBlending(true);
 	quadRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
 	quadRenderer->setTexturingMode(TEXTURE_2D);
 	quadRenderer->setTexture(textureParticle);
 	quadRenderer->setTextureBlending(D3DTOP_MODULATE);
 	quadRenderer->setScale(0.05f,0.05f);
+//*/
 
 	// Model
 	particleModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA);
@@ -267,13 +302,13 @@ void Init()
 	particleModel->setLifeTime(8.0f,8.0f);
 
 	// Emitter
-	SphericEmitter* particleEmitter = SphericEmitter::create(Vector3D(0.0f,1.0f,0.0f),0.1f * D3DX_PI,0.1f * D3DX_PI);
+	particleEmitter = SphericEmitter::create(Vector3D(0.0f,1.0f,0.0f),0.1f * D3DX_PI,0.1f * D3DX_PI);
 	particleEmitter->setZone(Point::create(Vector3D(0.0f,0.016f,0.0f)));
 	particleEmitter->setFlow(250);
 	particleEmitter->setForce(1.5f,1.5f);
 
 	// Modifier
-	Obstacle* groundObstacle = Obstacle::create(Plane::create(),INTERSECT_ZONE,0.6f,1.0f);
+	groundObstacle = Obstacle::create(Plane::create(),INTERSECT_ZONE,0.6f,1.0f);
 
 	// Group
 	particleGroup = Group::create(particleModel, 2100);
@@ -292,6 +327,7 @@ void Init()
 
 	cout << "\nSPARK FACTORY AFTER INIT :" << endl;
 	SPKFactory::getInstance().traceAll();
+#endif // USE_SPARK
 
 	///////////////
 	// D3D Setup //
@@ -317,11 +353,42 @@ void Init()
 	g_timerDemo.Start();
 }
 
+void UnInit()
+{
+#ifdef USE_SPARK
+	SAFE_RELEASE( textureParticle );
+/*
+	SAFE_DELETE( basicRenderer ); // basic renderer used for debug
+
+	SAFE_DELETE( pointRenderer ); // point sprite renderer
+
+	SAFE_DELETE( quadRenderer ); // quad renderer
+
+	SAFE_DELETE( particleModel );
+
+	// Emitter
+	SAFE_DELETE( particleEmitter );
+
+	// Modifier
+	SAFE_DELETE( groundObstacle );
+
+	// Group
+	SAFE_DELETE( particleGroup );
+
+	// System
+	SAFE_DELETE( particleSystem );
+*/
+	SAFE_RELEASE( g_pMesh );
+#endif // USE_SPARK
+
+	SAFE_DELETE( g_pCamera );
+}
+
 void Move()
 {
 	g_pCamera->Move();
 	float deltaTime = float(g_timerDemo.GetElapsedTime());
-
+#ifdef USE_SPARK
 	// Changes the color of the model over time
 	step += deltaTime * 0.5f;
 	particleModel->setParam(PARAM_RED,0.6f + 0.4f * sin(step));
@@ -330,6 +397,7 @@ void Move()
 
 	// Updates particle system
 	particleSystem->update(deltaTime);	// 1 defined as a second
+#endif // USE_SPARK
 }
 
 void Draw()
@@ -357,7 +425,9 @@ void Draw()
 
 	//g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	//g_pMesh->DrawSubset(0);
+#ifdef USE_SPARK
 	particleSystem->render();
+#endif
 
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present( NULL, NULL, NULL, NULL );
@@ -367,6 +437,7 @@ int Run()
 {
 	MSG uMsg;
     ZeroMemory(&uMsg, sizeof(uMsg));
+
 	while( uMsg.message != WM_QUIT )
 	{
 		if( PeekMessage( &uMsg, NULL, 0, 0, PM_REMOVE ) )
@@ -381,15 +452,23 @@ int Run()
 		}
 	}
 
+#ifdef USE_SPARK
 	cout << "\nSPARK FACTORY BEFORE DESTRUCTION :" << endl;
 	SPKFactory::getInstance().traceAll();
 	SPKFactory::getInstance().destroyAll();
 	cout << "\nSPARK FACTORY AFTER DESTRUCTION :" << endl;
 	SPKFactory::getInstance().traceAll();
+	SPKFactory::destroyInstance();
+#endif // USE_SPARK
+	UnInit();
 
-	g_pD3DDevice->Release();
-	g_pD3D->Release();
+	SAFE_RELEASE( g_pD3DDevice );
+	SAFE_RELEASE( g_pD3D );
 	UnregisterClass(L"SPARKDemoBasicDX9", g_hInst);
+
+	system("PAUSE");
+
+	FreeConsole();
 
 	return int(uMsg.wParam);
 }
@@ -425,6 +504,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	::AllocConsole();
 	InitializeConsoleStdIO();
 
+#if defined(DEBUG) | defined(_DEBUG)
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+#endif
+
 	screenHeight = 600;
 	CreateWnd(hInstance, 800, 600);
 	InitDX(800, 600, false);
@@ -445,7 +528,7 @@ LRESULT CALLBACK MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				case VK_F4:
 					{
 						renderValue = (renderValue + 1) % 4;
-
+#ifdef USE_SPARK
 						switch (renderValue)
 						{
 							case 0 :
@@ -464,6 +547,7 @@ LRESULT CALLBACK MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 								particleGroup->setRenderer(NULL);
 								break;
 						}
+#endif
 					}
 					break;
 				default:

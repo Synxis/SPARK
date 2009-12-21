@@ -150,12 +150,16 @@ namespace DX9
 		virtual void createBuffers(const Group& group);
 		virtual void destroyBuffers(const Group& group);
 
+		virtual bool DX9CreateBuffers(const Group& group);
+		virtual bool DX9DestroyBuffers(const Group& group);
+
 		virtual void render(const Group& group);
 
-		virtual HRESULT OnD3D9CreateDevice();
-
 	protected:
+
 		virtual bool checkBuffers(const Group& group);
+
+		virtual bool DX9CheckBuffers(const Group& group);
 
 	private :
 
@@ -165,14 +169,19 @@ namespace DX9
 		LPDIRECT3DTEXTURE9 textureIndex;
 
 		// vertex buffers and iterators
-		static LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
+		static D3DXVECTOR3* vertexBuffer;
 		static D3DXVECTOR3* vertexIterator;
-		static LPDIRECT3DVERTEXBUFFER9 colorBuffer;
+		static DWORD* colorBuffer;
 		static DWORD* colorIterator;
-		static LPDIRECT3DVERTEXBUFFER9 textureBuffer;
+		static float* textureBuffer;
 		static float* textureIterator;
-		static LPDIRECT3DINDEXBUFFER9 indexBuffer;
+		static short* indexBuffer;
 		static short* indexIterator;
+
+		static LPDIRECT3DVERTEXBUFFER9 DX9VertexBuffer;
+		static LPDIRECT3DVERTEXBUFFER9 DX9ColorBuffer;
+		static LPDIRECT3DVERTEXBUFFER9 DX9TextureBuffer;
+		static LPDIRECT3DINDEXBUFFER9 DX9IndexBuffer;
 
 		static int offsetIndex;
 
@@ -188,7 +197,7 @@ namespace DX9
 		static const std::string INDEX_BUFFER_NAME;
 
 		
-		LPDIRECT3DVERTEXBUFFER9 createTextureBuffer(const Group& group) const;
+		float* createTextureBuffer(const Group& group) const;
 
 
 		inline void DX9CallColorAndVertex(const Particle& particle) const;	// DX9 calls for color and position
@@ -210,6 +219,7 @@ namespace DX9
 	{
 		DX9QuadRenderer* obj = new DX9QuadRenderer(scaleX,scaleY);
 		registerObject(obj);
+		DX9Info::DX9RegisterRenderer(obj);
 		return obj;
 	}
 

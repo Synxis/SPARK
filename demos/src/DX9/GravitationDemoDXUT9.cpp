@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+
 #include "DXUT.h"
 #include "DXUTgui.h"
 #include "DXUTmisc.h"
@@ -27,6 +28,7 @@
 #include "SDKmisc.h"
 #include "SDKmesh.h"
 #include <ctime>
+
 
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
@@ -104,6 +106,7 @@ void UnInitApp();
 void RenderText();
 
 void InitSpark();
+void UnInitSpark();
 
 
 // SPARK lib
@@ -158,12 +161,12 @@ Vector3D convertHSV2RGB(const Vector3D& hsv)
 
 	switch(hi)
 	{
-	case 0 : return Vector3D(v,t,p);
-	case 1 : return Vector3D(q,v,p);
-	case 2 : return Vector3D(p,v,t);
-	case 3 : return Vector3D(p,q,v);
-	case 4 : return Vector3D(t,p,v);
-	default : return Vector3D(v,p,q);
+		case 0 : return Vector3D(v,t,p);
+		case 1 : return Vector3D(q,v,p);
+		case 2 : return Vector3D(p,v,t);
+		case 3 : return Vector3D(p,q,v);
+		case 4 : return Vector3D(t,p,v);
+		default : return Vector3D(v,p,q);
 	}
 }
 
@@ -177,6 +180,8 @@ bool bounceOnFloor(Particle& particle, float deltaTime)
 	}
 	return false;
 }
+
+
 #ifdef CONSOLE
 void InitializeConsoleStdIO()
 {
@@ -186,12 +191,12 @@ void InitializeConsoleStdIO()
 
 #if _MSC_VER >= 1400 // VC++ 8
     {
-    // éviter le warning C4996: 'freopen' was declared deprecated
-    // This function or variable may be unsafe. Consider using freopen_s instead.
-    FILE *stream;
-    freopen_s( &stream, "CONIN$", "r", stdin );
-    freopen_s( &stream, "CONOUT$", "w", stdout );
-    freopen_s( &stream, "CONOUT$", "w", stderr );
+		// éviter le warning C4996: 'freopen' was declared deprecated
+		// This function or variable may be unsafe. Consider using freopen_s instead.
+		FILE *stream;
+		freopen_s( &stream, "CONIN$", "r", stdin );
+		freopen_s( &stream, "CONOUT$", "w", stdout );
+		freopen_s( &stream, "CONOUT$", "w", stderr );
     }
 #else
     std::freopen( "CONIN$", "r", stdin );
@@ -256,6 +261,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
     DXUTMainLoop(); // Enter into the DXUT render loop
 
+	UnInitSpark();
+
 	UnInitApp();
 	FreeConsole();
 
@@ -295,10 +302,8 @@ void InitApp()
 	g_light.Diffuse.b = 1.0f;
 	g_light.Diffuse.a = 1.0f;
 	g_light.Direction = Vdir;
-
-
-	
 }
+
 
 void UnInitApp()
 {
@@ -342,13 +347,11 @@ void InitSpark()
 	centerPointMass->setMinDistance(0.01f);
 
 	// Groups
-	particleGroup = Group::create(particleModel,4100);
+	particleGroup = Group::create(particleModel, 4100);
 	particleGroup->addEmitter(particleEmitter);
-	DX9Info::addGroup(particleGroup);
 
 	massGroup = Group::create(massModel, NB_POINT_MASS);
 	massGroup->addModifier(centerPointMass);
-	DX9Info::addGroup(massGroup);
 
 	// Creates the point masses that will atract the particles
 	for (int i = 0; i < NB_POINT_MASS; ++i)
@@ -364,12 +367,40 @@ void InitSpark()
 	particleSystem->addGroup(massGroup);
 	particleSystem->addGroup(particleGroup);
 
-
-	basicRenderer->OnD3D9CreateDevice();
-	//trailRenderer->OnD3D9CreateDevice();
-
 	particleGroup->setRenderer(trailRenderer);
 	massGroup->setRenderer(NULL);
+}
+
+void UnInitSpark()
+{
+	SAFE_DELETE( basicRenderer );
+
+	SAFE_DELETE( trailRenderer );
+
+	// Models
+	SAFE_DELETE( massModel );
+
+	SAFE_DELETE( particleModel );
+
+	// Emitter
+	SAFE_DELETE( particleEmitter );
+
+	// This is the point mass that will attract the other point masses to make them move
+	SAFE_DELETE( centerPointMass );
+
+	// Groups
+	SAFE_DELETE( particleGroup );
+
+	SAFE_DELETE( massGroup );
+
+	// Creates the point masses that will atract the particles
+	for (int i = 0; i < NB_POINT_MASS; ++i)
+	{
+		SAFE_DELETE( pointMasses[i] );
+	}
+
+	// System
+	SAFE_DELETE( particleSystem );
 }
 
 
@@ -518,18 +549,12 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 	//*
 	// SPARK init
 	DX9Info::setDevice( pd3dDevice );
-	DX9Info::setPool( D3DPOOL_MANAGED );
+	DX9Info::setPool( D3DPOOL_DEFAULT );
 
 	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/point.bmp", &g_pTextureParticle);
 	if( FAILED(hr) )
 		cout << "erreur chargement texture" << endl;
-/*
-	basicRenderer->OnD3D9CreateDevice();
-	trailRenderer->OnD3D9CreateDevice();
 
-	particleGroup->setRenderer(trailRenderer);
-	massGroup->setRenderer(NULL);
-*/
     return S_OK;
 }
 
@@ -609,10 +634,12 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
+/*
 	OutputDebugString( L"OnFrameMove\n" );
 #ifdef CONSOLE
 	std::cout << "OnFrameMove" << std::endl;
 #endif
+*/
 //	g_fElapsedTime = fElapsedTime;
     // Update the camera's position based on user input 
     g_Camera.FrameMove( fElapsedTime );
@@ -630,9 +657,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 	if (massGroup->getNbParticles() == 0)
 	{
 		for (int i = 0; i < NB_POINT_MASS; ++i)
-			massGroup->addParticles(1,
-			Vector3D(2.0f,0.0f,0.0f),
-			Vector3D(random(-1.0f,0.0f),random(-0.5f,0.5f),random(-0.5f,0.5f)));
+			massGroup->addParticles(1, Vector3D(2.0f,0.0f,0.0f), Vector3D(random(-1.0f,0.0f),random(-0.5f,0.5f),random(-0.5f,0.5f)));
 		massGroup->flushAddedParticles(); // to ensure particles are added
 	}
 
@@ -819,7 +844,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
     SAFE_RELEASE( g_pSprite9 );
     SAFE_DELETE( g_pTxtHelper );
 
-	DX9Info::OnD3D9LostDevice();
+	DX9Info::DX9DestroyAllBuffers();
 }
 
 
@@ -839,7 +864,7 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
     SAFE_RELEASE( g_pFont9 );
 
 	// SPARK destroy
-	DX9Info::OnD3D9DestroyDevice();
+	DX9Info::DX9DestroyAllBuffers();
 
 	SAFE_RELEASE( g_pTextureParticle );
 	//-------------------------------------------------------------------------

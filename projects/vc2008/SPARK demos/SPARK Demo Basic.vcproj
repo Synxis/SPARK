@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\include;..\..\..\demos\external\SDL\include;..\..\..\demos\external\FTGL\include;..\..\..\demos\external\FreeType\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;SPK_IMPORT;FTGL_LIBRARY_STATIC"
+				PreprocessorDefinitions="WIN32;_DEBUG;FTGL_LIBRARY_STATIC"
 				RuntimeLibrary="3"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -182,6 +182,14 @@
 			>
 			<File
 				RelativePath="..\..\..\demos\src\BasicDemo.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SPK_All.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SPK_GL_All.cpp"
 				>
 			</File>
 		</Filter>

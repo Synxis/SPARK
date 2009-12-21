@@ -51,6 +51,15 @@
 #include <d3dx9.h>
 #include "Core\SPK_Vector3D.h"
 
+// trace allocations under windows
+/*
+#if defined(DEBUG) | defined(_DEBUG)
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#define new new(_CLIENT_BLOCK,__FILE__,__LINE__)
+#endif
+//*/
+
 inline DWORD FtoDW(FLOAT f) { return *((DWORD*)&f); }
 inline FLOAT DWtoF(DWORD dw) { return *((FLOAT*)&dw); }
 

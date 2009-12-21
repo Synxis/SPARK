@@ -35,6 +35,15 @@ namespace SPK
 		return *instance;
 	}
 
+	void SPKFactory::destroyInstance()
+	{
+		if (instance != NULL)
+		{
+			delete instance;
+			instance = NULL;
+		}
+	}
+
 	SPK_ID SPKFactory::create(const Registerable& base)
 	{
 		// Clears the adresses set

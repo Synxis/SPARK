@@ -27,12 +27,18 @@
 #include "RenderingAPIs/DX9/SPK_DX9_DEF.h"
 #include "RenderingAPIs/DX9/SPK_DX9Info.h"
 #include "Core/SPK_Renderer.h"
+#include "RenderingAPIs/DX9/SPK_DX9BufferHandler.h"
 
 namespace SPK
 {
 namespace DX9
 {
-	class SPK_DX9_PREFIX DX9Renderer : public Renderer
+	const int DX9_VERTEX_BUFFER_KEY = 0;
+	const int DX9_COLOR_BUFFER_KEY = 1;
+	const int DX9_INDEX_BUFFER_KEY = 2;
+	const int DX9_TEXTURE_BUFFER_KEY = 3;
+
+	class SPK_DX9_PREFIX DX9Renderer : public Renderer, public DX9BufferHandler
 	{
 	public :
 
@@ -108,46 +114,8 @@ namespace DX9
 		*/
 		inline int getTextureBlending() const;
 
-		/*
-		//--------------------------------------------------------------------------------------
-		// Create any D3D9 resources that will live through a device reset (D3DPOOL_MANAGED)
-		// and aren't tied to the back buffer size
-		//--------------------------------------------------------------------------------------
-		virtual HRESULT OnD3D9CreateDevice() = 0;
 
-		/*
-		//--------------------------------------------------------------------------------------
-		// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-		// or that are tied to the back buffer size 
-		//--------------------------------------------------------------------------------------
-		virtual HRESULT OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice ) = 0;
-		*/
-
-		//--------------------------------------------------------------------------------------
-		// Release D3D9 resources created in the OnD3D9ResetDevice callback 
-		//--------------------------------------------------------------------------------------
-		HRESULT OnD3D9LostDevice()
-		{
-			if( DX9Info::getPool() != D3DPOOL_DEFAULT )
-				return S_OK;
-
-			reinit = true;
-			return S_OK;
-		}
-
-		//--------------------------------------------------------------------------------------
-		// Release D3D9 resources created in the OnD3D9CreateDevice callback 
-		//--------------------------------------------------------------------------------------
-		HRESULT OnD3D9DestroyDevice()
-		{
-			if( DX9Info::getPool() != D3DPOOL_MANAGED )
-				return S_OK;
-
-			reinit = true;
-			return S_OK;
-		}
-
-		bool DX9PrepareBuffers(const Group& group);
+		/*virtual */inline bool DX9DestroyAllBuffers();
 
 	protected :
 
@@ -156,7 +124,7 @@ namespace DX9
 
 		inline void initRenderingHints() const;
 
-		bool reinit;
+		std::map<std::pair<const Group *, int>, IDirect3DResource9 *> DX9Buffers;
 
 	private :
 
@@ -237,6 +205,18 @@ namespace DX9
 
 		// depth write
 		DX9Info::getDevice()->SetRenderState(D3DRS_ZWRITEENABLE, isRenderingHintEnabled(DEPTH_WRITE));
+	}
+
+	inline bool DX9Renderer::DX9DestroyAllBuffers()
+	{
+		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it = DX9Buffers.begin();
+		while( it != DX9Buffers.end() )
+		{
+			SAFE_RELEASE( it->second );
+			it++;
+		}
+		DX9Buffers.clear();
+		return true;
 	}
 }}
 

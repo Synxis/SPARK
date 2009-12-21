@@ -257,9 +257,9 @@ void InitApp()
 	// Renderers
 	//DX9PointRenderer basicRenderer(g_pD3DDevice);
 
-	pointRenderer = new DX9PointRenderer();
-	basicRenderer = new DX9PointRenderer();
-	quadRenderer = new DX9QuadRenderer();
+	pointRenderer = DX9PointRenderer::create();
+	basicRenderer = DX9PointRenderer::create();
+	quadRenderer = DX9QuadRenderer::create();
 	particleRenderer = NULL;
 
 	{
@@ -294,7 +294,7 @@ void InitApp()
 	particleEmitter->setZone(point);
 	particleEmitter->setFlow(250);
 	particleEmitter->setForce(1.5f,1.5f);
-
+int n = sizeof(Group);
 	// Group
 	particleGroup = new Group(particleModel, 2100);
 	particleGroup->addEmitter(particleEmitter);
@@ -303,7 +303,7 @@ void InitApp()
 	particleGroup->setGravity(gravity);
 	
 	particleSystem.addGroup(particleGroup);
-	particleGroupPtr = particleGroup;
+	//particleGroupPtr = particleGroup;
 }
 
 void UnInitApp()
@@ -468,9 +468,6 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 	if( FAILED(hr) )
 		cout << "erreur chargement texture" << endl;
 
-	basicRenderer->OnD3D9CreateDevice();
-	pointRenderer->OnD3D9CreateDevice();
-	quadRenderer->OnD3D9CreateDevice();
 
 	// /!\ obligatoirement après la création du device, car créé les buffers dans certaines conditions
 	particleGroup->setRenderer(particleRenderer);
@@ -740,7 +737,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
 #ifdef CONSOLE
-	std::cout << "OnD3D9LostDevice" << std::endl;
+	std::cout << "OnD3D9LostDevice start" << std::endl;
 #endif
 
     g_DialogResourceManager.OnD3D9LostDevice();
@@ -749,6 +746,12 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
     if( g_pEffect9 ) g_pEffect9->OnLostDevice();
     SAFE_RELEASE( g_pSprite9 );
     SAFE_DELETE( g_pTxtHelper );
+
+	DX9Info::DX9DestroyAllBuffers();
+
+#ifdef CONSOLE
+	std::cout << "OnD3D9LostDevice end" << std::endl;
+#endif
 }
 
 
@@ -768,6 +771,7 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 
 	// SPARK destroy
 	SAFE_RELEASE( g_pTextureParticle );
+	DX9Info::DX9DestroyAllBuffers();
 	//-------------------------------------------------------------------------
 }
 

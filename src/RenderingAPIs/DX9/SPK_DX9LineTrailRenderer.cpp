@@ -34,12 +34,15 @@ namespace DX9
 	const std::string DX9LineTrailRenderer::COLOR_BUFFER_NAME("SPK_DX9LineTrailRenderer_Color");
 	const std::string DX9LineTrailRenderer::VALUE_BUFFER_NAME("SPK_DX9LineTrailRenderer_Value");
 
-	LPDIRECT3DVERTEXBUFFER9 DX9LineTrailRenderer::vertexBuffer = NULL;
+	D3DXVECTOR3* DX9LineTrailRenderer::vertexBuffer = NULL;
 	D3DXVECTOR3* DX9LineTrailRenderer::vertexIterator = NULL;
-	LPDIRECT3DVERTEXBUFFER9 DX9LineTrailRenderer::colorBuffer = NULL;
+	D3DCOLOR* DX9LineTrailRenderer::colorBuffer = NULL;
 	D3DCOLOR* DX9LineTrailRenderer::colorIterator = NULL;
 	float* DX9LineTrailRenderer::valueBuffer = NULL;
 	float* DX9LineTrailRenderer::valueIterator = NULL;
+
+	LPDIRECT3DVERTEXBUFFER9 DX9LineTrailRenderer::DX9VertexBuffer = NULL;
+	LPDIRECT3DVERTEXBUFFER9 DX9LineTrailRenderer::DX9ColorBuffer = NULL;
 
 	LPDIRECT3DVERTEXDECLARATION9 DX9LineTrailRenderer::pVertexDecl = NULL;
 
@@ -69,21 +72,21 @@ namespace DX9
 		if( pVertexDecl == NULL )
 			return false;
 
-		DX9VertexBuffer<D3DXVECTOR3>* fVertexBuffer = NULL;
-		DX9VertexBuffer<D3DCOLOR>* fColorBuffer = NULL;
+		ArrayBuffer<D3DXVECTOR3>* fVertexBuffer = NULL;
+		ArrayBuffer<D3DCOLOR>* fColorBuffer = NULL;
 		FloatBuffer* fValueBuffer = NULL;
 
-		if ((fVertexBuffer = dynamic_cast<DX9VertexBuffer<D3DXVECTOR3>*>(group.getBuffer(VERTEX_BUFFER_NAME,nbSamples))) == NULL)
-			if( (vertexBuffer = fVertexBuffer->getData()) == NULL ) return false;
+		if ((fVertexBuffer = dynamic_cast<ArrayBuffer<D3DXVECTOR3>*>(group.getBuffer(VERTEX_BUFFER_NAME,nbSamples))) == NULL)
+			return false;
 
-		if ((fColorBuffer = dynamic_cast<DX9VertexBuffer<D3DCOLOR>*>(group.getBuffer(COLOR_BUFFER_NAME,nbSamples))) == NULL)
-			if( (colorBuffer = fColorBuffer->getData()) == NULL ) return false;
+		if ((fColorBuffer = dynamic_cast<ArrayBuffer<D3DCOLOR>*>(group.getBuffer(COLOR_BUFFER_NAME,nbSamples))) == NULL)
+			return false;
 
 		if ((fValueBuffer = dynamic_cast<FloatBuffer*>(group.getBuffer(VALUE_BUFFER_NAME,nbSamples))) == NULL)
 			return false;
 
-		//vertexBuffer = fVertexBuffer->getData();
-		//colorBuffer = fColorBuffer->getData();
+		vertexIterator = vertexBuffer = fVertexBuffer->getData();
+		colorIterator = colorBuffer = fColorBuffer->getData();
 		valueIterator = valueBuffer = fValueBuffer->getData();
 
 		return true;
@@ -92,30 +95,25 @@ namespace DX9
 	void DX9LineTrailRenderer::createBuffers(const Group& group)
 	{
 		DX9Info::getDevice()->CreateVertexDeclaration(LineTrailVertexDecl, &pVertexDecl);
-		DX9Info::addResource((IUnknown **)&pVertexDecl);
 
-		DX9VertexBuffer<D3DXVECTOR3>* fVertexBuffer = dynamic_cast<DX9VertexBuffer<D3DXVECTOR3>*>(group.createBuffer(VERTEX_BUFFER_NAME,DX9VertexBufferCreator<D3DXVECTOR3>(D3DFVF_XYZ, (nbSamples + 2)),nbSamples,true));
-		DX9VertexBuffer<D3DCOLOR>* fColorBuffer = dynamic_cast<DX9VertexBuffer<D3DCOLOR>*>(group.createBuffer(COLOR_BUFFER_NAME,DX9VertexBufferCreator<D3DCOLOR>(D3DFVF_DIFFUSE, (nbSamples + 2)),nbSamples,true));
+		ArrayBuffer<D3DXVECTOR3>* fVertexBuffer = dynamic_cast<ArrayBuffer<D3DXVECTOR3>*>(group.createBuffer(VERTEX_BUFFER_NAME,ArrayBufferCreator<D3DXVECTOR3>(nbSamples + 2),nbSamples,true));
+		ArrayBuffer<D3DCOLOR>* fColorBuffer = dynamic_cast<ArrayBuffer<D3DCOLOR>*>(group.createBuffer(COLOR_BUFFER_NAME,ArrayBufferCreator<D3DCOLOR>(nbSamples + 2),nbSamples,true));
 		FloatBuffer* fValueBuffer = dynamic_cast<FloatBuffer*>(group.createBuffer(VALUE_BUFFER_NAME,FloatBufferCreator(nbSamples),nbSamples,true));
 
-		vertexBuffer = fVertexBuffer->getData();
-		colorBuffer = fColorBuffer->getData();
-		DX9Info::addResource((IUnknown **)fVertexBuffer->getDataAddr());
-		DX9Info::addResource((IUnknown **)fColorBuffer->getDataAddr());
+		vertexIterator = vertexBuffer = fVertexBuffer->getData();
+		colorIterator = colorBuffer = fColorBuffer->getData();
 		valueIterator = valueBuffer = fValueBuffer->getData();
 
 		// Fills the buffers with correct values
-		vertexBuffer->Lock(0, 0, (void**)&vertexIterator, 0);
-		colorBuffer->Lock(0, 0, (void**)&colorIterator, 0);
 		for (size_t i = 0; i < group.getNbParticles(); ++i)
 		{
 			const Particle& particle = group.getParticle(i);
 			init(particle,particle.getAge());
 		}
-		vertexBuffer->Unlock();
-		colorBuffer->Unlock();
 
 		// Resets the iterators at the beginning after the init
+		vertexIterator = vertexBuffer;
+		colorIterator = colorBuffer;
 		valueIterator = valueBuffer;
 	}
 
@@ -133,28 +131,27 @@ namespace DX9
 		if (!prepareBuffers(group))
 			return;
 
-		vertexBuffer->Lock(0, 0, (void**)&vertexIterator, 0);
-		colorBuffer->Lock(0, 0, (void**)&colorIterator, 0);
 		for (size_t i = 0; i < group.getNbParticles(); ++i)
 		{
 			const Particle& particle = group.getParticle(i);
 			init(particle,particle.getAge());
 		}
-		vertexBuffer->Unlock();
-		colorBuffer->Unlock();
 	}
 
 	void DX9LineTrailRenderer::render(const Group& group)
-	{	
-		if (!prepareBuffers(group))
+	{
+		if( !DX9PrepareBuffers(group) )
+			return;
+
+		if( !prepareBuffers(group) )
 			return;
 
 		initBlending();
 		initRenderingHints();
 
-		vertexBuffer->Lock(0, 0, (void**)&vertexIterator, 0);
-		colorBuffer->Lock(0, 0, (void**)&colorIterator, 0);
-		for (size_t i = 0; i < group.getNbParticles(); ++i)
+		//if( group.getNbParticles() == 0 ) return;
+
+		for(size_t i = 0; i < group.getNbParticles(); ++i)
 		{
 			const Particle& particle = group.getParticle(i);
 			float age = particle.getAge();
@@ -243,21 +240,105 @@ namespace DX9
 				memcpy(vertexIterator - 1, vertexIterator - 2, sizeof(D3DXVECTOR3));
 			}
 		}
-		vertexBuffer->Unlock();
-		colorBuffer->Unlock();
+
+		void *ptr;
+
+		DX9VertexBuffer->Lock(0, 0, &ptr, 0);
+		memcpy(ptr, vertexBuffer, group.getNbParticles() * (nbSamples + 2) * sizeof(D3DXVECTOR3));
+		DX9VertexBuffer->Unlock();
+
+		DX9ColorBuffer->Lock(0, 0, &ptr, 0);
+		memcpy(ptr, colorBuffer, group.getNbParticles() * (nbSamples + 2) * sizeof(D3DCOLOR));
+		DX9ColorBuffer->Unlock();
 
 		LPDIRECT3DDEVICE9 device = DX9Info::getDevice();
 		device->SetVertexDeclaration(pVertexDecl);
-		device->SetStreamSource(0, vertexBuffer, 0, sizeof(D3DXVECTOR3));
-		device->SetStreamSource(1, colorBuffer, 0, sizeof(D3DCOLOR));
+		device->SetStreamSource(0, DX9VertexBuffer, 0, sizeof(D3DXVECTOR3));
+		device->SetStreamSource(1, DX9ColorBuffer, 0, sizeof(D3DCOLOR));
 		device->DrawPrimitive(D3DPT_LINESTRIP, 0, group.getNbParticles() * (nbSamples + 2));
 	}
-/*
-	HRESULT DX9LineTrailRenderer::OnD3D9CreateDevice()
-	{
-		DX9Info::getDevice()->CreateVertexDeclaration(LineTrailVertexDecl, &pVertexDecl);
 
-		return S_OK;
+	bool DX9LineTrailRenderer::DX9CheckBuffers(const Group& group)
+	{
+//		std::cout << "DX9LineTrailRenderer::DX9CheckBuffers" << std::endl;
+
+		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
+		
+		std::pair<const Group *, int> key(&group, 0);
+		it = DX9Buffers.find(key);
+		if( it == DX9Buffers.end() )
+		{
+			DX9VertexBuffer = DX9ColorBuffer = NULL;
+			return false;
+		}
+		if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9VertexBuffer) == E_NOINTERFACE ) return false;
+
+		key = std::pair<const Group *, int>(&group, 1);
+		it = DX9Buffers.find(key);
+		if( it == DX9Buffers.end() )
+		{
+			DX9VertexBuffer = DX9ColorBuffer = NULL;
+			return false;
+		}
+		if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9ColorBuffer) == E_NOINTERFACE ) return false;
+
+		return true;
 	}
-*/
+
+	bool DX9LineTrailRenderer::DX9CreateBuffers(const Group& group)
+	{
+//		std::cout << "DX9LineTrailRenderer::DX9CreateBuffers start" << std::endl;
+
+		if( DX9Info::getDevice() == NULL ) return false;
+
+		if( DX9Buffers.size() == 0 )
+		{
+			SAFE_RELEASE( pVertexDecl );
+			DX9Info::getDevice()->CreateVertexDeclaration(LineTrailVertexDecl, &pVertexDecl);
+		}
+
+		LPDIRECT3DVERTEXBUFFER9 vb;
+
+		if( DX9Info::getDevice()->CreateVertexBuffer(group.getParticles().getNbReserved() * (nbSamples + 2) * sizeof(D3DXVECTOR3), 0, D3DFVF_XYZ, D3DPOOL_DEFAULT, &vb, NULL) != S_OK ) return false;
+		std::pair<const Group *, int> key(&group, 0);
+		DX9Buffers[key] = vb;
+
+		DX9VertexBuffer = vb;
+
+		if( DX9Info::getDevice()->CreateVertexBuffer(group.getParticles().getNbReserved() * (nbSamples + 2) * sizeof(D3DCOLOR), 0, D3DFVF_DIFFUSE, D3DPOOL_DEFAULT, &vb, NULL) != S_OK ) return false;
+		key = std::pair<const Group *, int>(&group, 1);
+		DX9Buffers[key] = vb;
+
+		DX9ColorBuffer = vb;
+
+//		std::cout << "DX9LineTrailRenderer::DX9CreateBuffers end" << std::endl;
+		return true;
+	}
+
+	bool DX9LineTrailRenderer::DX9DestroyBuffers(const Group& group)
+	{
+//		std::cout << "DX9LineTrailRenderer::DX9DestroyBuffers" << std::endl;
+
+		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
+
+		std::pair<const Group *, int> key(&group, 0);
+		it = DX9Buffers.find(key);
+		if( it != DX9Buffers.end() )
+		{
+			SAFE_RELEASE( it->second );
+			DX9Buffers.erase(it);
+		}
+
+		key = std::pair<const Group *, int>(&group, 1);
+		it = DX9Buffers.find(key);
+		if( it != DX9Buffers.end() )
+		{
+			SAFE_RELEASE( it->second );
+			DX9Buffers.erase(it);
+		}
+
+		DX9VertexBuffer = DX9ColorBuffer = NULL;
+
+		return true;
+	}
 }}

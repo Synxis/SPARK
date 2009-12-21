@@ -70,14 +70,18 @@ namespace DX9
 		virtual void createBuffers(const Group& group);
 		virtual void destroyBuffers(const Group& group);
 
-		void init(const Group& group);
-		virtual void render(const Group& group);
+		virtual bool DX9CreateBuffers(const Group& group);
+		virtual bool DX9DestroyBuffers(const Group& group);
 
-		//virtual HRESULT OnD3D9CreateDevice();
+		void init(const Group& group);
+
+		virtual void render(const Group& group);
 
 	protected :
 
 		virtual bool checkBuffers(const Group& group);
+
+		virtual bool DX9CheckBuffers(const Group& group);
 
 	private :
 
@@ -92,12 +96,15 @@ namespace DX9
 		float degeneratedA;
 
 		// vertex buffers and iterators
-		static LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
+		static D3DXVECTOR3* vertexBuffer;
 		static D3DXVECTOR3* vertexIterator;
-		static LPDIRECT3DVERTEXBUFFER9 colorBuffer;
+		static D3DCOLOR* colorBuffer;
 		static D3DCOLOR* colorIterator;
 		static float* valueBuffer;
 		static float* valueIterator;
+
+		static LPDIRECT3DVERTEXBUFFER9 DX9VertexBuffer;
+		static LPDIRECT3DVERTEXBUFFER9 DX9ColorBuffer;
 
 		// buffers names
 		static const std::string VERTEX_BUFFER_NAME;
@@ -115,6 +122,7 @@ namespace DX9
 	{
 		DX9LineTrailRenderer* obj = new DX9LineTrailRenderer;
 		registerObject(obj);
+		DX9Info::DX9RegisterRenderer(obj);
 		return obj;
 	}
 	

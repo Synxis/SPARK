@@ -24,7 +24,8 @@
 #ifndef H_SPK_DX9LINERENDERER
 #define H_SPK_DX9LINERENDERER
 
-#include "SPK_DX9Renderer.h"
+#include "RenderingAPIs/DX9/SPK_DX9Renderer.h"
+#include "Extensions/Renderers/SPK_LineRendererInterface.h"
 
 namespace SPK
 {
@@ -36,95 +37,40 @@ namespace DX9
 		D3DCOLOR color;
 	};
 	
-	/**
-	* @class DX9LineRenderer
-	* @brief A Renderer drawing particles as quad
-	*
-	* the length of the lines is function of the Particle velocity and is defined in the universe space
-	* while the width is fixed and defines in the screen space (in pixels).<br>
-	* <br>
-	* Below are the parameters of Particle that are used in this Renderer (others have no effects) :
-	* <ul>
-	* <li>SPK::PARAM_RED</li>
-	* <li>SPK::PARAM_GREEN</li>
-	* <li>SPK::PARAM_BLUE</li>
-	* <li>SPK::PARAM_ALPHA (only if blending is enabled)</li>
-	* </ul>
-	*/
-	class SPK_DX9_PREFIX DX9LineRenderer : public DX9Renderer
+	class SPK_DX9_PREFIX DX9LineRenderer : public DX9Renderer, public LineRendererInterface
 	{
 		SPK_IMPLEMENT_REGISTERABLE(DX9LineRenderer)
 
 	public :
 
-		//////////////////
-		// Constructors //
-		//////////////////
-
-		/**
-		* @brief Constructor of DX9LineRenderer
-		* @param length : the length multiplier of this DX9LineRenderer
-		* @param width : the width of this DX9LineRenderer in pixels
-		* @version 1.03.00
-		*/
 		DX9LineRenderer(float length = 1.0f, float width = 1.0f);
 
-		/////////////
-		// Setters //
-		/////////////
+		static inline DX9LineRenderer* create(float length = 1.0f, float width = 1.0f);
 
-		/**
-		* @brief Sets the length multiplier of this GLLineRenderer
-		*
-		* The length multiplier is the value which will be multiplied by the Particle velocity to get the line length in the universe.<br>
-		* A positive length means the line will be drawn in advance to the Particle, as opposed to a negative length.
-		*
-		* @param length : the length multiplier of this GLLineRenderer
-		*/
-		inline void setLength(float length);
-
-		/**
-		* @brief Sets the width of this DX9LineRenderer
-		* @param width : the width of this DX9LineRenderer in pixels
-		*/
-		inline void setWidth(float width);
-
-		/////////////
-		// Getters //
-		/////////////
-
-		/**
-		* @brief Gets the length multiplier of this DX9LineRenderer
-		* @return the length multiplier of this DX9LineRenderer
-		*/
-		inline float getLength() const;
-
-		/**
-		* @brief Gets the width of this DX9LineRenderer
-		* @return the width of this DX9LineRenderer in pixels
-		*/
-		inline float getWidth() const;
-
-		///////////////
-		// Interface //
-		///////////////
+		virtual void render(const Group& group);
 
 		virtual void createBuffers(const Group& group);
 		virtual void destroyBuffers(const Group& group);
 
-		virtual void render(const Group& group);
+		
 
-		virtual HRESULT OnD3D9CreateDevice();
+		virtual bool DX9CreateBuffers(const Group& group);
+		virtual bool DX9DestroyBuffers(const Group& group);
+
+	protected :
+
+		virtual bool checkBuffers(const Group& group);
+
+		virtual bool DX9CheckBuffers(const Group& group);
 
 	private :
 
-		float length;
-		float width;
-
 		// vertex buffers and iterators
 		
-		static LPDIRECT3DVERTEXBUFFER9 gpuBuffer;
+		static LineVertex* gpuBuffer;
 		static LineVertex* gpuIterator;
+
+		static LPDIRECT3DVERTEXBUFFER9 DX9VertexBuffer;
 
 #define DX9LINERENDERER_AS_LINELIST
 #ifndef DX9LINERENDERER_AS_LINELIST
@@ -138,28 +84,14 @@ namespace DX9
 		static const std::string INDEX_BUFFER_NAME;
 #endif
 
-		virtual bool checkBuffers(const Group& group);
 	};
 
-
-	inline void DX9LineRenderer::setLength(float length)
+	inline DX9LineRenderer* DX9LineRenderer::create(float length, float width)
 	{
-		this->length = length;
-	}
-
-	inline void DX9LineRenderer::setWidth(float width)
-	{
-		this->width = width;
-	}
-
-	inline float DX9LineRenderer::getLength() const
-	{
-		return length;
-	}
-
-	inline float DX9LineRenderer::getWidth() const
-	{
-		return width;
+		DX9LineRenderer* obj = new DX9LineRenderer(length, width);
+		registerObject(obj);
+		DX9Info::DX9RegisterRenderer(obj);
+		return obj;
 	}
 }}
 

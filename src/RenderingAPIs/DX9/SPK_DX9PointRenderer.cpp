@@ -29,7 +29,10 @@ namespace SPK
 {
 namespace DX9
 {
-	LPDIRECT3DVERTEXBUFFER9 DX9PointRenderer::vertexBuffer = NULL;
+	PointVertex* DX9PointRenderer::vertexBuffer = NULL;
+	PointVertex* DX9PointRenderer::vertexIterator = NULL;
+
+	LPDIRECT3DVERTEXBUFFER9 DX9PointRenderer::DX9VertexBuffer = NULL;
 
 	const std::string DX9PointRenderer::VERTEX_BUFFER_NAME("SPK_DX9PointRenderer_Vertex");
 
@@ -63,27 +66,20 @@ namespace DX9
 
 	bool DX9PointRenderer::checkBuffers(const Group& group)
 	{
-		// if device reseted or destroyed, send message to recreate buffers
-		if( reinit == true )
-		{
-			reinit = false;
-			return false;
-		}
+		ArrayBuffer<PointVertex>* pvbBuffer;
 
-		DX9VertexBuffer<PointVertex>* pvbBuffer;
-
-		if ((pvbBuffer = dynamic_cast<DX9VertexBuffer<PointVertex>*>(group.getBuffer(VERTEX_BUFFER_NAME))) == NULL)
+		if ((pvbBuffer = dynamic_cast<ArrayBuffer<PointVertex>*>(group.getBuffer(VERTEX_BUFFER_NAME))) == NULL)
 			return false;
 
-		vertexBuffer = pvbBuffer->getData();
+		vertexIterator = vertexBuffer = pvbBuffer->getData();
 
 		return true;
 	}
 
 	void DX9PointRenderer::createBuffers(const Group& group)
 	{
-		DX9VertexBuffer<PointVertex>* vbVertexBuffer = dynamic_cast<DX9VertexBuffer<PointVertex>*>(group.createBuffer(VERTEX_BUFFER_NAME, DX9VertexBufferCreator<PointVertex>((D3DFVF_XYZ|D3DFVF_DIFFUSE), 1), 0, false));
-		vertexBuffer = vbVertexBuffer->getData();
+		ArrayBuffer<PointVertex>* vbVertexBuffer = dynamic_cast<ArrayBuffer<PointVertex>*>(group.createBuffer(VERTEX_BUFFER_NAME, ArrayBufferCreator<PointVertex>(1), 0, false));
+		vertexIterator = vertexBuffer = vbVertexBuffer->getData();
 	}
 
 	void DX9PointRenderer::destroyBuffers(const Group& group)
@@ -93,6 +89,14 @@ namespace DX9
 
 	void DX9PointRenderer::render(const Group& group)
 	{
+		HRESULT hr;
+
+		if( !DX9PrepareBuffers(group) )
+			return;
+
+		if( !prepareBuffers(group) )
+			return;
+
 		initBlending();
 
 		if (worldSize)
@@ -117,15 +121,15 @@ namespace DX9
 
 		DX9Info::getDevice()->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
 
-		void *ptr;
-		if( group.getNbParticles() != 0 )
+		//if( group.getNbParticles() != 0 )
 		{
-			vertexBuffer->Lock(0, (group.getNbParticles())*sizeof(PointVertex), &ptr, 0);
+			
+
 			for(size_t i = 0; i < group.getNbParticles(); i++)
 			{
 				const Particle& particle = group.getParticle(i);
 
-				Assign(((PointVertex*)ptr)[i].position, particle.position());
+				Assign(vertexBuffer[i].position, particle.position());
 
 				/*
 				if( group.getModel()->isEnabled(PARAM_ALPHA) )
@@ -146,19 +150,82 @@ namespace DX9
 				}
 				*/
 				D3DXCOLOR c(particle.getR(), particle.getG(), particle.getB(), particle.getParamCurrentValue(PARAM_ALPHA));
-				((PointVertex*)ptr)[i].color = c;
+				vertexBuffer[i].color = c;
 				/*((PointVertex*)ptr)[i].color = D3DCOLOR_COLORVALUE(
 					group.getParticle(i).getR(),
 					group.getParticle(i).getG(),
 					group.getParticle(i).getB(),
 					group.getParticle(i).getParamCurrentValue(PARAM_ALPHA));*/
 			}
-			vertexBuffer->Unlock();
 
-			DX9Info::getDevice()->SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
-			DX9Info::getDevice()->SetStreamSource(0, vertexBuffer, 0, sizeof(PointVertex));
-			DX9Info::getDevice()->DrawPrimitive(D3DPT_POINTLIST, 0, group.getNbParticles());
+			void *ptr;
+			/*if( */hr = DX9VertexBuffer->Lock(0, 0, &ptr, 0);// == S_OK )
+			{
+				memcpy(ptr, vertexBuffer, group.getNbParticles() * sizeof(PointVertex));
+				DX9VertexBuffer->Unlock();
+
+				LPDIRECT3DDEVICE9 device = DX9Info::getDevice();
+				device->SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
+				device->SetStreamSource(0, DX9VertexBuffer, 0, sizeof(PointVertex));
+				device->DrawPrimitive(D3DPT_POINTLIST, 0, group.getNbParticles());
+			}
 		}
+	}
+
+	bool DX9PointRenderer::DX9CheckBuffers(const Group& group)
+	{
+		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
+
+		std::pair<const Group *, int> key(&group, 0);
+		it = DX9Buffers.find(key);
+		if( it == DX9Buffers.end() )
+		{
+			DX9VertexBuffer = NULL;
+			return false;
+		}
+		if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9VertexBuffer) == E_NOINTERFACE )
+		{
+			DX9VertexBuffer = NULL;
+			return false;
+		}
+
+		return true;
+	}
+
+	bool DX9PointRenderer::DX9CreateBuffers(const Group& group)
+	{
+		if( DX9Info::getDevice() == NULL ) return false;
+
+		LPDIRECT3DVERTEXBUFFER9 vb = NULL;
+
+		if( DX9Info::getDevice()->CreateVertexBuffer(group.getParticles().getNbReserved() * sizeof(PointVertex), 0, (D3DFVF_XYZ|D3DFVF_DIFFUSE), D3DPOOL_DEFAULT, &vb, NULL) != S_OK )
+		{
+			DX9VertexBuffer = NULL;
+			return false;
+		}
+		std::pair<const Group *, int> key(&group, 0);
+		DX9Buffers[key] = vb;
+
+		DX9VertexBuffer = vb;
+
+		return true;
+	}
+
+	bool DX9PointRenderer::DX9DestroyBuffers(const Group& group)
+	{
+		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
+
+		std::pair<const Group *, int> key(&group, 0);
+		it = DX9Buffers.find(key);
+		if( it != DX9Buffers.end() )
+		{
+			SAFE_RELEASE( it->second );
+			DX9Buffers.erase(it);
+		}
+
+		DX9VertexBuffer = NULL;
+
+		return true;
 	}
 
 	void DX9PointRenderer::setPixelPerUnit(float fovy,int screenHeight)
@@ -190,10 +257,5 @@ namespace DX9
 		DX9Info::getDevice()->SetRenderState(D3DRS_POINTSIZE, FtoDW(size));
 		DX9Info::getDevice()->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDW(POINT_SIZE_MIN));
 		DX9Info::getDevice()->SetRenderState(D3DRS_POINTSIZE_MAX, FtoDW(POINT_SIZE_MAX));
-	}
-
-	HRESULT DX9PointRenderer::OnD3D9CreateDevice()
-	{
-		return S_OK;
 	}
 }}

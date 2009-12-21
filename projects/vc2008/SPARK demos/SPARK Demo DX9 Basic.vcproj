@@ -41,7 +41,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;SPK_IMPORT"
+				PreprocessorDefinitions="WIN32;_DEBUG"
+				GeneratePreprocessedFile="0"
+				KeepComments="false"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="SPARK_debug.lib SPARK_DX9_debug.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
-				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic"
+				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;..\..\..\lib\vc2008\static"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -181,6 +183,30 @@
 			<File
 				RelativePath="..\..\..\demos\src\DX9\CCamera.cpp"
 				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SPK_All.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SPK_DX9_All.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

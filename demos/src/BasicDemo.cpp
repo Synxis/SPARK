@@ -244,6 +244,10 @@ void render()
 // Main function
 int main(int argc, char *argv[])
 {
+#if defined(DEBUG) | defined(_DEBUG)
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+#endif
+
 	// random seed
 	randomSeed = static_cast<unsigned int>(time(NULL));
 	
@@ -474,6 +478,7 @@ int main(int argc, char *argv[])
 	SPKFactory::getInstance().destroyAll();
 	cout << "\nSPARK FACTORY AFTER DESTRUCTION :" << endl;
 	SPKFactory::getInstance().traceAll();
+	SPKFactory::destroyInstance();
 	SDL_Quit();
 
 	cout << endl;
