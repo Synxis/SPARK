@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
 // Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+//                           foulon matthieu - stardeath@wanadoo.fr				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//

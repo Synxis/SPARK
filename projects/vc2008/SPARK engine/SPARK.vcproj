@@ -783,10 +783,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9IndexBuffer.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9Info.h"
 						>
 					</File>
@@ -808,10 +804,6 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9Renderer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\include\RenderingAPIs\DX9\SPK_DX9VertexBuffer.h"
 						>
 					</File>
 				</Filter>

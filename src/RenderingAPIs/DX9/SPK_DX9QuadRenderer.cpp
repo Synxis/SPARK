@@ -24,10 +24,7 @@
 #include "RenderingAPIs/DX9/SPK_DX9QuadRenderer.h"
 #include "Core/SPK_Particle.h"
 #include "Core/SPK_Group.h"
-/*
-#include "RenderingAPIs/DX9/SPK_DX9IndexBuffer.h"
-#include "RenderingAPIs/DX9/SPK_DX9VertexBuffer.h"
-*/
+
 namespace SPK
 {
 namespace DX9
@@ -51,7 +48,7 @@ namespace DX9
 	LPDIRECT3DVERTEXBUFFER9 DX9QuadRenderer::DX9TextureBuffer = NULL;
 	LPDIRECT3DINDEXBUFFER9 DX9QuadRenderer::DX9IndexBuffer = NULL;
 
-	int DX9QuadRenderer::offsetIndex = 0;
+	short DX9QuadRenderer::offsetIndex = 0;
 
 	LPDIRECT3DVERTEXDECLARATION9 DX9QuadRenderer::pVertexDecl = NULL;
 	LPDIRECT3DVERTEXDECLARATION9 DX9QuadRenderer::pVertexDecl2D = NULL;
@@ -385,7 +382,6 @@ namespace DX9
 
 	bool DX9QuadRenderer::DX9CheckBuffers(const Group& group)
 	{
-		//		std::cout << "DX9LineTrailRenderer::DX9CheckBuffers" << std::endl;
 
 		// vertex buffer
 		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
@@ -441,8 +437,6 @@ namespace DX9
 
 	bool DX9QuadRenderer::DX9CreateBuffers(const Group& group)
 	{
-		//		std::cout << "DX9LineTrailRenderer::DX9CreateBuffers start" << std::endl;
-
 		if( DX9Info::getDevice() == NULL ) return false;
 
 		if( DX9Buffers.size() == 0 )
@@ -495,15 +489,11 @@ namespace DX9
 			break;
 		}
 		//-----------------------------------------------------------------------------------------------
-
-		//		std::cout << "DX9LineTrailRenderer::DX9CreateBuffers end" << std::endl;
 		return true;
 	}
 
 	bool DX9QuadRenderer::DX9DestroyBuffers(const Group& group)
 	{
-		//		std::cout << "DX9LineTrailRenderer::DX9DestroyBuffers" << std::endl;
-
 		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
 
 		std::pair<const Group *, int> key(&group, DX9_VERTEX_BUFFER_KEY);

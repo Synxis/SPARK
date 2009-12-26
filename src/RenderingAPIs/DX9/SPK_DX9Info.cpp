@@ -28,14 +28,6 @@ namespace SPK
 namespace DX9
 {
 	LPDIRECT3DDEVICE9 DX9Info::device = NULL;
-	D3DPOOL DX9Info::pool = (D3DPOOL)-1;
-
-	//bool DX9Info::lost = false;
-	//bool DX9Info::destroyed = false;
-
-	//std::vector<const Group *> DX9Info::groups = std::vector<const Group *>();
-	//std::vector<IUnknown **> DX9Info::resources = std::vector<IUnknown **>();
-	//std::map<IDirect3DResource9 **, DX9BufferInfo> DX9Info::buffers = std::map<IDirect3DResource9 **, DX9BufferInfo>();
 
 	std::vector<DX9Renderer *> DX9Info::renderers = std::vector<DX9Renderer *>();
 

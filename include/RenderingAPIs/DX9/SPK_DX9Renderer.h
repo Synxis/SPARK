@@ -190,10 +190,7 @@ namespace DX9
 	{
 		// alpha test
 		if (isRenderingHintEnabled(ALPHA_TEST))
-		{
-			//glAlphaFunc(GL_GEQUAL,getAlphaTestThreshold());
 			DX9Info::getDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, true);
-		}
 		else
 			DX9Info::getDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, false);
 

@@ -260,8 +260,6 @@ namespace DX9
 
 	bool DX9LineTrailRenderer::DX9CheckBuffers(const Group& group)
 	{
-//		std::cout << "DX9LineTrailRenderer::DX9CheckBuffers" << std::endl;
-
 		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
 		
 		std::pair<const Group *, int> key(&group, 0);
@@ -287,8 +285,6 @@ namespace DX9
 
 	bool DX9LineTrailRenderer::DX9CreateBuffers(const Group& group)
 	{
-//		std::cout << "DX9LineTrailRenderer::DX9CreateBuffers start" << std::endl;
-
 		if( DX9Info::getDevice() == NULL ) return false;
 
 		if( DX9Buffers.size() == 0 )
@@ -311,14 +307,11 @@ namespace DX9
 
 		DX9ColorBuffer = vb;
 
-//		std::cout << "DX9LineTrailRenderer::DX9CreateBuffers end" << std::endl;
 		return true;
 	}
 
 	bool DX9LineTrailRenderer::DX9DestroyBuffers(const Group& group)
 	{
-//		std::cout << "DX9LineTrailRenderer::DX9DestroyBuffers" << std::endl;
-
 		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
 
 		std::pair<const Group *, int> key(&group, 0);

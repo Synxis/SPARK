@@ -46,7 +46,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;SPK_DX9_EXPORT;SPK_CORE_IMPORT"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
 			<Tool

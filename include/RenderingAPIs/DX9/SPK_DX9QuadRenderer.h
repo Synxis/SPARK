@@ -61,26 +61,6 @@ namespace DX9
 		D3DDECL_END()
 	};
 
-	/**
-	* @class DX9QuadRenderer
-	* @brief A Renderer drawing particles as DX quads
-	*
-	* the orientation of the quads depends on the method defined in setAlignement.
-	* This orientation is computed during rendering by the CPU (further improvement of SPARK will allow to make the computation on GPU side).<br>
-	* <br>
-	* Below are the parameters of Particle that are used in this Renderer (others have no effects) :
-	* <ul>
-	* <li>SPK::PARAM_SIZE</li>
-	* <li>SPK::PARAM_RED</li>
-	* <li>SPK::PARAM_GREEN</li>
-	* <li>SPK::PARAM_BLUE</li>
-	* <li>SPK::PARAM_ALPHA (only if blending is enabled)</li>
-	* <li>SPK::PARAM_ANGLE (only if a texture is set)</li>
-	* <li>SPK::PARAM_TEXTURE_INDEX</li>
-	* </ul>
-	*
-	* @version 1.03.01
-	*/
 	class SPK_DX9_PREFIX DX9QuadRenderer : public DX9Renderer, public QuadRendererInterface, public Oriented3DRendererInterface
 	{
 		SPK_IMPLEMENT_REGISTERABLE(DX9QuadRenderer)
@@ -91,12 +71,6 @@ namespace DX9
 		// Constructors //
 		//////////////////
 
-		/**
-		* @brief Constructor of DX9QuadRenderer
-		* @param scaleX the scale of the width of the quad
-		* @param scaleY the scale of the height of the quad
-		* @version 1.02.00
-		*/
 		DX9QuadRenderer(float scaleX = 1.0f, float scaleY = 1.0f);
 
 		virtual ~DX9QuadRenderer();
@@ -107,29 +81,8 @@ namespace DX9
 		// Setters //
 		/////////////
 
-		/**
-		* @brief Sets the texturing mode for this DX9QuadRenderer
-		*
-		* The texturing mode defines whether or not to apply a texture
-		* and if so which type of texture to apply (2D,3D or atlas)
-		*
-		* @param mode : the texturing mode of this DX9QuadRenderer
-		* @since 1.02.00
-		*/
 		virtual bool setTexturingMode(TexturingMode mode);
 
-		/**
-		* @brief Sets the texture of this DX9QuadRenderer
-		*
-		* The texture is the reference value of a loaded openGL texture.<br>
-		* The whole texture will be renderered on each quad.<br>
-		* <br>
-		* Not that to use texturing, the texturing type must be anything else than TEXTURE_NONE.
-		* see setTexturingMode(TexturingMode).
-		*
-		* @param textureIndex : the index of the openGL texture of this DX9QuadRenderer
-		* @version 1.02.00
-		*/
 		inline void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
 
 
@@ -137,10 +90,6 @@ namespace DX9
 		// Getters //
 		/////////////
 
-		/**
-		* @brief Gets the texture of this DX9QuadRenderer
-		* @return the texture of this DX9QuadRenderer
-		*/
 		inline LPDIRECT3DTEXTURE9 getTexture() const;
 
 		///////////////
@@ -183,7 +132,7 @@ namespace DX9
 		static LPDIRECT3DVERTEXBUFFER9 DX9TextureBuffer;
 		static LPDIRECT3DINDEXBUFFER9 DX9IndexBuffer;
 
-		static int offsetIndex;
+		static short offsetIndex;
 
 		// vertex declaration
 		static LPDIRECT3DVERTEXDECLARATION9 pVertexDecl;
