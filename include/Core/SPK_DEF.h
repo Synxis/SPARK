@@ -35,6 +35,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <cstring>
 
 // 1.02.02 Compatibility with older versions
 #ifdef SPK_DLL
