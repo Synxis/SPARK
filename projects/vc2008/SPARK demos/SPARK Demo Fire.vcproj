@@ -183,12 +183,40 @@
 				RelativePath="..\..\..\demos\src\FireDemo.cpp"
 				>
 			</File>
+			<Filter
+				Name="ObjLoader"
+				>
+				<File
+					RelativePath="..\..\..\demos\external\ObjLoader\list.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\demos\external\ObjLoader\obj_parser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\demos\src\Loaders\Object3D.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\demos\external\ObjLoader\objLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\demos\external\ObjLoader\string_extra.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Fichiers d&apos;en-tête"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\..\demos\src\Loaders\Object3D.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Fichiers de ressources"

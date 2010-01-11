@@ -39,6 +39,8 @@
 #include "SPK.h"
 #include "SPK_GL.h"
 
+#include "loaders/Object3D.h"
+
 using namespace std;
 using namespace SPK;
 using namespace SPK::GL;
@@ -82,6 +84,8 @@ float lightIntensity = 1.0f;
 
 bool renderEnv = true;
 bool paused = false;
+
+Object3D* scene = NULL;
 
 // Converts an int into a string
 string int2Str(int a)
@@ -227,14 +231,14 @@ void render()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();                       
 
-	glPushMatrix();
+	//glPushMatrix();
 	glTranslatef(0.0f,0.0f,-camPosZ);
 	glRotatef(angleX,1.0f,0.0f,0.0f);
 	glRotatef(angleY,0.0f,1.0f,0.0f);
 	
 	if (renderEnv)
 	{
-		if (!paused)
+		/*if (!paused)
 		{
 			lightTime += deltaTime;
 			if (lightTime >= 50)
@@ -277,7 +281,47 @@ void render()
 		glVertex3f(-10.0f,-1.2f,-10.0f);
 		glTexCoord2f(-5.0f,5.0f);
 		glVertex3f(-10.0f,-1.2f,10.0f);
-		glEnd();
+		glEnd();*/
+
+		static GLfloat light_position[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+		if (!paused)
+		{
+			lightTime += deltaTime;
+			if (lightTime >= 50)
+			{
+				lightDist = -random(0.0f,0.05f);
+				lightIntensity = 1.0f + (lightDist * 5.0f);
+				lightTime -= lightTime;
+
+				light_position[0] = random(-0.5f,0.5f);
+				light_position[1] = 0.5f + random(-0.5f,0.5f);
+				light_position[2] = random(-0.5f,0.5f);
+				glLightf(GL_LIGHT0,GL_QUADRATIC_ATTENUATION, 15.0f / lightIntensity);
+			}
+		}
+
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+
+		/*glEnable(GL_POINT_SMOOTH);
+		glPointSize(16.0f);
+		glBegin(GL_POINTS);
+		glColor3f(1.0f,0.0f,0.0f);
+		glVertex3f(light_position[0],light_position[1],light_position[2]);
+		glEnd();*/
+		glLightfv(GL_LIGHT0,GL_POSITION, light_position);
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glShadeModel(GL_SMOOTH);
+		glColor4f(1.0f,1.0f,1.0f,1.0f);
+		glPushMatrix();
+		glTranslatef(0.0f,-1.5f,0.0f);
+		glScalef(0.01f,0.01f,0.01f);
+		scene->render();
+		glPopMatrix();
+		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHT0);
 	}
 
 	glDisable(GL_TEXTURE_2D);
@@ -346,6 +390,30 @@ int main(int argc, char *argv[])
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 	glViewport(0,0,screen.w,screen.h);
 
+	// lighting
+	GLfloat light_ambient[] = { 0.15f, 0.15f, 0.25f, 1.0f };
+	GLfloat light_diffuse[] = { 1.0f, 0.75f, 0.25f, 1.0f };
+	//GLfloat light_specular[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+    GLfloat mat_shininess[] = { 0.0f };
+
+	GLfloat mat_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	GLfloat mat_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//GLfloat mat_specular[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+    
+	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT, mat_ambient);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, mat_diffuse);
+    //glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, light_specular);
+	//glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, mat_shininess);
+
+	glLightfv(GL_LIGHT0,GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT0,GL_DIFFUSE, light_diffuse);
+    //glLightfv(GL_LIGHT0,GL_SPECULAR, light_specular);
+	glLightf(GL_LIGHT0,GL_QUADRATIC_ATTENUATION, 20.0f);
+
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,light_ambient);
+	glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER,1.0f);
+    //glLightfv(GL_LIGHT0,GL_SHININESS, mat_shininess);
+
 	// Loads texture font
 	FTGLTextureFont font = FTGLTextureFont("res/font.ttf");
 	if(font.Error())
@@ -354,12 +422,12 @@ int main(int argc, char *argv[])
 	fontPtr = &font;
 
 	// Loads grass texture
-	if (!loadTexture(textureGrass,"res/grass.bmp",GL_RGB,GL_REPEAT,true))
-		return 1;
+	//if (!loadTexture(textureGrass,"res/grass.bmp",GL_RGB,GL_REPEAT,true))
+	//	return 1;
 
 	// Loads lightmap
-	if (!loadTexture(textureLight,"res/lightmap.bmp",GL_RGB,GL_CLAMP,false))
-		return 1;
+	//if (!loadTexture(textureLight,"res/lightmap.bmp",GL_RGB,GL_CLAMP,false))
+	//	return 1;
 
 	// Loads fire texture
 	GLuint textureFire;
@@ -369,6 +437,10 @@ int main(int argc, char *argv[])
 	// Loads smoke texture
 	GLuint textureSmoke;
 	if (!loadTexture(textureSmoke,"res/explosion.bmp",GL_ALPHA,GL_CLAMP,false))
+		return 1;
+
+	scene = new Object3D();
+	if (!scene->load("res/SceneFireCamp.obj"))
 		return 1;
 
 	// Inits Particle Engine
