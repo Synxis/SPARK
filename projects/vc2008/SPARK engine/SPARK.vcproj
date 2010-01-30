@@ -312,6 +312,14 @@
 						RelativePath="..\..\..\src\Extensions\Zones\SPK_Sphere.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Zones\SPK_ZoneIntersection.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Zones\SPK_ZoneUnion.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Renderers"
@@ -640,6 +648,14 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Zones\SPK_Sphere.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Zones\SPK_ZoneIntersection.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Zones\SPK_ZoneUnion.h"
 						>
 					</File>
 				</Filter>
