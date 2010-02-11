@@ -1,6 +1,11 @@
 #ifndef OBJ_PARSER_H
 #define OBJ_PARSER_H
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4091) // disables the warning about the C typedef
+#pragma warning(disable : 4996) // disables the warning about function deprecations
+#endif
+
 #include "list.h"
 
 #define OBJ_FILENAME_LENGTH 500

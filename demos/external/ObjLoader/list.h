@@ -1,6 +1,10 @@
 #ifndef __LIST_H
 #define __LIST_H
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4996) // disables the warning about function deprecations
+#endif
+
 typedef struct
 {
 	int item_count;
