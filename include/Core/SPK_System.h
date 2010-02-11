@@ -80,6 +80,12 @@ namespace SPK
 		*/
 		static inline System* create();
 
+		////////////////
+		// Destructor //
+		////////////////
+
+		virtual ~System() {}
+
 		/////////////
 		// Setters //
 		/////////////

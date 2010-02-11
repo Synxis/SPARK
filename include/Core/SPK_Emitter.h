@@ -63,6 +63,13 @@ namespace SPK
 		/** @brief Constructor of Emitter */
 		Emitter();
 
+		////////////////
+		// Destructor //
+		////////////////
+
+		/** @brief Destructor of Emitter */
+		virtual inline ~Emitter() {}
+
 		/////////////
 		// Setters //
 		/////////////

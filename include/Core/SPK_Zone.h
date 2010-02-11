@@ -57,6 +57,13 @@ namespace SPK
 		*/
 		Zone(const Vector3D& position = Vector3D());
 
+		////////////////
+		// Destructor //
+		////////////////
+
+		/** @brief Destructor of Zone */
+		virtual inline ~Zone() {}
+
 		////////////
 		// Setter //
 		////////////

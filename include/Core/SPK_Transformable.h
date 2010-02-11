@@ -74,6 +74,13 @@ namespace SPK
 		/** @brief Constructor of Transformable */
 		Transformable();
 
+		////////////////
+		// Destructor //
+		////////////////
+
+		/** @brief Destructor of Transformable */
+		virtual inline ~Transformable() {}
+
 		/////////////
 		// Setters //
 		/////////////

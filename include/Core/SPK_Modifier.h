@@ -85,6 +85,13 @@ namespace SPK
 		*/
 		Modifier(int availableTriggers = ALWAYS,ModifierTrigger trigger = ALWAYS,bool needsIntersection = false,bool needsNormal = false,Zone* zone = NULL);
 
+		////////////////
+		// Destructor //
+		////////////////
+
+		/** @brief Destructor of Modifier */
+		virtual inline ~Modifier() {}
+
 		/////////////
 		// Setters //
 		/////////////
