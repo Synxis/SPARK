@@ -48,17 +48,6 @@ const float PI = 3.14159265358979323846f;
 System* particleSystem = NULL;
 IrrlichtDevice* device = NULL;
 
-// Calls back function to have particle bounce on the floor
-bool bounceOnFloor(Particle& particle,float deltaTime)
-{
-	if (particle.position().y < 0.015f)
-	{
-		particle.position().y = 0.015f;
-		particle.velocity().y = -particle.velocity().y * 0.6f;
-	}
-	return false;
-}
-
 // Input Receiver
 class MyEventReceiver : public IEventReceiver
 {
@@ -139,11 +128,15 @@ int main(int argc, char *argv[])
 	particleEmitter->setFlow(250);
 	particleEmitter->setForce(1.5f,1.5f);
 
+	// Obstacle
+	Plane* groundPlane = Plane::create();
+	Obstacle* obstacle = Obstacle::create(groundPlane,INTERSECT_ZONE,0.6f,1.0f);
+
 	// Group
 	Group* particleGroup = Group::create(particleModel,2100);
 	particleGroup->addEmitter(particleEmitter);
 	particleGroup->setRenderer(particleRenderer);
-	particleGroup->setCustomUpdate(&bounceOnFloor);
+	particleGroup->addModifier(obstacle);
 	particleGroup->setGravity(gravity);
 	particleGroup->enableAABBComputing(true);
 	
