@@ -114,7 +114,6 @@ using namespace SPK::DX9;
 //-----------------------------------------------------------------------------
 
 // SPARK variables
-Group* particleGroupPtr = NULL;
 SPK::System particleSystem;
 DX9PointRenderer *basicRenderer = NULL;
 DX9PointRenderer *pointRenderer = NULL;
@@ -252,8 +251,14 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	InitializeConsoleStdIO();
 #endif
 
+	// SPARK INITS
+
 	// random seed
 	randomSeed = static_cast<unsigned int>(time(NULL));
+
+	// Sets the update step
+	System::setClampStep(true,0.1f);			// clamp the step to 100 ms
+	System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
     // DXUT will create and use the best device (either D3D9 or D3D10) 
     // that is available on the system depending on which D3D callbacks are set below
@@ -371,7 +376,6 @@ void InitApp()
 	particleGroup->setGravity(gravity);
 	
 	particleSystem.addGroup(particleGroup);
-	particleGroupPtr = particleGroup;
 
 	//----------------------------------------------------------------------------
 	g_pBasicRenderer = new DX9PointRenderer();

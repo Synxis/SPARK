@@ -582,12 +582,16 @@ int main(int argc, char *argv[])
 		while (SDL_PollEvent(&event))
 		{
 			// if space is pressed, a new system is added
-			if ((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_SPACE))
+			if (((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_SPACE))||
+				(event.type == SDL_MOUSEBUTTONDOWN)&&
+				((event.button.button == SDL_BUTTON_LEFT)||(event.button.button == SDL_BUTTON_RIGHT)))
 			{
 				spacePressed = 1000.0f;
 			}
 
-			if ((event.type == SDL_KEYUP)&&(event.key.keysym.sym == SDLK_SPACE))
+			if (((event.type == SDL_KEYUP)&&(event.key.keysym.sym == SDLK_SPACE))||
+				(event.type == SDL_MOUSEBUTTONUP)&&
+				((event.button.button == SDL_BUTTON_LEFT)||(event.button.button == SDL_BUTTON_RIGHT)))
 			{
 				spacePressed = -1.0f;
 			}

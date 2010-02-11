@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
 	randomSeed = static_cast<unsigned int>(time(NULL));
 	
 	// Sets the update step
-	System::setClampStep(true,0.1f);			// clamp the step to 100 ms
+	System::setClampStep(true,0.01f);			// clamp the step to 10 ms
 	System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
 	SDL_Event event;

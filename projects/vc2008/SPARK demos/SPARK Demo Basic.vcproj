@@ -184,14 +184,6 @@
 				RelativePath="..\..\..\demos\src\BasicDemo.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\src\SPK_All.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\SPK_GL_All.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Fichiers d&apos;en-tête"

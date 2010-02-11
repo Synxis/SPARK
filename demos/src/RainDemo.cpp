@@ -495,28 +495,28 @@ int main(int argc, char *argv[])
 
 		// Allows the camera to move into the infinite universe
 		bool move = false;
-		if (keyState[SDLK_UP])
+		if (keyState[SDLK_UP] || keyState[SDLK_w])
 		{
 			posX += 0.001f * deltaTime * sin(angleY * PI / 180.0f);
 			posZ += -0.001f * deltaTime * cos(angleY * PI / 180.0f);
 			move = true;
 		}
 
-		if (keyState[SDLK_DOWN])
+		if (keyState[SDLK_DOWN] || keyState[SDLK_s])
 		{
 			posX += -0.001f * deltaTime * sin(angleY * PI / 180.0f);
 			posZ += 0.001f * deltaTime * cos(angleY * PI / 180.0f);	
 			move = true;
 		}
 
-		if (keyState[SDLK_LEFT])
+		if (keyState[SDLK_LEFT] || keyState[SDLK_a])
 		{
 			posX += -0.001f * deltaTime * cos(angleY * PI / 180.0f);
 			posZ += -0.001f * deltaTime * sin(angleY * PI / 180.0f);
 			move = true;
 		}
 
-		if (keyState[SDLK_RIGHT])
+		if (keyState[SDLK_RIGHT] || keyState[SDLK_d])
 		{
 			posX += 0.001f * deltaTime * cos(angleY * PI / 180.0f);
 			posZ += 0.001f * deltaTime * sin(angleY * PI / 180.0f);	
