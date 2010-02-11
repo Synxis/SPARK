@@ -79,8 +79,6 @@ float screenRatio;
 int drawText = 2;
 
 int lightTime = 0;
-float lightDist = 0.0f;
-float lightIntensity = 1.0f;
 
 bool renderEnv = true;
 bool paused = false;
@@ -238,59 +236,13 @@ void render()
 	
 	if (renderEnv)
 	{
-		/*if (!paused)
-		{
-			lightTime += deltaTime;
-			if (lightTime >= 50)
-			{
-				lightDist = -random(0.0f,0.05f);
-				lightIntensity = 1.0f + (lightDist * 1.0f);
-				lightTime -= lightTime;
-			}
-		}
-
-		// light mask
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA,GL_DST_ALPHA);
-		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D,textureLight);
-		glBegin(GL_QUADS);
-		glColor3f(lightIntensity,lightIntensity,lightIntensity);
-		glTexCoord2f(1.0f - lightDist,1.0f - lightDist);
-		glVertex3f(10.0f,-1.2f,10.0f);
-		glTexCoord2f(1.0f - lightDist,lightDist);
-		glVertex3f(10.0f,-1.2f,-10.0f);
-		glTexCoord2f(lightDist,lightDist);
-		glVertex3f(-10.0f,-1.2f,-10.0f);
-		glTexCoord2f(lightDist,1.0f - lightDist);
-		glVertex3f(-10.0f,-1.2f,10.0f);
-		glEnd();
-
-		// grass
-		glDisable(GL_DEPTH_TEST);
-		glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR);
-		glBindTexture(GL_TEXTURE_2D,textureGrass);
-		glBegin(GL_QUADS);
-		glColor3f(0.5f,1.0f,0.2f);
-		glTexCoord2f(5.0f,5.0f);
-		glVertex3f(10.0f,-1.2f,10.0f);
-		glTexCoord2f(5.0f,-5.0f);
-		glVertex3f(10.0f,-1.2f,-10.0f);
-		glTexCoord2f(-5.0f,-5.0f);
-		glVertex3f(-10.0f,-1.2f,-10.0f);
-		glTexCoord2f(-5.0f,5.0f);
-		glVertex3f(-10.0f,-1.2f,10.0f);
-		glEnd();*/
-
 		static GLfloat light_position[] = { 0.0f, 1.0f, 0.0f, 1.0f };
 		if (!paused)
 		{
 			lightTime += deltaTime;
 			if (lightTime >= 50)
 			{
-				lightDist = -random(0.0f,0.05f);
-				lightIntensity = 1.0f + (lightDist * 5.0f);
+				float lightIntensity = 1.0f + (-random(0.0f,0.05f) * 5.0f);
 				lightTime -= lightTime;
 
 				light_position[0] = random(-0.5f,0.5f);
@@ -303,12 +255,6 @@ void render()
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 
-		/*glEnable(GL_POINT_SMOOTH);
-		glPointSize(16.0f);
-		glBegin(GL_POINTS);
-		glColor3f(1.0f,0.0f,0.0f);
-		glVertex3f(light_position[0],light_position[1],light_position[2]);
-		glEnd();*/
 		glLightfv(GL_LIGHT0,GL_POSITION, light_position);
 
 		glEnable(GL_LIGHTING);
@@ -393,26 +339,20 @@ int main(int argc, char *argv[])
 	// lighting
 	GLfloat light_ambient[] = { 0.15f, 0.15f, 0.25f, 1.0f };
 	GLfloat light_diffuse[] = { 1.0f, 0.75f, 0.25f, 1.0f };
-	//GLfloat light_specular[] = { 0.0f, 1.0f, 0.0f, 1.0f };
     GLfloat mat_shininess[] = { 0.0f };
 
 	GLfloat mat_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	GLfloat mat_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//GLfloat mat_specular[] = { 0.0f, 1.0f, 0.0f, 1.0f };
     
 	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT, mat_ambient);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, mat_diffuse);
-    //glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, light_specular);
-	//glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS, mat_shininess);
 
 	glLightfv(GL_LIGHT0,GL_AMBIENT, light_ambient);
 	glLightfv(GL_LIGHT0,GL_DIFFUSE, light_diffuse);
-    //glLightfv(GL_LIGHT0,GL_SPECULAR, light_specular);
 	glLightf(GL_LIGHT0,GL_QUADRATIC_ATTENUATION, 20.0f);
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,light_ambient);
 	glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER,1.0f);
-    //glLightfv(GL_LIGHT0,GL_SHININESS, mat_shininess);
 
 	// Loads texture font
 	FTGLTextureFont font = FTGLTextureFont("res/font.ttf");
@@ -420,14 +360,6 @@ int main(int argc, char *argv[])
 		return 1;
 	font.FaceSize(24);
 	fontPtr = &font;
-
-	// Loads grass texture
-	//if (!loadTexture(textureGrass,"res/grass.bmp",GL_RGB,GL_REPEAT,true))
-	//	return 1;
-
-	// Loads lightmap
-	//if (!loadTexture(textureLight,"res/lightmap.bmp",GL_RGB,GL_CLAMP,false))
-	//	return 1;
 
 	// Loads fire texture
 	GLuint textureFire;
