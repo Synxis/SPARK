@@ -157,34 +157,22 @@ int main(int argc, char *argv[])
         core::vector3df());
     cam->setNearValue(0.05f);
 
-	// plane
-    core::array<video::S3DVertex2TCoords> pVertices;
-    pVertices.set_used(4);
-    core::array<u16> pIndices;
-    pIndices.set_used(6);
-    for(int y=0; y<2; y++){
-    for(int x=0; x<2; x++){
-        pVertices[x+2*y].Pos = core::vector3df((x*2-1)*5.0f,-1.2f,(y*2-1)*5.0f);
-        pVertices[x+2*y].Normal = core::vector3df(0,1,0);
-        pVertices[x+2*y].TCoords = core::vector2df((x*2-1)*5.0f,(y*2-1)*5.0f);
-        pVertices[x+2*y].TCoords2 = core::vector2df((f32)x,(f32)y);
-        pVertices[x+2*y].Color = video::SColor(255,255,255,255);
-    }
-    }
-    pIndices[0] = 0;
-    pIndices[1] = 2;
-    pIndices[2] = 1;
-    pIndices[3] = 2;
-    pIndices[4] = 3;
-    pIndices[5] = 1;
-    scene::IMeshBuffer* buff = new scene::CMeshBuffer<video::S3DVertex2TCoords>;
-    buff->append(pVertices.pointer(),4,pIndices.pointer(),6);
-    buff->getMaterial().MaterialType = video::EMT_LIGHTMAP;
-    buff->getMaterial().TextureLayer[0].Texture = driver->getTexture("res\\grass.bmp");
-    buff->getMaterial().TextureLayer[1].Texture = driver->getTexture("res\\lightmap3.bmp");
-    buff->getMaterial().Lighting = false;
-    scene::SMesh* mesh = new scene::SMesh; mesh->addMeshBuffer(buff);
-    scene::IMeshSceneNode* plane = smgr->addMeshSceneNode(mesh);
+	scene::IMesh* sceneryMesh = smgr->getMesh("res/SceneFireCamp.obj");
+	scene::ISceneNode* sceneryNode = smgr->addMeshSceneNode(sceneryMesh);
+	sceneryNode->setPosition(core::vector3df(0.0f,-1.5f,0.0f));
+	sceneryNode->setScale(core::vector3df(0.01f,0.01f,0.01f));
+
+	smgr->setAmbientLight(video::SColorf(0.15f,0.15f,0.25f));
+
+	scene::ILightSceneNode* lightNode = smgr->addLightSceneNode();
+	lightNode->setLightType(video::ELT_SPOT);
+	video::SLight& lightData = lightNode->getLightData();
+	lightData.AmbientColor = video::SColorf(0.0f,0.0f,0.0f);
+	lightData.DiffuseColor = video::SColorf(1.0f,0.75f,0.25f);
+	lightData.InnerCone = 180.0f;
+	lightData.OuterCone = 180.0f;
+	lightData.Attenuation.X = 0.0f;
+	lightData.Attenuation.Y = 0.0f;
 
 	// random seed
 	randomSeed = device->getTimer()->getRealTime();
@@ -304,10 +292,11 @@ int main(int argc, char *argv[])
 	// setup some useful variables
 	float time=(f32)device->getTimer()->getTime() / 1000.0f,oldtime,deltaTime;
 	float step = 0.0f;
-	float lastLightTime = 0;
 
 	cout << "\nSPARK FACTORY AFTER INIT :" << endl;
 	SPKFactory::getInstance().traceAll();
+
+	float lightTime = 0.05f;
 
 	while(device->run())
 	{
@@ -315,15 +304,14 @@ int main(int argc, char *argv[])
         time = (f32)device->getTimer()->getTime() / 1000.0f;
         deltaTime = time - oldtime;
 
-		// lightmap effect
-        if(time - lastLightTime >= 0.05f)
-        {
-            float decal = SPK::random(0.95f,1.05f);
-            for(int y=0; y<2; y++)
-                for(int x=0; x<2; x++)
-                    ((video::S3DVertex2TCoords*)(buff->getVertices()))[x+2*y].TCoords2 = core::vector2df((x-0.5f)*decal+0.5f,(y-0.5f)*decal+0.5f);
-            lastLightTime = time;
-        }
+		lightTime += deltaTime;
+		if (lightTime >= 0.05f)
+		{
+			float lightIntensity = 1.0f - (random(0.0f,0.05f) * 5.0f);
+			lightTime -= lightTime;
+			lightNode->setPosition(core::vector3df(random(-0.5f,0.5f),0.5f + random(-0.5f,0.5f),random(-0.5f,0.5f)));
+			lightNode->getLightData().Attenuation.Z = 15.0f / lightIntensity;
+		}
 
 		driver->beginScene(true, true, video::SColor(0,0,0,0));
 
