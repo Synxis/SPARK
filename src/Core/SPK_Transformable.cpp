@@ -40,8 +40,8 @@ namespace SPK
 		parent(NULL),
 		localIdentity(true)
 	{
-		std::memcpy(local,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
-		std::memcpy(world,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
+		memcpy(local,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
+		memcpy(world,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
 	}
 
 	void Transformable::setTransformNC(const float* transform)
