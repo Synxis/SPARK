@@ -27,6 +27,7 @@
 
 namespace SPK
 {
+	class Group;
 	template<class T> class ArrayBufferCreator;
 
 	/**
