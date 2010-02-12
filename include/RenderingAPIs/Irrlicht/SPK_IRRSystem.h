@@ -49,6 +49,8 @@ namespace IRR
 	*/
     class SPK_IRR_PREFIX IRRSystem : public System, public irr::scene::ISceneNode
     {
+		SPK_IMPLEMENT_REGISTERABLE(IRRSystem)
+
 	public:
 
 		//////////////////
