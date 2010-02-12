@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="SPARK workspace">
-		<Project filename="SPARK engine\SPARK.cbp" active="1" />
-		<Project filename="SPARK engine\SPARK DLL.cbp" />
+		<Project filename="SPARK engine\SPARK.cbp" />
+		<Project filename="SPARK engine\SPARK DLL.cbp" active="1" />
 		<Project filename="SPARK engine\SPARK LIB.cbp" />
 		<Project filename="SPARK engine\SPARK GL DLL.cbp">
 			<Depends filename="SPARK engine\SPARK DLL.cbp" />
