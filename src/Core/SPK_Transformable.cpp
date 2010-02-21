@@ -111,7 +111,7 @@ namespace SPK
 	{
 		axis.normalize();
 		float c = std::cos(angle);
-		float s = std::cos(angle);
+		float s = std::sin(angle);
 		float a = 1 - c;
 		Vector3D axis2(axis.x * axis.x,axis.y * axis.y,axis.z * axis.z);
 
@@ -132,7 +132,7 @@ namespace SPK
 	void Transformable::setTransformOrientationX(float angle)
 	{
 		float cosA = std::cos(angle);
-		float sinA = std::cos(angle);
+		float sinA = std::sin(angle);
 
 		local[0] = 1.0f;
 		local[1] = 0.0f;
@@ -151,7 +151,7 @@ namespace SPK
 	void Transformable::setTransformOrientationY(float angle)
 	{
 		float cosA = std::cos(angle);
-		float sinA = std::cos(angle);
+		float sinA = std::sin(angle);
 
 		local[0] = cosA;
 		local[1] = 0.0f;
@@ -170,7 +170,7 @@ namespace SPK
 	void Transformable::setTransformOrientationZ(float angle)
 	{
 		float cosA = std::cos(angle);
-		float sinA = std::cos(angle);
+		float sinA = std::sin(angle);
 
 		local[0] = cosA;
 		local[1] = sinA;
