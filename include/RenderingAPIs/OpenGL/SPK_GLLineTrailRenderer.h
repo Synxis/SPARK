@@ -277,7 +277,7 @@ namespace GL
 
 		// Inits age
 		for (size_t i = 0; i < nbSamples; ++i)
-			*(valueIterator++) = duration * (i / static_cast<float>(nbSamples - 1) - 1.0f) + age;
+			*(valueIterator++) = age;
 	}
 }}
 

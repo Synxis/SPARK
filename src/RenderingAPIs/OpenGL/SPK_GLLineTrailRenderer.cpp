@@ -142,85 +142,51 @@ namespace GL
 		{
 			const Particle& particle = group.getParticle(i);
 			float age = particle.getAge();
+			float oldAge = *valueIterator;
 
-			if ((age == 0.0f)||(age < valueIterator[nbSamples - 1])) // If the particle is new, buffers for it are reinitialized
+			if ((age == 0.0f)||(age < *valueIterator)) // If the particle is new, buffers for it are reinitialized
 				init(particle,0.0f);
 			else
 			{
-				// skips pre degenerated vertex
-				vertexIterator += 3; 
-				colorIterator += 4;
-
-				int count = 0;
-
-				// Counts the number of end points to update
-				while((age - valueIterator[count] > duration)&&(count < static_cast<int>(nbSamples) - 1))
-					++count;
-
-				if (count > 0)
+				if (age - *(valueIterator + 1) >= duration / (nbSamples - 1)) // shifts the data by one
 				{
-					--count;
+					memmove(vertexIterator + 6,vertexIterator + 3,(nbSamples - 1) * 3 * sizeof(float));
+					memmove(colorIterator + 8,colorIterator + 4,((nbSamples - 1) << 2) * sizeof(float));
+					memmove(valueIterator + 1,valueIterator,(nbSamples - 1) * sizeof(float));
 
-					float ratio1 = (age - duration - valueIterator[count]) / (valueIterator[count + 1] - valueIterator[count]);
-					float ratio0 = 1.0f - ratio1;
-
-					int vertexDelta = count * 3;
-					int colorDelta = count << 2;
-
-					// Interpolates
-					for (size_t i = 0; i < 3; ++i)
-						vertexIterator[vertexDelta + i] = vertexIterator[vertexDelta + i] * ratio0 + vertexIterator[vertexDelta + i + 3] * ratio1;
-					for (size_t i = 0; i < 4; ++i)
-						colorIterator[colorDelta + i] = colorIterator[colorDelta + i] * ratio0 + colorIterator[colorDelta + i + 4] * ratio1;
-
-					valueIterator[count] = age - duration;
-
-					if (count > 0) // shifts the data by one
-					{
-						memmove(vertexIterator + vertexDelta - 3,vertexIterator + vertexDelta,(nbSamples - count) * 3 * sizeof(float));
-						memmove(colorIterator + colorDelta - 4,colorIterator + colorDelta,((nbSamples - count) << 2) * sizeof(float));
-						memmove(valueIterator + count - 1,valueIterator + count,(nbSamples - count) * sizeof(float));
-
-						--count;
-						if (count > 0) // confounds points (not supposed to happen often)
-							for (size_t i = 0; i < static_cast<size_t>(count); ++i)
-							{
-								memcpy(vertexIterator + i * 3,vertexIterator + count * 3,sizeof(float) * 3);
-								memcpy(colorIterator + (i << 2),colorIterator + (count << 2),sizeof(float) << 2);
-								memcpy(valueIterator + i,valueIterator + count,sizeof(float));
-							}
-					}
+					// post degenerated vertex copy
+					memcpy(vertexIterator + (nbSamples + 1) * 3,vertexIterator + nbSamples * 3,3 * sizeof(float));
 				}
 
-				for (size_t i = 0; i < nbSamples - 1; ++i)
-					colorIterator[(i << 2) + 3] *= 1.0f - (age - valueIterator[nbSamples - 1]) / (valueIterator[i] + duration - valueIterator[nbSamples - 1]);
-
-				// pre degenerated vertex
-				memcpy(vertexIterator - 3,vertexIterator,sizeof(float) * 3);
-				
-				// Positions pseudo iterators to the current point
-				vertexIterator += (nbSamples - 1) * 3;
-				colorIterator += (nbSamples - 1) << 2;
-				valueIterator += nbSamples - 1;
-
-				// Updates renderers's data with the particle
+				// Updates the current sample
 				const Vector3D& pos = particle.position();
-
 				*(vertexIterator++) = pos.x;
 				*(vertexIterator++) = pos.y;
 				*(vertexIterator++) = pos.z;
-				vertexIterator += 3;	// skips post degenerated vertex
 
+				memcpy(vertexIterator,vertexIterator - 3,3 * sizeof(float));
+				vertexIterator += (nbSamples + 1) * 3;
+
+				colorIterator += 4; // skips post degenerated vertex color
 				*(colorIterator++) = particle.getR();
 				*(colorIterator++) = particle.getG();
 				*(colorIterator++) = particle.getB();
 				*(colorIterator++) = particle.getParamCurrentValue(PARAM_ALPHA);
-				colorIterator += 4;	// skips post degenerated vertex
+				colorIterator += 3;
 
 				*(valueIterator++) = age;
+				//valueIterator += nbSamples;
 
-				// post degenerated vertex
-				memcpy(vertexIterator - 3,vertexIterator - 6,sizeof(float) * 3);
+				// Updates alpha
+				for (size_t i = 0; i < nbSamples - 1; ++i)
+				{
+					float ratio = (age - oldAge) / (duration - age + *valueIterator);
+					if (ratio > 0.0f)
+						*colorIterator *= ratio < 1.0f ? 1.0f - ratio : 0.0f;
+					colorIterator += 4;
+					++valueIterator;
+				}
+				++colorIterator;
 			}
 		}
 
