@@ -145,8 +145,6 @@ namespace GL
 
 	private :
 
-		static GLint statesSaved;
-
 		bool blendingEnabled;
 		GLuint srcBlending;
 		GLuint destBlending;

@@ -26,8 +26,6 @@ namespace SPK
 {
 namespace GL
 {
-	GLint GLRenderer::statesSaved = -1;
-
 	GLRenderer::GLRenderer() :
 		Renderer(),
 		blendingEnabled(false),
@@ -64,19 +62,6 @@ namespace GL
 
 	void GLRenderer::saveGLStates()
 	{
-		// If some states are already saved, we restore the states
-		if (statesSaved != -1)
-			restoreGLStates();
-
-		GLint currentDepth;
-		GLint maxDepth;
-		glGetIntegerv(GL_ATTRIB_STACK_DEPTH,&currentDepth);
-		glGetIntegerv(GL_MAX_ATTRIB_STACK_DEPTH,&maxDepth);
-
-		// If the attrib stack is full we return
-		if (currentDepth == maxDepth)
-			return;
-
 		glPushAttrib(GL_POINT_BIT |
 			GL_LINE_BIT |
 			GL_ENABLE_BIT |
@@ -86,25 +71,10 @@ namespace GL
 			GL_DEPTH_BUFFER_BIT |
 			GL_LIGHTING_BIT |
 			GL_POLYGON_BIT);
-
-		statesSaved = currentDepth;
 	}
 
 	void GLRenderer::restoreGLStates()
 	{
-		if (statesSaved == -1)
-			return;
-
-		GLint currentDepth;
-		glGetIntegerv(GL_ATTRIB_STACK_DEPTH,&currentDepth);
-
-		// Pops until we reach the saved depth
-		while (currentDepth > statesSaved)
-		{
-			glPopAttrib();
-			--currentDepth;
-		}
-
-		statesSaved = -1;
+		glPopAttrib();
 	}
 }}
