@@ -224,7 +224,7 @@ HRESULT InitDX(int largeur, int hauteur, bool bPleinEcran)
     g_D3Dpp.AutoDepthStencilFormat = D3DFMT_D16;
     g_D3Dpp.PresentationInterval   = D3DPRESENT_INTERVAL_IMMEDIATE;
 
-	if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, DeviceType, g_hWnd, dwBehaviorFlags, &g_D3Dpp, &g_pD3DDevice ) ) )
+	if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, DeviceType, g_hWnd, dwBehaviorFlags|D3DCREATE_MULTITHREADED, &g_D3Dpp, &g_pD3DDevice ) ) )
 	{
 		// TO DO: Respond to failure of CreateDevice
 		cout << "CreateDevice fails" << endl;

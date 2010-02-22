@@ -32,6 +32,14 @@ namespace SPK
 {
 namespace DX9
 {
+	enum {
+		DX9_NONE = 0, // invalid
+		DX9_VERTEX_BUFFER_KEY = 1 << 0,
+		DX9_COLOR_BUFFER_KEY = 1 << 1,
+		DX9_INDEX_BUFFER_KEY = 1 << 2,
+		DX9_TEXTURE_BUFFER_KEY = 1 << 3
+	};
+
 	class SPK_DX9_PREFIX DX9BufferHandler
 	{
 	public :
@@ -49,7 +57,17 @@ namespace DX9
 
 		bool DX9PrepareBuffers(const Group& group);
 
+		bool DX9Bind(const Group& group, int key, void** to);
+
+		bool DX9Release(const Group& group, int key);
+
+		bool DX9Create();
+
 		virtual inline bool DX9CheckBuffers(const Group& group);
+
+		std::map<std::pair<const Group *, int>, IDirect3DResource9 *> DX9Buffers;
+		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator DX9BuffersIt;
+		std::pair<const Group *, int> DX9BuffersKey;
 
 	};
 

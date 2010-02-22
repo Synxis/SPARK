@@ -110,7 +110,9 @@ namespace DX9
 		vertexIterator = vertexBuffer = vbVertexBuffer->getData();
 		colorIterator = colorBuffer = vbColorBuffer->getData();
 		indexIterator = indexBuffer = ibIndexBuffer->getData();
-		textureIterator = textureBuffer = createTextureBuffer(group);
+
+		if( texturingMode != TEXTURE_NONE )
+			textureIterator = textureBuffer = createTextureBuffer(group);
 
 		offsetIndex = 0;
 
@@ -382,54 +384,32 @@ namespace DX9
 
 	bool DX9QuadRenderer::DX9CheckBuffers(const Group& group)
 	{
-
-		// vertex buffer
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
-
-		std::pair<const Group *, int> key(&group, DX9_VERTEX_BUFFER_KEY);
-		it = DX9Buffers.find(key);
-		if( it == DX9Buffers.end() )
+		if( !DX9Bind(group, DX9_VERTEX_BUFFER_KEY, (void**)&DX9VertexBuffer) )
 		{
 			DX9VertexBuffer = DX9ColorBuffer = DX9TextureBuffer = NULL;
 			DX9IndexBuffer = NULL;
 			return false;
 		}
-		if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9VertexBuffer) == E_NOINTERFACE ) return false;
-
-		// color buffer
-		key = std::pair<const Group *, int>(&group, DX9_COLOR_BUFFER_KEY);
-		it = DX9Buffers.find(key);
-		if( it == DX9Buffers.end() )
+		if( !DX9Bind(group, DX9_COLOR_BUFFER_KEY, (void**)&DX9ColorBuffer) )
 		{
 			DX9VertexBuffer = DX9ColorBuffer = DX9TextureBuffer = NULL;
 			DX9IndexBuffer = NULL;
 			return false;
 		}
-		if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9ColorBuffer) == E_NOINTERFACE ) return false;
-
-		// index buffer
-		key = std::pair<const Group *, int>(&group, DX9_INDEX_BUFFER_KEY);
-		it = DX9Buffers.find(key);
-		if( it == DX9Buffers.end() )
+		if( !DX9Bind(group, DX9_INDEX_BUFFER_KEY, (void**)&DX9IndexBuffer) )
 		{
 			DX9VertexBuffer = DX9ColorBuffer = DX9TextureBuffer = NULL;
 			DX9IndexBuffer = NULL;
 			return false;
 		}
-		if( it->second->QueryInterface(__uuidof(IDirect3DIndexBuffer9), (void**)&DX9IndexBuffer) == E_NOINTERFACE ) return false;
-
-		// texture buffer
 		if( texturingMode != TEXTURE_NONE )
 		{
-			key = std::pair<const Group *, int>(&group, DX9_TEXTURE_BUFFER_KEY);
-			it = DX9Buffers.find(key);
-			if( it == DX9Buffers.end() )
+			if( !DX9Bind(group, DX9_TEXTURE_BUFFER_KEY, (void**)&DX9TextureBuffer) )
 			{
 				DX9VertexBuffer = DX9ColorBuffer = DX9TextureBuffer = NULL;
 				DX9IndexBuffer = NULL;
 				return false;
 			}
-			if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9TextureBuffer) == E_NOINTERFACE ) return false;
 		}
 
 		return true;
@@ -437,11 +417,15 @@ namespace DX9
 
 	bool DX9QuadRenderer::DX9CreateBuffers(const Group& group)
 	{
+		std::cout << "DX9QuadRenderer::DX9CreateBuffers" << std::endl;
+
 		if( DX9Info::getDevice() == NULL ) return false;
 
 		if( DX9Buffers.size() == 0 )
 		{
 			SAFE_RELEASE( pVertexDecl );
+			SAFE_RELEASE( pVertexDecl2D );
+			SAFE_RELEASE( pVertexDecl3D );
 			DX9Info::getDevice()->CreateVertexDeclaration(QuadVertexDecl, &pVertexDecl);
 			DX9Info::getDevice()->CreateVertexDeclaration(QuadVertexDecl2D, &pVertexDecl2D);
 			DX9Info::getDevice()->CreateVertexDeclaration(QuadVertexDecl3D, &pVertexDecl3D);
@@ -494,39 +478,10 @@ namespace DX9
 
 	bool DX9QuadRenderer::DX9DestroyBuffers(const Group& group)
 	{
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
-
-		std::pair<const Group *, int> key(&group, DX9_VERTEX_BUFFER_KEY);
-		it = DX9Buffers.find(key);
-		if( it != DX9Buffers.end() )
-		{
-			SAFE_RELEASE( it->second );
-			DX9Buffers.erase(it);
-		}
-
-		key = std::pair<const Group *, int>(&group, DX9_COLOR_BUFFER_KEY);
-		it = DX9Buffers.find(key);
-		if( it != DX9Buffers.end() )
-		{
-			SAFE_RELEASE( it->second );
-			DX9Buffers.erase(it);
-		}
-
-		key = std::pair<const Group *, int>(&group, DX9_INDEX_BUFFER_KEY);
-		it = DX9Buffers.find(key);
-		if( it != DX9Buffers.end() )
-		{
-			SAFE_RELEASE( it->second );
-			DX9Buffers.erase(it);
-		}
-
-		key = std::pair<const Group *, int>(&group, DX9_TEXTURE_BUFFER_KEY);
-		it = DX9Buffers.find(key);
-		if( it != DX9Buffers.end() )
-		{
-			SAFE_RELEASE( it->second );
-			DX9Buffers.erase(it);
-		}
+		DX9Release(group, DX9_VERTEX_BUFFER_KEY);
+		DX9Release(group, DX9_COLOR_BUFFER_KEY);
+		DX9Release(group, DX9_INDEX_BUFFER_KEY);
+		DX9Release(group, DX9_TEXTURE_BUFFER_KEY);
 
 		DX9VertexBuffer = DX9ColorBuffer = DX9TextureBuffer = NULL;
 		DX9IndexBuffer = NULL;

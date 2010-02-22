@@ -59,6 +59,11 @@ namespace DX9
 		enableBlending(true);	
 	}
 
+	DX9LineTrailRenderer::~DX9LineTrailRenderer()
+	{
+		SAFE_RELEASE( pVertexDecl );
+	}
+
 	void DX9LineTrailRenderer::setDegeneratedLines(float r,float g,float b,float a)
 	{
 		degeneratedR = r;
@@ -69,9 +74,6 @@ namespace DX9
 
 	bool DX9LineTrailRenderer::checkBuffers(const Group& group)
 	{
-		if( pVertexDecl == NULL )
-			return false;
-
 		ArrayBuffer<D3DXVECTOR3>* fVertexBuffer = NULL;
 		ArrayBuffer<D3DCOLOR>* fColorBuffer = NULL;
 		FloatBuffer* fValueBuffer = NULL;
@@ -119,8 +121,6 @@ namespace DX9
 
 	void DX9LineTrailRenderer::destroyBuffers(const Group& group)
 	{
-		SAFE_RELEASE( pVertexDecl );
-
 		group.destroyBuffer(VERTEX_BUFFER_NAME);
 		group.destroyBuffer(COLOR_BUFFER_NAME);
 		group.destroyBuffer(VALUE_BUFFER_NAME);
@@ -260,25 +260,16 @@ namespace DX9
 
 	bool DX9LineTrailRenderer::DX9CheckBuffers(const Group& group)
 	{
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
-		
-		std::pair<const Group *, int> key(&group, 0);
-		it = DX9Buffers.find(key);
-		if( it == DX9Buffers.end() )
+		if( !DX9Bind(group, DX9_VERTEX_BUFFER_KEY, (void**)&DX9VertexBuffer) )
 		{
 			DX9VertexBuffer = DX9ColorBuffer = NULL;
 			return false;
 		}
-		if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9VertexBuffer) == E_NOINTERFACE ) return false;
-
-		key = std::pair<const Group *, int>(&group, 1);
-		it = DX9Buffers.find(key);
-		if( it == DX9Buffers.end() )
+		if( !DX9Bind(group, DX9_COLOR_BUFFER_KEY, (void**)&DX9ColorBuffer) )
 		{
 			DX9VertexBuffer = DX9ColorBuffer = NULL;
 			return false;
 		}
-		if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9ColorBuffer) == E_NOINTERFACE ) return false;
 
 		return true;
 	}
@@ -296,13 +287,13 @@ namespace DX9
 		LPDIRECT3DVERTEXBUFFER9 vb;
 
 		if( DX9Info::getDevice()->CreateVertexBuffer(group.getParticles().getNbReserved() * (nbSamples + 2) * sizeof(D3DXVECTOR3), 0, D3DFVF_XYZ, D3DPOOL_DEFAULT, &vb, NULL) != S_OK ) return false;
-		std::pair<const Group *, int> key(&group, 0);
+		std::pair<const Group *, int> key(&group, DX9_VERTEX_BUFFER_KEY);
 		DX9Buffers[key] = vb;
 
 		DX9VertexBuffer = vb;
 
 		if( DX9Info::getDevice()->CreateVertexBuffer(group.getParticles().getNbReserved() * (nbSamples + 2) * sizeof(D3DCOLOR), 0, D3DFVF_DIFFUSE, D3DPOOL_DEFAULT, &vb, NULL) != S_OK ) return false;
-		key = std::pair<const Group *, int>(&group, 1);
+		key = std::pair<const Group *, int>(&group, DX9_COLOR_BUFFER_KEY);
 		DX9Buffers[key] = vb;
 
 		DX9ColorBuffer = vb;
@@ -312,23 +303,8 @@ namespace DX9
 
 	bool DX9LineTrailRenderer::DX9DestroyBuffers(const Group& group)
 	{
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
-
-		std::pair<const Group *, int> key(&group, 0);
-		it = DX9Buffers.find(key);
-		if( it != DX9Buffers.end() )
-		{
-			SAFE_RELEASE( it->second );
-			DX9Buffers.erase(it);
-		}
-
-		key = std::pair<const Group *, int>(&group, 1);
-		it = DX9Buffers.find(key);
-		if( it != DX9Buffers.end() )
-		{
-			SAFE_RELEASE( it->second );
-			DX9Buffers.erase(it);
-		}
+		DX9Release(group, DX9_VERTEX_BUFFER_KEY);
+		DX9Release(group, DX9_COLOR_BUFFER_KEY);
 
 		DX9VertexBuffer = DX9ColorBuffer = NULL;
 

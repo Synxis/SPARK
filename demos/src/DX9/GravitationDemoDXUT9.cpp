@@ -264,6 +264,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	UnInitSpark();
 
 	UnInitApp();
+
+	system("PAUSE");
 	FreeConsole();
 
     return DXUTGetExitCode();
@@ -373,34 +375,11 @@ void InitSpark()
 
 void UnInitSpark()
 {
-	SAFE_DELETE( basicRenderer );
-
-	SAFE_DELETE( trailRenderer );
-
-	// Models
-	SAFE_DELETE( massModel );
-
-	SAFE_DELETE( particleModel );
-
-	// Emitter
-	SAFE_DELETE( particleEmitter );
-
-	// This is the point mass that will attract the other point masses to make them move
-	SAFE_DELETE( centerPointMass );
-
-	// Groups
-	SAFE_DELETE( particleGroup );
-
-	SAFE_DELETE( massGroup );
-
-	// Creates the point masses that will atract the particles
-	for (int i = 0; i < NB_POINT_MASS; ++i)
-	{
-		SAFE_DELETE( pointMasses[i] );
-	}
-
-	// System
-	SAFE_DELETE( particleSystem );
+	DX9Info::DX9DestroyAllBuffers();
+	SPKFactory::getInstance().traceAll();
+	SPKFactory::getInstance().destroyAll();
+	SPKFactory::getInstance().traceAll();
+	SPKFactory::destroyInstance();
 }
 
 
@@ -549,7 +528,6 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 	//*
 	// SPARK init
 	DX9Info::setDevice( pd3dDevice );
-	DX9Info::setPool( D3DPOOL_DEFAULT );
 
 	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/point.bmp", &g_pTextureParticle);
 	if( FAILED(hr) )

@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;SPK_IMPORT"
+				AdditionalIncludeDirectories="..\..\..\include;&quot;$(DXSDK_DIR)Samples\C++\DXUT\Core&quot;;&quot;$(DXSDK_DIR)Samples\C++\DXUT\Optional&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG"
 				GeneratePreprocessedFile="0"
 				KeepComments="false"
 				MinimalRebuild="true"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="DXUT.lib DXUTOpt.lib SPARK_debug.lib SPARK_DX9_debug.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
-				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Core\Debug&quot;;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Optional\Debug&quot;"
+				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;&quot;$(DXSDK_DIR)Samples\C++\DXUT\Core\Debug&quot;;&quot;$(DXSDK_DIR)Samples\C++\DXUT\Optional\Debug&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 				Profile="true"
@@ -121,7 +121,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories="..\..\..\include"
+				AdditionalIncludeDirectories="..\..\..\include;&quot;$(DXSDK_DIR)Samples\C++\DXUT\Core&quot;;&quot;$(DXSDK_DIR)Samples\C++\DXUT\Optional&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;SPK_IMPORT"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -140,7 +140,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="DXUT.lib DXUTOpt.lib SPARK.lib SPARK_DX9.lib"
-				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Core\Release&quot;;&quot;c:\Program Files (x86)\Microsoft DirectX SDK (August 2009)\Samples\C++\DXUT\Optional\Release&quot;"
+				AdditionalLibraryDirectories="..\..\..\lib\vc2008\dynamic;&quot;$(DXSDK_DIR)Samples\C++\DXUT\Core\Release&quot;;&quot;$(DXSDK_DIR)Samples\C++\DXUT\Optional\Release&quot;"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -184,6 +184,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\demos\src\DX9\CCamera.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SPK_All.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SPK_DX9_All.cpp"
 				>
 			</File>
 		</Filter>

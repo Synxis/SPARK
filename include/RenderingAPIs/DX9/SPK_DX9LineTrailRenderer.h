@@ -48,6 +48,8 @@ namespace DX9
 
 		DX9LineTrailRenderer();
 
+		virtual ~DX9LineTrailRenderer();
+
 		static inline DX9LineTrailRenderer* create();
 
 

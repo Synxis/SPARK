@@ -101,6 +101,9 @@ void InitApp();
 void UnInitApp();
 void RenderText();
 
+void InitSpark();
+void UnInitSpark();
+
 
 // SPARK lib
 #include <SPK.h>
@@ -210,9 +213,17 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCursorSettings( true, true );
     DXUTCreateWindow( L"BasicDemoDXUT9" );
     DXUTCreateDevice( true, 640, 480 );
-    DXUTMainLoop(); // Enter into the DXUT render loop
+    
+	InitSpark();
+
+	DXUTMainLoop(); // Enter into the DXUT render loop
+
+	UnInitSpark();
 
 	UnInitApp();
+
+	system("PAUSE");
+
 	FreeConsole();
 
     return DXUTGetExitCode();
@@ -252,58 +263,7 @@ void InitApp()
 	g_light.Direction = Vdir;
 
 	// Inits Particle Engine
-	Vector3D gravity(0.0f,-0.8f,0.0f);
-
-	// Renderers
-	//DX9PointRenderer basicRenderer(g_pD3DDevice);
-
-	pointRenderer = DX9PointRenderer::create();
-	basicRenderer = DX9PointRenderer::create();
-	quadRenderer = DX9QuadRenderer::create();
-	particleRenderer = NULL;
-
-	{
-		pointRenderer->setType(POINT_SPRITE);
-		pointRenderer->enableBlending(true);
-		pointRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-		//pointRenderer->setTexture(g_pTextureParticle);
-		pointRenderer->setTextureBlending(D3DTOP_MODULATE);
-		pointRenderer->enableWorldSize(true);
-		DX9PointRenderer::setPixelPerUnit(45.0f * D3DX_PI / 180.f, 600);
-		pointRenderer->setSize(0.05f);
-		particleRenderer = pointRenderer;
-	}
-	{
-		quadRenderer->enableBlending(true);
-		quadRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-		quadRenderer->setTexturingMode(TEXTURE_2D);
-		//quadRenderer->setTexture(g_pTextureParticle);
-		quadRenderer->setTextureBlending(D3DTOP_MODULATE);
-		quadRenderer->setScale(0.05f,0.05f);
-		//particleRenderer = quadRenderer;
-	}
-
-	// Model
-	particleModel = new Model(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA);
-	particleModel->setParam(PARAM_ALPHA,0.8f); // constant alpha
-	particleModel->setLifeTime(8.0f,8.0f);
-
-	// Emitter
-	point = new Point(Vector3D(0.0f,0.016f,0.0f));
-	particleEmitter = new SphericEmitter(Vector3D(0.0f,1.0f,0.0f), 0.1f * D3DX_PI, 0.1f * D3DX_PI);
-	particleEmitter->setZone(point);
-	particleEmitter->setFlow(250);
-	particleEmitter->setForce(1.5f,1.5f);
-int n = sizeof(Group);
-	// Group
-	particleGroup = new Group(particleModel, 2100);
-	particleGroup->addEmitter(particleEmitter);
-	//particleGroup->setRenderer(particleRenderer);
-	particleGroup->setCustomUpdate(&bounceOnFloor);
-	particleGroup->setGravity(gravity);
 	
-	particleSystem.addGroup(particleGroup);
-	//particleGroupPtr = particleGroup;
 }
 
 void UnInitApp()
@@ -311,21 +271,86 @@ void UnInitApp()
 #ifdef CONSOLE
 	std::cout << "UnInitApp" << std::endl;
 #endif
+}
 
-	SAFE_DELETE( pointRenderer );
-	SAFE_DELETE( basicRenderer );
-	SAFE_DELETE( quadRenderer );
+
+void InitSpark()
+{
+#ifdef CONSOLE
+	std::cout << "InitSpark" << std::endl;
+#endif
+	Vector3D gravity(0.0f,-0.8f,0.0f);
+
+	// Renderers
+
+	
+	basicRenderer = DX9PointRenderer::create();
+//	
 	particleRenderer = NULL;
 
+	pointRenderer = DX9PointRenderer::create();
+	{
+		pointRenderer->setType(POINT_SPRITE);
+		pointRenderer->enableBlending(true);
+		pointRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
+		pointRenderer->setTexture(g_pTextureParticle);
+		pointRenderer->setTextureBlending(D3DTOP_MODULATE);
+		pointRenderer->enableWorldSize(true);
+		DX9PointRenderer::setPixelPerUnit(45.0f * D3DX_PI / 180.f, 600);
+		pointRenderer->setSize(0.05f);
+		particleRenderer = pointRenderer;
+	}
+//*
+	quadRenderer = DX9QuadRenderer::create();
+	{
+		quadRenderer->enableBlending(true);
+		quadRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
+		quadRenderer->setTexturingMode(TEXTURE_2D);
+		quadRenderer->setTexture(g_pTextureParticle);
+		quadRenderer->setTextureBlending(D3DTOP_MODULATE);
+		quadRenderer->setScale(0.05f,0.05f);
+		//particleRenderer = quadRenderer;
+	}
+//*/
 	// Model
-	SAFE_DELETE( particleModel );
+	particleModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA);
+	particleModel->setParam(PARAM_ALPHA,0.8f); // constant alpha
+	particleModel->setLifeTime(8.0f,8.0f);
 
 	// Emitter
-	SAFE_DELETE( point );
-	SAFE_DELETE( particleEmitter );
-
+	point = Point::create(Vector3D(0.0f,0.016f,0.0f));
+	particleEmitter = SphericEmitter::create(Vector3D(0.0f,1.0f,0.0f), 0.1f * D3DX_PI, 0.1f * D3DX_PI);
+	particleEmitter->setZone(point);
+	particleEmitter->setFlow(250);
+	particleEmitter->setForce(1.5f,1.5f);
+	int n = sizeof(Group);
 	// Group
-	SAFE_DELETE( particleGroup );
+	particleGroup = Group::create(particleModel, 2100);
+	particleGroup->addEmitter(particleEmitter);
+	//particleGroup->setRenderer(particleRenderer);
+	particleGroup->setCustomUpdate(&bounceOnFloor);
+	particleGroup->setGravity(gravity);
+
+	particleSystem.addGroup(particleGroup);
+	//particleGroupPtr = particleGroup;
+
+	// /!\ obligatoirement après la création du device, car créé les buffers dans certaines conditions
+	particleGroup->setRenderer(particleRenderer);
+
+
+	SPKFactory::getInstance().traceAll();
+}
+
+void UnInitSpark()
+{
+#ifdef CONSOLE
+	std::cout << "UnInitSpark" << std::endl;
+#endif
+	DX9Info::DX9DestroyAllBuffers();
+	SPKFactory::getInstance().traceAll();
+	SPKFactory::getInstance().destroyAll();
+	SPKFactory::getInstance().traceAll();
+	SPKFactory::destroyInstance();
 }
 
 
@@ -462,18 +487,11 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 	//*
 	// SPARK init
 	DX9Info::setDevice( pd3dDevice );
-	DX9Info::setPool( D3DPOOL_MANAGED );
 
 	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/point.bmp", &g_pTextureParticle);
 	if( FAILED(hr) )
 		cout << "erreur chargement texture" << endl;
 
-
-	// /!\ obligatoirement après la création du device, car créé les buffers dans certaines conditions
-	particleGroup->setRenderer(particleRenderer);
-
-	pointRenderer->setTexture(g_pTextureParticle);
-	quadRenderer->setTexture(g_pTextureParticle);
 
     return S_OK;
 }
@@ -771,6 +789,7 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 
 	// SPARK destroy
 	SAFE_RELEASE( g_pTextureParticle );
+	
 	DX9Info::DX9DestroyAllBuffers();
 	//-------------------------------------------------------------------------
 }

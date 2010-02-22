@@ -174,16 +174,7 @@ namespace DX9
 
 	bool DX9PointRenderer::DX9CheckBuffers(const Group& group)
 	{
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
-
-		std::pair<const Group *, int> key(&group, 0);
-		it = DX9Buffers.find(key);
-		if( it == DX9Buffers.end() )
-		{
-			DX9VertexBuffer = NULL;
-			return false;
-		}
-		if( it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9VertexBuffer) == E_NOINTERFACE )
+		if( !DX9Bind(group, DX9_VERTEX_BUFFER_KEY, (void**)&DX9VertexBuffer) )
 		{
 			DX9VertexBuffer = NULL;
 			return false;
@@ -194,6 +185,8 @@ namespace DX9
 
 	bool DX9PointRenderer::DX9CreateBuffers(const Group& group)
 	{
+		std::cout << "DX9PointRenderer::DX9CreateBuffers" << std::endl;
+
 		if( DX9Info::getDevice() == NULL ) return false;
 
 		LPDIRECT3DVERTEXBUFFER9 vb = NULL;
@@ -203,7 +196,7 @@ namespace DX9
 			DX9VertexBuffer = NULL;
 			return false;
 		}
-		std::pair<const Group *, int> key(&group, 0);
+		std::pair<const Group *, int> key(&group, DX9_VERTEX_BUFFER_KEY);
 		DX9Buffers[key] = vb;
 
 		DX9VertexBuffer = vb;
@@ -213,16 +206,7 @@ namespace DX9
 
 	bool DX9PointRenderer::DX9DestroyBuffers(const Group& group)
 	{
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
-
-		std::pair<const Group *, int> key(&group, 0);
-		it = DX9Buffers.find(key);
-		if( it != DX9Buffers.end() )
-		{
-			SAFE_RELEASE( it->second );
-			DX9Buffers.erase(it);
-		}
-
+		DX9Release(group, DX9_VERTEX_BUFFER_KEY);
 		DX9VertexBuffer = NULL;
 
 		return true;

@@ -33,11 +33,6 @@ namespace SPK
 {
 namespace DX9
 {
-	const int DX9_VERTEX_BUFFER_KEY = 0;
-	const int DX9_COLOR_BUFFER_KEY = 1;
-	const int DX9_INDEX_BUFFER_KEY = 2;
-	const int DX9_TEXTURE_BUFFER_KEY = 3;
-
 	class SPK_DX9_PREFIX DX9Renderer : public Renderer, public DX9BufferHandler
 	{
 	public :
@@ -124,7 +119,7 @@ namespace DX9
 
 		inline void initRenderingHints() const;
 
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *> DX9Buffers;
+		//std::map<std::pair<const Group *, int>, IDirect3DResource9 *> DX9Buffers;
 
 	private :
 

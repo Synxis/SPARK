@@ -45,4 +45,38 @@ namespace DX9
 		}
 		return true;
 	}
+
+	bool DX9BufferHandler::DX9Bind(const Group& group, int key, void** to)
+	{
+		DX9BuffersKey = std::pair<const Group *, int>(&group, key);
+		DX9BuffersIt = DX9Buffers.find(DX9BuffersKey);
+		if( DX9BuffersIt == DX9Buffers.end() ) return false;
+
+		switch( key )
+		{
+			case DX9_VERTEX_BUFFER_KEY:
+			case DX9_COLOR_BUFFER_KEY:
+			case DX9_TEXTURE_BUFFER_KEY:
+				*to = reinterpret_cast<IDirect3DVertexBuffer9*>(DX9BuffersIt->second);
+				break;
+			case DX9_INDEX_BUFFER_KEY:
+				*to = reinterpret_cast<IDirect3DIndexBuffer9*>(DX9BuffersIt->second);
+				break;
+			default:
+				return false;
+		}
+		return true;
+	}
+
+	bool DX9BufferHandler::DX9Release(const Group& group, int key)
+	{
+		DX9BuffersKey = std::pair<const Group *, int>(&group, key);
+		DX9BuffersIt = DX9Buffers.find(DX9BuffersKey);
+		if( DX9BuffersIt != DX9Buffers.end() )
+		{
+			SAFE_RELEASE( DX9BuffersIt->second );
+			DX9Buffers.erase(DX9BuffersIt);
+		}
+		return true;
+	}
 }}

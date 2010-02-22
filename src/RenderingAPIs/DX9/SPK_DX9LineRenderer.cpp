@@ -155,14 +155,17 @@ namespace DX9
 
 			void *ptr;
 
-			DX9VertexBuffer->Lock(0, 0, &ptr, 0);
-			memcpy(ptr, gpuBuffer, group.getNbParticles() * sizeof(LineVertex));
-			DX9VertexBuffer->Unlock();
-
-			LPDIRECT3DDEVICE9 device = DX9Info::getDevice();
-			device->SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
-			device->SetStreamSource(0, DX9VertexBuffer, 0, sizeof(LineVertex));
-			device->DrawPrimitive(D3DPT_LINELIST, 0, group.getNbParticles());
+			if( DX9VertexBuffer->Lock(0, 0, &ptr, 0) == D3D_OK )
+			{
+				memcpy(ptr, gpuBuffer, group.getNbParticles() * 2 * sizeof(LineVertex));
+				if( DX9VertexBuffer->Unlock() == D3D_OK )
+				{
+					LPDIRECT3DDEVICE9 device = DX9Info::getDevice();
+					device->SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
+					device->SetStreamSource(0, DX9VertexBuffer, 0, sizeof(LineVertex));
+					device->DrawPrimitive(D3DPT_LINELIST, 0, group.getNbParticles());
+				}
+			}
 		}
 	}
 #else
@@ -236,13 +239,11 @@ namespace DX9
 
 	bool DX9LineRenderer::DX9CheckBuffers(const Group& group)
 	{
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
-
-		std::pair<const Group *, int> key(&group, 0);
-		it = DX9Buffers.find(key);
-		if( it == DX9Buffers.end() )
+		if( !DX9Bind(group, DX9_VERTEX_BUFFER_KEY, (void**)&DX9VertexBuffer) )
+		{
+			DX9VertexBuffer = NULL;
 			return false;
-		it->second->QueryInterface(__uuidof(IDirect3DVertexBuffer9), (void**)&DX9VertexBuffer);
+		}
 
 		return true;
 	}
@@ -253,24 +254,19 @@ namespace DX9
 
 		LPDIRECT3DVERTEXBUFFER9 vb;
 
-		if( DX9Info::getDevice()->CreateVertexBuffer(group.getNbParticles() * 2 * sizeof(D3DXVECTOR3), 0, D3DFVF_XYZ, D3DPOOL_DEFAULT, &vb, NULL) != S_OK ) return false;
-		std::pair<const Group *, int> key(&group, 0);
+		if( DX9Info::getDevice()->CreateVertexBuffer(group.getParticles().getNbReserved() * 2 * sizeof(LineVertex), 0, D3DFVF_XYZ|D3DFVF_DIFFUSE, D3DPOOL_DEFAULT, &vb, NULL) != S_OK ) return false;
+		std::pair<const Group *, int> key(&group, DX9_VERTEX_BUFFER_KEY);
 		DX9Buffers[key] = vb;
+		DX9VertexBuffer = vb;
 
 		return true;
 	}
 
 	bool DX9LineRenderer::DX9DestroyBuffers(const Group& group)
 	{
-		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator it;
+		DX9Release(group, DX9_VERTEX_BUFFER_KEY);
 
-		std::pair<const Group *, int> key(&group, 0);
-		it = DX9Buffers.find(key);
-		if( it != DX9Buffers.end() )
-		{
-			SAFE_RELEASE( it->second );
-			DX9Buffers.erase(it);
-		}
+		DX9VertexBuffer = NULL;
 
 		return true;
 	}

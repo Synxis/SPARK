@@ -99,6 +99,8 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext );
 void CALLBACK MouseProc( bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down,
                          bool bSideButton2Down, int nMouseWheelDelta, int xPos, int yPos, void* pUserContext );
 
+void InitSpark();
+void UnInitSpark();
 void InitApp();
 void UnInitApp();
 void RenderText();
@@ -282,7 +284,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCursorSettings( true, true );
     DXUTCreateWindow( L"Rain Demo DXUT9" );
     DXUTCreateDevice( true, 640, 480 );
-    DXUTMainLoop(); // Enter into the DXUT render loop
+
+	InitSpark();
+
+	DXUTMainLoop(); // Enter into the DXUT render loop
+
+	UnInitSpark();
 
 	UnInitApp();
 	FreeConsole();
@@ -324,121 +331,7 @@ void InitApp()
 	g_light.Diffuse.a = 1.0f;
 	g_light.Direction = Vdir;
 
-	// Inits Particle Engine
-	Vector3D gravity(0.0f,-0.8f,0.0f);
-
-	// Renderers
-	//DX9PointRenderer basicRenderer(g_pD3DDevice);
-
-	pointRenderer = new DX9PointRenderer();
-	basicRenderer = new DX9PointRenderer();
-	quadRenderer = new DX9QuadRenderer();
-	particleRenderer = NULL;
-
-	{
-		pointRenderer->setType(POINT_SPRITE);
-		pointRenderer->enableBlending(true);
-		pointRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-		//pointRenderer->setTexture(g_pTextureParticle);
-		pointRenderer->setTextureBlending(D3DTOP_MODULATE);
-		pointRenderer->enableWorldSize(true);
-		DX9PointRenderer::setPixelPerUnit(45.0f * D3DX_PI / 180.f, 600);
-		pointRenderer->setSize(0.05f);
-		particleRenderer = pointRenderer;
-	}
-	{
-		quadRenderer->enableBlending(true);
-		quadRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-		quadRenderer->setTexturingMode(TEXTURE_2D);
-		//quadRenderer->setTexture(g_pTextureParticle);
-		quadRenderer->setTextureBlending(D3DTOP_MODULATE);
-		quadRenderer->setScale(0.05f,0.05f);
-		//particleRenderer = quadRenderer;
-	}
-
-	// Model
-	particleModel = new Model(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA);
-	particleModel->setParam(PARAM_ALPHA,0.8f); // constant alpha
-	particleModel->setLifeTime(8.0f,8.0f);
-
-	// Emitter
-	point = new Point(Vector3D(0.0f,0.016f,0.0f));
-	particleEmitter = new SphericEmitter(Vector3D(0.0f,1.0f,0.0f), 0.1f * D3DX_PI, 0.1f * D3DX_PI);
-	particleEmitter->setZone(point);
-	particleEmitter->setFlow(250);
-	particleEmitter->setForce(1.5f,1.5f);
-
-	// Group
-	particleGroup = new Group(particleModel, 2100);
-	particleGroup->addEmitter(particleEmitter);
-	//particleGroup->setRenderer(particleRenderer);
-	particleGroup->setCustomUpdate(&bounceOnFloor);
-	particleGroup->setGravity(gravity);
 	
-	particleSystem.addGroup(particleGroup);
-
-	//----------------------------------------------------------------------------
-	g_pBasicRenderer = new DX9PointRenderer();
-
-	g_pDropRenderer	= new DX9PointRenderer();
-	g_pDropRenderer->setType(POINT_SPRITE);
-	g_pDropRenderer->setSize(2.0f/* * sizeRatio*/);
-	g_pDropRenderer->enableBlending(true);
-
-	g_pRainRenderer	= new DX9LineRenderer();
-	g_pRainRenderer->setLength(-0.1f);
-	//g_pRainRenderer->setAA(true);
-	g_pRainRenderer->enableBlending(true);
-
-	g_pSplashRenderer = new DX9QuadRenderer();
-	g_pSplashRenderer->setScale(0.05f, 0.05f);
-	g_pSplashRenderer->setTexturingMode(TEXTURE_2D);
-	g_pSplashRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
-	//g_pSplashRenderer->setTexture(textureSplash);
-	g_pSplashRenderer->enableBlending(true);
-
-	g_pRainModel = new Model(FLAG_GREEN | FLAG_RED | FLAG_BLUE | FLAG_ALPHA | FLAG_MASS, 0, FLAG_MASS);
-	g_pRainModel->setParam(PARAM_ALPHA, 0.2f);
-	g_pRainModel->setImmortal(true);
-
-	g_pDropModel = new Model(FLAG_GREEN | FLAG_RED | FLAG_BLUE | FLAG_ALPHA | FLAG_MASS, 0, FLAG_MASS);
-	g_pDropModel->setParam(PARAM_ALPHA,0.6f);
-
-	g_pSplashModel = new Model(FLAG_GREEN | FLAG_RED | FLAG_BLUE | FLAG_ALPHA | FLAG_SIZE | FLAG_ANGLE, FLAG_SIZE | FLAG_ALPHA, FLAG_SIZE | FLAG_ANGLE);
-	g_pSplashModel->setParam(PARAM_ANGLE,0.0f,2.0f * D3DX_PI);
-	g_pSplashModel->setParam(PARAM_ALPHA,1.0f,0.0f);
-
-	g_pRainZone = new AABox(Vector3D(0.0f,5.0f,0.0f));
-
-	g_pRainEmitter = new StraightEmitter(Vector3D(0.0f,-1.0f,0.0f));
-	g_pRainEmitter->setZone(g_pRainZone);
-
-	/*
-	g_pRainEmitter->setFlow(param(0.0f,6000.0f));
-	g_pRainEmitter->setForce(param(3.0f,5.0f),param(6.0f,10.0f));
-	g_pRainZone->setDimension(Vector3D(param(40.0f,10.0f),0.0f,param(40.0f,10.0f)));
-	*/
-
-	g_pDropEmitter = new SphericEmitter(Vector3D(0.0f,1.0f,0.0f),0.0f,0.2f * D3DX_PI);
-
-	g_pRainGroup = new Group(g_pRainModel, 10000);
-	g_pRainGroup->setCustomUpdate(killRain);
-	//g_pRainGroup->setRenderer(g_pRainRenderer);
-	g_pRainGroup->addEmitter(g_pRainEmitter);
-	g_pRainGroup->setFriction(0.7f);
-	g_pRainGroup->setGravity(Vector3D(0.0f, -2.0f, 0.0f));
-
-	g_pDropGroup = new Group(g_pDropModel, 22000);
-	//g_pDropGroup->setRenderer(g_pDropRenderer);
-	g_pDropGroup->setFriction(0.7f);
-	g_pDropGroup->setGravity(Vector3D(0.0f, -2.0f, 0.0f));
-
-	g_pSplashGroup = new Group(g_pSplashModel, 3000);
-	//g_pSplashGroup->setRenderer(g_pSplashRenderer);
-
-	g_particleSystem.addGroup(g_pSplashGroup);
-	g_particleSystem.addGroup(g_pDropGroup);
-	g_particleSystem.addGroup(g_pRainGroup);
 
 	//particleSystem.addGroup(g_pSplashGroup);
 	//particleSystem.addGroup(g_pDropGroup);
@@ -450,47 +343,146 @@ void UnInitApp()
 #ifdef CONSOLE
 	std::cout << "UnInitApp" << std::endl;
 #endif
+}
 
-	SAFE_DELETE( pointRenderer );
-	SAFE_DELETE( basicRenderer );
-	SAFE_DELETE( quadRenderer );
+void InitSpark()
+{
+	// Inits Particle Engine
+	Vector3D gravity(0.0f,-0.8f,0.0f);
+
+	// Renderers
+	
+	basicRenderer = DX9PointRenderer::create();
+	
 	particleRenderer = NULL;
 
+	pointRenderer = DX9PointRenderer::create();
+	{
+		pointRenderer->setType(POINT_SPRITE);
+		pointRenderer->enableBlending(true);
+		pointRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
+		//pointRenderer->setTexture(g_pTextureParticle);
+		pointRenderer->setTextureBlending(D3DTOP_MODULATE);
+		pointRenderer->enableWorldSize(true);
+		DX9PointRenderer::setPixelPerUnit(45.0f * D3DX_PI / 180.f, 600);
+		pointRenderer->setSize(0.05f);
+		particleRenderer = pointRenderer;
+	}
+
+	quadRenderer = DX9QuadRenderer::create();
+	{
+		quadRenderer->enableBlending(true);
+		quadRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
+		quadRenderer->setTexturingMode(TEXTURE_2D);
+		//quadRenderer->setTexture(g_pTextureParticle);
+		quadRenderer->setTextureBlending(D3DTOP_MODULATE);
+		quadRenderer->setScale(0.05f,0.05f);
+		//particleRenderer = quadRenderer;
+	}
+
 	// Model
-	SAFE_DELETE( particleModel );
+	particleModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA);
+	particleModel->setParam(PARAM_ALPHA,0.8f); // constant alpha
+	particleModel->setLifeTime(8.0f,8.0f);
 
 	// Emitter
-	SAFE_DELETE( point );
-	SAFE_DELETE( particleEmitter );
+	point = Point::create(Vector3D(0.0f,0.016f,0.0f));
+	particleEmitter = SphericEmitter::create(Vector3D(0.0f,1.0f,0.0f), 0.1f * D3DX_PI, 0.1f * D3DX_PI);
+	particleEmitter->setZone(point);
+	particleEmitter->setFlow(250);
+	particleEmitter->setForce(1.5f,1.5f);
 
 	// Group
-	SAFE_DELETE( particleGroup );
-
-	SAFE_DELETE( g_pBasicRenderer );
-
-	SAFE_DELETE( g_pDropRenderer );
-
-	SAFE_DELETE( g_pRainRenderer );
+	particleGroup = Group::create(particleModel, 2100);
+	particleGroup->addEmitter(particleEmitter);
+	//particleGroup->setRenderer(particleRenderer);
+	particleGroup->setCustomUpdate(&bounceOnFloor);
+	particleGroup->setGravity(gravity);
 	
-	SAFE_DELETE( g_pSplashRenderer );
+	particleSystem.addGroup(particleGroup);
 
-	SAFE_DELETE( g_pRainModel );
+	//----------------------------------------------------------------------------
+	g_pBasicRenderer = DX9PointRenderer::create();
 
-	SAFE_DELETE( g_pDropModel );
+	g_pDropRenderer	= DX9PointRenderer::create();
+	g_pDropRenderer->setType(POINT_SPRITE);
+	g_pDropRenderer->setSize(2.0f/* * sizeRatio*/);
+	g_pDropRenderer->enableBlending(true);
 
-	SAFE_DELETE( g_pSplashModel );
+	g_pRainRenderer	= DX9LineRenderer::create();
+	g_pRainRenderer->setLength(-0.1f);
+	//g_pRainRenderer->setAA(true);
+	g_pRainRenderer->enableBlending(true);
 
-	SAFE_DELETE( g_pRainZone );
+	g_pSplashRenderer = DX9QuadRenderer::create();
+	g_pSplashRenderer->setScale(0.05f, 0.05f);
+	g_pSplashRenderer->setTexturingMode(TEXTURE_2D);
+	g_pSplashRenderer->setBlendingFunctions(D3DBLEND_SRCALPHA, D3DBLEND_ONE);
+	//g_pSplashRenderer->setTexture(textureSplash);
+	g_pSplashRenderer->enableBlending(true);
 
-	SAFE_DELETE( g_pRainEmitter );
+	g_pRainModel = Model::create(FLAG_GREEN | FLAG_RED | FLAG_BLUE | FLAG_ALPHA | FLAG_MASS, 0, FLAG_MASS);
+	g_pRainModel->setParam(PARAM_ALPHA, 0.2f);
+	g_pRainModel->setImmortal(true);
 
-	SAFE_DELETE( g_pDropEmitter );
+	g_pDropModel = Model::create(FLAG_GREEN | FLAG_RED | FLAG_BLUE | FLAG_ALPHA | FLAG_MASS, 0, FLAG_MASS);
+	g_pDropModel->setParam(PARAM_ALPHA,0.6f);
 
-	SAFE_DELETE( g_pRainGroup );
+	g_pSplashModel = Model::create(FLAG_GREEN | FLAG_RED | FLAG_BLUE | FLAG_ALPHA | FLAG_SIZE | FLAG_ANGLE, FLAG_SIZE | FLAG_ALPHA, FLAG_SIZE | FLAG_ANGLE);
+	g_pSplashModel->setParam(PARAM_ANGLE,0.0f,2.0f * D3DX_PI);
+	g_pSplashModel->setParam(PARAM_ALPHA,1.0f,0.0f);
 
-	SAFE_DELETE( g_pDropGroup );
+	g_pRainZone = AABox::create(Vector3D(0.0f,5.0f,0.0f));
 
-	SAFE_DELETE( g_pSplashGroup );
+	g_pRainEmitter = StraightEmitter::create(Vector3D(0.0f,-1.0f,0.0f));
+	g_pRainEmitter->setZone(g_pRainZone);
+
+	/*
+	g_pRainEmitter->setFlow(param(0.0f,6000.0f));
+	g_pRainEmitter->setForce(param(3.0f,5.0f),param(6.0f,10.0f));
+	g_pRainZone->setDimension(Vector3D(param(40.0f,10.0f),0.0f,param(40.0f,10.0f)));
+	*/
+
+	g_pDropEmitter = SphericEmitter::create(Vector3D(0.0f,1.0f,0.0f),0.0f,0.2f * D3DX_PI);
+
+	g_pRainGroup = Group::create(g_pRainModel, 10000);
+	g_pRainGroup->setCustomUpdate(killRain);
+	//g_pRainGroup->setRenderer(g_pRainRenderer);
+	g_pRainGroup->addEmitter(g_pRainEmitter);
+	g_pRainGroup->setFriction(0.7f);
+	g_pRainGroup->setGravity(Vector3D(0.0f, -2.0f, 0.0f));
+
+	g_pDropGroup = Group::create(g_pDropModel, 22000);
+	//g_pDropGroup->setRenderer(g_pDropRenderer);
+	g_pDropGroup->setFriction(0.7f);
+	g_pDropGroup->setGravity(Vector3D(0.0f, -2.0f, 0.0f));
+
+	g_pSplashGroup = Group::create(g_pSplashModel, 3000);
+	//g_pSplashGroup->setRenderer(g_pSplashRenderer);
+
+	g_particleSystem.addGroup(g_pSplashGroup);
+	g_particleSystem.addGroup(g_pDropGroup);
+	g_particleSystem.addGroup(g_pRainGroup);
+
+	particleGroup->setRenderer(particleRenderer);
+
+	pointRenderer->setTexture(g_pTextureParticle);
+	quadRenderer->setTexture(g_pTextureParticle);
+
+	g_pSplashRenderer->setTexture(textureSplash);
+
+	g_pSplashGroup->setRenderer(g_pSplashRenderer);
+	g_pDropGroup->setRenderer(g_pDropRenderer);
+	g_pRainGroup->setRenderer(g_pRainRenderer);
+}
+
+void UnInitSpark()
+{
+	DX9Info::DX9DestroyAllBuffers();
+	SPKFactory::getInstance().traceAll();
+	SPKFactory::getInstance().destroyAll();
+	SPKFactory::getInstance().traceAll();
+	SPKFactory::destroyInstance();
 }
 
 
@@ -641,30 +633,14 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 	//*
 	// SPARK init
 	DX9Info::setDevice( pd3dDevice );
-	DX9Info::setPool( D3DPOOL_MANAGED );
 
 	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/point.bmp", &g_pTextureParticle);
 	if( FAILED(hr) )
 		cout << "erreur chargement texture" << endl;
 
-	basicRenderer->OnD3D9CreateDevice();
-	pointRenderer->OnD3D9CreateDevice();
-	quadRenderer->OnD3D9CreateDevice();
 
-	particleGroup->setRenderer(particleRenderer);
 
-	pointRenderer->setTexture(g_pTextureParticle);
-	quadRenderer->setTexture(g_pTextureParticle);
-
-	//-------------------------------------------------------------------------
-	g_pBasicRenderer->OnD3D9CreateDevice();
-	g_pDropRenderer->OnD3D9CreateDevice();
-	g_pRainRenderer->OnD3D9CreateDevice();
-	g_pSplashRenderer->OnD3D9CreateDevice();
-
-	g_pSplashGroup->setRenderer(g_pSplashRenderer);
-	g_pDropGroup->setRenderer(g_pDropRenderer);
-	g_pRainGroup->setRenderer(g_pRainRenderer);
+	
 	//-------------------------------------------------------------------------
 	
 
@@ -756,11 +732,11 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
 		cout << "erreur chargement texture" << endl;
 	//-------------------------------------------------------------------------
 
-	//hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/waterdrops.bmp", &textureSplash);
-	hr = D3DXCreateTextureFromFileEx(pd3dDevice, L"res/waterdrops.bmp", D3DX_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, 0xFF000000, NULL, NULL, &textureSplash);
+	hr = D3DXCreateTextureFromFile(pd3dDevice, L"res/waterdrops.bmp", &textureSplash);
+	//hr = D3DXCreateTextureFromFileEx(pd3dDevice, L"res/waterdrops.bmp", D3DX_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, 0xFF000000, NULL, NULL, &textureSplash);
 	if( FAILED(hr) )
 		cout << "erreur chargement texture" << endl;
-	g_pSplashRenderer->setTexture(textureSplash);
+	
 
     return S_OK;
 }
@@ -812,8 +788,8 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 	}
 
 	// Updates particle system
-	particleSystem.update( fElapsedTime );
-	g_particleSystem.update( fElapsedTime );
+	particleSystem.update( fElapsedTime/10.0f );
+	g_particleSystem.update( fElapsedTime/10.0f );
 
 	// Changes the color of the model over time
 	step += fElapsedTime * 0.5f;
@@ -1042,6 +1018,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 	SAFE_RELEASE( texturePaving );
 	SAFE_RELEASE( textureSplash );
 
+	DX9Info::DX9DestroyAllBuffers();
 }
 
 
@@ -1066,15 +1043,8 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 
 	SAFE_RELEASE( g_pVbFloor );
 	SAFE_RELEASE( g_pIbFloor );
-/*
-	basicRenderer->OnD3D9DestroyDevice();
-	pointRenderer->OnD3D9DestroyDevice();
-	quadRenderer->OnD3D9DestroyDevice();
-	g_pBasicRenderer->OnD3D9DestroyDevice();
-	g_pDropRenderer->OnD3D9DestroyDevice();
-	g_pRainRenderer->OnD3D9DestroyDevice();
-	g_pSplashRenderer->OnD3D9DestroyDevice();
-*/
+
+	DX9Info::DX9DestroyAllBuffers();
 }
 
 void CALLBACK MouseProc( bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down,
