@@ -170,6 +170,7 @@ namespace SPK
 		enableFlag(model.enableFlag),
 		mutableFlag(model.mutableFlag),
 		randomFlag(model.randomFlag),
+		interpolatedFlag(model.interpolatedFlag),
 		params(NULL),
 		enableParams(NULL),
 		mutableParams(NULL),
