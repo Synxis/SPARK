@@ -66,6 +66,8 @@ namespace IRR
 		*/
         IRRSystem(irr::scene::ISceneNode* parent,irr::scene::ISceneManager* mgr,bool worldTransformed = true,irr::s32 id=-1);
 
+		IRRSystem(const IRRSystem& system);
+
 		/**
 		* @brief Creates and registers a new IRRSystem
 		* @param parent : the parent node of the particle system
@@ -187,6 +189,7 @@ namespace IRR
 		bool finished;
 
         mutable irr::core::aabbox3d<irr::f32> BBox;
+		mutable irr::u32 lastUpdatedTime;
 
 		virtual inline void onRegister();
 		virtual inline void onUnregister();

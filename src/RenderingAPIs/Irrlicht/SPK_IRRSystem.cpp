@@ -33,8 +33,23 @@ namespace IRR
 		System(),
 		worldTransformed(worldTransformed),
 		AutoUpdate(true),
-		AlwaysUpdate(false)
+		AlwaysUpdate(false),
+		finished(false),
+		lastUpdatedTime(0)
     {}
+
+	IRRSystem::IRRSystem(const IRRSystem& system) :
+		System(system),
+		ISceneNode(system.getParent(),system.getSceneManager()),
+		AutoUpdate(system.AutoUpdate),
+		AlwaysUpdate(system.AlwaysUpdate),
+		worldTransformed(system.worldTransformed),
+		finished(system.finished),
+		lastUpdatedTime(0)
+	{
+		cloneMembers(&const_cast<IRRSystem&>(system),NULL);
+		//updateAbsolutePosition();
+	}
 
     void IRRSystem::OnRegisterSceneNode()
     {
@@ -55,13 +70,16 @@ namespace IRR
 
     void IRRSystem::OnAnimate(irr::u32 timeMs)
     {
-        static irr::u32 lastTime=0;
-        float deltaT = (timeMs-lastTime)*0.001f;
+		if (lastUpdatedTime == 0)
+		{
+			lastUpdatedTime = timeMs;
+			return;
+		}
 
         if(AutoUpdate && (AlwaysUpdate || (IsVisible/* && !SceneManager->isCulled(this)*/))) // check culling (disabled atm)
-			update(deltaT);
+			update((timeMs - lastUpdatedTime) * 0.001f);
 
-        lastTime = timeMs;
+        lastUpdatedTime = timeMs;
     }
 
 	void IRRSystem::updateAbsolutePosition()
