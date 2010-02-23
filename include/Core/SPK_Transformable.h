@@ -74,6 +74,8 @@ namespace SPK
 		/** @brief Constructor of Transformable */
 		Transformable();
 
+		Transformable(const Transformable& transformable);
+
 		////////////////
 		// Destructor //
 		////////////////
@@ -386,7 +388,7 @@ namespace SPK
 		* @brief Gets the latest parent of this Transformable
 		* @return the latest parent of this Transformable or NULL
 		*/
-		inline const Transformable* getParent() const;
+		inline const Transformable* getParentTransform() const;
 
 		/**
 		* @brief Updates all the parameters in the world coordinates
@@ -535,7 +537,7 @@ namespace SPK
 		++currentUpdate;
 	}
 
-	inline const Transformable* Transformable::getParent() const
+	inline const Transformable* Transformable::getParentTransform() const
 	{
 		return parent;
 	}

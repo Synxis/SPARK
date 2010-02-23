@@ -44,6 +44,17 @@ namespace SPK
 		memcpy(world,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
 	}
 
+	Transformable::Transformable(const Transformable& transformable) :
+		currentUpdate(0),
+		lastUpdate(0),
+		lastParentUpdate(0),
+		parent(NULL),
+		localIdentity(transformable.localIdentity)
+	{
+		memcpy(local,transformable.local,sizeof(float) * TRANSFORM_LENGTH);
+		memcpy(world,transformable.world,sizeof(float) * TRANSFORM_LENGTH);
+	}
+
 	void Transformable::setTransformNC(const float* transform)
 	{
 		for (size_t i = 0; i < TRANSFORM_LENGTH; ++i)
