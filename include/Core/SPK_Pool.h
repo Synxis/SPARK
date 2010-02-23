@@ -634,7 +634,7 @@ namespace SPK
 	template<class T>
 	Pool<T>& Pool<T>::operator=(const Pool<T>& pool)
 	{
-		if (this != *pool)
+		if (this != &pool)
 		{
 			nbActive = pool.nbActive();
 			maxTotal = 0;
