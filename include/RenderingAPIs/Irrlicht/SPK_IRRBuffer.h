@@ -148,7 +148,6 @@ namespace IRR
 		IRRBuffer(const IRRBuffer& buffer);
 		virtual ~IRRBuffer();
 
-		inline virtual IRRBuffer* clone() const;
 		virtual void swap(size_t index0,size_t index1);
 
 		void initInnerBuffers();
@@ -206,11 +205,6 @@ namespace IRR
 
 		getVertexBuffer().set_used(nb * particleVertexSize);
 		getIndexBuffer().set_used(nb * particleIndexSize);
-	}
-
-	inline IRRBuffer* IRRBuffer::clone() const
-	{
-		return new IRRBuffer(*this);
 	}
 
 	inline bool IRRBuffer::areVBOInitialized() const

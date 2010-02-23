@@ -71,7 +71,6 @@ namespace SPK
 		ArrayBuffer<T>(const ArrayBuffer<T>& buffer);
 		virtual ~ArrayBuffer<T>();
 
-		virtual ArrayBuffer<T>* clone() const;
 		virtual void swap(size_t index0,size_t index1);
 	};
 
@@ -145,12 +144,6 @@ namespace SPK
 	inline size_t ArrayBuffer<T>::getDataSize() const
 	{
 		return dataSize;
-	}
-
-	template<class T>
-	ArrayBuffer<T>* ArrayBuffer<T>::clone() const
-	{
-		return new ArrayBuffer<T>(*this);
 	}
 
 	template<class T>

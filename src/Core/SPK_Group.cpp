@@ -77,7 +77,7 @@ namespace SPK
 		emitters(group.emitters),
 		modifiers(group.modifiers),
 		activeModifiers(group.activeModifiers.capacity()),
-		additionalBuffers(group.additionalBuffers),
+		additionalBuffers(),
 		swappableBuffers()
 	{
 		particleData = new Particle::ParticleData[pool.getNbReserved()];
@@ -94,16 +94,6 @@ namespace SPK
 			it->data = particleData + it->index;
 			it->currentParams = particleCurrentParams + it->index * model->getSizeOfParticleCurrentArray();
 			it->extendedParams = particleExtendedParams + it->index * model->getSizeOfParticleExtendedArray();
-		}
-
-		// copy additional buffers
-		for (std::map<std::string,Buffer*>::iterator it = additionalBuffers.begin(); it != additionalBuffers.end(); ++it)
-		{
-			Buffer* buffer = it->second;
-			it->second = buffer->clone();
-
-			if (it->second->isSwapEnabled())
-				swappableBuffers.insert(it->second);
 		}
 	}
 

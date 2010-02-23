@@ -76,15 +76,6 @@ namespace SPK
 		bool swapEnabled;
 
 		/**
-		* @brief Clones the buffer
-		*
-		* This is a pure virtual method that must be implemented by inherited classes of buffer.
-		*
-		* @return a copy of this buffer
-		*/
-		virtual Buffer* clone() const = 0;
-
-		/**
 		* @brief Swaps 2 particles data in this buffer
 		*
 		* This is a pure virtual method that must be implemented by inherited classes of buffer.
