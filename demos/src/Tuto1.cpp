@@ -40,8 +40,6 @@
 #include <SPK_GL.h>
 
 using namespace std;
-using namespace SPK;
-using namespace SPK::GL;
 
 float angleY = 0.0f;
 float camPosZ = 5.0f;
@@ -62,9 +60,9 @@ float screenRatio;
 
 int drawText = 2;
 
-deque<System*> particleSystems;
+deque<SPK::System*> particleSystems;
 
-SPK_ID BaseSystemID = NO_ID;
+SPK::SPK_ID BaseSystemID = SPK::NO_ID;
 
 // Converts an int into a string
 string int2Str(int a)
@@ -78,7 +76,7 @@ string int2Str(int a)
 // h E [0,360]
 // s E [0,1]
 // v E [0,1]
-Vector3D convertHSV2RGB(const Vector3D& hsv)
+SPK::Vector3D convertHSV2RGB(const SPK::Vector3D& hsv)
 {
 	float h = hsv.x;
 	float s = hsv.y;
@@ -92,12 +90,12 @@ Vector3D convertHSV2RGB(const Vector3D& hsv)
 
 	switch(hi)
 	{
-	case 0 : return Vector3D(v,t,p);
-	case 1 : return Vector3D(q,v,p);
-	case 2 : return Vector3D(p,v,t);
-	case 3 : return Vector3D(p,q,v);
-	case 4 : return Vector3D(t,p,v);
-	default : return Vector3D(v,p,q);
+	case 0 : return SPK::Vector3D(v,t,p);
+	case 1 : return SPK::Vector3D(q,v,p);
+	case 2 : return SPK::Vector3D(p,v,t);
+	case 3 : return SPK::Vector3D(p,q,v);
+	case 4 : return SPK::Vector3D(t,p,v);
+	default : return SPK::Vector3D(v,p,q);
 	}
 }
 
@@ -190,7 +188,7 @@ void render()
 	glRotatef(angleY,0.0f,1.0f,0.0f);
 
 	// Renders all the particle systems
-	for (deque<System*>::const_iterator it = particleSystems.begin(); it != particleSystems.end(); ++it)
+	for (deque<SPK::System*>::const_iterator it = particleSystems.begin(); it != particleSystems.end(); ++it)
 		(*it)->render();
 
 	if (drawText != 0)
@@ -213,32 +211,32 @@ void render()
 }
 
 // Creates the base system and returns its ID
-SPK_ID createParticleSystemBase(GLuint textureIndex)
+SPK::SPK_ID createParticleSystemBase(GLuint textureIndex)
 {
 	// Creates the model
-	Model* model = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA,
-		FLAG_ALPHA,
-		FLAG_RED | FLAG_GREEN | FLAG_BLUE);
-	model->setParam(PARAM_ALPHA,1.0f,0.0f); // This makes the particles fade out over time
+	SPK::Model* model = SPK::Model::create(SPK::FLAG_RED | SPK::FLAG_GREEN | SPK::FLAG_BLUE | SPK::FLAG_ALPHA,
+		SPK::FLAG_ALPHA,
+		SPK::FLAG_RED | SPK::FLAG_GREEN | SPK::FLAG_BLUE);
+	model->setParam(SPK::PARAM_ALPHA,1.0f,0.0f); // This makes the particles fade out over time
 	model->setLifeTime(1.0f,2.0f);
 
 	// Create the renderer
-	GLRenderer* renderer = NULL;
+	SPK::GL::GLRenderer* renderer = NULL;
 	// If the point sprite extension and the point parameter extensions are supported by the hardware, we use point sprites
-	if ((GLPointRenderer::loadGLExtPointSprite())&&(GLPointRenderer::loadGLExtPointParameter()))
+	if ((SPK::GL::GLPointRenderer::loadGLExtPointSprite())&&(SPK::GL::GLPointRenderer::loadGLExtPointParameter()))
 	{
-		GLPointRenderer* pointRenderer = GLPointRenderer::create();
-		pointRenderer->setType(POINT_SPRITE);
+		SPK::GL::GLPointRenderer* pointRenderer = SPK::GL::GLPointRenderer::create();
+		pointRenderer->setType(SPK::POINT_SPRITE);
 		pointRenderer->enableWorldSize(true);
-		GLPointRenderer::setPixelPerUnit(45.0f * 3.14159f / 180.f,screenHeight);
+		SPK::GL::GLPointRenderer::setPixelPerUnit(45.0f * 3.14159f / 180.f,screenHeight);
 		pointRenderer->setSize(0.1f);
 		pointRenderer->setTexture(textureIndex);
 		renderer = pointRenderer;
 	}
 	else // else we use quads
 	{
-		GLQuadRenderer* quadRenderer = GLQuadRenderer::create();
-		quadRenderer->setTexturingMode(TEXTURE_2D);
+		SPK::GL::GLQuadRenderer* quadRenderer = SPK::GL::GLQuadRenderer::create();
+		quadRenderer->setTexturingMode(SPK::TEXTURE_2D);
 		quadRenderer->setScale(0.1f,0.1f);
 		quadRenderer->setTexture(textureIndex);
 		renderer = quadRenderer;
@@ -247,27 +245,27 @@ SPK_ID createParticleSystemBase(GLuint textureIndex)
 	renderer->enableBlending(true);
 	renderer->setBlendingFunctions(GL_SRC_ALPHA,GL_ONE); // additive blending
 	renderer->setTextureBlending(GL_MODULATE); // the texture is modulated with the particle's color
-	renderer->enableRenderingHint(DEPTH_TEST,false); // the depth test is disabled
+	renderer->enableRenderingHint(SPK::DEPTH_TEST,false); // the depth test is disabled
 
 	// Creates the zone
-	Point* source = Point::create();
+	SPK::Point* source = SPK::Point::create();
 
 	// Creates the emitter
-	RandomEmitter* emitter = RandomEmitter::create();
+	SPK::RandomEmitter* emitter = SPK::RandomEmitter::create();
 	emitter->setForce(2.8f,3.2f);
 	emitter->setZone(source);
 	emitter->setTank(500);
 	emitter->setFlow(-1); // Creates all the particles in the tank at the first frame
 
 	// Creates the Group
-	Group* group = Group::create(model,500); // 500 particles is the maximum capacity of the group
+	SPK::Group* group = SPK::Group::create(model,500); // 500 particles is the maximum capacity of the group
 	group->addEmitter(emitter);
-	group->setGravity(Vector3D(0.0f,-1.0f,0.0f));
+	group->setGravity(SPK::Vector3D(0.0f,-1.0f,0.0f));
 	group->setFriction(2.0f);
 	group->setRenderer(renderer);
 
 	// Creates the System
-	System* system = System::create();
+	SPK::System* system = SPK::System::create();
 	system->addGroup(group);
 
 	// Defines which objects will be shared by all systems
@@ -279,26 +277,26 @@ SPK_ID createParticleSystemBase(GLuint textureIndex)
 }
 
 // Creates a particle system from the base system
-System* createParticleSystem(const Vector3D& pos,const Vector3D& color)
+SPK::System* createParticleSystem(const SPK::Vector3D& pos,const SPK::Vector3D& color)
 {
 	// Creates a copy of the base system
-	System* system = SPK_Copy(System,BaseSystemID);
+	SPK::System* system = SPK_Copy(SPK::System,BaseSystemID);
 
 	// Updates the model with the given color
-	Model* model = system->getGroup(0)->getModel();
-	model->setParam(PARAM_RED,max(0.0f,color.x - 0.25f),min(1.0f,color.x + 0.25f));
-	model->setParam(PARAM_GREEN,max(0.0f,color.y - 0.25f),min(1.0f,color.y + 0.25f));
-	model->setParam(PARAM_BLUE,max(0.0f,color.z - 0.25f),min(1.0f,color.z + 0.25f));
+	SPK::Model* model = system->getGroup(0)->getModel();
+	model->setParam(SPK::PARAM_RED,max(0.0f,color.x - 0.25f),min(1.0f,color.x + 0.25f));
+	model->setParam(SPK::PARAM_GREEN,max(0.0f,color.y - 0.25f),min(1.0f,color.y + 0.25f));
+	model->setParam(SPK::PARAM_BLUE,max(0.0f,color.z - 0.25f),min(1.0f,color.z + 0.25f));
 
 	// Locates the zone of the emitter at the given position
-	Zone* zone = system->getGroup(0)->getEmitter(0)->getZone();
+	SPK::Zone* zone = system->getGroup(0)->getEmitter(0)->getZone();
 	zone->setPosition(pos);
 
 	return system;
 }
 
 // destroy a particle system
-void destroyParticleSystem(System*& system)
+void destroyParticleSystem(SPK::System*& system)
 {
 	// Destroys the given system
 	SPK_Destroy(system);
@@ -345,11 +343,11 @@ int main(int argc, char *argv[])
 		return 1;
 
 	// random seed
-	randomSeed = static_cast<unsigned int>(time(NULL));
+	SPK::randomSeed = static_cast<unsigned int>(time(NULL));
 
 	// Sets the update step
-	System::setClampStep(true,0.1f);			// clamp the step to 100 ms
-	System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
+	SPK::System::setClampStep(true,0.1f);			// clamp the step to 100 ms
+	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
 	// creates the base system
 	BaseSystemID = createParticleSystemBase(textureParticle);
@@ -358,7 +356,7 @@ int main(int argc, char *argv[])
 	bool paused = false;
 
 	cout << "\nSPARK FACTORY AFTER INIT :" << endl;
-	SPKFactory::getInstance().traceAll();
+	SPK::SPKFactory::getInstance().traceAll();
 	
 	SDL_Delay(3000);
 	while (SDL_PollEvent(&event)){}
@@ -422,15 +420,15 @@ int main(int argc, char *argv[])
 
 				if (spacePressed >= 200.0f)
 				{
-					Vector3D color(random(0.0f,360.0f),0.8f,1.0f);
-					Vector3D position(random(-2.0f,2.0f),random(-2.0f,2.0f),random(-2.0f,2.0f));
+					SPK::Vector3D color(SPK::random(0.0f,360.0f),0.8f,1.0f);
+					SPK::Vector3D position(SPK::random(-2.0f,2.0f),SPK::random(-2.0f,2.0f),SPK::random(-2.0f,2.0f));
 					particleSystems.push_back(createParticleSystem(position,convertHSV2RGB(color)));
 
 					spacePressed = 0.0f;
 				}
 			}
 
-			deque<System*>::iterator it = particleSystems.begin();
+			deque<SPK::System*>::iterator it = particleSystems.begin();
 			while(it != particleSystems.end())
 			{
 				// Updates the particle systems
@@ -460,7 +458,7 @@ int main(int argc, char *argv[])
 
 		// Updates info strings
 		unsigned int nbParticles = 0;
-		for (deque<System*>::const_iterator it = particleSystems.begin(); it != particleSystems.end(); ++it)
+		for (deque<SPK::System*>::const_iterator it = particleSystems.begin(); it != particleSystems.end(); ++it)
 			nbParticles += (*it)->getNbParticles();
 		strNbParticles = STR_NB_PARTICLES + int2Str(nbParticles);
 		int fps = static_cast<int>(((frameFPS.size() - 1) * 1000.0f) / (frameFPS.back() - frameFPS.front()));
@@ -471,10 +469,10 @@ int main(int argc, char *argv[])
 	}
 
 	cout << "\nSPARK FACTORY BEFORE DESTRUCTION :" << endl;
-	SPKFactory::getInstance().traceAll();
-	SPKFactory::getInstance().destroyAll();
+	SPK::SPKFactory::getInstance().traceAll();
+	SPK::SPKFactory::getInstance().destroyAll();
 	cout << "\nSPARK FACTORY AFTER DESTRUCTION :" << endl;
-	SPKFactory::getInstance().traceAll();
+	SPK::SPKFactory::getInstance().traceAll();
 	SDL_Quit();
 
 	cout << endl;

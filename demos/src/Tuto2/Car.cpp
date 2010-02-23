@@ -26,9 +26,6 @@
 using namespace std;
 using namespace sf;
 
-using namespace SPK;
-using namespace SPK::SFML;
-
 const Vector2f Car::TURN_RADIUS_RANGE(32.0f,512.0f);
 const Vector2f Car::TURN_TIME_RANGE(0.5f,2.0f);
 
@@ -40,7 +37,7 @@ const float Car::MAX_SHAKE(3.0f);
 
 const float Car::PI = 3.14159265358979323846f;
 
-SPK_ID Car::baseParticleSystemID = NO_ID;
+SPK::SPK_ID Car::baseParticleSystemID = SPK::NO_ID;
 
 FloatRect Car::collisionBox;
 Image Car::texture;
@@ -331,18 +328,18 @@ void Car::resultFromCollision(const Vector2f& impact,bool forceReverse)
 void Car::loadBaseParticleSystem(Image& smoke)
 {	
 	// Creates the model
-	Model* smokeModel = Model::create(
-		FLAG_SIZE | FLAG_ALPHA | FLAG_TEXTURE_INDEX | FLAG_ANGLE,
-		FLAG_SIZE | FLAG_ALPHA,
-		FLAG_SIZE | FLAG_TEXTURE_INDEX | FLAG_ANGLE);
-	smokeModel->setParam(PARAM_SIZE,5.0f,10.0f,100.0f,200.0f);
-	smokeModel->setParam(PARAM_ALPHA,1.0f,0.0f);
-	smokeModel->setParam(PARAM_TEXTURE_INDEX,0.0f,4.0f);
-	smokeModel->setParam(PARAM_ANGLE,0.0f,PI * 2.0f);
+	SPK::Model* smokeModel = SPK::Model::create(
+		SPK::FLAG_SIZE | SPK::FLAG_ALPHA | SPK::FLAG_TEXTURE_INDEX | SPK::FLAG_ANGLE,
+		SPK::FLAG_SIZE | SPK::FLAG_ALPHA,
+		SPK::FLAG_SIZE | SPK::FLAG_TEXTURE_INDEX | SPK::FLAG_ANGLE);
+	smokeModel->setParam(SPK::PARAM_SIZE,5.0f,10.0f,100.0f,200.0f);
+	smokeModel->setParam(SPK::PARAM_ALPHA,1.0f,0.0f);
+	smokeModel->setParam(SPK::PARAM_TEXTURE_INDEX,0.0f,4.0f);
+	smokeModel->setParam(SPK::PARAM_ANGLE,0.0f,PI * 2.0f);
 	smokeModel->setLifeTime(2.0f,5.0f);
 
 	// Creates the renderer
-	SFMLQuadRenderer* smokeRenderer = SFMLQuadRenderer::create();
+	SPK::SFML::SFMLQuadRenderer* smokeRenderer = SPK::SFML::SFMLQuadRenderer::create();
 	smokeRenderer->setBlendMode(Blend::Alpha);
 	smokeRenderer->setImage(&smoke);
 	smokeRenderer->setAtlasDimensions(2,2);
@@ -350,28 +347,28 @@ void Car::loadBaseParticleSystem(Image& smoke)
 	smokeRenderer->setGroundCulling(true);
 
 	// Creates the zones
-	Point* leftTire = Point::create(Vector3D(8.0f,-28.0f));
-	Point* rightTire = Point::create(Vector3D(-8.0f,-28.0f));
+	SPK::Point* leftTire = SPK::Point::create(SPK::Vector3D(8.0f,-28.0f));
+	SPK::Point* rightTire = SPK::Point::create(SPK::Vector3D(-8.0f,-28.0f));
 
 	// Creates the emitters
-	SphericEmitter* leftSmokeEmitter = SphericEmitter::create(Vector3D(0.0f,0.0f,1.0f),0.0f,1.1f * PI);
+	SPK::SphericEmitter* leftSmokeEmitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,1.0f),0.0f,1.1f * PI);
 	leftSmokeEmitter->setZone(leftTire);
 	leftSmokeEmitter->setName("left wheel emitter");
 	
-	SphericEmitter* rightSmokeEmitter = SphericEmitter::create(Vector3D(0.0f,0.0f,1.0f),0.0f,1.1f * PI);
+	SPK::SphericEmitter* rightSmokeEmitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,1.0f),0.0f,1.1f * PI);
 	rightSmokeEmitter->setZone(rightTire);
 	rightSmokeEmitter->setName("right wheel emitter");
 
 	// Creates the Group
-	Group* smokeGroup = Group::create(smokeModel,500);
-	smokeGroup->setGravity(Vector3D(0.0f,0.0f,2.0f));
+	SPK::Group* smokeGroup = SPK::Group::create(smokeModel,500);
+	smokeGroup->setGravity(SPK::Vector3D(0.0f,0.0f,2.0f));
 	smokeGroup->setRenderer(smokeRenderer);
 	smokeGroup->addEmitter(leftSmokeEmitter);
 	smokeGroup->addEmitter(rightSmokeEmitter);
 	smokeGroup->enableSorting(true);
 
 	// Creates the System
-	SFMLSystem* system = SFMLSystem::create(true);
+	SPK::SFML::SFMLSystem* system = SPK::SFML::SFMLSystem::create(true);
 	system->addGroup(smokeGroup);
 
 	// Defines which objects will be shared by all systems
@@ -384,7 +381,7 @@ void Car::loadBaseParticleSystem(Image& smoke)
 
 void Car::createParticleSystem()
 {
-	particleSystem = SPK_Copy(SFMLSystem,baseParticleSystemID);
+	particleSystem = SPK_Copy(SPK::SFML::SFMLSystem,baseParticleSystemID);
 }
 
 void Car::updateParticleSystem(float deltaTime,float angle,float power)
@@ -393,8 +390,8 @@ void Car::updateParticleSystem(float deltaTime,float angle,float power)
 	float forceMax = power * 0.08f;
 	float flow = power * 0.20f;
 
-	Emitter* leftWheelEmitter = dynamic_cast<Emitter*>(particleSystem->findByName("left wheel emitter"));
-	Emitter* rightWheelEmitter = dynamic_cast<Emitter*>(particleSystem->findByName("right wheel emitter"));
+	SPK::Emitter* leftWheelEmitter = dynamic_cast<SPK::Emitter*>(particleSystem->findByName("left wheel emitter"));
+	SPK::Emitter* rightWheelEmitter = dynamic_cast<SPK::Emitter*>(particleSystem->findByName("right wheel emitter"));
 	leftWheelEmitter->setForce(forceMin,forceMax);
 	rightWheelEmitter->setForce(forceMin,forceMax);
 	leftWheelEmitter->setFlow(flow);

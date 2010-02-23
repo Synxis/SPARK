@@ -44,9 +44,6 @@ using namespace std;
 
 using namespace sf;
 
-using namespace SPK;
-using namespace SPK::SFML;
-
 float angleY = 0.0f;
 float camPosZ = 5.0f;
 
@@ -70,9 +67,9 @@ Clock timer;
 View hudView;
 View worldView;
 
-deque<SFMLSystem*> collisionParticleSystems;
+deque<SPK::SFML::SFMLSystem*> collisionParticleSystems;
 
-SPK_ID BaseSparkSystemID = NO_ID;
+SPK::SPK_ID BaseSparkSystemID = SPK::NO_ID;
 Image textureGround;
 
 static const size_t NB_CARS = 4;
@@ -90,7 +87,7 @@ string int2Str(int a)
 // h E [0,360]
 // s E [0,1]
 // v E [0,1]
-Vector3D convertHSV2RGB(const Vector3D& hsv)
+SPK::Vector3D convertHSV2RGB(const SPK::Vector3D& hsv)
 {
 	float h = hsv.x;
 	float s = hsv.y;
@@ -104,12 +101,12 @@ Vector3D convertHSV2RGB(const Vector3D& hsv)
 
 	switch(hi)
 	{
-	case 0 : return Vector3D(v,t,p);
-	case 1 : return Vector3D(q,v,p);
-	case 2 : return Vector3D(p,v,t);
-	case 3 : return Vector3D(p,q,v);
-	case 4 : return Vector3D(t,p,v);
-	default : return Vector3D(v,p,q);
+	case 0 : return SPK::Vector3D(v,t,p);
+	case 1 : return SPK::Vector3D(q,v,p);
+	case 2 : return SPK::Vector3D(p,v,t);
+	case 3 : return SPK::Vector3D(p,q,v);
+	case 4 : return SPK::Vector3D(t,p,v);
+	default : return SPK::Vector3D(v,p,q);
 	}
 }
 
@@ -142,7 +139,7 @@ void render(RenderWindow& window)
 		window.Draw(car[i].getParticleSystem());
 
 	// Draws particles
-	for (deque<SFMLSystem*>::const_iterator it = collisionParticleSystems.begin(); it != collisionParticleSystems.end(); ++it)
+	for (deque<SPK::SFML::SFMLSystem*>::const_iterator it = collisionParticleSystems.begin(); it != collisionParticleSystems.end(); ++it)
 		window.Draw(**it);
 
 //	glDisable(GL_ALPHA_TEST);
@@ -161,42 +158,42 @@ void render(RenderWindow& window)
 }
 
 // creates and register the base system
-SPK_ID createParticleSystemBase(Image* texture)
+SPK::SPK_ID createParticleSystemBase(Image* texture)
 {
 	// Creates the model
-	Model* sparkModel = Model::create(FLAG_RED | FLAG_GREEN | FLAG_BLUE | FLAG_ALPHA,
-		FLAG_ALPHA,
-		FLAG_GREEN | FLAG_BLUE);
-	sparkModel->setParam(PARAM_RED,1.0f);
-	sparkModel->setParam(PARAM_BLUE,0.0f,0.2f);
-	sparkModel->setParam(PARAM_GREEN,0.2f,1.0f);
-	sparkModel->setParam(PARAM_ALPHA,0.8f,0.0f);
+	SPK::Model* sparkModel = SPK::Model::create(SPK::FLAG_RED | SPK::FLAG_GREEN | SPK::FLAG_BLUE | SPK::FLAG_ALPHA,
+		SPK::FLAG_ALPHA,
+		SPK::FLAG_GREEN | SPK::FLAG_BLUE);
+	sparkModel->setParam(SPK::PARAM_RED,1.0f);
+	sparkModel->setParam(SPK::PARAM_BLUE,0.0f,0.2f);
+	sparkModel->setParam(SPK::PARAM_GREEN,0.2f,1.0f);
+	sparkModel->setParam(SPK::PARAM_ALPHA,0.8f,0.0f);
 	sparkModel->setLifeTime(0.2f,0.6f);
 
 	// Creates the renderer
-	SFMLLineRenderer* sparkRenderer = SFMLLineRenderer::create(0.1f,1.0f);
+	SPK::SFML::SFMLLineRenderer* sparkRenderer = SPK::SFML::SFMLLineRenderer::create(0.1f,1.0f);
 	sparkRenderer->setBlendMode(sf::Blend::Add);
 	sparkRenderer->setGroundCulling(true);
 
 	// Creates the zone
-	Sphere* sparkSource = Sphere::create(Vector3D(0.0f,0.0f,10.0f),5.0f);
+	SPK::Sphere* sparkSource = SPK::Sphere::create(SPK::Vector3D(0.0f,0.0f,10.0f),5.0f);
 
 	// Creates the emitter
-	SphericEmitter* sparkEmitter = SphericEmitter::create(Vector3D(0.0f,0.0f,1.0f),3.14159f / 4.0f,3.0f * 3.14159f / 4.0f);
+	SPK::SphericEmitter* sparkEmitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,1.0f),3.14159f / 4.0f,3.0f * 3.14159f / 4.0f);
 	sparkEmitter->setForce(50.0f,150.0f);
 	sparkEmitter->setZone(sparkSource);
 	sparkEmitter->setTank(25);
 	sparkEmitter->setFlow(-1);
 
 	// Creates the Group
-	Group* sparkGroup = Group::create(sparkModel,25);
+	SPK::Group* sparkGroup = SPK::Group::create(sparkModel,25);
 	sparkGroup->setRenderer(sparkRenderer);
 	sparkGroup->addEmitter(sparkEmitter);
-	sparkGroup->setGravity(Vector3D(0.0f,0.0f,-200.0f));
+	sparkGroup->setGravity(SPK::Vector3D(0.0f,0.0f,-200.0f));
 	sparkGroup->setFriction(2.0f);
 
 	// Creates the System
-	SFMLSystem* sparkSystem = SFMLSystem::create();
+	SPK::SFML::SFMLSystem* sparkSystem = SPK::SFML::SFMLSystem::create();
 	sparkSystem->addGroup(sparkGroup);
 
 	// Defines which objects will be shared by all systems
@@ -208,16 +205,16 @@ SPK_ID createParticleSystemBase(Image* texture)
 }
 
 // creates a particle system from the base system
-SFMLSystem* createParticleSystem(const Vector2f& pos)
+SPK::SFML::SFMLSystem* createParticleSystem(const Vector2f& pos)
 {
-	SFMLSystem* sparkSystem = SPK_Copy(SFMLSystem,BaseSparkSystemID);
+	SPK::SFML::SFMLSystem* sparkSystem = SPK_Copy(SPK::SFML::SFMLSystem,BaseSparkSystemID);
 	sparkSystem->SetPosition(pos);
 
 	return sparkSystem;
 }
 
 // destroy a particle system
-void destroyParticleSystem(SFMLSystem*& system)
+void destroyParticleSystem(SPK::SFML::SFMLSystem*& system)
 {
 	SPK_Destroy(system);
 	system = NULL;
@@ -279,11 +276,11 @@ int main(int argc, char *argv[])
 		return 1;
 
 	// random seed
-	randomSeed = static_cast<unsigned int>(time(NULL));
+	SPK::randomSeed = static_cast<unsigned int>(time(NULL));
 
 	// Sets the update step
-	System::setClampStep(true,0.1f);			// clamp the step to 100 ms
-	System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
+	SPK::System::setClampStep(true,0.1f);			// clamp the step to 100 ms
+	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
 	if (!Car::loadCarTexture())
 		return 1;
@@ -299,15 +296,15 @@ int main(int argc, char *argv[])
 	}
 
 	// creates the base system
-	SFMLRenderer::setZFactor(1.0f);
-	setCameraPosition(CAMERA_CENTER,CAMERA_BOTTOM,static_cast<float>(universeHeight),0.0f);
+	SPK::SFML::SFMLRenderer::setZFactor(1.0f);
+	SPK::SFML::setCameraPosition(SPK::SFML::CAMERA_CENTER,SPK::SFML::CAMERA_BOTTOM,static_cast<float>(universeHeight),0.0f);
 	BaseSparkSystemID = createParticleSystemBase(&textureParticle);
 	
 	bool exit = false;
 	bool paused = false;
 
 	cout << "\nSPARK FACTORY AFTER INIT :" << endl;
-	SPKFactory::getInstance().traceAll();
+	SPK::SPKFactory::getInstance().traceAll();
 	
 	Sleep(3.0f);
 
@@ -357,7 +354,7 @@ int main(int argc, char *argv[])
 						collisionParticleSystems.push_back(createParticleSystem(collisionPos));	
 				}
 
-			deque<SFMLSystem*>::iterator it = collisionParticleSystems.begin();
+			deque<SPK::SFML::SFMLSystem*>::iterator it = collisionParticleSystems.begin();
 			while(it != collisionParticleSystems.end())
 			{
 				if (!(*it)->update(deltaTime * 0.001f))
@@ -386,7 +383,7 @@ int main(int argc, char *argv[])
 		unsigned int nbParticles = 0;
 		for (size_t i = 0; i < NB_CARS; ++i)
 			nbParticles += car[i].getParticleSystem().getNbParticles();
-		for (deque<SFMLSystem*>::const_iterator it = collisionParticleSystems.begin(); it != collisionParticleSystems.end(); ++it)
+		for (deque<SPK::SFML::SFMLSystem*>::const_iterator it = collisionParticleSystems.begin(); it != collisionParticleSystems.end(); ++it)
 			nbParticles += (*it)->getNbParticles();
 		strNbParticles.SetText(STR_NB_PARTICLES + int2Str(nbParticles));
 		int fps = static_cast<int>(((frameFPS.size() - 1) * 1000.0f) / (frameFPS.back() - frameFPS.front()));
@@ -397,10 +394,10 @@ int main(int argc, char *argv[])
 	}
 
 	cout << "\nSPARK FACTORY BEFORE DESTRUCTION :" << endl;
-	SPKFactory::getInstance().traceAll();
-	SPKFactory::getInstance().destroyAll();
+	SPK::SPKFactory::getInstance().traceAll();
+	SPK::SPKFactory::getInstance().destroyAll();
 	cout << "\nSPARK FACTORY AFTER DESTRUCTION :" << endl;
-	SPKFactory::getInstance().traceAll();
+	SPK::SPKFactory::getInstance().traceAll();
 	window.Close();
 
 	cout << endl;
