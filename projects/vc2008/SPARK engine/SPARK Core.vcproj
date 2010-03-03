@@ -355,6 +355,14 @@
 						RelativePath="..\..\..\src\Extensions\Emitters\SPK_RandomEmitter.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Emitters\SPK_SphericEmitter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Emitters\SPK_StraightEmitter.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Modifiers"
@@ -530,7 +538,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\include\Extensions\Emitters\SPK_SphericEmitter.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\Extensions\Emitters\SPK_StaticEmitter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Emitters\SPK_StraightEmitter.h"
 						>
 					</File>
 				</Filter>

@@ -102,7 +102,9 @@
 		<Unit filename="..\..\..\include\Extensions\Actions\SPK_ActionSet.h" />
 		<Unit filename="..\..\..\include\Extensions\Actions\SPK_SpawnParticlesAction.h" />
 		<Unit filename="..\..\..\include\Extensions\Emitters\SPK_RandomEmitter.h" />
+		<Unit filename="..\..\..\include\Extensions\Emitters\SPK_SphericEmitter.h" />
 		<Unit filename="..\..\..\include\Extensions\Emitters\SPK_StaticEmitter.h" />
+		<Unit filename="..\..\..\include\Extensions\Emitters\SPK_StraightEmitter.h" />
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_DefaultInitializer.h" />
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_RandomInitializer.h" />
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_RandomInterpolator.h" />
@@ -128,6 +130,8 @@
 		<Unit filename="..\..\..\src\Extensions\Actions\SPK_ActionSet.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Actions\SPK_SpawnParticlesAction.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Emitters\SPK_RandomEmitter.cpp" />
+		<Unit filename="..\..\..\src\Extensions\Emitters\SPK_SphericEmitter.cpp" />
+		<Unit filename="..\..\..\src\Extensions\Emitters\SPK_StraightEmitter.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_BasicModifiers.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Obstacle.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Rotator.cpp" />
