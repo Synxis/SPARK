@@ -43,6 +43,7 @@ namespace GL
 	{
 		delete[] vertexBuffer;
 		delete[] colorBuffer;
+		delete[] texCoordBuffer;
 	}
 
 	void GLBuffer::setNbTexCoords(size_t nb)
