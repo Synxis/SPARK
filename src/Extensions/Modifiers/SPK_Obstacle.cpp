@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,39 +19,69 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #include "Extensions/Modifiers/SPK_Obstacle.h"
-
+#include "Core/SPK_Zone.h"
+#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {
-	Obstacle::Obstacle(Zone* zone,ModifierTrigger trigger,float bouncingRatio,float friction) :
-		Modifier(INTERSECT_ZONE | ENTER_ZONE | EXIT_ZONE,INTERSECT_ZONE,true,true,zone),
+	Obstacle::Obstacle(Zone* zone,float bouncingRatio,float friction) :
+		Modifier(MODIFIER_PRIORITY_COLLISION,false,false),
+		zone(zone),
 		bouncingRatio(bouncingRatio),
 		friction(friction)
 	{
-		setTrigger(trigger);
+		incrementChild(zone);
 	}
 
-	void Obstacle::modify(Particle& particle,float deltaTime) const
+	Obstacle::Obstacle(const Obstacle& obstacle) :
+		Modifier(obstacle),
+		bouncingRatio(obstacle.bouncingRatio),
+		friction(obstacle.friction)
 	{
-		Vector3D& velocity = particle.velocity();
-		velocity = particle.position();
-		velocity -= particle.oldPosition();
+		zone = dynamic_cast<Zone*>(copyChild(obstacle.zone));
+	}
 
-		if (deltaTime != 0.0f)
-			velocity *= 1.0f / deltaTime;
-		else 
-			velocity.set(0.0f,0.0f,0.0f);
+	Obstacle::~Obstacle()
+	{
+		destroyChild(zone);
+	}
 
-		float dist = dotProduct(velocity,normal);
+	void Obstacle::setZone(Zone* zone)
+	{
+		decrementChild(this->zone);
+		this->zone = zone;
+		incrementChild(zone);
+	}
 
-		normal *= dist;
-		velocity -= normal;			// tangent component
-		velocity *= friction;
-		normal *= bouncingRatio;	// normal component
-		velocity -= normal;
+	void Obstacle::modify(Group& group,DataSet* dataSet,float deltaTime) const
+	{
+		if (zone == NULL)
+			return;
 
-		particle.position() = intersection;
+		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
+		{
+			if (zone->intersects(particleIt->oldPosition(),particleIt->position(),particleIt->getParam(PARAM_SIZE) * group.getRadius()))
+			{
+				particleIt->position() = particleIt->oldPosition();
+
+				Vector3D& velocity = particleIt->velocity();
+				Vector3D normal = zone->computeNormal(particleIt->position());
+
+				float dist = dotProduct(velocity,normal);
+
+				normal *= dist;
+				velocity -= normal;			// tangent component
+				velocity *= friction;
+				normal *= bouncingRatio;	// normal component
+				velocity -= normal;
+			}
+		}
+	}
+
+	void Obstacle::propagateUpdateTransform()
+	{
+		if (!zone->isShared())
+			zone->updateTransform(this);
 	}
 }

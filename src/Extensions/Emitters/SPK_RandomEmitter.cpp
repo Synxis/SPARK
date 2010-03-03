@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <cmath> // for sqrt
 
 #include "Extensions/Emitters/SPK_RandomEmitter.h"
 #include "Core/SPK_Particle.h"
@@ -27,13 +28,15 @@ namespace SPK
 {
 	void RandomEmitter::generateVelocity(Particle& particle,float speed) const
 	{
-		float norm;
+		float sqrNorm;
+		
 		do 
 		{
-			particle.velocity().set(random(-1.0f,1.0f),random(-1.0f,1.0f),random(-1.0f,1.0f));
-			norm = particle.velocity().getNorm();
+			particle.velocity().set(SPK_RANDOM(-1.0f,1.0f),SPK_RANDOM(-1.0f,1.0f),SPK_RANDOM(-1.0f,1.0f));
+			sqrNorm = particle.velocity().getSqrNorm();
 		}
-		while((norm > 1.0f) || (norm == 0.0f));
-		particle.velocity() *= speed / norm;
+		while((sqrNorm > 1.0f) || (sqrNorm == 0.0f));
+
+		particle.velocity() *= speed / sqrt(sqrNorm);
 	}
 }

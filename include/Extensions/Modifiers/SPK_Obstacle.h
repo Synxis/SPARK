@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,113 +19,101 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_OBSTACLE
 #define H_SPK_OBSTACLE
 
 #include "Core/SPK_Modifier.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Zone.h"
+#include "Core/SPK_Vector3D.h"
 
 namespace SPK
 {
-	/**
-	* @class Obstacle
-	* @brief A Modifier that acts as an obstacle on particles
-	*/
 	class SPK_PREFIX Obstacle : public Modifier
 	{
-		SPK_IMPLEMENT_REGISTERABLE(Obstacle)
+	SPK_IMPLEMENT_REGISTERABLE(Obstacle)
 
 	public :
 
-		/////////////////
-		// Constructor //
-		/////////////////
+		static inline Obstacle* create(Zone* zone = NULL,float bouncingRatio = 1.0f,float friction = 1.0f);
 
+		virtual ~Obstacle();
+
+		//////////
+		// Zone //
+		//////////
+
+		void setZone(Zone* zone);
+		
+		inline Zone* getZone() const;
+
+		////////////////////
+		// Bouncing ratio //
+		////////////////////
+		
 		/**
-		* @brief Constructor of Obstacle
-		* @param zone : the Zone of the Obstacle
-		* @param trigger : the trigger of the Destructor
-		* @param bouncingRatio : the bouncingRatio of the Obstacle
-		* @param friction : the friction of the Obstacle
-		*/
-		Obstacle(Zone* zone = NULL,ModifierTrigger trigger = INTERSECT_ZONE,float bouncingRatio = 1.0f,float friction = 1.0f);
-
-		/**
-		* @brief Creates and registers a new Obstacle
-		* @param zone : the Zone of the Obstacle
-		* @param trigger : the trigger of the Destructor
-		* @param bouncingRatio : the bouncingRatio of the Obstacle
-		* @param friction : the friction of the Obstacle
-		* @return A new registered Obstacle
-		* @since 1.04.00
-		*/
-		static inline Obstacle* create(Zone* zone = NULL,ModifierTrigger trigger = INTERSECT_ZONE,float bouncingRatio = 1.0f,float friction = 1.0f);
-
-		/////////////
-		// Setters //
-		/////////////
-
-		/**
-		* @brief Sets the bouncing ratio of this Obstacle
+		* @brief Sets the bouncing ratio of this obstacle
 		*
 		* The bouncing ratio is the multiplier applied to the normal component of the rebound.
 		*
-		* @param bouncingRatio : the bouncing ratio of this Obstacle
+		* @param bouncingRatio : the bouncing ratio of this obstacle
 		*/
 		inline void setBouncingRatio(float bouncingRatio);
 
-		/**
-		* @brief Sets the friction of this Obstacle
-		*
-		* The bouncing ratio is the multiplier applied to the tangent component of the rebound.
-		*
-		* @param friction : the friction of this Obstacle
-		*/
-		inline void setFriction(float friction);
-
-		/////////////
-		// Getters //
-		/////////////
-
-		/**
-		* @brief Gets the bouncing ratio of this Obstacle
-		* @return the bouncing ratio of this Obstacle
+			/**
+		* @brief Gets the bouncing ratio of this obstacle
+		* @return the bouncing ratio of this obstacle
 		*/
 		inline float getBouncingRatio() const;
 
+		//////////////
+		// Friction //
+		//////////////
+
 		/**
-		* @brief Gets the friction of this Obstacle
-		* @return the friction of this Obstacle
+		* @brief Sets the friction of this obstacle
+		*
+		* The bouncing ratio is the multiplier applied to the tangent component of the rebound.
+		*
+		* @param friction : the friction of this obstacle
+		*/
+		inline void setFriction(float friction);
+
+		/**
+		* @brief Gets the friction of this obstacle
+		* @return the friction of this obstacle
 		*/
 		inline float getFriction() const;
 
+	protected :
+
+		void propagateUpdateTransform();
+
 	private :
+
+		Zone* zone;
 
 		float bouncingRatio;
 		float friction;
 
-		virtual void modify(Particle& particle,float deltaTime) const;
-		virtual inline void modifyWrongSide(Particle& particle,bool inside) const;
+		Obstacle(Zone* zone = NULL,float bouncingRatio = 1.0f,float friction = 1.0f);
+
+		Obstacle(const Obstacle& obstacle);
+
+		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-
-	inline Obstacle* Obstacle::create(Zone* zone,ModifierTrigger trigger,float bouncingRatio,float friction)
+	inline Obstacle* Obstacle::create(Zone* zone,float bouncingRatio,float friction)
 	{
-		Obstacle* obj = new Obstacle(zone,trigger,bouncingRatio,friction);
-		registerObject(obj);
-		return obj;
+		return new Obstacle(zone,bouncingRatio,friction);
 	}
-		
+
+	inline Zone* Obstacle::getZone() const
+	{
+		return zone;
+	}
+
 	inline void Obstacle::setBouncingRatio(float bouncingRatio)
 	{
-		this->bouncingRatio = bouncingRatio < 0.0f ? 0.0f : bouncingRatio;
-	}
-
-	inline void Obstacle::setFriction(float friction)
-	{
-		this->friction = friction;
+		this->bouncingRatio = bouncingRatio;
 	}
 
 	inline float Obstacle::getBouncingRatio() const
@@ -133,15 +121,14 @@ namespace SPK
 		return bouncingRatio;
 	}
 
+	inline void Obstacle::setFriction(float friction)
+	{
+		this->friction = friction;
+	}
+
 	inline float Obstacle::getFriction() const
 	{
 		return friction;
-	}
-
-	inline void Obstacle::modifyWrongSide(Particle& particle,bool inside) const
-	{
-		if (isFullZone())
-			getZone()->moveAtBorder(particle.position(),inside);
 	}
 }
 

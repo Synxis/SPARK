@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,18 +19,16 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_TRANSFORMABLE
 #define H_SPK_TRANSFORMABLE
 
-#include "Core/SPK_Vector3D.h"
+#include <cstring> // for memcpy
 
+#include "Core/SPK_DEF.h"
+#include "Core/SPK_Vector3D.h"
 
 namespace SPK
 {
-	class Zone;
-
-
 	/**
 	* @class Transformable
 	* @brief an abstract class that allows matrix transformations
@@ -39,9 +37,9 @@ namespace SPK
 	* A Transformable stores a matrix and performs operation on object parameters function of its matrix.<br>
 	* <br>
 	* It allows for instance to transform all emitters and zones in a system with a transform matrix.<br>
-	* Particles are still living in the world coordinates (unlike transforming the rendering process).<br>
+	* Particles are still living in the world coordinates (unlike transforming during the rendering process).<br>
 	* <br>
-	* Note that SPARK is not a linear algebra library, so this class does not offers lots of matri operations.<br>
+	* Note that SPARK is not a linear algebra library, so this class does not offers lots of matrix operations.<br>
 	* It is rather designed to be plugged within an existing engine with its own matrix system.<br>
 	* <br>
 	* SPARK was not designed to offer a complete scene graph. Even if the library can handle matrices stack, it does not
@@ -50,8 +48,6 @@ namespace SPK
 	* The transforms used are continuous-in-memory homogeneous matrices with vectors being stored with their coordinates contiguous :<br>
 	* <i>[side.x side.y side.z side.w up.x up.y up.z up.w look.x look.y look.z look.w pos.x pos.y pos.z pos.w]</i><br>
 	* (look being -look in right-handed coordinate systems)<br>
-	*
-	* @since 1.03.00
 	*/
 	class SPK_PREFIX Transformable
 	{
@@ -66,22 +62,6 @@ namespace SPK
 
 		/** @brief The identity matrix */
 		static const float IDENTITY[TRANSFORM_LENGTH];
-
-		/////////////////
-		// Constructor //
-		/////////////////
-
-		/** @brief Constructor of Transformable */
-		Transformable();
-
-		Transformable(const Transformable& transformable);
-
-		////////////////
-		// Destructor //
-		////////////////
-
-		/** @brief Destructor of Transformable */
-		virtual inline ~Transformable() {}
 
 		/////////////
 		// Setters //
@@ -125,7 +105,6 @@ namespace SPK
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param pos : the position of the local transform
-		* @since 1.05.00
 		*/
 		void setTransformPosition(const Vector3D& pos);
 
@@ -139,7 +118,6 @@ namespace SPK
 		*
 		* @param look : the look vector of the transformable
 		* @param up : the up vector of the transformable
-		* @since 1.05.00
 		*/
 		void setTransformOrientationRH(Vector3D look,Vector3D up);
 
@@ -153,7 +131,6 @@ namespace SPK
 		*
 		* @param look : the look vector of the transformable
 		* @param up : the up vector of the transformable
-		* @since 1.05.00
 		*/
 		void setTransformOrientationLH(Vector3D look,Vector3D up);
 
@@ -168,7 +145,6 @@ namespace SPK
 		*
 		* @param axis : the axis of rotation
 		* @param angle : the angle of rotation around the axis
-		* @since 1.05.00
 		*/
 		void setTransformOrientation(Vector3D axis,float angle);
 
@@ -182,7 +158,6 @@ namespace SPK
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param angle : the angle of rotation around the x axis
-		* @since 1.05.00
 		*/
 		void setTransformOrientationX(float angle);
 
@@ -196,7 +171,6 @@ namespace SPK
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param angle : the angle of rotation around the y axis
-		* @since 1.05.00
 		*/
 		void setTransformOrientationY(float angle);
 
@@ -210,7 +184,6 @@ namespace SPK
 		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param angle : the angle of rotation around the z axis
-		* @since 1.05.00
 		*/
 		void setTransformOrientationZ(float angle);
 
@@ -239,70 +212,60 @@ namespace SPK
 		/**
 		* @brief Gets the position of the local transform
 		* @return the position of the local transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getLocalTransformPos() const;
 
 		/**
 		* @brief Gets the side vector of the local transform
 		* @return the side vector of the local transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getLocalTransformSide() const;
 
 		/**
 		* @brief Gets the up vector of the local transform
 		* @return the up vector of the local transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getLocalTransformUp() const;
 
 		/**
 		* @brief Gets the look vector of the local transform in a right-handed system
 		* @return the look vector of the local transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getLocalTransformLookRH() const;
 
 		/**
 		* @brief Gets the look vector of the local transform in a left-handed system
 		* @return the look vector of the local transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getLocalTransformLookLH() const;
 
 		/**
 		* @brief Gets the position of the world transform
 		* @return the position of the world transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getWorldTransformPos() const;
 
 		/**
 		* @brief Gets the side vector of the world transform
 		* @return the side vector of the world transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getWorldTransformSide() const;
 
 		/**
 		* @brief Gets the up vector of the world transform
 		* @return the up vector of the world transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getWorldTransformUp() const;
 
 		/**
 		* @brief Gets the look vector of the world transform  in a right-handed system
 		* @return the look vector of the world transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getWorldTransformLookRH() const;
 
 		/**
 		* @brief Gets the look vector of the world transform  in a left-handed system
 		* @return the look vector of the world transform
-		* @since 1.05.00
 		*/
 		inline Vector3D getWorldTransformLookLH() const;
 
@@ -321,7 +284,6 @@ namespace SPK
 		* @param target : the point the transformable is looking at
 		* @param up : the up vector of the transformable
 		* @param pos : the position of the transformable
-		* @since 1.05.00
 		*/
 		inline void lookAtRH(const Vector3D& target,Vector3D up,const Vector3D& pos);
 
@@ -336,7 +298,6 @@ namespace SPK
 		* @param target : the point the transformable is looking at
 		* @param up : the up vector of the transformable
 		* @param pos : the position of the transformable
-		* @since 1.05.00
 		*/
 		inline void lookAtLH(const Vector3D& target,Vector3D up,const Vector3D& pos);
 
@@ -357,6 +318,9 @@ namespace SPK
 
 	protected :
 
+		Transformable();
+		Transformable(const Transformable& transformable);
+
 		/**
 		* @brief A helper method to transform a position from local to world coordinates
 		* @param tPos : the resulting transformed position
@@ -375,20 +339,20 @@ namespace SPK
 		* @brief Tells whether this Transformable needs update or not
 		* @return true if it needs update, false if not
 		*/
-		inline bool isUpdateNotified() const;
+		inline bool isTransformUpdateNotified() const;
 
 		/**
 		* @brief Notifies the Transformable for a update need
 		*
 		* This method has to be called when modifying a parameter that impose the transform's recomputation.
 		*/
-		inline void notifyForUpdate();
+		inline void notifyForTransformUpdate();
 
 		/**
 		* @brief Gets the latest parent of this Transformable
 		* @return the latest parent of this Transformable or NULL
 		*/
-		inline const Transformable* getParentTransform() const;
+		inline const Transformable* getParent() const;
 
 		/**
 		* @brief Updates all the parameters in the world coordinates
@@ -403,8 +367,6 @@ namespace SPK
 		*
 		* This method can be overriden in derived classes of Transformable (By default it does nothing).<br>
 		* It is this method task to call the updateTransform method of transformable children of this transformable.
-		*
-		* @since 1.05.00
 		*/
 		virtual inline void propagateUpdateTransform() {}
 
@@ -441,7 +403,7 @@ namespace SPK
 	{
 		memcpy(local,transform,sizeof(float) * TRANSFORM_LENGTH);
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	inline const float* Transformable::getLocalTransform() const
@@ -527,17 +489,17 @@ namespace SPK
 		localIdentity = true;
 	}
 
-	inline bool Transformable::isUpdateNotified() const
+	inline bool Transformable::isTransformUpdateNotified() const
 	{
 		return lastUpdate != currentUpdate;
 	}
 
-	inline void Transformable::notifyForUpdate()
+	inline void Transformable::notifyForTransformUpdate()
 	{
 		++currentUpdate;
 	}
 
-	inline const Transformable* Transformable::getParentTransform() const
+	inline const Transformable* Transformable::getParent() const
 	{
 		return parent;
 	}
@@ -556,9 +518,7 @@ namespace SPK
 				dest[(i << 2) + j] = 0.0f;
 				for (size_t k = 0; k < 4; ++k)
 					dest[(i << 2) + j] += src0[(k << 2) + j] * src1[(i << 2) + k];
-				//++dest;
 			}
-			//++dest;
 		}
 	}
 
@@ -588,3 +548,4 @@ namespace SPK
 }
 
 #endif
+

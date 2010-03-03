@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,154 +19,69 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_ZONE
 #define H_SPK_ZONE
 
 #include "Core/SPK_DEF.h"
+#include "Core/SPK_Vector3D.h"
 #include "Core/SPK_Registerable.h"
 #include "Core/SPK_Transformable.h"
-#include "Core/SPK_Vector3D.h"
-
 
 namespace SPK
 {
-    class Particle;
-
-	/**
-	* @class Zone
-	* @brief An abstract class that defines a zone in space
-	*
-	* A Zone is used in SPARK to :
-	* <ul>
-	* <li>define the area of an Emitter</li>
-	* <li>define the area of a Modifier</li>
-	* </ul>
-	*/
-	class SPK_PREFIX Zone : public Registerable, public Transformable
+	class Zone : public Registerable, 
+				 public Transformable
 	{
 	public :
-
-		/////////////////
-		// Constructor //
-		/////////////////
-
-		/**
-		* @brief Default constructor for Zone
-		* @param position : the position of the Zone
-		*/
-		Zone(const Vector3D& position = Vector3D());
 
 		////////////////
 		// Destructor //
 		////////////////
 
-		/** @brief Destructor of Zone */
 		virtual inline ~Zone() {}
 
-		////////////
-		// Setter //
-		////////////
+		//////////////
+		// Position //
+		//////////////
 
-		/**
-		* @brief Sets the position of this Zone
-		* @param v : the position of this Zone
-		*/
-		virtual inline void setPosition(const Vector3D& v);
-
-		/////////////
-		// Getters //
-		/////////////
-
-		/**
-		* @brief Gets the position of this Zone
-		* @return the position of this Zone
-		*/
+		inline void setPosition(const Vector3D& position);
 		inline const Vector3D& getPosition() const;
-
-		/**
-		* @brief Gets the transformed position of this Zone
-		* @return the transformed position of this Zone
-		* @since 1.03.00
-		*/
 		inline const Vector3D& getTransformedPosition() const;
 
 		///////////////
 		// Interface //
 		///////////////
 
-		/**
-		* @brief Randomly generates a position inside this Zone for a given Particle
-		* @param particle : the Particle whose position will be generated
-		* @param full : true to generate a position in the whole volume of this Zone, false to generate a position only at borders
-		*/
-		virtual void generatePosition(Particle& particle,bool full) const = 0;
-
-		/**
-		* @brief Checks whether a point is within the Zone
-		* @param point : the point to check
-		* @return true if the point is within the Zone, false otherwise
-		*/
-		virtual bool contains(const Vector3D& point) const = 0;
-
-		/**
-		* @brief Checks whether a line intersects the Zone
-		*
-		* The intersection is computed only if the Vector3D* intersection is not NULL.<br>
-		* The normal is computed if the Vector3D* normal AND intersection are not NULL.
-		*
-		* @param v0 : start of the line
-		* @param v1 : end of the line
-		* @param intersection : the Vector3D where the intersection will be stored, NULL not to compute the intersection
-		* @param normal : the Vector3D where the normal will be stored, NULL not to compute the normal
-		* @return true if the line intersects with the Zone, false otherwise
-		*/
-		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,Vector3D* intersection,Vector3D* normal) const = 0;
-
-		/**
-		* @brief Moves a point at the border of the Zone
-		* @param point : the point that will be moved to the border of the Zone
-		* @param inside : true to move the point inside the Zone of APPROXIMATION_VALUE, false to move it outside of APPROXIMATION_VALUE
-		*/
-		virtual void moveAtBorder(Vector3D& point,bool inside) const = 0;
-
-		/**
-		* @brief Computes the normal for the point
-		* @param point : the point from where the normal is computed
-		* @return the normal vector
-		* @since 1.02.00
-		*/
-		virtual Vector3D computeNormal(const Vector3D& point) const = 0;
+		virtual void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const = 0;
+		virtual bool contains(const Vector3D& v,float radius = 0.0f) const = 0;
+		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f) const = 0;
+		virtual Vector3D computeNormal(const Vector3D& v) const = 0;
+		//virtual void moveAtBorder(Vector3D& v,bool inside) const = 0;
 
 	protected :
 
-		/** @brief Value used for approximation */
-		static const float APPROXIMATION_VALUE;
-
-		/**
-		* @brief A helper static method to normalize a Vector3D
-		*
-		* If the Vector3D is NULL, a random normal Vector3D is set.<br>
-		* The randomness is guaranteed to be uniformely distributed.
-		*
-		* @param v : the Vector3D to normalize or randomize if not normalizable
-		* @since 1.03.00
-		*/
-		static inline void normalizeOrRandomize(Vector3D& v);
+		inline Zone(const Vector3D& position = Vector3D());
 
 		virtual inline void innerUpdateTransform();
+		static inline void normalizeOrRandomize(Vector3D& v);
 
 	private :
 
 		Vector3D position;
-		Vector3D tPosition; // transformed position
+		Vector3D tPosition;
 	};
 
+	inline Zone::Zone(const Vector3D& position) :
+		Registerable(),
+		Transformable(),
+		position(position),
+		tPosition(position)
+	{}
 
 	inline void Zone::setPosition(const Vector3D& v)
 	{
 		position = tPosition = v;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	inline const Vector3D& Zone::getPosition() const
@@ -179,18 +94,18 @@ namespace SPK
 		return tPosition;
 	}
 
+	inline void Zone::innerUpdateTransform()
+	{
+		transformPos(tPosition,position);
+	}
+
 	inline void Zone::normalizeOrRandomize(Vector3D& v)
 	{
 		while(!v.normalize())
 		{
-			do v = Vector3D(random(-1.0f,1.0f),random(-1.0f,1.0f),random(-1.0f,1.0f));
+			do v = SPK_RANDOM(Vector3D(-1.0f,-1.0f,-1.0f),Vector3D(1.0f,1.0f,1.0f));
 			while (v.getSqrNorm() > 1.0f);
 		}
-	}
-
-	inline void Zone::innerUpdateTransform()
-	{
-		transformPos(tPosition,position);
 	}
 }
 

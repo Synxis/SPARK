@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,100 +19,133 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #include "Core/SPK_Registerable.h"
-#include "Core/SPK_Factory.h"
 
 namespace SPK
 {
-	const SPK_ID NO_ID(0);
-	const std::string NO_NAME; 
+	std::map<const Registerable*,Registerable*> Registerable::copyBuffer;
+
+#if _DEBUG
+//	std::set<const Registerable*> Registerable::debugBuffer;
+#endif
 
 	Registerable::Registerable() :
-		ID(NO_ID),
 		nbReferences(0),
 		shared(false),
-		destroyable(true),
-		name(NO_NAME)
-	{}
-
-	Registerable::Registerable(const Registerable& registerable) :
-		ID(NO_ID),
-		nbReferences(0),
-		shared(registerable.shared),
-		destroyable(registerable.destroyable),
-		name(registerable.name)
-	{}
-
-	Registerable::~Registerable(){}
-
-	Registerable* Registerable::copyChild(Registerable* child,bool createBase)
+		destroyable(true)
 	{
-		if (child == NULL)
-			return NULL;
-
-		if (((child->isRegistered())&&(!child->isShared()))||(createBase))
-		{
-			if (SPKFactory::getInstance().isAlreadyProcessed(child))
-			{
-				Registerable* processedClone = SPKFactory::getInstance().getProcessedObject(child);
-				processedClone->incrementReference();
-				return processedClone;
-			}
-
-			Registerable* cloneChild = child->clone(createBase);
-			SPKFactory::getInstance().registerObject(cloneChild);
-			cloneChild->incrementReference();
-			SPKFactory::getInstance().markAsProcessed(child,cloneChild);
-			return cloneChild;
-		}
-
-		child->incrementReference();
-		return child;
+#if _DEBUG
+//		debugBuffer.insert(this);
+#endif
 	}
 
-	bool Registerable::destroyChild(Registerable* child,bool keepChildren)
+	Registerable::Registerable(const Registerable& registerable) :
+		nbReferences(0),
+		shared(registerable.shared),
+		destroyable(true)
 	{
-		if ((child == NULL)||(keepChildren))
+#if _DEBUG
+//		debugBuffer.insert(this);
+#endif		
+	}
+
+	Registerable::~Registerable()
+	{
+		if (nbReferences != 0)
+		{
+			SPK_LOG_WARNING("Registerable::~Registerable() - The number of references of the object is not 0 during destruction");
+		}
+
+#if _DEBUG
+//		debugBuffer.erase(this);
+#endif	
+	}
+
+	void Registerable::decrement()
+	{
+		if (nbReferences == 0)
+		{
+			SPK_LOG_WARNING("Registerable::decrement() - Wrong counting of references of the objects. A call to increment() is missing");
+		}
+		else		
+			--nbReferences;
+	}
+
+	bool Registerable::destroy(bool decrement)
+	{
+		if (decrement)
+			this->decrement();
+		if (nbReferences == 0)
+		{
+			delete this;
+			return true;
+		}
+		return false;
+	}
+
+	void Registerable::incrementChild(Registerable* registerable)
+	{
+		if (registerable != NULL)
+			registerable->increment();
+	}
+
+	void Registerable::decrementChild(Registerable* registerable)
+	{
+		if (registerable != NULL)
+			registerable->decrement();
+	}
+
+	bool Registerable::destroyChild(Registerable* registerable)
+	{
+		if (registerable == NULL)
 			return false;
 
-		child->decrementReference();
-
-		if ((child->isRegistered())&&
-			(child->isDestroyable())&&
-			(child->getNbReferences() == 0))
+		registerable->decrement();
+		if (registerable->destroyable && registerable->nbReferences == 0)
 		{
-			SPKFactory::getInstance().unregisterObject(child->getID());
+			delete registerable;
 			return true;
 		}
 
 		return false;
 	}
-
-	void Registerable::registerChild(Registerable* child,bool registerAll)
+	
+	Registerable* Registerable::copyChild(Registerable* registerable,bool increment)
 	{
-		if (child == NULL)
-			return;
+		if (registerable == NULL)
+			return NULL;
 
-		if (child->isRegistered())
+		if (registerable->isShared())
 		{
-			child->incrementReference();
-			child->registerChildren(registerAll);
+			if (increment)
+				registerable->increment();
+			return registerable;
 		}
-		else if (registerAll)
+
+		std::map<const Registerable*,Registerable*>::const_iterator it = copyBuffer.find(registerable);
+		if (it != copyBuffer.end())
 		{
-			SPKFactory::getInstance().registerObject(child);
-			child->incrementReference();
-			child->registerChildren(registerAll);
+			if (increment)
+				it->second->increment();
+			return it->second;
 		}
+
+		Registerable* clone = registerable->clone();
+		copyBuffer.insert(std::pair<const Registerable*,Registerable*>(registerable,clone));
+		if (increment)
+			clone->increment();
+		return clone;
 	}
 
-	void Registerable::registerObject(Registerable* obj,bool registerAll)
+	Registerable* Registerable::copyRegisterable(Registerable* registerable,bool increment)
 	{
-		if ((obj != NULL)&&(!obj->isRegistered()))
-		{
-			SPKFactory::getInstance().registerObject(obj);
-			obj->registerChildren(registerAll);
-		}
+		if (registerable == NULL)
+			return NULL;
+
+		copyBuffer.clear();
+		Registerable* clone = registerable->clone();
+		if (increment)
+			clone->increment();
+		return clone;
 	}
 }

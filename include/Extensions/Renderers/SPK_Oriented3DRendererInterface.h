@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,12 +19,13 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_ORIENTED3DRENDERERINTERFACE
 #define H_SPK_ORIENTED3DRENDERERINTERFACE
 
+#include "Core/SPK_DEF.h"
 #include "Core/SPK_Vector3D.h"
 #include "Core/SPK_Group.h"
+#include "Core/SPK_Particle.h"
 
 // Packs the orientations parameters into one int for orientation presets
 #define PACK_ORIENTATION(lock,look,up) ((lock << 0x10)|(look << 0x8)|(up))
@@ -36,8 +37,6 @@ namespace SPK
 	*
 	* Enumerators marked as (fast) are the ones that only needs to be computed once for
 	* a set of particles instead of being computed for each particles.
-	*
-	* @since 1.04.00
 	*/
 	enum LookOrientation
 	{
@@ -52,8 +51,6 @@ namespace SPK
 	*
 	* Enumerators marked as (fast) are the ones that only needs to be computed once for
 	* a set of particles instead of being computed for each particles.
-	*
-	* @since 1.04.00
 	*/
 	enum UpOrientation
 	{
@@ -67,8 +64,6 @@ namespace SPK
 	* @brief Defines which axis is locked and will not change when computing a cross product.
 	*
 	* Note that the side vector cannot be locked as it is always derived from the look and up vectors.
-	*
-	* @since 1.04.00
 	*/
 	enum LockedAxis
 	{
@@ -76,10 +71,7 @@ namespace SPK
 		LOCK_UP,			/**< The up vector is locked */
 	};
 
-	/**
-	* @brief Orientation presets to easily set up common orientations
-	* @since 1.04.00
-	*/
+	/** @brief Orientation presets to easily set up common orientations */
 	enum OrientationPreset
 	{
 		CAMERA_PLANE_ALIGNED = PACK_ORIENTATION(LOCK_LOOK,LOOK_CAMERA_PLANE,UP_CAMERA),		/**< Particles are oriented towards the camera plane (the most common) */
@@ -91,10 +83,7 @@ namespace SPK
 	};
 
 
-	/**
-	* @brief Base Interface for rendering particles that can be oriented in a 3D world
-	* @since 1.04.00
-	*/
+	/** @brief Base Interface for rendering particles that can be oriented in a 3D world */
 	class SPK_PREFIX Oriented3DRendererInterface
 	{
 	public :
@@ -126,13 +115,6 @@ namespace SPK
 		* In other modes the up vector is not used
 		*/
 		Vector3D upVector;
-
-		//////////////////
-		// Constructors //
-		//////////////////
-
-		/** @brief Constructor of Oriented3DRendererInterface */
-		Oriented3DRendererInterface();
 
 		////////////////
 		// Destructor //
@@ -198,15 +180,22 @@ namespace SPK
 		UpOrientation upOrientation;
 		LockedAxis lockedAxis;
 
-		inline bool precomputeOrientation3D(const Group& group,const Vector3D& look,const Vector3D& up,const Vector3D& pos);
-		inline void computeGlobalOrientation3D();
-		inline void computeSingleOrientation3D(const Particle& particle);
+		inline bool precomputeOrientation3D(const Group& group,const Vector3D& look,const Vector3D& up,const Vector3D& pos) const;
+		inline void computeGlobalOrientation3D(const Group& group) const;
+		inline void computeSingleOrientation3D(const Particle& particle) const;
 
 		inline void scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
 		inline void rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
 
 		inline const Vector3D& quadUp() const;
 		inline const Vector3D& quadSide() const;
+
+		//////////////////
+		// Constructors //
+		//////////////////
+
+		/** @brief Constructor of Oriented3DRendererInterface */
+		Oriented3DRendererInterface();
 
 	private :
 
@@ -258,7 +247,7 @@ namespace SPK
 		return sideQuad;
 	}
 
-	inline bool Oriented3DRendererInterface::precomputeOrientation3D(const Group& group,const Vector3D& modelViewLook,const Vector3D& modelViewUp,const Vector3D& modelViewPos)
+	inline bool Oriented3DRendererInterface::precomputeOrientation3D(const Group& group,const Vector3D& modelViewLook,const Vector3D& modelViewUp,const Vector3D& modelViewPos) const
 	{
 		mVLook = modelViewLook;
 		mVUp = modelViewUp;
@@ -279,12 +268,12 @@ namespace SPK
 			globalUp = upVector;
 		else globalOrientation = false;
 
-		quadRotated = group.getModel()->isEnabled(PARAM_ANGLE);
+		quadRotated = group.isEnabled(PARAM_ANGLE);
 
 		return globalOrientation;
 	}
 	
-	inline void Oriented3DRendererInterface::computeGlobalOrientation3D()
+	inline void Oriented3DRendererInterface::computeGlobalOrientation3D(const Group& group) const
 	{
 		look = globalLook;
 		up = globalUp;
@@ -299,13 +288,13 @@ namespace SPK
 		}
 
 		up.normalize();
-		up *= 0.5f;
+		up *= group.getRadius();
 
 		side.normalize();
-		side *= 0.5f;
+		side *= group.getRadius();
 	}
 	
-	inline void Oriented3DRendererInterface::computeSingleOrientation3D(const Particle& particle)
+	inline void Oriented3DRendererInterface::computeSingleOrientation3D(const Particle& particle) const
 	{
 		if (lookOrientation == LOOK_CAMERA_POINT)
 		{
@@ -340,15 +329,15 @@ namespace SPK
 		}
 
 		side.normalize();
-		side *= 0.5f;
+		side *= particle.getGroup().getRadius();
 
 		up.normalize();
-		up *= 0.5f;
+		up *= particle.getGroup().getRadius();
 	}
 
 	inline void Oriented3DRendererInterface::scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
 	{
-		float size = particle.getParamCurrentValue(PARAM_SIZE);
+		float size = particle.getParam(PARAM_SIZE);
 
 		sideQuad = side;
 		sideQuad *= size * scaleX;
@@ -359,9 +348,9 @@ namespace SPK
 
 	inline void Oriented3DRendererInterface::rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
 	{
-		float size = particle.getParamCurrentValue(PARAM_SIZE);
+		float size = particle.getParam(PARAM_SIZE);
 
-		float angleTexture = particle.getParamCurrentValue(PARAM_ANGLE);
+		float angleTexture = particle.getParamNC(PARAM_ANGLE);
 		float cosA = cos(angleTexture);
 		float sinA = sin(angleTexture);
 

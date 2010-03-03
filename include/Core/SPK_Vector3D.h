@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -23,8 +23,10 @@
 #ifndef H_SPK_VECTOR3D
 #define H_SPK_VECTOR3D
 
-#include "Core/SPK_DEF.h"
+#include <cmath> // for sqrt
+#include <iostream>  // for operator <<
 
+#include "Core/SPK_DEF.h"
 
 namespace SPK
 {
@@ -38,7 +40,7 @@ namespace SPK
 	* <br>
 	* Note that Vector3D coordinates are accessible directly without any setters or getters.
 	*/
-	class SPK_PREFIX Vector3D
+	class Vector3D
 	{
 	public :
 
@@ -60,7 +62,7 @@ namespace SPK
 		* @param y : y coordinate
 		* @param z : z coordinate
 		*/
-		Vector3D(float x = 0.0f,float y = 0.0f,float z = 0.0f);
+		inline Vector3D(float x = 0.0f,float y = 0.0f,float z = 0.0f);
 
 		///////////////
 		// Operators //
@@ -77,7 +79,7 @@ namespace SPK
 		* @param v : the Vector3D to add
 		* @return the result Vector3D
 		*/
-		Vector3D& operator+=(const Vector3D& v);
+		inline Vector3D& operator+=(const Vector3D& v);
 
 		/**
 		* @brief Substracts a Vector3D
@@ -90,7 +92,7 @@ namespace SPK
 		* @param v : the Vector3D to substract
 		* @return the result Vector3D
 		*/
-		Vector3D& operator-=(const Vector3D& v);
+		inline Vector3D& operator-=(const Vector3D& v);
 
 		/**
 		* @brief Adds a floating number
@@ -103,7 +105,7 @@ namespace SPK
 		* @param f : the number to add
 		* @return the result Vector3D
 		*/
-		Vector3D& operator+=(float f);
+		inline Vector3D& operator+=(float f);
 
 		/**
 		* @brief Substracts a floating number
@@ -116,7 +118,7 @@ namespace SPK
 		* @param f : the number to substract
 		* @return the result Vector3D
 		*/
-		Vector3D& operator-=(float f);
+		inline Vector3D& operator-=(float f);
 
 		/**
 		* @brief Multiplies by a floating number
@@ -129,7 +131,7 @@ namespace SPK
 		* @param f : the number to multiply the Vector3D by
 		* @return the result Vector3D
 		*/
-		Vector3D& operator*=(float f);
+		inline Vector3D& operator*=(float f);
 
 		/**
 		* @brief Divides by a floating number
@@ -142,7 +144,7 @@ namespace SPK
 		* @param f : the number to divide the Vector3D by
 		* @return the result Vector3D
 		*/
-		Vector3D& operator/=(float f);
+		inline Vector3D& operator/=(float f);
 
 		/**
 		* @brief Unary - operator of Vector3D
@@ -166,9 +168,8 @@ namespace SPK
 		*
 		* @param index : the index of the coordinate to get (from 0 to 2)
 		* @return : the coordinate value at index
-		* @since 1.03.00
 		*/
-		float& operator[](size_t index);
+		inline float& operator[](size_t index);
 
 		/**
 		* @brief Accesses the Vector3D coordinates in an container like fashion
@@ -177,9 +178,8 @@ namespace SPK
 		*
 		* @param index : the index of the coordinate to get (from 0 to 2)
 		* @return : the coordinate value at index
-		* @since 1.03.00
 		*/
-		const float& operator[](size_t index) const;
+		inline const float& operator[](size_t index) const;
 
 		/////////////
 		// Setters //
@@ -191,7 +191,7 @@ namespace SPK
 		* @param y : y coordinate
 		* @param z : z coordinate
 		*/
-		void set(float x,float y,float z = 0.0f);
+		inline void set(float x,float y,float z = 0.0f);
 
 		///////////////
 		// Interface //
@@ -227,7 +227,7 @@ namespace SPK
 		*
 		* @return true if this Vector3D can be normalized, false otherwise
 		*/
-		bool normalize();
+		inline bool normalize();
 
 		/**
 		* @brief Reverts the Vector3D
@@ -237,7 +237,7 @@ namespace SPK
 		* y = -y<br>
 		* z = -z</i>
 		*/
-		void revert();
+		inline void revert();
 
 		/**
 		* @brief Sets this Vector3D to its absolute values
@@ -246,16 +246,20 @@ namespace SPK
 		* x = abs(x)<br>
 		* y = abs(y)<br>
 		* z = abs(z)</i>
-		*
-		* @since 1.02.00
 		*/
-		void abs();
+		inline void abs();
 
 		/**
 		* @brief Computes the cross product between v and the vector3D and store the result in the vector3D
 		* @param v : the vector3D used to compute the cross product (*this x v)
 		*/
-		void crossProduct(const Vector3D& v);
+		inline void crossProduct(const Vector3D& v);
+
+		/** @brief */
+		inline void setMax(const Vector3D& v);
+
+		/** @brief */
+		inline void setMin(const Vector3D& v);
 	};
 
 	////////////////////////
@@ -407,7 +411,6 @@ namespace SPK
 	* @param v0 : the first Vector3D to compare
 	* @param v1 : the second Vector3D to compare
 	* @return true if the Vector3D are equal, false if not
-	* @since 1.01.01
 	*/
 	inline bool operator==(const Vector3D& v0,const Vector3D& v1);
 
@@ -416,7 +419,6 @@ namespace SPK
 	* @param v0 : the first Vector3D to compare
 	* @param v1 : the second Vector3D to compare
 	* @return true if the Vector3D are different, false if not
-	* @since 1.01.01
 	*/
 	inline bool operator!=(const Vector3D& v0,const Vector3D& v1);
 
@@ -428,7 +430,6 @@ namespace SPK
 	* @param s : the output stream where to write
 	* @param v : the Vector3D to write to the output stream
 	* @return the output stream
-	* @since 1.01.01
 	*/
 	inline std::ostream& operator<<(std::ostream& s,const Vector3D& v);
 
@@ -445,7 +446,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @return the square distance between the two Vector3D
 	*/
-	extern SPK_PREFIX float getSqrDist(const Vector3D& v0,const Vector3D& v1);
+	inline float getSqrDist(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Returns the distance between two Vector3D
@@ -453,7 +454,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @return the distance between the two Vector3D
 	*/
-	extern SPK_PREFIX float getDist(const Vector3D& v0,const Vector3D& v1);
+	inline float getDist(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Returns the dot product between two Vector3D
@@ -469,7 +470,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @return the cross product (v0 x v1)
 	*/
-	extern SPK_PREFIX Vector3D crossProduct(const Vector3D& v0,const Vector3D& v1);
+	inline Vector3D crossProduct(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Computes the cross product between two Vector3D and stores the result in the Vector3D result
@@ -477,8 +478,92 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @param result : the Vector3D where to store the cross product (v0 x v1)
 	*/
-	extern SPK_PREFIX void crossProduct(const Vector3D& v0,const Vector3D& v1,Vector3D& result);
+	inline void crossProduct(const Vector3D& v0,const Vector3D& v1,Vector3D& result);
 
+	/////////////////
+	// Definitions //
+	/////////////////
+
+	inline Vector3D::Vector3D(float x,float y,float z) :
+		x(x),
+		y(y),
+		z(z) {}
+
+	inline Vector3D& Vector3D::operator+=(const Vector3D& v)
+	{
+		x += v.x;
+		y += v.y;
+		z += v.z;
+		return *this;
+	}
+
+	inline Vector3D& Vector3D::operator-=(const Vector3D& v)
+	{
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
+		return *this;
+	}
+
+	inline Vector3D& Vector3D::operator+=(float f)
+	{
+		x += f;
+		y += f;
+		z += f;
+		return *this;
+	}
+
+	inline Vector3D& Vector3D::operator-=(float f)
+	{
+		x -= f;
+		y -= f;
+		z -= f;
+		return *this;
+	}
+
+	inline Vector3D& Vector3D::operator*=(float f)
+	{
+		x *= f;
+		y *= f;
+		z *= f;
+		return *this;
+	}
+
+	inline Vector3D& Vector3D::operator/=(float f)
+	{
+		f = 1.0f / f;
+		x *= f;
+		y *= f;
+		z *= f;
+		return *this;
+	}
+
+	inline float& Vector3D::operator[](size_t index)
+	{
+		switch(index)
+		{
+		case 0 : return x;
+		case 1 : return y;
+		default : return z;
+		}
+	}
+
+	inline const float& Vector3D::operator[](size_t index) const
+	{
+		switch(index)
+		{
+		case 0 : return x;
+		case 1 : return y;
+		default : return z;
+		}
+	}
+
+	inline void Vector3D::set(float x,float y,float z)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
 
 	inline float Vector3D::getSqrNorm() const
 	{
@@ -490,14 +575,67 @@ namespace SPK
 		return sqrt(getSqrNorm());
 	}
 
+	inline bool Vector3D::normalize()
+	{
+		float norm = getNorm();
+		if (norm != 0.0f)
+		{
+			x /= norm;
+			y /= norm;
+			z /= norm;
+			return true;
+		}
+		return false;
+	}
+
+	inline void Vector3D::revert()
+	{
+		x = -x;
+		y = -y;
+		z = -z;
+	}
+
+	inline void Vector3D::abs()
+	{
+		if (x < 0.0f) x = -x;
+		if (y < 0.0f) y = -y;
+		if (z < 0.0f) z = -z;
+	}
+
+	inline void Vector3D::crossProduct(const Vector3D& v)
+	{
+		Vector3D result;
+
+		result.x = y * v.z - z * v.y;
+		result.y = z * v.x - x * v.z;
+		result.z = x * v.y - y * v.x;
+
+		*this = result;
+	}
+
+	inline void Vector3D::setMax(const Vector3D& v)
+	{
+		if (x < v.x)
+			x = v.x;
+		if (y < v.y)
+			y = v.y;
+		if (z < v.z)
+			z = v.z;
+	}
+
+	inline void Vector3D::setMin(const Vector3D& v)
+	{
+		if (x > v.x)
+			x = v.x;
+		if (y > v.y)
+			y = v.y;
+		if (z > v.z)
+			z = v.z;
+	}
+
 	inline Vector3D Vector3D::operator-() const
 	{
 		return Vector3D(-x,-y,-z);
-	}
-
-	inline float dotProduct(const Vector3D& v0,const Vector3D& v1)
-	{
-		return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
 	}
 
 	inline Vector3D operator+(const Vector3D& v0,const Vector3D& v1)
@@ -564,6 +702,53 @@ namespace SPK
 	inline std::ostream& operator<<(std::ostream& s,const Vector3D& v)
 	{
 		return s << '(' << v.x << ',' << v.y << ',' << v.z << ')';
+	}
+
+	inline float dotProduct(const Vector3D& v0,const Vector3D& v1)
+	{
+		return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
+	}
+
+	inline float getSqrDist(const Vector3D& v0,const Vector3D& v1)
+	{
+		float dx = v0.x - v1.x;
+		float dy = v0.y - v1.y;
+		float dz = v0.z - v1.z;
+
+		return dx * dx + dy * dy + dz * dz;
+	}
+
+	inline float getDist(const Vector3D& v0,const Vector3D& v1)
+	{
+		return std::sqrt(getSqrDist(v0,v1));
+	}
+
+	inline Vector3D crossProduct(const Vector3D& v0,const Vector3D& v1)
+	{
+		Vector3D result;
+
+		result.x = v0.y * v1.z - v0.z * v1.y;
+		result.y = v0.z * v1.x - v0.x * v1.z;
+		result.z = v0.x * v1.y - v0.y * v1.x;
+
+		return result;
+	}
+
+	inline void crossProduct(const Vector3D& v0,const Vector3D& v1,Vector3D& result)
+	{
+		result.x = v0.y * v1.z - v0.z * v1.y;
+		result.y = v0.z * v1.x - v0.x * v1.z;
+		result.z = v0.x * v1.y - v0.y * v1.x;
+	}
+
+	// Specialization of the random generation of colors
+	template<>
+	inline Vector3D SPKMain::generateRandom(const Vector3D& v0,const Vector3D& v1)
+	{
+		return Vector3D(
+			generateRandom(v0.x,v1.x),
+			generateRandom(v0.y,v1.y),
+			generateRandom(v0.z,v1.z));
 	}
 }
 

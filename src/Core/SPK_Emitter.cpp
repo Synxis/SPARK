@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,104 +19,89 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #include "Core/SPK_Emitter.h"
-#include "Extensions/Zones/SPK_Point.h"
-
+#include "Core/SPK_Zone.h"
+#include "Core/SPK_Group.h"
+#include "Core/SPK_Particle.h"
 
 namespace SPK
 {
-	Emitter::Emitter() :
+	Emitter::Emitter(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax) :
 		Registerable(),
 		Transformable(),
-		zone(&defaultZone),
-		full(true),
-		tank(-1),
-		flow(0.0f),
-		forceMin(0.0f),
-		forceMax(0.0f),
-		fraction(random(0.0f,1.0f)),
-		active(true)
-	{}
-
-	void Emitter::registerChildren(bool registerAll)
+		active(true),
+		zone(zone == NULL ? SPK_DEFAULT_ZONE : zone),
+		flow(1.0f),
+		fraction(0.0f)
 	{
-		Registerable::registerChildren(registerAll);
-		registerChild(zone,registerAll);
+		incrementChild(this->zone);
+		setTank(tank);
+		setFlow(flow);
+		setForce(forceMin,forceMax);
 	}
 
-	void Emitter::copyChildren(const Emitter& emitter,bool createBase)
+	Emitter::Emitter(const Emitter& emitter) :
+		Registerable(emitter),
+		Transformable(emitter),
+		active(emitter.active),
+		flow(emitter.flow),
+		tank(emitter.tank),
+		forceMin(emitter.forceMin),
+		forceMax(emitter.forceMax),
+		fraction(0.0f)
 	{
-		Registerable::copyChildren(emitter,createBase);
-		zone = dynamic_cast<Zone*>(copyChild(emitter.zone,createBase));	
-	}
-	
-	void Emitter::destroyChildren(bool keepChildren)
-	{
-		destroyChild(zone,keepChildren);
-		Registerable::destroyChildren(keepChildren);
-	}
-
-	Registerable* Emitter::findByName(const std::string& name)
-	{
-		Registerable* object = Registerable::findByName(name);
-		if (object != NULL)
-			return object;
-
-		return zone->findByName(name);
+		zone = dynamic_cast<Zone*>(copyChild(emitter.zone));
 	}
 
-	void Emitter::changeTank(int deltaTank)
+	Emitter::~Emitter()
 	{
-		if (tank >= 0)
+		destroyChild(zone);
+	}
+
+	void Emitter::setTank(int tank)
+	{
+		SPK_ASSERT(flow >= 0.0f || tank >= 0,"Emitter::setTank(int) : the flow and tank of an emitter cannot be both negative");
+		this->tank = tank;
+	}
+
+	void Emitter::setFlow(float flow)
+	{
+		SPK_ASSERT(flow >= 0.0f || tank >= 0,"Emitter::setFlow(float) : the flow and tank of an emitter cannot be both negative");
+		this->flow = flow;
+	}
+
+	void Emitter::setForce(float min,float max)
+	{
+		if (forceMin <= forceMax)
 		{
-			tank += deltaTank;
-			if (tank < 0)
-				tank = 0;
+			forceMin = min;
+			forceMax = max;
 		}
-	}
-
-	void Emitter::changeFlow(float deltaFlow)
-	{
-		if (flow >= 0.0f)
+		else
 		{
-			flow += deltaFlow;
-			if (flow < 0.0f)
-				flow = 0.0f;
+			SPK_LOG_WARNING("Emitter::setForce(float,float) - min is higher than max - Values are swapped");
+			forceMin = max;
+			forceMax = min;
 		}
 	}
 
 	void Emitter::setZone(Zone* zone,bool full)
 	{
-		decrementChildReference(this->zone);
-		incrementChildReference(zone);
-
-		if (zone == NULL)
-			zone = &defaultZone;
-
-		this->zone = zone;
+		decrementChild(this->zone);
+		this->zone = (zone == NULL ? SPK_DEFAULT_ZONE : zone);
+		incrementChild(this->zone);
 		this->full = full;
 	}
 
-	unsigned int Emitter::updateNumber(float deltaTime)
+	void Emitter::propagateUpdateTransform()
 	{
-		int nbBorn;
-		if (flow < 0.0f)
-		{
-			nbBorn = std::max(0,tank);
-			tank = 0;
-		}
-		else
-		{
-			fraction += flow * deltaTime;
-			nbBorn = static_cast<int>(fraction);
-			if (tank >= 0)
-			{
-				nbBorn = std::min(tank,nbBorn);
-				tank -= nbBorn;
-			}
-			fraction -= nbBorn;
-		}
-		return static_cast<unsigned int>(nbBorn);
+		if (!zone->isShared())
+			zone->updateTransform(this);
+	}
+
+	void Emitter::emit(Particle& particle) const
+	{
+		zone->generatePosition(particle.position(),full);
+		generateVelocity(particle,SPK_RANDOM(forceMin,forceMax) / particle.getParam(PARAM_MASS));
 	}
 }

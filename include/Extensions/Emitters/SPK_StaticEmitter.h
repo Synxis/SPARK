@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,43 +19,56 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_STATICEMITTER
 #define H_SPK_STATICEMITTER
 
 #include "Core/SPK_Emitter.h"
-
+#include "Core/SPK_Vector3D.h"
 
 namespace SPK
 {
 	/**
 	* @class StaticEmitter
 	* @brief An Emitter that emits particles with no initial velocity
-	* @since 1.05.00
 	*/
 	class StaticEmitter : public Emitter
 	{
-		SPK_IMPLEMENT_REGISTERABLE(StaticEmitter)
+	SPK_IMPLEMENT_REGISTERABLE(StaticEmitter)
 
 	public :
 
 		/**
-		* @brief Creates and registers a new StaticEmitter
-		* @return A new registered StaticEmitter
+		* @brief Creates a new StaticEmitter
+		* @return A new StaticEmitter
 		*/
-		static inline StaticEmitter* create();
+		static inline StaticEmitter* create(
+			Zone* zone = NULL,
+			bool full = true,
+			int tank = -1,
+			float flow = 1.0f,
+			float forceMin = 1.0f,
+			float forceMax = 1.0f);
 
 	private :
+
+		inline StaticEmitter(
+			Zone* zone = NULL,
+			bool full = true,
+			int tank = -1,
+			float flow = 1.0f,
+			float forceMin = 1.0f,
+			float forceMax = 1.0f);
 
 		virtual inline void generateVelocity(Particle& particle,float speed) const;
 	};
 
+	inline StaticEmitter::StaticEmitter(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax) :
+		Emitter(zone,full,tank,flow,forceMin,forceMax)
+	{}
 
-	inline StaticEmitter* StaticEmitter::create()
+	inline StaticEmitter* StaticEmitter::create(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax)
 	{
-		StaticEmitter* obj = new StaticEmitter;
-		registerObject(obj);
-		return obj;
+		return new StaticEmitter;
 	}
 
 	inline void StaticEmitter::generateVelocity(Particle& particle,float speed) const
@@ -65,5 +78,3 @@ namespace SPK
 }
 
 #endif
-
-

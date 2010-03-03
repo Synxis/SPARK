@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,11 +19,35 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <ctime>
+#include <limits>
 
-#include "Core/SPK_DEF.h"
-
+#include "Core/SPK_Logger.h"
+#include "Extensions/Zones/SPK_Point.h"
 
 namespace SPK
 {
-	unsigned int randomSeed = 0;
+	SPKMain SPKMain::instance = SPKMain();
+
+	// This allows SPARK initialization at application start up
+	SPKMain::SPKMain()
+	{
+		// Inits the random seed
+		randomSeed = static_cast<unsigned int>(std::time(NULL));
+		// little tweak to ensure the randomSeed is uniformly distributed along all the range
+		for (size_t i = 0; i < 2; ++i)
+			randomSeed = generateRandom(static_cast<unsigned int>(1),std::numeric_limits<unsigned int>::max());
+
+		// Creates the zone by default
+		defaultZone = Point::create();
+		defaultZone->setShared(true);
+		defaultZone->setDestroyable(false);
+	}
+
+	// This allows SPARK finalization at application exit
+	SPKMain::~SPKMain()
+	{
+		// Singletons are destroyed
+		Logger::destroyInstance();
+	}
 }

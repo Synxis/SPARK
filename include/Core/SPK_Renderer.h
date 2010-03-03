@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,181 +19,101 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_RENDERER
 #define H_SPK_RENDERER
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Registerable.h"
-#include "Core/SPK_BufferHandler.h"
-
+#include "SPK_DEF.h"
+#include "SPK_Registerable.h"
+#include "SPK_DataHandler.h"
 
 namespace SPK
 {
-	class Group;
 	class Particle;
+	class Group;
+	class Vector3D;
+	class RenderBuffer;
 
-	/**
-	* @enum BlendingMode
-	* @brief Constants defining the available blending modes
-	* @since 1.04.00
-	*/
-	enum BlendingMode
+	enum Blending
 	{
-		BLENDING_NONE,			/**< No blending is applied. The particles will appeared as opaque */
-		BLENDING_ADD,			/**< The additive blending is useful to render particles that supposed to emit light (fire, magic spells...) */
-		BLENDING_ALPHA,			/**< The alpha blending is useful to render transparent particles */
+		BLENDING_NONE,
+		BLENDING_ALPHA,
+		BLENDING_ADD,
 	};
 
-	/**
-	* @enum RenderingHint
-	* @brief Constants defining the available rendering hints
-	* @since 1.04.00
-	*/
-	enum RenderingHint
+	enum RenderingOption
 	{
-		ALPHA_TEST = 1 << 0,	/**< The alpha test. Enabling it is useful when rendering fully opaque particles with fully transparent zones (a texture of ball for instance) */
-		DEPTH_TEST = 1 << 1,	/**< The depth test. Disabling it is useful when rendering particles with additive blending without having to sort them. Note that disabling the depth test will disable the depth write as well. */
-		DEPTH_WRITE = 1 << 2,	/**< The depth write. Disabling it is useful when rendering particles with additive blending without having to sort them. Particles are still culled with the Zbuffer (when behind a wall for instance) */
+		RENDERING_OPTION_ALPHA_TEST = 1 << 0,
+		RENDERING_OPTION_DEPTH_WRITE = 1 << 1,
 	};
 
-	/**
-	* @class Renderer
-	* @brief An abstract class that renders particles
-	*
-	* A renderer is used to represent particle systems.<br>
-	* the representation of a particle system is totally independant to its computation.<br>
-	* <br>
-	* Some renderers (or renderers modes) may need some buffers be attached to the Group of particles they render.<br>
-	* rendering buffers are attached to groups but used by renderers. Their creation can also be given to renderer when needed.<br>
-	* By enabling the buffer creation with the static method enableBuffersCreation(bool), the renderer will create the buffers he needs,
-	* if not already created in the group, before rendering. If buffer creation is disabled, a group that dont have the correct buffers for the renderer, cannot
-	* be renderered, the render method of the renderer will simply exit.<br>
-	* <br>
-	* Note that buffers are linked to a class of renderer, not to a given renderer object.<br>
-	* Moreover buffers have an inner flag that can vary function of the states of the renderer used.
-	*/
-	class SPK_PREFIX Renderer : public Registerable,
-								public BufferHandler
+	class Renderer :	public Registerable,
+						public DataHandler
 	{
+	friend class Group;
+
 	public :
-
-		/////////////////
-		// Constructor //
-		/////////////////
-
-		/** @brief Constructor of Renderer */
-		Renderer();
 
 		////////////////
 		// Destructor //
 		////////////////
 
-		/** @brief Destructor of Renderer */
-		virtual ~Renderer();
+		virtual inline ~Renderer() {}
 
 		/////////////
 		// Setters //
 		/////////////
 
-		/**
-		* @brief Sets this Renderer active or not.
-		*
-		* An inactive Renderer will render its parent Group when a call to Group::render() is made.<br>
-		* However it can still be used manually by the user with render(Group&).
-		*
-		* @param active : true to activate this Renderer, false to deactivate it
-		* @since 1.03.00
-		*/
+		inline void enableRenderingOption(RenderingOption option,bool enable);
+		inline void setAlphaTestThreshold(float alphaThreshold);
 		inline void setActive(bool active);
-
-		/**
-		* @brief Sets the blending mode of this renderer
-		*
-		* This is a generic method that allows to set most common blending modes in a generic way.
-		* However renderers can implement method to give more control over the blending mode used.
-		*
-		* @param blendMode : the blending mode to use
-		* @since 1.04.00
-		*/
-		virtual void setBlending(BlendingMode blendMode) = 0;
-
-		/**
-		* @brief Enables or disables a rendering hint
-		*
-		* Note that as stated, these are only hints that may not be taken into account in all rendering APIs
-		*
-		* @param renderingHint : the renderingHint to enable or disable
-		* @param enable : true to enable it, false to disable it
-		* @since 1.04.00
-		*/
-		virtual inline void enableRenderingHint(RenderingHint renderingHint,bool enable);
-
-		/**
-		* @brief Tells the alpha threshold to use when the ALPHA_TEST is enabled
-		* 
-		* The operation performs by the alpha test is <i>greater or equal to threshold</i>
-		*
-		* @param alphaThreshold : the alpha threshold to use for the alpha test
-		* @since 1.04.00
-		*/
-		virtual inline void setAlphaTestThreshold(float alphaThreshold);
-
+		virtual void setBlending(Blending blendMode) = 0;
+		
 		/////////////
 		// Getters //
 		/////////////
 
-		/**
-		* @brief Tells whether this Renderer is active or not
-		* @return true if this Renderer is active, false if is is inactive
-		* @since 1.03.00
-		*/
+		inline bool isRenderingOptionEnabled(RenderingOption option) const;
+		inline float getAlphaTestThreshold() const;
 		inline bool isActive() const;
 
-		/**
-		* @brief Tells whether a rendering hint is enabled or not
-		* @param renderingHint : the rendering hint
-		* @since 1.04.00
-		*/
-		virtual inline bool isRenderingHintEnabled(RenderingHint renderingHint) const;
+	protected :
 
-		/**
-		* @brief Gets the alpha threhold used by the alpha test
-		* @return the alpha threhold used by the alpha test
-		* @since 1.04.00
-		*/
-		inline float getAlphaTestThreshold() const;
+		/////////////////
+		// Constructor //
+		/////////////////
 
-		///////////////
-		// Interface //
-		///////////////
-
-		/**
-		* @brief Renders a Group of particles
-		* @param group : the Group to render
-		*/
-		virtual void render(const Group& group) = 0;
+		inline Renderer(bool NEEDS_DATASET);
 
 	private :
 
 		bool active;
 
-		int renderingHintsMask;
+		int renderingOptionsMask;
 		float alphaThreshold;
+
+		virtual inline RenderBuffer* attachRenderBuffer(const Group& group) const;
+
+		virtual inline void init(const Particle& particle,DataSet* dataSet) const {};
+		virtual inline void update(const Group& group,DataSet* dataSet) const {};
+
+		virtual void render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const = 0;
+		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const = 0;
 	};
 
+	inline Renderer::Renderer(bool NEEDS_DATASET) :
+		Registerable(),
+		DataHandler(NEEDS_DATASET),
+		active(true),
+		renderingOptionsMask(RENDERING_OPTION_DEPTH_WRITE),
+		alphaThreshold(1.0f)
+	{}
 
-	inline void Renderer::setActive(bool active)
-	{
-		this->active = active;
-	}
-
-	inline void Renderer::enableRenderingHint(RenderingHint renderingHint,bool enable)
+	inline void Renderer::enableRenderingOption(RenderingOption option,bool enable)
 	{
 		if (enable)
-			renderingHintsMask |= renderingHint;
+			renderingOptionsMask |= option;
 		else
-			renderingHintsMask &= ~renderingHint;
+			renderingOptionsMask &= ~option;
 	}
 
 	inline void Renderer::setAlphaTestThreshold(float alphaThreshold)
@@ -201,19 +121,29 @@ namespace SPK
 		this->alphaThreshold = alphaThreshold;
 	}
 
-	inline bool Renderer::isActive() const
+	inline void Renderer::setActive(bool active)
 	{
-		return active;
+		this->active = active;
 	}
 
-	inline bool Renderer::isRenderingHintEnabled(RenderingHint renderingHint) const
+	inline bool Renderer::isRenderingOptionEnabled(RenderingOption option) const
 	{
-		return (renderingHintsMask & renderingHint) != 0;
+		return (renderingOptionsMask & option) != 0;
 	}
 
 	inline float Renderer::getAlphaTestThreshold() const
 	{
 		return alphaThreshold;
+	}
+
+	inline bool Renderer::isActive() const
+	{
+		return active;
+	}
+
+	inline RenderBuffer* Renderer::attachRenderBuffer(const Group& group) const 
+	{
+		return NULL;
 	}
 }
 

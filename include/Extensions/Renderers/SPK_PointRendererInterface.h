@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_POINTRENDERERINTERFACE
 #define H_SPK_POINTRENDERERINTERFACE
 
@@ -33,29 +32,17 @@ namespace SPK
 	*/
 	enum PointType
 	{
-		POINT_SQUARE,	/**< Points are renderered as squares */
-		POINT_CIRCLE,	/**< Points are renderered as circles */
-		POINT_SPRITE,	/**< Points are renderered as point sprites (textured points) */
+		POINT_TYPE_SQUARE,	/**< Points are renderered as squares */
+		POINT_TYPE_CIRCLE,	/**< Points are renderered as circles */
+		POINT_TYPE_SPRITE,	/**< Points are renderered as point sprites (textured points) */
 	};
 
 	/**
 	* @brief Base Interface for rendering particles with points
-	* @since 1.04.00
 	*/
 	class PointRendererInterface
 	{
 	public :
-
-		/////////////////
-		// Constructor //
-		/////////////////
-
-		/**
-		* @brief Constructor of PointRendererInterface
-		* @param type : the initial type of this PointRendererInterface (must be supported by default by the platform)
-		* @param size : the width of this PointRendererInterface
-		*/
-		inline PointRendererInterface(PointType type = POINT_SQUARE,float size = 1.0f);
 
 		////////////////
 		// Destructor //
@@ -82,7 +69,7 @@ namespace SPK
 		* @brief Sets the size of the points in this PointRendererInterface
 		* @param size : the size of the points in this PointRendererInterface
 		*/
-		virtual inline void setSize(float size);
+		virtual inline void setScreenSize(float screenSize);
 
 		/////////////
 		// Getters //
@@ -98,18 +85,28 @@ namespace SPK
 		* @brief Gets the size of points in this PointRendererInterface
 		* @return the size of points in this PointRendererInterface
 		*/
-		inline float getSize() const;
+		inline float getScreenSize() const;
 
 	protected :
 
 		PointType type;
-		float size;
+		float screenSize;
+
+		/////////////////
+		// Constructor //
+		/////////////////
+
+		/**
+		* @brief Constructor of PointRendererInterface
+		* @param type : the initial type of this PointRendererInterface (must be supported by default by the platform)
+		* @param size : the width of this PointRendererInterface
+		*/
+		inline PointRendererInterface(PointType type = POINT_TYPE_SQUARE,float screenSize = 1.0f);
 	};
 
-
-	inline PointRendererInterface::PointRendererInterface(PointType type,float size) :
+	inline PointRendererInterface::PointRendererInterface(PointType type,float screenSize) :
 		type(type),
-		size(size)
+		screenSize(screenSize)
 	{}
 
 	inline bool PointRendererInterface::setType(PointType type)
@@ -118,9 +115,9 @@ namespace SPK
 		return true;
 	}
 
-	inline void PointRendererInterface::setSize(float size)
+	inline void PointRendererInterface::setScreenSize(float screenSize)
 	{
-		this->size = size;
+		this->screenSize = screenSize;
 	}
 
 	inline PointType PointRendererInterface::getType() const
@@ -128,9 +125,9 @@ namespace SPK
 		return type;
 	}
 
-	inline float PointRendererInterface::getSize() const
+	inline float PointRendererInterface::getScreenSize() const
 	{
-		return size;
+		return screenSize;
 	}
 }
 

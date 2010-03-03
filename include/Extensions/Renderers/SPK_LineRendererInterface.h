@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_LINERENDERERINTERFACE
 #define H_SPK_LINERENDERERINTERFACE
 
@@ -29,22 +28,10 @@ namespace SPK
 {
 	/**
 	* @brief Base Interface for rendering particles with lines
-	* @since 1.04.00
 	*/
 	class LineRendererInterface
 	{
 	public :
-
-		/////////////////
-		// Constructor //
-		/////////////////
-
-		/**
-		* @brief Constructor of LineRendererInterface
-		* @param length : the length multiplier of this LineRendererInterface
-		* @param width : the width of this GLLineRenderer
-		*/
-		inline LineRendererInterface(float length = 1.0f,float width = 1.0f);
 
 		////////////////
 		// Destructor //
@@ -93,6 +80,17 @@ namespace SPK
 
 		float length;
 		float width;
+
+		/////////////////
+		// Constructor //
+		/////////////////
+
+		/**
+		* @brief Constructor of LineRendererInterface
+		* @param length : the length multiplier of this LineRendererInterface
+		* @param width : the width of this GLLineRenderer
+		*/
+		inline LineRendererInterface(float length = 1.0f,float width = 1.0f);
 	};
 
 

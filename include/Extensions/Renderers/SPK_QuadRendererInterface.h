@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_QUADRENDERERINTERFACE
 #define H_SPK_QUADRENDERERINTERFACE
 
@@ -31,34 +30,19 @@ namespace SPK
 	/**
 	* @enum TexturingMode
 	* @brief Constants defining the way to apply texture over the particles
-	* @since 1.02.00
 	*/
-	enum TexturingMode
+	enum TextureMode
 	{
-		TEXTURE_NONE,		/**< Constant telling no texturing is used */
-		TEXTURE_2D,			/**< Constant telling a 2D texture is used */
-		TEXTURE_3D,			/**< Constant telling a 3D texture is used */
+		TEXTURE_MODE_NONE,	/**< Constant telling no texturing is used */
+		TEXTURE_MODE_2D,	/**< Constant telling a 2D texture is used */
+		TEXTURE_MODE_3D,	/**< Constant telling a 3D texture is used */
 	};
 
 
-	/**
-	* @brief Base Interface for rendering particles with quads
-	* @since 1.04.00
-	*/
+	/** @brief Base Interface for rendering particles with quads */
 	class SPK_PREFIX QuadRendererInterface
 	{
 	public :
-
-		//////////////////
-		// Constructors //
-		//////////////////
-
-		/**
-		* @brief Constructor of QuadRendererInterface
-		* @param scaleX the scale of the width of the quad
-		* @param scaleY the scale of the height of the quad
-		*/
-		QuadRendererInterface(float scaleX = 1.0f,float scaleY = 1.0f);
 
 		////////////////
 		// Destructor //
@@ -83,7 +67,7 @@ namespace SPK
 		* @param mode : the texturing mode of this GLQuadRenderer
 		* @return true if the rendering mode can be set, false if it cannot
 		*/
-		virtual inline bool setTexturingMode(TexturingMode mode);
+		virtual inline bool setTexturingMode(TextureMode mode);
 
 		/**
 		* @brief Sets the cut of the texture
@@ -133,7 +117,7 @@ namespace SPK
 		* @brief Gets the texturing mode of this GLQuadRenderer
 		* @return the texturing mode of this GLQuadRenderer
 		*/
-		inline TexturingMode getTexturingMode() const;
+		inline TextureMode getTexturingMode() const;
 
 		/**
 		* @brief Gets the atlas dimension on the X axis
@@ -167,7 +151,7 @@ namespace SPK
 
 	protected :
 
-		TexturingMode texturingMode;
+		TextureMode texturingMode;
 
 		float scaleX;
 		float scaleY;
@@ -185,6 +169,17 @@ namespace SPK
 		inline float textureAtlasV0() const;
 		inline float textureAtlasV1() const;
 
+		//////////////////
+		// Constructors //
+		//////////////////
+
+		/**
+		* @brief Constructor of QuadRendererInterface
+		* @param scaleX the scale of the width of the quad
+		* @param scaleY the scale of the height of the quad
+		*/
+		QuadRendererInterface(float scaleX = 1.0f,float scaleY = 1.0f);
+
 	private :
 
 		// this is where textureAtlas are stored after computation
@@ -195,7 +190,7 @@ namespace SPK
 	};
 
 
-	inline bool QuadRendererInterface::setTexturingMode(TexturingMode mode)
+	inline bool QuadRendererInterface::setTexturingMode(TextureMode mode)
 	{
 		texturingMode = mode;
 		return true;
@@ -207,7 +202,7 @@ namespace SPK
 		this->scaleY = scaleY;
 	}
 
-	inline TexturingMode QuadRendererInterface::getTexturingMode() const
+	inline TextureMode QuadRendererInterface::getTexturingMode() const
 	{
 		return texturingMode;
 	}
@@ -254,7 +249,7 @@ namespace SPK
 
 	inline void QuadRendererInterface::computeAtlasCoordinates(const Particle& particle) const
 	{
-		int textureIndex = static_cast<int>(particle.getParamCurrentValue(PARAM_TEXTURE_INDEX));
+		int textureIndex = static_cast<int>(particle.getParamNC(PARAM_TEXTURE_INDEX));
 		atlasU0 = atlasU1 = static_cast<float>(textureIndex % textureAtlasNbX) / textureAtlasNbX;
 		atlasV0 = atlasV1 = static_cast<float>(textureIndex / textureAtlasNbY) / textureAtlasNbY;
 		atlasU1 += textureAtlasW;

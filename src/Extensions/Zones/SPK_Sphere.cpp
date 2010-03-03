@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,98 +19,74 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <algorithm> // for min
 
 #include "Extensions/Zones/SPK_Sphere.h"
-#include "Core/SPK_Particle.h"
+#include "Core/SPK_Logger.h"
 
 namespace SPK
 {
-	Sphere::Sphere(const Vector3D& position,float radius) :
-		Zone(position)
+	void Sphere::setRadius(float radius)
 	{
-		setRadius(radius);
+		if (radius < 0)
+		{
+			radius = 0.0f;
+			SPK_LOG_WARNING("Sphere::setRadius(float) - The radius cannot be set to a negative value - 0 is used");
+		}
+		this->radius = radius;
 	}
 
-	void Sphere::generatePosition(Particle& particle,bool full) const
+	void Sphere::generatePosition(Vector3D& v,bool full,float radius) const
 	{
-		do particle.position() = Vector3D(random(-radius,radius),random(-radius,radius),random(-radius,radius));
-		while (particle.position().getSqrNorm() > radius * radius);
+		const float relRadius = this->radius - radius;
+			
+		do v = SPK_RANDOM(Vector3D(-relRadius,-relRadius,-relRadius),Vector3D(relRadius,relRadius,relRadius));
+		while (v.getSqrNorm() > relRadius * relRadius);
 
-		if ((!full)&&(radius > 0.0f))
-			particle.position() *= radius / particle.position().getNorm();
+		if (!full)
+			v *= this->radius / v.getNorm();
 
-		particle.position() += getTransformedPosition();
+		v += getTransformedPosition();
 	}
 
-	bool Sphere::contains(const Vector3D& v) const
+	bool Sphere::contains(const Vector3D& v,float radius) const
 	{
-		return getSqrDist(getTransformedPosition(),v) <= radius * radius;
+		const float relRadius = this->radius - radius;
+		return getSqrDist(getTransformedPosition(),v) <= relRadius * relRadius;
 	}
 
-	bool Sphere::intersects(const Vector3D& v0,const Vector3D& v1,Vector3D* intersection,Vector3D* normal) const
+	bool Sphere::intersects(const Vector3D& v0,const Vector3D& v1,float radius) const
 	{
-		float r2 = radius * radius;
+		float r2 = this->radius * this->radius + radius * radius;
+		float s2 = 2.0f * this->radius * radius;
+
 		float dist0 = getSqrDist(getTransformedPosition(),v0);
 		float dist1 = getSqrDist(getTransformedPosition(),v1);
 
-		if ((dist0 <= r2) == (dist1 <= r2))
-			return false;
-
-		if (intersection != NULL)
+		if (dist0 > r2 + s2) // the start sphere is completely out of the sphere
 		{
-			Vector3D vDir = v1 - v0;
-			float norm = vDir.getNorm();
+			if (dist1 > r2 + s2) // the end sphere is completely out of the sphere
+				return false;
 
-			float d = dotProduct(vDir,getTransformedPosition() - v0) / norm;
-			float a = std::sqrt(r2 - dist0 + d * d);
-
-			float ti;
-			if (dist0 <= r2)
-				ti = d - a;
-			else
-				ti = d + a;
-
-			ti /= norm;
-
-			if (ti < 0.0f) ti = 0.0f;
-			if (ti > 1.0f) ti = 1.0f;
-
-			norm *= ti;
-			ti = norm < APPROXIMATION_VALUE ? 0.0f : ti * (norm - APPROXIMATION_VALUE) / norm;
-
-			vDir *= ti;
-			*intersection = v0 + vDir;
-
-			if (normal != NULL)
-			{
-				if (dist0 <= r2)
-					*normal = getTransformedPosition() - *intersection;
-				else
-					*normal = *intersection - getTransformedPosition();
-				normal->normalize();
-			}
+			return true;
 		}
 
-		return true;
+		if (dist0 < r2 - s2) // the start sphere is completely in the sphere
+		{
+			if (dist1 < r2 - s2) // the end sphere is completely in the sphere
+				return false;
+
+			return true;
+		}
+
+		// the start sphere is already intersecting the sphere, the intersection is ignored
+		return false;
 	}
 
-	void Sphere::moveAtBorder(Vector3D& v,bool inside) const
+	Vector3D Sphere::computeNormal(const Vector3D& v) const
 	{
-		Vector3D vDir = v - getTransformedPosition();
-		float norm = vDir.getNorm();
-
-		if (inside)
-			vDir *= (radius + APPROXIMATION_VALUE) / norm;
-		else
-			vDir *= (radius - APPROXIMATION_VALUE) / norm;
-
-		v = getTransformedPosition() + vDir;
-	}
-
-	Vector3D Sphere::computeNormal(const Vector3D& point) const
-	{
-		Vector3D normal(point - getTransformedPosition());
+		Vector3D normal(v - getTransformedPosition());
 		normalizeOrRandomize(normal);
 		return normal;
-	}
+	}	
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,18 +19,16 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <algorithm>
+#include <limits> // for max float value
 
 #include "Core/SPK_System.h"
 #include "Core/SPK_Group.h"
-#include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Emitter.h"
-#include "Core/SPK_Modifier.h"
+#include "Core/SPK_Registerable.h"
 
 namespace SPK
 {
-	Vector3D System::cameraPosition;
-
-	StepMode System::stepMode(STEP_REAL);
+	StepMode System::stepMode(STEP_MODE_REAL);
 	float System::constantStep(0.0f);
 	float System::minStep(0.0f);
 	float System::maxStep(0.0f);
@@ -38,108 +36,122 @@ namespace SPK
 	bool System::clampStepEnabled(false);
 	float System::clampStep(1.0f);
 
-	System::System() :
-		Registerable(),
+	Vector3D System::cameraPosition;
+
+	System::System(const System& system) :
 		Transformable(),
-		groups(),
-		nbParticles(0),
-		boundingBoxEnabled(false),
-		AABBMin(),
-		AABBMax(),
-		deltaStep(0.0f)
-	{}
-
-	void System::registerChildren(bool registerAll)
+		deltaStep(0.0f),
+		AABBComputationEnabled(system.AABBComputationEnabled),
+		AABBMin(system.AABBMin),
+		AABBMax(system.AABBMax),
+		initialized(system.initialized)
 	{
-		Registerable::registerChildren(registerAll);
-
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			registerChild(*it,registerAll);
-	}
-
-	void System::copyChildren(const System& system,bool createBase)
-	{
-		Registerable::copyChildren(system,createBase);
-
-		// we clear the copies of pointers pushed in the vectors by the copy constructor
-		groups.clear();
+		Registerable::copyBuffer.clear();
 
 		for (std::vector<Group*>::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
-			groups.push_back(dynamic_cast<Group*>(copyChild(*it,createBase)));
+			groups.push_back(new Group(*this,**it));
 	}
-
-	void System::destroyChildren(bool keepChildren)
+	
+	System::~System()
 	{
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			destroyChild(*it,keepChildren);
-
-		Registerable::destroyChildren(keepChildren);
+			delete *it;
 	}
 
-	void System::addGroup(Group* group)
+	Group* System::createGroup(size_t capacity)
 	{
-		incrementChildReference(group);
+		if (capacity == 0)
+		{
+			SPK_LOG_WARNING("System::addGroup(size_t) - The capacity of a Group cannot be 0, NULL is returned");
+			return NULL;
+		}
+
+		Group* group = new Group(*this,capacity);
 		groups.push_back(group);
-		nbParticles += group->getNbParticles();
+		return group;
 	}
 
-	void System::removeGroup(Group* group)
+	void System::destroyGroup(Group* group)
 	{
 		std::vector<Group*>::iterator it = std::find(groups.begin(),groups.end(),group);
 		if (it != groups.end())
 		{
-			decrementChildReference(group);
+			delete *it;
 			groups.erase(it);
+		}
+		else
+		{
+			SPK_LOG_WARNING("System::removeGroup(Group*) - The group " << group << " was not found in the system and cannot be removed");
 		}
 	}
 
-	size_t System::computeNbParticles()
+	size_t System::getNbParticles() const
 	{
-		nbParticles = 0;
+		size_t nbParticles = 0;
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			nbParticles += (*it)->getNbParticles();
 		return nbParticles;
 	}
 
-	bool System::innerUpdate(float deltaTime)
+	bool System::updateParticles(float deltaTime)
 	{
-		nbParticles = 0;
-		bool isAlive = false;
+		if (!initialized)
+		{
+			SPK_LOG_WARNING("System::updateParticles(float) - An uninitialized system cannot be updated");
+			return true;
+		}
 
-		bool hasGroupsWithAABB = false;
-		if (boundingBoxEnabled)
+		bool isAlive = true;
+
+		if ((clampStepEnabled)&&(deltaTime > clampStep))
+			deltaTime = clampStep;
+
+		if (stepMode != STEP_MODE_REAL)
+		{
+			deltaTime += deltaStep;
+
+			float updateStep;
+			if (stepMode == STEP_MODE_ADAPTIVE)
+			{
+				if (deltaTime > maxStep)
+					updateStep = maxStep;
+				else if (deltaTime < minStep)
+					updateStep = minStep;
+				else
+					updateStep = deltaTime;
+			}
+			else
+				updateStep = constantStep;
+	
+			while(deltaTime >= updateStep)
+			{
+				if ((isAlive)&&(!innerUpdate(updateStep)))
+					isAlive = false;
+				deltaTime -= updateStep;
+			}
+			deltaStep = deltaTime;
+		}	
+		else
+			isAlive = innerUpdate(deltaTime);
+
+		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+			(*it)->sortParticles();
+
+		if (isAABBComputationEnabled())
 		{
 			const float maxFloat = std::numeric_limits<float>::max();
 			AABBMin.set(maxFloat,maxFloat,maxFloat);
 			AABBMax.set(-maxFloat,-maxFloat,-maxFloat);
-		}
 
-		for (std::vector<Group*>::iterator it = groups.begin(); it != groups.end(); ++it)
-		{
-			isAlive |= (*it)->update(deltaTime);
-			nbParticles += (*it)->getNbParticles();
-
-			if ((boundingBoxEnabled)&&((*it)->isAABBComputingEnabled()))
+			for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			{
-				Vector3D groupMin = (*it)->getAABBMin();
-				Vector3D groupMax = (*it)->getAABBMax();
-				if (AABBMin.x > groupMin.x)
-					AABBMin.x = groupMin.x;
-				if (AABBMin.y > groupMin.y)
-					AABBMin.y = groupMin.y;
-				if (AABBMin.z > groupMin.z)
-					AABBMin.z = groupMin.z;
-				if (AABBMax.x < groupMax.x)
-					AABBMax.x = groupMax.x;
-				if (AABBMax.y < groupMax.y)
-					AABBMax.y = groupMax.y;
-				if (AABBMax.z < groupMax.z)
-					AABBMax.z = groupMax.z;
-				hasGroupsWithAABB = true;
+				(*it)->computeAABB();
+
+				AABBMin.setMin((*it)->getAABBMin());
+				AABBMax.setMax((*it)->getAABBMax());
 			}
 		}
-
-		if ((!boundingBoxEnabled)||(!hasGroupsWithAABB))
+		else
 		{
 			AABBMin.set(0.0f,0.0f,0.0f);
 			AABBMax.set(0.0f,0.0f,0.0f);
@@ -148,183 +160,39 @@ namespace SPK
 		return isAlive;
 	}
 
-	bool System::update(float deltaTime)
+	void System::renderParticles() const
 	{
-		if ((clampStepEnabled)&&(deltaTime > clampStep))
-			deltaTime = clampStep;
-
-		if (stepMode != STEP_REAL)
+		if (!initialized)
 		{
-			deltaTime += deltaStep;
-
-			float updateStep;
-			if (stepMode == STEP_ADAPTIVE)
-			{
-				if (deltaTime > maxStep)
-					updateStep = maxStep;
-				else if (deltaTime < minStep)
-					updateStep = minStep;
-				else
-				{
-					deltaStep = 0.0f;
-					return innerUpdate(deltaTime);
-				}
-			}
-			else
-				updateStep = constantStep;
-
-			bool isAlive = true;
-			while(deltaTime >= updateStep)
-			{
-				if ((isAlive)&&(!innerUpdate(updateStep)))
-					isAlive = false;
-				deltaTime -= updateStep;
-			}
-			deltaStep = deltaTime;
-			return isAlive;
-
-		}	
-		else
-			return innerUpdate(deltaTime);
-	}
-
-	void System::render() const
-	{
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			(*it)->render();
-	}
-
-	void System::grow(float time,float step)
-	{
-		if (step <= 0.0f)
-			step = time;
-
-		while (time > 0.0f)
-		{
-			float currentStep = time > step ? step : time;
-			update(currentStep);
-			time -= currentStep;
+			SPK_LOG_WARNING("System::updateParticles(float) - An uninitialized system cannot be rendered");
+			return;
 		}
-	}
-
-	void System::empty()
-	{
-		for (std::vector<Group*>::iterator it = groups.begin(); it != groups.end(); ++it)
-			(*it)->empty();
-		nbParticles = 0;
-	}
-
-	void System::setCameraPosition(const Vector3D& cameraPosition)
-	{
-		System::cameraPosition = cameraPosition;
-	}
-
-	void System::setClampStep(bool enableClampStep,float clamp)
-	{
-		clampStepEnabled = enableClampStep;
-		clampStep = clamp;
-	}
-
-	void System::useConstantStep(float constantStep)
-	{
-		stepMode = STEP_CONSTANT;
-		System::constantStep = constantStep;
-	}
-
-	void System::useAdaptiveStep(float minStep,float maxStep)
-	{
-		stepMode = STEP_ADAPTIVE;
-		System::minStep = minStep;
-		System::maxStep = maxStep;
-	}
-
-	void System::useRealStep()
-	{
-		stepMode = STEP_REAL;
-	}
-
-	const Vector3D& System::getCameraPosition()
-	{
-		return cameraPosition;
-	}
-
-	StepMode System::getStepMode()
-	{
-		return stepMode;
-	}
-
-	void System::sortParticles()
-	{
-		for (std::vector<Group*>::iterator it = groups.begin(); it != groups.end(); ++it)
-			(*it)->sortParticles();
-	}
-
-	void System::computeDistances()
-	{
-		for (std::vector<Group*>::iterator it = groups.begin(); it != groups.end(); ++it)
-			(*it)->computeDistances();
-	}
-
-	void System::computeAABB()
-	{
-		if (boundingBoxEnabled)
-		{
-			const float maxFloat = std::numeric_limits<float>::max();
-			AABBMin.set(maxFloat,maxFloat,maxFloat);
-			AABBMax.set(-maxFloat,-maxFloat,-maxFloat);
-		}
-
-		bool hasGroupsWithAABB = false;
-		for (std::vector<Group*>::iterator it = groups.begin(); it != groups.end(); ++it)
-		{
-			(*it)->computeAABB();
-
-			if ((boundingBoxEnabled)&&((*it)->isAABBComputingEnabled()))
-			{
-				Vector3D groupMin = (*it)->getAABBMin();
-				Vector3D groupMax = (*it)->getAABBMax();
-				if (AABBMin.x > groupMin.x)
-					AABBMin.x = groupMin.x;
-				if (AABBMin.y > groupMin.y)
-					AABBMin.y = groupMin.y;
-				if (AABBMin.z > groupMin.z)
-					AABBMin.z = groupMin.z;
-				if (AABBMax.x < groupMax.x)
-					AABBMax.x = groupMax.x;
-				if (AABBMax.y < groupMax.y)
-					AABBMax.y = groupMax.y;
-				if (AABBMax.z < groupMax.z)
-					AABBMax.z = groupMax.z;
-				hasGroupsWithAABB = true;
-			}
-		}
-
-		if ((!boundingBoxEnabled)||(!hasGroupsWithAABB))
-		{
-			AABBMin.set(0.0f,0.0f,0.0f);
-			AABBMax.set(0.0f,0.0f,0.0f);
-		}
-	}
-
-	Registerable* System::findByName(const std::string& name)
-	{
-		Registerable* object = Registerable::findByName(name);
-		if (object != NULL)
-			return object;
 
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-		{
-			object = (*it)->findByName(name);
-			if (object != NULL)
-				return object;
-		}
+			(*it)->renderParticles();
+	}
 
-		return NULL;
+	void System::initialize()
+	{
+		if (initialized)
+			return; // the system is already initialized
+
+		initialized = true;
+		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+			(*it)->initData();
+	}
+
+	bool System::innerUpdate(float deltaTime)
+	{
+		bool isAlive = false;
+		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+			isAlive |= (*it)->updateParticles(deltaTime);
+		return isAlive;
 	}
 
 	void System::propagateUpdateTransform()
 	{
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			(*it)->updateTransform(this);
+			(*it)->propagateUpdateTransform();
 	}
 }

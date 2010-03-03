@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,425 +19,679 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <algorithm> // for std::swap and std::sort
+#include <limits> // for max float value
 
 #include "Core/SPK_Group.h"
+#include "Core/SPK_System.h"
 #include "Core/SPK_Emitter.h"
-#include "Core/SPK_Modifier.h"
 #include "Core/SPK_Renderer.h"
-#include "Core/SPK_Factory.h"
-#include "Core/SPK_Buffer.h"
-
+#include "Core/SPK_Action.h"
+#include "Core/SPK_Zone.h"
+#include "Core/SPK_Particle.h"
+#include "Core/SPK_DataSet.h"
+#include "Core/SPK_RenderBuffer.h"
 
 namespace SPK
 {
-	bool Group::bufferManagement = true;
-
-	Group::Group(Model* model,size_t capacity) :
-		Registerable(),
-		Transformable(),
-		model(model != NULL ? model : &defaultModel),
-		renderer(NULL),
-		friction(0.0f),
-		gravity(Vector3D()),
-		pool(Pool<Particle>(capacity)),
-		particleData(new Particle::ParticleData[capacity]),
-		particleCurrentParams(new float[capacity * model->getSizeOfParticleCurrentArray()]),
-		particleExtendedParams(new float[capacity * model->getSizeOfParticleExtendedArray()]),
-		sortingEnabled(false),
-		distanceComputationEnabled(false),
-		creationBuffer(),
-		nbBufferedParticles(0),
-		fupdate(NULL),
-		fbirth(NULL),
-		fdeath(NULL),
-		boundingBoxEnabled(false),
-		emitters(),
-		modifiers(),
-		activeModifiers(),
-		additionalBuffers(),
-		swappableBuffers()
-	{}
-
-	Group::Group(const Group& group) :
-		Registerable(group),
-		Transformable(group),
-		model(group.model),
-		renderer(group.renderer),
-		friction(group.friction),
-		gravity(group.gravity),
-		pool(group.pool),
-		sortingEnabled(group.sortingEnabled),
-		distanceComputationEnabled(group.distanceComputationEnabled),
-		creationBuffer(group.creationBuffer),
-		nbBufferedParticles(group.nbBufferedParticles),
-		fupdate(group.fupdate),
-		fbirth(group.fbirth),
-		fdeath(group.fdeath),
-		boundingBoxEnabled(group.boundingBoxEnabled),
-		emitters(group.emitters),
-		modifiers(group.modifiers),
-		activeModifiers(group.activeModifiers.capacity()),
-		additionalBuffers(),
-		swappableBuffers()
+	const float Group::DEFAULT_VALUES[NB_PARAMETERS] =
 	{
-		particleData = new Particle::ParticleData[pool.getNbReserved()];
-		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
-		particleExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
-		
-		memcpy(particleData,group.particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
-		memcpy(particleCurrentParams,group.particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
-		memcpy(particleExtendedParams,group.particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
+		1.0f,	// PARAM_SIZE
+		1.0f,	// PARAM_MASS
+		0.0f,	// PARAM_ANGLE
+		0.0f,	// PARAM_TEXTURE_INDEX
+		0.0f,	// PARAM_ROTATION_SPEED
+	};
 
-		for (Pool<Particle>::iterator it = pool.begin(); it != pool.endInactive(); ++it)
+	Group::Group(System& system,size_t capacity) :
+		system(system),
+		nbEnabledParameters(0),
+		minLifeTime(1.0f),
+		maxLifeTime(1.0f),
+		immortal(false),
+		still(false),
+		distanceComputationEnabled(false),
+		sortingEnabled(false),
+		AABBMin(),
+		AABBMax(),
+		radius(0.0f),
+		nbBufferedParticles(0),
+		birthAction(NULL),
+		deathAction(NULL)
+	{
+		reallocate(capacity);
+	}
+
+	Group::Group(System& system,const Group& group) :
+		system(system),
+		nbEnabledParameters(0),
+		minLifeTime(group.minLifeTime),
+		maxLifeTime(group.maxLifeTime),
+		immortal(group.immortal),
+		still(group.still),
+		distanceComputationEnabled(group.distanceComputationEnabled),
+		sortingEnabled(group.sortingEnabled),
+		AABBMin(group.AABBMin),
+		AABBMax(group.AABBMax),
+		radius(group.radius),
+		nbBufferedParticles(0)
+	{
+		reallocate(group.getCapacity());
+
+		renderer.obj = dynamic_cast<Renderer*>(Registerable::copyChild(group.renderer.obj));
+		renderer.dataSet = attachDataSet(renderer.obj);
+
+		setColorInterpolator(dynamic_cast<ColorInterpolator*>(Registerable::copyChild(group.colorInterpolator.obj,false)));
+		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+			setParamInterpolator(static_cast<Param>(i),dynamic_cast<FloatInterpolator*>(Registerable::copyChild(group.paramInterpolators[i].obj,false)));
+
+		for (std::vector<Emitter*>::const_iterator it = group.emitters.begin(); it != group.emitters.end(); ++it)
+			emitters.push_back(dynamic_cast<Emitter*>(Registerable::copyChild(*it)));
+
+		for (std::vector<ModifierDef>::const_iterator it = group.modifiers.begin(); it != group.modifiers.end(); ++it)
 		{
-			it->group = this;
-			it->data = particleData + it->index;
-			it->currentParams = particleCurrentParams + it->index * model->getSizeOfParticleCurrentArray();
-			it->extendedParams = particleExtendedParams + it->index * model->getSizeOfParticleExtendedArray();
+			Modifier* modifier = dynamic_cast<Modifier*>(Registerable::copyChild(it->obj));
+			ModifierDef modifierDef(modifier,attachDataSet(modifier));
+			modifiers.push_back(modifierDef);
+			if (system.isInitialized())
+				sortedModifiers.push_back(modifierDef);
 		}
+		std::sort(sortedModifiers.begin(),sortedModifiers.end(),CompareModifierPriority());
+
+		birthAction = dynamic_cast<Action*>(Registerable::copyChild(group.birthAction));
+		deathAction = dynamic_cast<Action*>(Registerable::copyChild(group.deathAction));
 	}
 
 	Group::~Group()
 	{
-		delete[] particleData;
-		delete[] particleCurrentParams;
-		delete[] particleExtendedParams;
+		delete[] particleData.positions;
+		delete[] particleData.velocities;
+		delete[] particleData.oldPositions;
+		delete[] particleData.ages;
+		delete[] particleData.lifeTimes;
+		delete[] particleData.energies;
+		delete[] particleData.sqrDists;
+		delete[] particleData.colors;
 
-		// destroys additional buffers
-		destroyAllBuffers();
-	}
+		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+			delete[] particleData.parameters[i];
 
-	void Group::registerChildren(bool registerAll)
-	{
-		Registerable::registerChildren(registerAll);
-		
-		registerChild(model,registerAll);
-		registerChild(renderer,registerAll);
-		
-		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
-			registerChild(*it,registerAll);
-		for (std::vector<Modifier*>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
-			registerChild(*it,registerAll);
-	}
+		Registerable::destroyChild(colorInterpolator.obj);
+		Registerable::destroyChild(renderer.obj);
 
-	void Group::copyChildren(const Group& group,bool createBase)
-	{
-		Registerable::copyChildren(group,createBase);
+		destroyRenderBuffer();
 
-		model = dynamic_cast<Model*>(copyChild(group.model,createBase));
-		renderer = dynamic_cast<Renderer*>(copyChild(group.renderer,createBase));
-
-		// we clear the copies of pointers pushed in the vectors by the copy constructor
-		emitters.clear();
-		modifiers.clear();
-
-		for (std::vector<Emitter*>::const_iterator it = group.emitters.begin(); it != group.emitters.end(); ++it)
-			emitters.push_back(dynamic_cast<Emitter*>(copyChild(*it,createBase)));
-		for (std::vector<Modifier*>::const_iterator it = group.modifiers.begin(); it != group.modifiers.end(); ++it)
-			modifiers.push_back(dynamic_cast<Modifier*>(copyChild(*it,createBase)));
-	}
-
-	void Group::destroyChildren(bool keepChildren)
-	{
-		destroyChild(model,keepChildren);
-		destroyChild(renderer,keepChildren);
+		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+			Registerable::destroyChild(paramInterpolators[i].obj);
 
 		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
-			destroyChild(*it,keepChildren);
-		for (std::vector<Modifier*>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
-			destroyChild(*it,keepChildren);
+			Registerable::destroyChild(*it);
 
-		Registerable::destroyChildren(keepChildren);
+		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+			Registerable::destroyChild(it->obj);
+
+		Registerable::destroyChild(birthAction);
+		Registerable::destroyChild(deathAction);
+
+		for (std::deque<CreationData>::const_iterator it = creationBuffer.begin(); it != creationBuffer.end(); ++it)
+		{
+			Registerable::decrementChild(it->emitter);
+			Registerable::decrementChild(it->zone);
+		}
 	}
 
-	Registerable* Group::findByName(const std::string& name)
+	Particle Group::getParticle(size_t index)
 	{
-		Registerable* object = Registerable::findByName(name);
-		if (object != NULL)
-			return object;
+		SPK_ASSERT(index < particleData.nbParticles,"Group::getParticle(size_t) - Particle index is out of bounds : " << index);
+		return Particle(*this,index);
+	}
 
-		object = model->findByName(name);
-		if (object != NULL)
-			return object;
+	const Particle Group::getParticle(size_t index) const
+	{
+		SPK_ASSERT(index < particleData.nbParticles,"Group::getParticle(size_t) - Particle index is out of bounds : " << index);
+		return Particle(const_cast<Group&>(*this),index);
+	}
 
-		if (renderer != NULL)
+	void Group::setLifeTime(float minLifeTime,float maxLifeTime)
+	{
+		SPK_ASSERT(minLifeTime > 0.0f && maxLifeTime > 0.0f,"Group::setLifeTime(float,float) - Life times must not be set to negative values");
+		if (minLifeTime <= maxLifeTime)
 		{
-			object = renderer->findByName(name);
-			if (object != NULL)
-				return object;
+			this->minLifeTime = minLifeTime;
+			this->maxLifeTime = maxLifeTime;
 		}
+		else
+		{
+			SPK_LOG_WARNING("Group::setEnergy(float,float) - minEnergy is higher than maxEnergy - Values are swapped");
+			this->minLifeTime = maxLifeTime;
+			this->maxLifeTime = minLifeTime;
+		}
+	}
+
+	bool Group::updateParticles(float deltaTime)
+	{
+		// Prepares the additionnal data
+		prepareAdditionnalData();
+
+		size_t nbAutoBorn = 0;
+		size_t nbManualBorn = nbBufferedParticles;
+
+		// Checks the number of born particles
+		bool hasAliveEmitters = false;
+		activeEmitters.clear();
 
 		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+			if ((*it)->isActive())
+			{
+				int nb = (*it)->updateTankFromTime(deltaTime);
+				if (nb > 0)
+				{
+					activeEmitters.push_back(EmitterPair(*it,nb));
+					nbAutoBorn += nb;
+				}
+
+				hasAliveEmitters |= ((*it)->getTank() != 0); // An emitter with some particles in its tank is still potentially alive
+			}
+
+		size_t emitterIndex = 0;
+		size_t nbBorn = nbAutoBorn + nbManualBorn;
+
+		// Updates the age of the particles function of the delta time
+		for (size_t i = 0; i < particleData.nbParticles; ++i)
+			particleData.ages[i] += deltaTime;
+
+		// Computes the energy of the particles (if they are not immortal)
+		if (!immortal)
+			for (size_t i = 0; i < particleData.nbParticles; ++i)
+				particleData.energies[i] = 1.0f - particleData.ages[i] / particleData.lifeTimes[i];
+
+		// Updates the position of particles function of their velocity
+		if (!still)
+			for (size_t i = 0; i < particleData.nbParticles; ++i)
+			{
+				particleData.oldPositions[i] = particleData.positions[i];
+				particleData.positions[i] += particleData.velocities[i] * deltaTime;
+			}
+
+		// Interpolates the parameters
+		if (colorInterpolator.obj != NULL)
+			colorInterpolator.obj->interpolate(particleData.colors,*this,colorInterpolator.dataSet);
+		for (size_t i = 0; i < nbEnabledParameters; ++i)
 		{
-			object = (*it)->findByName(name);
-			if (object != NULL)
-				return object;
+			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
+			interpolator.obj->interpolate(particleData.parameters[enabledParamIndices[i]],*this,interpolator.dataSet);
 		}
 
-		for (std::vector<Modifier*>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+		// Modifies the particles with specific active modifiers behavior
+		for (std::vector<ModifierDef>::const_iterator it = activeModifiers.begin(); it != activeModifiers.end(); ++it)
+			it->obj->modify(*this,it->dataSet,deltaTime);
+
+		// Updates the renderer data
+		if (renderer.obj != NULL)
+			renderer.obj->update(*this,renderer.dataSet);
+
+		// Checks dead particles and reinits or swaps
+		for (size_t i = 0; i < particleData.nbParticles; ++i)
+			if (particleData.energies[i] <= 0.0f)
+			{
+				// Death action
+				if (deathAction	!= NULL && deathAction->isActive())
+				{
+				    Particle particle = getParticle(i); // fix for gcc
+					deathAction->apply(particle);
+				}
+
+				if (nbBorn > 0) // If particles are to be born, reinits a dead one with a new one
+				{
+					initParticle(i,emitterIndex,nbManualBorn);
+					--nbBorn;
+				}
+				else // Else inactivate the dead one
+				{
+					swapParticles(i,particleData.nbParticles - 1);
+					--particleData.nbParticles;
+				}
+			}
+
+		// Emits new particles if some left
+		for (size_t i = std::min(nbBorn,particleData.maxParticles - particleData.nbParticles); i > 0; --i)
+			initParticle(particleData.nbParticles++,emitterIndex,nbManualBorn);
+
+		// Computes the distance of particles from the camera
+		if (distanceComputationEnabled)
 		{
-			object = (*it)->findByName(name);
-			if (object != NULL)
-				return object;
+			for (size_t i = 0; i < particleData.nbParticles; ++i)
+				particleData.sqrDists[i] = getSqrDist(particleData.positions[i],System::getCameraPosition());
 		}
 
-		return NULL;
+		return hasAliveEmitters || particleData.nbParticles > 0;
 	}
 
-	void Group::setRenderer(Renderer* renderer)
+	void Group::renderParticles()
 	{
-		decrementChildReference(this->renderer);
-		incrementChildReference(renderer);
-
-		if ((bufferManagement)&&(renderer != this->renderer))
+		if (renderer.obj != NULL && renderer.obj->isActive())
 		{
-			if (this->renderer != NULL) this->renderer->destroyBuffers(*this);
-			if (renderer != NULL) renderer->createBuffers(*this);
+			renderer.obj->prepareData(*this,renderer.dataSet);
+			if (renderer.renderBuffer == NULL)
+				renderer.renderBuffer = renderer.obj->attachRenderBuffer(*this);
+			renderer.obj->render(*this,renderer.dataSet,renderer.renderBuffer);
+		}
+	}
+
+	void Group::reallocate(size_t capacity)
+	{
+		SPK_ASSERT(capacity != 0,"Group::reallocate(size_t) - Group capacity must not be 0");
+
+		if (system.isInitialized() && (!particleData.initialized || capacity != particleData.maxParticles))
+		{
+			destroyAllAdditionnalData();
+
+			size_t copySize = particleData.nbParticles;
+			if (capacity < copySize)
+				copySize = capacity;
+
+			reallocateArray(particleData.positions,capacity,copySize);
+			reallocateArray(particleData.velocities,capacity,copySize);
+			reallocateArray(particleData.oldPositions,capacity,copySize);
+			reallocateArray(particleData.ages,capacity,copySize);
+			reallocateArray(particleData.lifeTimes,capacity,copySize);
+			reallocateArray(particleData.energies,capacity,copySize);
+			reallocateArray(particleData.sqrDists,capacity,copySize);
+			reallocateArray(particleData.colors,capacity,copySize);
+
+			for (size_t i = 0; i < nbEnabledParameters; ++i)
+				reallocateArray(particleData.parameters[enabledParamIndices[i]],capacity,copySize);
+
+			particleData.initialized = true;
 		}
 
-		this->renderer = renderer;
+		particleData.maxParticles = capacity;
+	}
+
+	void Group::setColorInterpolator(ColorInterpolator* interpolator)
+	{
+		if (colorInterpolator.obj != interpolator)
+		{
+			detachDataSet(colorInterpolator.dataSet);
+			Registerable::decrementChild(colorInterpolator.obj);
+
+			colorInterpolator.obj = interpolator;
+			Registerable::incrementChild(interpolator);
+			colorInterpolator.dataSet = attachDataSet(interpolator);
+		}
+	}
+
+	void Group::setParamInterpolator(Param param,FloatInterpolator* interpolator)
+	{
+		if (paramInterpolators[param].obj == NULL && interpolator != NULL)
+		{
+			if (particleData.parameters[param] != NULL)
+				SPK_LOG_ERROR("setParamInterpolator(Param,FloatInterpolator*) - Unexpected memory leak happened");
+
+			// Creates the data for the parameter
+			if (system.isInitialized())
+				particleData.parameters[param] = new float[particleData.maxParticles];
+		}
+		else if (paramInterpolators[param].obj != NULL && interpolator == NULL)
+		{
+			if (particleData.parameters[param] == NULL)
+			{
+				SPK_LOG_ERROR("setParamInterpolator(Param,FloatInterpolator*) - Unexpected error happened");
+			}
+
+			// Destroys the data for the parameter
+			delete[] particleData.parameters[param];
+			particleData.parameters[param] = NULL;
+		}
+
+		detachDataSet(paramInterpolators[param].dataSet);
+		Registerable::decrementChild(paramInterpolators[param].obj);
+
+		paramInterpolators[param].obj = interpolator;
+		Registerable::incrementChild(interpolator);
+		paramInterpolators[param].dataSet = attachDataSet(interpolator);
+		recomputeEnabledParamIndices();
 	}
 
 	void Group::addEmitter(Emitter* emitter)
 	{
 		if (emitter == NULL)
+		{
+			SPK_LOG_WARNING("Group::addEmitter(Emitter*) - A NULL emitter cannot must not be added to a group");
 			return;
+		}
 
-		// Checks if the emitter is already in the group (since 1.03.03)
 		std::vector<Emitter*>::const_iterator it = std::find(emitters.begin(),emitters.end(),emitter);
 		if (it != emitters.end())
+		{
+			SPK_LOG_WARNING("Group::addEmitter(Emitter*) - The emitter is already in the group and cannot be added");
 			return;
+		}
 
-		incrementChildReference(emitter);
+		Registerable::incrementChild(emitter);
 		emitters.push_back(emitter);
 	}
 
 	void Group::removeEmitter(Emitter* emitter)
 	{
-		std::vector<Emitter*>::iterator it = std::find(emitters.begin(),emitters.end(),emitter);
+		std::vector<Emitter*>::iterator it = emitters.begin();
 		if (it != emitters.end())
 		{
-			decrementChildReference(emitter);
+			Registerable::decrementChild(*it);
 			emitters.erase(it);
+		}
+		else
+		{
+			SPK_LOG_WARNING("Group::removeEmitter(Emitter*) - The emitter was not found in the group and cannot be removed");
 		}
 	}
 
 	void Group::addModifier(Modifier* modifier)
 	{
 		if (modifier == NULL)
+		{
+			SPK_LOG_WARNING("Group::addModifier(Modifier*) - A NULL modifier cannot be added to a group");
 			return;
+		}
 
-		incrementChildReference(modifier);
+		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+			if (it->obj == modifier)
+			{
+				SPK_LOG_WARNING("Group::addModifier(Modifier*) - The modifier is already in the group and cannot be added");
+				return;
+			}
 
-		if (bufferManagement)
-			modifier->createBuffers(*this);
-
-		modifiers.push_back(modifier);
+		Registerable::incrementChild(modifier);
+		ModifierDef modifierDef(modifier,attachDataSet(modifier));
+		modifiers.push_back(modifierDef);
+		if (system.isInitialized())
+		{
+			sortedModifiers.push_back(modifierDef);
+			std::sort(sortedModifiers.begin(),sortedModifiers.end(),CompareModifierPriority());
+			SPK_ASSERT(modifiers.size() == sortedModifiers.size(),"Group::addModifier(Modifier*) - Internal Error - Inconsistent storage of modifiers");
+		}
 	}
 
 	void Group::removeModifier(Modifier* modifier)
 	{
-		std::vector<Modifier*>::iterator it = std::find(modifiers.begin(),modifiers.end(),modifier);
-		if (it != modifiers.end())
+		for (std::vector<ModifierDef>::iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+			if (it->obj == modifier)
+			{
+				detachDataSet(it->dataSet);
+				Registerable::decrementChild(it->obj);
+				if (system.isInitialized())
+					for (std::vector<ModifierDef>::iterator it2 = sortedModifiers.begin(); it2 != sortedModifiers.end(); ++it2)
+						if (it2->obj == modifier)
+						{
+							sortedModifiers.erase(it2);
+							break;
+						}
+				modifiers.erase(it);
+				return;
+			}
+
+		if (system.isInitialized())
+			SPK_ASSERT(modifiers.size() == sortedModifiers.size(),"Group::addModifier(Modifier*) - Internal Error - Inconsistent storage of modifiers");
+		SPK_LOG_WARNING("The modifier was not found in the group and cannot be removed");
+	}
+
+	void Group::setRenderer(Renderer* renderer)
+	{
+		if (this->renderer.obj != renderer)
 		{
-			decrementChildReference(modifier);
+			destroyRenderBuffer();
 
-			if (bufferManagement)
-				(*it)->createBuffers(*this);
+			detachDataSet(this->renderer.dataSet);
+			Registerable::decrementChild(this->renderer.obj);
 
-			modifiers.erase(it);
+			this->renderer.obj = renderer;
+			Registerable::incrementChild(renderer);
+			this->renderer.dataSet = attachDataSet(renderer);
 		}
 	}
 
-	bool Group::update(float deltaTime)
+	void Group::recomputeEnabledParamIndices()
 	{
-		unsigned int nbManualBorn = nbBufferedParticles;
-		unsigned int nbAutoBorn = 0;
-
-		bool hasActiveEmitters = false;	
-
-		// Updates emitters
-		activeEmitters.clear();
-		std::vector<Emitter*>::const_iterator endIt = emitters.end();
-		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != endIt; ++it)
-		{
-			if ((*it)->isActive())
-			{
-				int nb = (*it)->updateNumber(deltaTime);
-				if (nb > 0)
-				{
-					EmitterData data = {*it,nb};
-					activeEmitters.push_back(data);
-					nbAutoBorn += nb;
-				}
-			}
-
-			hasActiveEmitters |= !((*it)->isSleeping());
-		}
-		std::vector<EmitterData>::iterator emitterIt = activeEmitters.begin();
-
-		unsigned int nbBorn = nbAutoBorn + nbManualBorn;
-
-		// Inits bounding box
-		if (boundingBoxEnabled)
-		{
-			const float maxFloat = std::numeric_limits<float>::max();
-			AABBMin.set(maxFloat,maxFloat,maxFloat);
-			AABBMax.set(-maxFloat,-maxFloat,-maxFloat);
-		}
-
-		// Prepare modifiers for processing
-		activeModifiers.clear();
-		for (std::vector<Modifier*>::iterator it = modifiers.begin(); it != modifiers.end(); ++it)
-		{
-			(*it)->beginProcess(*this);
-			if ((*it)->isActive())
-				activeModifiers.push_back(*it);
-		}
-
-		// Updates particles
-		for (size_t i = 0; i < pool.getNbActive(); ++i)
-		{
-			if ((pool[i].update(deltaTime))||((fupdate != NULL)&&((*fupdate)(pool[i],deltaTime))))
-			{
-				if (fdeath != NULL)
-					(*fdeath)(pool[i]);
-
-				if (nbBorn > 0)
-				{
-					pool[i].init();
-					launchParticle(pool[i],emitterIt,nbManualBorn);
-					--nbBorn;
-				}
-				else
-				{
-					particleData[i].sqrDist = 0.0f;
-					pool.makeInactive(i);
-					--i;
-				}
-			}
-			else
-			{
-				if (boundingBoxEnabled)
-					updateAABB(pool[i]);
-
-				if (distanceComputationEnabled)
-					pool[i].computeSqrDist();
-			}
-		}
-
-		// Terminates modifiers processing
-		for (std::vector<Modifier*>::iterator it = modifiers.begin(); it != modifiers.end(); ++it)
-			(*it)->endProcess(*this);
-
-		// Emits new particles if some left
-		for (int i = nbBorn; i > 0; --i)
-			pushParticle(emitterIt,nbManualBorn);
-
-		// Sorts particles if enabled
-		if ((sortingEnabled)&&(pool.getNbActive() > 1))
-			sortParticles(0,pool.getNbActive() - 1);
-
-		if ((!boundingBoxEnabled)||(pool.getNbActive() == 0))
-		{
-			AABBMin.set(0.0f,0.0f,0.0f);
-			AABBMax.set(0.0f,0.0f,0.0f);
-		}
-
-		return (hasActiveEmitters)||(pool.getNbActive() > 0);
+		nbEnabledParameters = 0;
+		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+			if (paramInterpolators[i].obj != NULL)
+				enabledParamIndices[nbEnabledParameters++] = i;
 	}
 
-	void Group::pushParticle(std::vector<EmitterData>::iterator& emitterIt,unsigned int& nbManualBorn)
+	void Group::initParticle(size_t index,size_t& emitterIndex,size_t& nbManualBorn)
 	{
-		Particle* ptr = pool.makeActive();
-		if (ptr == NULL)
-		{
-			if (pool.getNbEmpty() > 0)
-			{
-				Particle p(this,pool.getNbActive());
-				launchParticle(p,emitterIt,nbManualBorn);
-				pool.pushActive(p);
-			}
-			else if (nbManualBorn > 0)
-				popNextManualAdding(nbManualBorn);
-		}
+		Particle particle(getParticle(index));
+
+		particleData.ages[index] = 0.0f;
+		particleData.energies[index] = 1.0f;
+		particleData.lifeTimes[index] = SPK_RANDOM(minLifeTime,maxLifeTime);
+
+		if (colorInterpolator.obj != NULL)
+			colorInterpolator.obj->init(particleData.colors[index],particle,colorInterpolator.dataSet);
 		else
-		{
-			ptr->init();
-			launchParticle(*ptr,emitterIt,nbManualBorn);
-		}
-	}
+			particleData.colors[index] = 0xFFFFFFFF;
 
-	void Group::launchParticle(Particle& p,std::vector<EmitterData>::iterator& emitterIt,unsigned int& nbManualBorn)
-	{
+		for (size_t i = 0; i < nbEnabledParameters; ++i)
+		{
+			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
+			interpolator.obj->init(particleData.parameters[enabledParamIndices[i]][index],particle,interpolator.dataSet);
+		}
+
 		if (nbManualBorn == 0)
 		{
-			emitterIt->emitter->emit(p);
-			if (--emitterIt->nbParticles == 0)
-				++emitterIt;
+			activeEmitters[emitterIndex].obj->emit(particle);
+			if (--activeEmitters[emitterIndex].nbBorn == 0)
+				++emitterIndex;
 		}
 		else
 		{
-			CreationData creationData = creationBuffer.front();
+			CreationData& creationData = creationBuffer.front();
 
 			if (creationData.zone != NULL)
-				creationData.zone->generatePosition(p,creationData.full);
+				creationData.zone->generatePosition(particle.position(),creationData.full);
 			else
-				p.position() = creationData.position;
+				particle.position() = creationData.position;
 
 			if (creationData.emitter != NULL)
-				creationData.emitter->generateVelocity(p);
+			{
+				float speed = SPK_RANDOM(creationData.emitter->getForceMin(),creationData.emitter->getForceMax()) / particle.getParam(PARAM_MASS);
+				creationData.emitter->generateVelocity(particle,speed);
+			}
 			else
-				p.velocity() = creationData.velocity;
+				particle.velocity() = creationData.velocity;
 
-			popNextManualAdding(nbManualBorn);
+			--creationBuffer.front().nb;
+			--nbManualBorn;
+			--nbBufferedParticles;
+			if (creationBuffer.front().nb <= 0)
+			{
+				Registerable::decrementChild(creationData.emitter);
+				Registerable::decrementChild(creationData.zone);
+				creationBuffer.pop_front();
+			}
 		}
 
-		// Resets old position (fix 1.04.00)
-		p.oldPosition() = p.position();
+		particleData.oldPositions[index] = particleData.positions[index];
 
-		// first parameter interpolation 
-		// must be here so that the velocity has already been initialized
-		p.interpolateParameters();
+		for (std::vector<ModifierDef>::iterator it = initModifiers.begin(); it != initModifiers.end(); ++it)
+			it->obj->init(particle,it->dataSet);
 
-		if (fbirth != NULL)
-			(*fbirth)(p);
+		if (renderer.obj != NULL && renderer.obj->isActive())
+			renderer.obj->init(particle,renderer.dataSet);
 
-		if (boundingBoxEnabled)
-			updateAABB(p);
-
-		if (distanceComputationEnabled)
-			p.computeSqrDist();
+		// birth action
+		if (birthAction != NULL && birthAction->isActive())
+			birthAction->apply(particle);
 	}
 
-	void Group::render()
+	void Group::swapParticles(size_t index0,size_t index1)
 	{
-		if ((renderer == NULL)||(!renderer->isActive()))
-			return;
+		// Swaps particles attributes
+		std::swap(particleData.positions[index0],particleData.positions[index1]);
+		std::swap(particleData.velocities[index0],particleData.velocities[index1]);
+		std::swap(particleData.oldPositions[index0],particleData.oldPositions[index1]);
+		std::swap(particleData.ages[index0],particleData.ages[index1]);
+		std::swap(particleData.energies[index0],particleData.energies[index1]);
+		std::swap(particleData.lifeTimes[index0],particleData.lifeTimes[index1]);
+		std::swap(particleData.sqrDists[index0],particleData.sqrDists[index1]);
+		std::swap(particleData.colors[index0],particleData.colors[index1]);
 
-		renderer->render(*this);
+		// Swaps particles enabled parameters
+		for (size_t i = 0; i < nbEnabledParameters; ++i)
+			std::swap(particleData.parameters[enabledParamIndices[i]][index0],particleData.parameters[enabledParamIndices[i]][index1]);
+
+		// Swaps particles additionnal swappable data
+		for (std::list<DataSet>::iterator it = dataSets.begin(); it != dataSets.end(); ++it)
+			it->swap(index0,index1);
 	}
 
-	void Group::empty()
+	DataSet* Group::attachDataSet(DataHandler* dataHandler)
 	{
-		for (size_t i = 0; i < pool.getNbActive(); ++i)
-			particleData[i].sqrDist = 0.0f;
+		if (!system.isInitialized())
+			return NULL;
 
-		pool.makeAllInactive();
-		creationBuffer.clear();
-		nbBufferedParticles = 0;
+		if (dataHandler != NULL && dataHandler->needsDataSet())
+		{
+			dataSets.push_back(DataSet());
+			return &dataSets.back();
+		}
+
+		return NULL;
 	}
 
-	void Group::flushAddedParticles()
+	void Group::detachDataSet(DataSet* dataSet)
 	{
-		unsigned int nbManualBorn = nbBufferedParticles;
-		std::vector<EmitterData>::iterator emitterIt; // dummy emitterIt because we dont care
-		while(nbManualBorn > 0)
-			pushParticle(emitterIt,nbManualBorn);
+		if (dataSet != NULL)
+			for (std::list<DataSet>::iterator it = dataSets.begin(); it != dataSets.end(); ++it)
+				if (&*it == dataSet)
+				{
+					dataSets.erase(it);
+					break;
+				}
+	}
+
+	void Group::destroyRenderBuffer()
+	{
+		delete renderer.renderBuffer;
+		renderer.renderBuffer = NULL;
+	}
+
+	void Group::destroyAllAdditionnalData()
+	{
+		destroyRenderBuffer();
+
+		for (std::list<DataSet>::iterator it = dataSets.begin(); it != dataSets.end(); ++it)
+			it->destroyAllData();
+	}
+
+	void Group::sortParticles()
+	{
+		if (sortingEnabled)
+			sortParticles(0,particleData.nbParticles - 1);
+	}
+
+	void Group::computeAABB()
+	{
+		const float maxFloat = std::numeric_limits<float>::max();
+		AABBMin.set(maxFloat,maxFloat,maxFloat);
+		AABBMax.set(-maxFloat,-maxFloat,-maxFloat);
+
+		if (renderer.obj != NULL && renderer.obj->isActive())
+		{
+			renderer.obj->prepareData(*this,renderer.dataSet);
+			renderer.obj->computeAABB(AABBMin,AABBMax,*this,renderer.dataSet);
+		}
+		else // Switches to default AABB computation
+			for (size_t i = 0; i < particleData.nbParticles; ++i)
+			{
+				AABBMin.setMin(particleData.positions[i]);
+				AABBMax.setMax(particleData.positions[i]);
+			}
+	}
+
+	void Group::sortParticles(int start,int end)
+	{
+		// quick sort implementation (can be optimized)
+		if (start < end)
+		{
+			int i = start - 1;
+			int j = end + 1;
+			float pivot = particleData.sqrDists[(start + end) >> 1];
+			while (true)
+			{
+				do ++i;
+				while (particleData.sqrDists[i] > pivot);
+				do --j;
+				while (particleData.sqrDists[j] < pivot);
+				if (i < j)
+					swapParticles(i,j);
+				else break;
+			}
+
+			sortParticles(start,j);
+			sortParticles(j + 1,end);
+		}
+	}
+
+	void Group::propagateUpdateTransform()
+	{
+		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+			if (!(*it)->isShared())
+				(*it)->updateTransform(&system);
+
+		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+			if (!it->obj->isShared() && it->obj->isLocalToSystem())
+				it->obj->updateTransform(&system);
+	}
+
+	void Group::addParticles(unsigned int nb,Zone* zone,Emitter* emitter,bool full)
+	{
+		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,Zone*,Emitter*,bool) - emitter must not be NULL");
+		SPK_ASSERT(zone != NULL,"Group::addParticles(unsigned int,Zone*,Emitter*,bool) - zone must not be NULL");
+		addParticles(emitter->updateTankFromNb(nb),Vector3D(),Vector3D(),zone,emitter,full);
+	}
+
+	void Group::addParticles(unsigned int nb,Zone* zone,const Vector3D& velocity,bool full)
+	{
+		SPK_ASSERT(zone != NULL,"Group::addParticles(unsigned int,Zone*,const Vector3D&,bool) - zone must not be NULL");
+		addParticles(nb,Vector3D(),velocity,zone,NULL,full);
+	}
+
+	void Group::addParticles(unsigned int nb,const Vector3D& position,Emitter* emitter)
+	{
+		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,const Vector3D&,Emitter*) - emitter must not be NULL");
+		addParticles(emitter->updateTankFromNb(nb),position,Vector3D(),NULL,emitter);
+	}
+
+	void Group::addParticles(unsigned int nb,Emitter* emitter)
+	{
+		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,Emitter*) - emitter must not be NULL");
+		addParticles(emitter->updateTankFromNb(nb),Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
+	}
+
+	void Group::addParticles(Zone* zone,Emitter* emitter,float deltaTime,bool full)
+	{
+		SPK_ASSERT(emitter != NULL,"Group::addParticles(Zone*,Emitter*,float,bool) - emitter must not be NULL");
+		SPK_ASSERT(zone != NULL,"Group::addParticles(Zone*,Emitter*,float,bool) - zone must not be NULL");
+		addParticles(emitter->updateTankFromTime(deltaTime),Vector3D(),Vector3D(),zone,emitter,full);
+	}
+
+	void Group::addParticles(const Vector3D& position,Emitter* emitter,float deltaTime)
+	{
+		SPK_ASSERT(emitter != NULL,"Group::addParticles(const Vector3D&,Emitter*,float) - emitter must not be NULL");
+		addParticles(emitter->updateTankFromTime(deltaTime),position,Vector3D(),NULL,emitter);
+	}
+
+	void Group::addParticles(Emitter* emitter,float deltaTime)
+	{
+		SPK_ASSERT(emitter != NULL,"Group::addParticles(Emitter*,float) - emitter must not be NULL");
+		addParticles(emitter->updateTankFromTime(deltaTime),Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
 	}
 
 	float Group::addParticles(const Vector3D& start,const Vector3D& end,Emitter* emitter,float step,float offset)
 	{
+		SPK_ASSERT(emitter != NULL,"Group::addParticles(const Vector3D&,const Vector3D&,Emitter*,float,float) - emitter must not be NULL");
+
 		if ((step <= 0.0f)||(offset < 0.0f))
 			return 0.0f;
 
@@ -474,232 +728,130 @@ namespace SPK
 		return offset - totalDist;
 	}
 
-	void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,const Zone* zone,Emitter* emitter,bool full)
+	void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,Zone* zone,Emitter* emitter,bool full)
 	{
 		if (nb == 0)
 			return;
+
+		SPK_ASSERT(system.isInitialized(),"Group::addParticles(unsigned int,const Vector3D&,const Vector3D&,Zone*,Emitter*,bool) - Particles cannot be added to an uninitialized group");
+
+		Registerable::incrementChild(emitter);
+		Registerable::incrementChild(zone);
 
 		CreationData data = {nb,position,velocity,zone,emitter,full};
 		creationBuffer.push_back(data);
 		nbBufferedParticles += nb;
 	}
 
-	void Group::addParticles(unsigned int nb,Emitter* emitter)
+	void Group::flushBufferedParticles()
 	{
-		addParticles(nb,Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
-	}
+		prepareAdditionnalData();
 
-	void Group::addParticles(const Zone* zone,Emitter* emitter,float deltaTime,bool full)
-	{
-		addParticles(emitter->updateNumber(deltaTime),Vector3D(),Vector3D(),zone,emitter,full);
-	}
+		unsigned int nbManualBorn = nbBufferedParticles;
+		if (nbManualBorn > getCapacity() - getNbParticles())
+			nbManualBorn = getCapacity() - getNbParticles();
 
-	void Group::addParticles(const Vector3D& position,Emitter* emitter,float deltaTime)
-	{
-		addParticles(emitter->updateNumber(deltaTime),position,Vector3D(),NULL,emitter);
-	}
+		size_t dummy;
+		while(nbManualBorn > 0)
+			initParticle(particleData.nbParticles++,dummy,nbManualBorn);
 
-	void Group::addParticles(Emitter* emitter,float deltaTime)
-	{
-		addParticles(emitter->updateNumber(deltaTime),Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
-	}
-
-	void Group::sortParticles()
-	{
-		computeDistances();
-
-		if (sortingEnabled)
-			sortParticles(0,pool.getNbActive() - 1);
-	}
-
-	void Group::computeDistances()
-	{
-		if (!distanceComputationEnabled)
-			return;
-
-		Pool<Particle>::const_iterator endIt = pool.end();
-		for (Pool<Particle>::iterator it = pool.begin(); it != endIt; ++it)
-			it->computeSqrDist();
-	}
-
-	void Group::computeAABB()
-	{
-		if ((!boundingBoxEnabled)||(pool.getNbActive() == 0))
+		if (nbBufferedParticles > 0)
 		{
-			AABBMin.set(0.0f,0.0f,0.0f);
-			AABBMax.set(0.0f,0.0f,0.0f);
-			return;
-		}
-
-		const float maxFloat = std::numeric_limits<float>::max();
-		AABBMin.set(maxFloat,maxFloat,maxFloat);
-		AABBMax.set(-maxFloat,-maxFloat,-maxFloat);
-
-		Pool<Particle>::iterator endIt = pool.end();
-		for (Pool<Particle>::iterator it = pool.begin(); it != endIt; ++it)
-			updateAABB(*it);
-	}
-
-	void Group::reallocate(size_t capacity)
-	{
-		if (capacity > pool.getNbReserved())
-		{
-			pool.reallocate(capacity);
-
-			Particle::ParticleData* newData = new Particle::ParticleData[pool.getNbReserved()];
-			float* newCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
-			float* newExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
-
-			memcpy(newData,particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
-			memcpy(newCurrentParams,particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
-			memcpy(newExtendedParams,particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
-
-			delete[] particleData;
-			delete[] particleCurrentParams;
-			delete[] particleExtendedParams;
-
-			particleData = newData;
-			particleCurrentParams = newCurrentParams;
-			particleExtendedParams = newExtendedParams;
-
-			// Destroys all the buffers
-			destroyAllBuffers();
-		}
-	}
-
-	void Group::popNextManualAdding(unsigned int& nbManualBorn)
-	{
-		--creationBuffer.front().nb;
-		--nbManualBorn;
-		--nbBufferedParticles;
-		if (creationBuffer.front().nb <= 0)
-			creationBuffer.pop_front();
-	}
-
-	void Group::updateAABB(const Particle& particle)
-	{
-		const Vector3D& position = particle.position();
-		if (AABBMin.x > position.x)
-			AABBMin.x = position.x;
-		if (AABBMin.y > position.y)
-			AABBMin.y = position.y;
-		if (AABBMin.z > position.z)
-			AABBMin.z = position.z;
-		if (AABBMax.x < position.x)
-			AABBMax.x = position.x;
-		if (AABBMax.y < position.y)
-			AABBMax.y = position.y;
-		if (AABBMax.z < position.z)
-			AABBMax.z = position.z;
-	}
-
-	const void* Group::getParamAddress(ModelParam param) const
-	{
-		return particleCurrentParams + model->getParameterOffset(param);
-	}
-
-	size_t Group::getParamStride() const
-	{
-		return model->getSizeOfParticleCurrentArray() * sizeof(float);
-	}
-
-	Buffer* Group::createBuffer(const std::string& ID,const BufferCreator& creator,unsigned int flag,bool swapEnabled) const
-	{
-		destroyBuffer(ID);
-
-		Buffer* buffer = creator.createBuffer(pool.getNbReserved(),*this);
-
-		buffer->flag = flag;
-		buffer->swapEnabled = swapEnabled;
-
-		additionalBuffers.insert(std::pair<std::string,Buffer*>(ID,buffer));
-		if (swapEnabled)
-			swappableBuffers.insert(buffer);
-
-		return buffer;
-	}
-
-	void Group::destroyBuffer(const std::string& ID) const
-	{
-		std::map<std::string,Buffer*>::iterator it = additionalBuffers.find(ID);
-
-		if (it != additionalBuffers.end())
-		{
-			if (it->second->isSwapEnabled())
-				swappableBuffers.erase(it->second);
-			delete it->second;
-			additionalBuffers.erase(it);
-
-		}
-	}
-
-	void Group::destroyAllBuffers() const
-	{
-		for (std::map<std::string,Buffer*>::const_iterator it = additionalBuffers.begin(); it != additionalBuffers.end(); ++it)
-			delete it->second;
-		additionalBuffers.clear();
-		swappableBuffers.clear();
-	}
-
-	Buffer* Group::getBuffer(const std::string& ID,unsigned int flag) const
-	{
-		Buffer* buffer = getBuffer(ID);
-
-		if ((buffer != NULL)&&(buffer->flag == flag))
-			return buffer;
-
-		return NULL;
-	}
-
-	Buffer* Group::getBuffer(const std::string& ID) const
-	{
-		std::map<std::string,Buffer*>::const_iterator it = additionalBuffers.find(ID);
-
-		if (it != additionalBuffers.end())
-			return it->second;
-
-		return NULL;
-	}
-
-	void Group::enableBuffersManagement(bool manage)
-	{
-		bufferManagement = manage;
-	}
-
-	bool Group::isBuffersManagementEnabled()
-	{
-		return bufferManagement;
-	}
-
-	void Group::sortParticles(int start,int end)
-	{
-		if (start < end)
-		{
-			int i = start - 1;
-			int j = end + 1;
-			float pivot = particleData[(start + end) >> 1].sqrDist;
-			while (true)
+			for (std::deque<CreationData>::const_iterator it = creationBuffer.begin(); it != creationBuffer.end(); ++it)
 			{
-				do ++i;
-				while (particleData[i].sqrDist > pivot);
-				do --j;	
-				while (particleData[j].sqrDist < pivot);
-				if (i < j)
-					swapParticles(pool[i],pool[j]);
-				else break;
+				Registerable::decrementChild(it->emitter);
+				Registerable::decrementChild(it->zone);
+			}
+			creationBuffer.clear();
+			nbBufferedParticles = 0;
+		}
+	}
+
+	inline void Group::prepareAdditionnalData()
+	{
+		if (renderer.obj != NULL)
+			renderer.obj->prepareData(*this,renderer.dataSet);
+
+		activeModifiers.clear();
+		initModifiers.clear();
+
+		for (std::vector<ModifierDef>::const_iterator it = sortedModifiers.begin(); it != sortedModifiers.end(); ++it)
+		{
+			it->obj->prepareData(*this,it->dataSet);	// if it has a data set, it is prepared
+			if (it->obj->CALL_INIT)
+				initModifiers.push_back(*it); // if its init method needs to be called it is added to the init vector
+			if (it->obj->isActive())
+				activeModifiers.push_back(*it); // if the modifier is active, it is added to the active vector
+		}
+
+		if (colorInterpolator.obj != NULL)
+		{
+			colorInterpolator.obj->prepareData(*this,colorInterpolator.dataSet);
+			colorInterpolator.obj->interpolate(particleData.colors,*this,colorInterpolator.dataSet);
+		}
+		for (size_t i = 0; i < nbEnabledParameters; ++i)
+		{
+			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
+			interpolator.obj->prepareData(*this,interpolator.dataSet);
+		}
+	}
+
+	void Group::initData()
+	{
+		if (!particleData.initialized)
+		{
+			// Creates particle data arrays
+			reallocate(particleData.maxParticles);
+
+			// Creates data sets
+			renderer.dataSet = attachDataSet(renderer.obj);
+			colorInterpolator.dataSet = attachDataSet(colorInterpolator.obj);
+			for (size_t i = 0; i < nbEnabledParameters; ++i)
+			{
+				FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
+				interpolator.dataSet = attachDataSet(interpolator.obj);
 			}
 
-			sortParticles(start,j);
-			sortParticles(j + 1,end);
+			for (std::vector<ModifierDef>::iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+			{
+				it->dataSet = attachDataSet(it->obj);
+				sortedModifiers.push_back(*it);
+			}
+			std::sort(sortedModifiers.begin(),sortedModifiers.end(),CompareModifierPriority());
 		}
 	}
 
-	void Group::propagateUpdateTransform()
+	void Group::setBirthAction(Action* action)
 	{
-		for (std::vector<Emitter*>::const_iterator emitterIt = emitters.begin(); emitterIt != emitters.end(); ++emitterIt)
-			(*emitterIt)->updateTransform(this);
-		for (std::vector<Modifier*>::const_iterator modifierIt = modifiers.begin(); modifierIt != modifiers.end(); ++modifierIt)
-			if ((*modifierIt)->isLocalToSystem())
-				(*modifierIt)->updateTransform(this);
+		Registerable::decrementChild(birthAction);
+		birthAction = action;
+		Registerable::incrementChild(birthAction);
+	}
+
+	void Group::setDeathAction(Action* action)
+	{
+		Registerable::decrementChild(deathAction);
+		deathAction = action;
+		Registerable::incrementChild(deathAction);
+	}
+
+	DataSet* Group::getModifierDataSet(Modifier* modifier)
+	{
+		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+			if (it->obj == modifier)
+				return it->dataSet;
+
+		SPK_LOG_WARNING("Group::getModifierDataSet(Modifier*) - The modifier was not found in the group, NULL is returned");
+		return NULL;
+	}
+
+	void Group::setRadius(float radius)
+	{
+		if (radius < 0)
+		{
+			radius = 0.0f;
+			SPK_LOG_WARNING("Group::setRadius(float) - The radius cannot be set to a negative value - 0 is used");
+		}
+		this->radius = radius;
 	}
 }

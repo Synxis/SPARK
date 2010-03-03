@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Core", "SPARK engine\SPARK Core.vcproj", "{A536B445-EACD-43C1-AC18-8167468D6285}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK OpenGL", "SPARK engine\SPARK OpenGL.vcproj", "{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A536B445-EACD-43C1-AC18-8167468D6285} = {A536B445-EACD-43C1-AC18-8167468D6285}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug DLL|Win32 = Debug DLL|Win32
+		Debug static|Win32 = Debug static|Win32
+		Release DLL|Win32 = Release DLL|Win32
+		Release static|Win32 = Release static|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug DLL|Win32.ActiveCfg = Debug DLL|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug DLL|Win32.Build.0 = Debug DLL|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug static|Win32.ActiveCfg = Debug static|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug static|Win32.Build.0 = Debug static|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Release DLL|Win32.Build.0 = Release DLL|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Release static|Win32.ActiveCfg = Release static|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Release static|Win32.Build.0 = Release static|Win32
+		{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}.Debug DLL|Win32.ActiveCfg = Debug DLL|Win32
+		{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}.Debug DLL|Win32.Build.0 = Debug DLL|Win32
+		{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}.Debug static|Win32.ActiveCfg = Debug static|Win32
+		{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}.Debug static|Win32.Build.0 = Debug static|Win32
+		{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
+		{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}.Release DLL|Win32.Build.0 = Release DLL|Win32
+		{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}.Release static|Win32.ActiveCfg = Release static|Win32
+		{E75C9D3F-1FA1-4AAC-87DC-7A68664D18B4}.Release static|Win32.Build.0 = Release static|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

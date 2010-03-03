@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2010 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -19,9 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #include "Core/SPK_Transformable.h"
-#include "Core/SPK_Zone.h"
 
 namespace SPK
 {
@@ -61,7 +59,7 @@ namespace SPK
 			local[i] = transform[(i >> 2) + ((i & 3) << 2)];	// conversion
 		
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	void Transformable::setTransformPosition(const Vector3D& pos)
@@ -71,7 +69,7 @@ namespace SPK
 		local[14] = pos.z;
 
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	void Transformable::setTransformOrientationRH(Vector3D look,Vector3D up)
@@ -93,7 +91,7 @@ namespace SPK
 		local[10] = -look.z;
 
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	void Transformable::setTransformOrientationLH(Vector3D look,Vector3D up)
@@ -115,7 +113,7 @@ namespace SPK
 		local[10] = look.z;
 
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	void Transformable::setTransformOrientation(Vector3D axis,float angle)
@@ -137,7 +135,7 @@ namespace SPK
 		local[10] = axis2.z + (1 - axis2.z) * c;
 
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	void Transformable::setTransformOrientationX(float angle)
@@ -156,7 +154,7 @@ namespace SPK
 		local[10] = cosA;
 
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	void Transformable::setTransformOrientationY(float angle)
@@ -175,7 +173,7 @@ namespace SPK
 		local[10] = cosA;
 
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	void Transformable::setTransformOrientationZ(float angle)
@@ -194,12 +192,12 @@ namespace SPK
 		local[10] = 1.0f;
 
 		localIdentity = false;
-		notifyForUpdate();
+		notifyForTransformUpdate();
 	}
 
 	void Transformable::updateTransform(const Transformable* parent)
 	{
-		if (isUpdateNotified() ||											// the local transform or instance param have been updated
+		if (isTransformUpdateNotified() ||									// the local transform or instance param have been updated
 			parent != this->parent ||										// the parent has changed
 			(parent != NULL && lastParentUpdate != parent->currentUpdate))	// the parent transform has been modified
 		{

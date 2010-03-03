@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="SPARK Engine workspace">
+		<Project filename="SPARK engine\SPARK Core.cbp" />
+		<Project filename="SPARK engine\SPARK OpenGL.cbp" active="1">
+			<Depends filename="SPARK engine\SPARK Core.cbp" />
+		</Project>
+	</Workspace>
+</CodeBlocks_workspace_file>
