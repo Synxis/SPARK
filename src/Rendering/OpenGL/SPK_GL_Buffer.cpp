@@ -20,6 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #include "Rendering/OpenGL/SPK_GL_Buffer.h"
+#include "Core/SPK_Logger.h"
 
 namespace SPK
 {
@@ -28,13 +29,16 @@ namespace GL
 	GLBuffer::GLBuffer(size_t nbVertices,size_t nbTexCoords) :
 		nbVertices(nbVertices),
 		nbTexCoords(nbTexCoords),
-		vertexBuffer(new Vector3D[nbVertices]),
-		colorBuffer(new Color[nbVertices]),
 		texCoordBuffer(NULL),
 		currentVertexIndex(0),
 		currentColorIndex(0),
 		currentTexCoordIndex(0)
 	{
+		SPK_ASSERT(nbVertices > 0,"GLBuffer::GLBuffer(size_t,size_t) - The number of vertices cannot be 0");
+
+		vertexBuffer = new Vector3D[nbVertices];
+		colorBuffer = new Color[nbVertices];
+
 		if (nbTexCoords > 0)
 			texCoordBuffer = new float[nbVertices * nbTexCoords];
 	}
@@ -48,9 +52,9 @@ namespace GL
 
 	void GLBuffer::setNbTexCoords(size_t nb)
 	{
-		if (this->nbTexCoords != nbTexCoords)
+		if (nbTexCoords != nb)
 		{
-			this->nbTexCoords = nbTexCoords;
+			nbTexCoords = nb;
 			delete texCoordBuffer;
 			if (nbTexCoords > 0)
 				texCoordBuffer = new float[nbVertices * nbTexCoords];
