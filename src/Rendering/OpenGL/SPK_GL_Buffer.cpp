@@ -55,7 +55,7 @@ namespace GL
 		if (nbTexCoords != nb)
 		{
 			nbTexCoords = nb;
-			delete texCoordBuffer;
+			delete[] texCoordBuffer;
 			if (nbTexCoords > 0)
 				texCoordBuffer = new float[nbVertices * nbTexCoords];
 			currentTexCoordIndex = 0;
