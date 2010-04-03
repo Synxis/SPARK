@@ -273,7 +273,7 @@ namespace SPK
 	{
 		unsigned int nbValues = getNbValues(type);
 
-		if ((nbValues - 1 > index)&&(nbValues != 0))
+		if (index < nbValues)
 			return params[indices[type] + index];
 
 		return DEFAULT_VALUES[type];
