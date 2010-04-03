@@ -562,6 +562,14 @@ namespace SPK
 			particleCurrentParams = newCurrentParams;
 			particleExtendedParams = newExtendedParams;
 
+			for (Pool<Particle>::iterator it = pool.begin(); it != pool.endInactive(); ++it)
+			{
+				it->group = this;
+				it->data = particleData + it->index;
+				it->currentParams = particleCurrentParams + it->index * model->getSizeOfParticleCurrentArray();
+				it->extendedParams = particleExtendedParams + it->index * model->getSizeOfParticleExtendedArray();
+			}
+
 			// Destroys all the buffers
 			destroyAllBuffers();
 		}
