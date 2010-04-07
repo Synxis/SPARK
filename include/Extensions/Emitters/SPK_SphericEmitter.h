@@ -56,7 +56,6 @@ namespace SPK
 		* @param direction : the direction of the SphericEmitter
 		* @param angleA : the first angle in radians of the SphericEmitter
 		* @param angleB : the second angle in radians of the SphericEmitter
-		* @since 1.04.00
 		*/
 		static inline SphericEmitter* create(
 			const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),

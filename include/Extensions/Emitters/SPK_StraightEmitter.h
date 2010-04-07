@@ -39,7 +39,6 @@ namespace SPK
 		/**
 		* @brief Creates and registers a new StraightEmitter
 		* @param direction : the direction of the StraighEmitter
-		* @since 1.04.00
 		*/
 		static inline StraightEmitter* create(
 			const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),

@@ -121,14 +121,14 @@ namespace SPK
 		* @param deltaTime : the time step
 		* @return true if the System is still active (has active groups)
 		*/
-		bool updateParticles(float deltaTime);
+		virtual bool updateParticles(float deltaTime);
 
 		/**
 		* @brief Renders particles in the System
 		*
 		* Note that this method renders all groups in the System from first to last.
 		*/
-		void renderParticles() const;
+		virtual void renderParticles() const;
 
 		//////////////////
 		// Bounding Box //
@@ -152,7 +152,6 @@ namespace SPK
 		* Note that this method is only useful when the AABB computation is enabled (see enableAABBComputation(bool)).
 		*
 		* @return a Vector3D holding the minimum coordinates of the AABB of this System
-		* @since 1.01.00
 		*/
 		inline const Vector3D& getAABBMin() const;
 
@@ -162,7 +161,6 @@ namespace SPK
 		* Note that this method is only useful when the AABB computation is enabled (see enableAABBComputation(bool)).
 		*
 		* @return a Vector3D holding the maximum coordinates of the AABB of this System
-		* @since 1.01.00
 		*/
 		inline const Vector3D& getAABBMax() const;
 

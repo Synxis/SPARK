@@ -65,7 +65,6 @@ namespace GL
 		* @param scaleX the scale of the width of the quad
 		* @param scaleY the scale of the height of the quad
 		* @return A new registered GLQuadRenderer
-		* @since 1.04.00
 		*/
 		static inline GLQuadRenderer* create(float scaleX = 1.0f,float scaleY = 1.0f);
 
