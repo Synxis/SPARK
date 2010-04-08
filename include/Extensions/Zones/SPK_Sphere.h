@@ -52,9 +52,9 @@ namespace SPK
 
 	private :
 
-		inline Sphere(const Vector3D& position = Vector3D(),float radius = 1.0f);
-
 		float radius;
+
+		inline Sphere(const Vector3D& position = Vector3D(),float radius = 1.0f);
 	};
 
 	inline Sphere::Sphere(const Vector3D& position,float radius) :

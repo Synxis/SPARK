@@ -117,6 +117,7 @@
 		<Unit filename="..\..\..\include\Extensions\Renderers\SPK_Oriented3DRendererInterface.h" />
 		<Unit filename="..\..\..\include\Extensions\Renderers\SPK_PointRendererInterface.h" />
 		<Unit filename="..\..\..\include\Extensions\Renderers\SPK_QuadRendererInterface.h" />
+		<Unit filename="..\..\..\include\Extensions\Zones\SPK_Plane.h" />
 		<Unit filename="..\..\..\include\Extensions\Zones\SPK_Point.h" />
 		<Unit filename="..\..\..\include\Extensions\Zones\SPK_Sphere.h" />
 		<Unit filename="..\..\..\include\SPARK.h" />
@@ -138,6 +139,7 @@
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Rotator.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Renderers\SPK_Oriented3DRendererInterface.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Renderers\SPK_QuadRendererInterface.cpp" />
+		<Unit filename="..\..\..\src\Extensions\Zones\SPK_Plane.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Zones\SPK_Sphere.cpp" />
 		<Extensions>
 			<code_completion />

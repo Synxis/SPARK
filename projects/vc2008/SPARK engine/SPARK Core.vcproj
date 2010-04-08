@@ -384,6 +384,10 @@
 					Name="Zones"
 					>
 					<File
+						RelativePath="..\..\..\src\Extensions\Zones\SPK_Plane.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\Zones\SPK_Sphere.cpp"
 						>
 					</File>
@@ -557,6 +561,10 @@
 				<Filter
 					Name="Zones"
 					>
+					<File
+						RelativePath="..\..\..\include\Extensions\Zones\SPK_Plane.h"
+						>
+					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Zones\SPK_Point.h"
 						>

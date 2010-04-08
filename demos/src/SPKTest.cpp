@@ -33,7 +33,7 @@
 #include <SPARK.h>
 #include <SPARK_GL.h>
 
-float angleX = 0.0f;
+float angleX = -90.0f;
 float angleY = 0.0f;
 const float CAM_POS_Z = 3.0f;
 
@@ -140,6 +140,8 @@ int main(int argc, char *argv[])
 	graphInterpolator->addEntry(0.5f,0x00FF0088);
 	graphInterpolator->addEntry(1.0f,0x0000FF88);
 
+	SPK::Obstacle* obstacle = SPK::Obstacle::create(SPK::Plane::create(SPK::Vector3D(0.0f,-0.8f,0.0f),SPK::Vector3D(0.0f,1.0f,0.0f)));
+
 	SPK::Group* group1 = system->createGroup(100);
 	group1->setRadius(0.05f);
 	group1->setLifeTime(1.0f,2.0f);
@@ -151,15 +153,18 @@ int main(int argc, char *argv[])
 	group1->addEmitter(emitter);
 	group1->addModifier(gravity);
 	group1->addModifier(friction);
+	group1->addModifier(obstacle);
 	group1->addModifier(SPK::Rotator::create());
 	group1->setRenderer(quadRenderer);
 	group1->setDeathAction(SPK::SpawnParticlesAction::create(5,10,1,emitter));
 
 	SPK::Group* group2 = system->createGroup(1000);
+	group2->setRadius(0.0f);
 	group2->setLifeTime(1.0f,1.0f);
 	group2->setColorInterpolator(SPK::ColorSimpleInterpolator::create(0xFF000088,0x0000FF00));
 	group2->addModifier(gravity);
 	group2->addModifier(friction);
+	group2->addModifier(obstacle);
 	group2->setRenderer(lineTrailRenderer);
 
 	float deltaTime = 0.0f;
@@ -197,15 +202,23 @@ int main(int argc, char *argv[])
 	
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();  
-		glTranslatef(0.0f,1.0f,-CAM_POS_Z);
+		glTranslatef(0.0f,0.2f,-CAM_POS_Z);
 		glRotatef(angleX,1.0f,0.0f,0.0f);
 		glRotatef(angleY,0.0f,1.0f,0.0f);
+
+		glColor4f(0.5f,0.0f,0.0f,1.0f);
+		glBegin(GL_QUADS);
+		glVertex3f(-1.0f,-0.8f,-1.0f);
+		glVertex3f(-1.0f,-0.8f,1.0f);
+		glVertex3f(1.0f,-0.8f,1.0f);
+		glVertex3f(1.0f,-0.8f,-1.0f);
+		glEnd();
 
 		drawBoundingBox(*system);
 		SPK::GL::GLRenderer::saveGLStates();
 		system->renderParticles();
 		SPK::GL::GLRenderer::restoreGLStates();
-		
+
 		SDL_GL_SwapBuffers();
 
 		clock_t currentTick = clock();
