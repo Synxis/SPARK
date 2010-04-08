@@ -57,7 +57,7 @@ namespace SPK
 
 		RandomInterpolator<T>(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 
-		virtual inline void createData(DataSet& dataSet,const Group& group) const;
+		virtual void createData(DataSet& dataSet,const Group& group) const;
 
 		virtual void interpolate(T* data,Group& group,DataSet* dataSet) const;
 		virtual void init(T& data,Particle& particle,DataSet* dataSet) const;
@@ -115,7 +115,7 @@ namespace SPK
 	}
 
 	template<typename T>
-	inline void RandomInterpolator<T>::createData(DataSet& dataSet,const Group& group) const
+	void RandomInterpolator<T>::createData(DataSet& dataSet,const Group& group) const
 	{
 		dataSet.init(NB_DATA);
 		ArrayData<T>* birthValuesDataPtr = new ArrayData<T>(group.getCapacity(),1);

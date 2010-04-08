@@ -106,6 +106,7 @@
 		<Unit filename="..\..\..\include\Extensions\Emitters\SPK_StaticEmitter.h" />
 		<Unit filename="..\..\..\include\Extensions\Emitters\SPK_StraightEmitter.h" />
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_DefaultInitializer.h" />
+		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_GraphInterpolator.h" />
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_RandomInitializer.h" />
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_RandomInterpolator.h" />
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_SimpleInterpolator.h" />

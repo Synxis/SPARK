@@ -51,6 +51,7 @@
 #include "Extensions/Interpolators/SPK_RandomInitializer.h"
 #include "Extensions/Interpolators/SPK_SimpleInterpolator.h"
 #include "Extensions/Interpolators/SPK_RandomInterpolator.h"
+#include "Extensions/Interpolators/SPK_GraphInterpolator.h"
 
 // Zones
 #include "Extensions/Zones/SPK_Point.h"

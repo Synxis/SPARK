@@ -135,10 +135,16 @@ int main(int argc, char *argv[])
 	SPK::Gravity* gravity = SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f));
 	SPK::Friction* friction = SPK::Friction::create(0.2f);
 
+	SPK::ColorGraphInterpolator* graphInterpolator = SPK::ColorGraphInterpolator::create();
+	graphInterpolator->addEntry(0.0f,0xFF000088);
+	graphInterpolator->addEntry(0.5f,0x00FF0088);
+	graphInterpolator->addEntry(1.0f,0x0000FF88);
+
 	SPK::Group* group1 = system->createGroup(100);
 	group1->setRadius(0.05f);
 	group1->setLifeTime(1.0f,2.0f);
-	group1->setColorInterpolator(SPK::ColorDefaultInitializer::create(0xFFFF2288));
+	//group1->setColorInterpolator(SPK::ColorDefaultInitializer::create(0xFFFF2288));
+	group1->setColorInterpolator(graphInterpolator);
 	group1->setParamInterpolator(SPK::PARAM_SIZE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
 	group1->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-1.0f,1.0f));
 	group1->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
