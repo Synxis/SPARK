@@ -56,7 +56,7 @@ namespace SPK
 		T y0;		/**< y first value of this entry */
 		T y1;		/**< y second value of this entry */
 
-		/** @brief Default constructor of interpolator entry. All values are set to 0 */
+		/** @brief Default constructor of interpolator entry */
 		InterpolatorEntry() : x(0.0f),y0(),y1() {}
 
 		/**
@@ -481,12 +481,7 @@ namespace SPK
 			// If the graph has less than 2 entries, we cannot loop
 			if (graph.size() < 2)
 			{
-				if (graph.empty())
-				{
-					SPK_LOG_ERROR("GraphInterpolator<T>::interpolateParticle(T&,const Particle&,float,float,float) const - The graph of the interpolator is empty, nothing is done");
-				}
-				else
-					interpolateEntry(data,*(graph.begin()),ratioY);
+				interpolateEntry(data,*(graph.begin()),ratioY);
 				return;
 			}
 
@@ -504,12 +499,7 @@ namespace SPK
 		// If the current X is higher than the one of the last entry
 		if (nextIt == graph.end())
 		{
-			if (graph.empty())	// If the graph has no entry, sets the default value
-			{
-				SPK_LOG_ERROR("GraphInterpolator<T>::interpolateParticle(T&,const Particle&,float,float,float) const - The graph of the interpolator is empty, nothing is done");
-			}
-			else	// Else sets the value of the last entry
-				interpolateEntry(data,*(--nextIt),ratioY);
+			interpolateEntry(data,*(--nextIt),ratioY); // Sets the value of the last entry
 		}
 		else if (nextIt == graph.begin()) // If the current X is lower than the first entry, sets the value to the first entry
 		{
