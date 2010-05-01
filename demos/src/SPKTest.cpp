@@ -96,6 +96,10 @@ int main(int argc, char *argv[])
 
 	// vsync
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL,0);
+
+	// AA
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
 	
 	SDL_SetVideoMode(800,600,32,SDL_OPENGL);
 
@@ -124,6 +128,7 @@ int main(int argc, char *argv[])
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 
 	SPK::GL::GLLineTrailRenderer* lineTrailRenderer = SPK::GL::GLLineTrailRenderer::create();
+	//lineTrailRenderer->setNbSamples(32);
 	lineTrailRenderer->setBlending(SPK::BLENDING_ADD);
 	lineTrailRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 
@@ -148,7 +153,7 @@ int main(int argc, char *argv[])
 	//group1->setColorInterpolator(SPK::ColorDefaultInitializer::create(0xFFFF2288));
 	group1->setColorInterpolator(graphInterpolator);
 	group1->setParamInterpolator(SPK::PARAM_SIZE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
-	group1->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-1.0f,1.0f));
+	group1->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-2.0f,2.0f));
 	group1->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
 	group1->addEmitter(emitter);
 	group1->addModifier(gravity);
