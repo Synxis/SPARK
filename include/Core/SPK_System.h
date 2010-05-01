@@ -256,6 +256,8 @@ namespace SPK
 
 	protected :
 
+		std::vector<Group*> groups; // vector containing all the groups of the system
+
 		virtual void propagateUpdateTransform();
 
 	private :
@@ -279,8 +281,6 @@ namespace SPK
 		bool AABBComputationEnabled;
 		Vector3D AABBMin;
 		Vector3D AABBMax;
-
-		std::vector<Group*> groups; // vector containing all the groups of the system
 
 		bool innerUpdate(float deltaTime);
 	};
