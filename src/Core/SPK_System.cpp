@@ -101,7 +101,7 @@ namespace SPK
 			return true;
 		}
 
-		bool isAlive = true;
+		bool alive = true;
 
 		if ((clampStepEnabled)&&(deltaTime > clampStep))
 			deltaTime = clampStep;
@@ -125,14 +125,14 @@ namespace SPK
 	
 			while(deltaTime >= updateStep)
 			{
-				if ((isAlive)&&(!innerUpdate(updateStep)))
-					isAlive = false;
+				if ((alive)&&(!innerUpdate(updateStep)))
+					alive = false;
 				deltaTime -= updateStep;
 			}
 			deltaStep = deltaTime;
 		}	
 		else
-			isAlive = innerUpdate(deltaTime);
+			alive = innerUpdate(deltaTime);
 
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->sortParticles();
@@ -157,7 +157,7 @@ namespace SPK
 			AABBMax.set(0.0f,0.0f,0.0f);
 		}
 
-		return isAlive;
+		return alive;
 	}
 
 	void System::renderParticles() const
@@ -184,10 +184,10 @@ namespace SPK
 
 	bool System::innerUpdate(float deltaTime)
 	{
-		bool isAlive = false;
+		bool alive = false;
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			isAlive |= (*it)->updateParticles(deltaTime);
-		return isAlive;
+			alive |= (*it)->updateParticles(deltaTime);
+		return alive;
 	}
 
 	void System::propagateUpdateTransform()
