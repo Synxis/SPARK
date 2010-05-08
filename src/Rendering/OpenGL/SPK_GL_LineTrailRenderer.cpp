@@ -69,7 +69,7 @@ namespace GL
 		dataSet.setData(START_ALPHA_DATA_INDEX,new ArrayData<unsigned char>(group.getCapacity(),nbSamples));
 
 		// Inits the buffers
-		for (GroupIterator particleIt(const_cast<Group&>(group)); !particleIt.end(); ++particleIt)
+		for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 			init(*particleIt,&dataSet);
 	}
 
