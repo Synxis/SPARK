@@ -28,6 +28,6 @@
 #include "Rendering/Irrlicht/SPK_IRR_DEF.h"
 
 // System
-#include "Rendering/Irrlicht/CSPKParticleSystemNode.h"
+#include "Rendering/Irrlicht/SPK_IRR_System.h"
 
 #endif

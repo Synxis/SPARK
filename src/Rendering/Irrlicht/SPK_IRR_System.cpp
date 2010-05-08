@@ -21,21 +21,21 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include "Rendering/Irrlicht/CSPKParticleSystemNode.h"
+#include "Rendering/Irrlicht/SPK_IRR_SYSTEM.h"
 #include "Core/SPK_Group.h"
 
-namespace irr
+namespace SPK
 {
-namespace scene
+namespace IRR
 {
-	CSPKParticleSystemNode::CSPKParticleSystemNode(
+	IRRSystem::IRRSystem(
 		irr::scene::ISceneNode* parent,
 		irr::scene::ISceneManager* mgr,
 		bool initialize,
 		bool worldTransformed,
 		irr::s32 id) :
-			ISceneNode(parent,mgr,id),
-			SPK::System(initialize),
+			irr::scene::ISceneNode(parent,mgr,id),
+			System(initialize),
 			worldTransformed(worldTransformed),
 			autoUpdate(true),
 			onlyWhenVisible(false),
@@ -43,12 +43,12 @@ namespace scene
 			lastUpdatedTime(0)
     {}
 
-	CSPKParticleSystemNode::CSPKParticleSystemNode(
-		const CSPKParticleSystemNode& system,
-		ISceneNode* newParent,
-		ISceneManager* newManager) :
-			ISceneNode(NULL,NULL),
-			SPK::System(system),
+	IRRSystem::IRRSystem(
+		const IRRSystem& system,
+		irr::scene::ISceneNode* newParent,
+		irr::scene::ISceneManager* newManager) :
+			irr::scene::ISceneNode(NULL,NULL),
+			System(system),
 			worldTransformed(system.worldTransformed),
 			autoUpdate(system.autoUpdate),
 			onlyWhenVisible(system.onlyWhenVisible),
@@ -61,38 +61,38 @@ namespace scene
 			newManager = system.SceneManager;
 
 		setParent(newParent);
-		cloneMembers(const_cast<CSPKParticleSystemNode*>(&system),newManager);
+		cloneMembers(const_cast<IRRSystem*>(&system),newManager);
 	}
 
-	CSPKParticleSystemNode* CSPKParticleSystemNode::clone(ISceneNode* newParent,ISceneManager* newManager)
+	IRRSystem* IRRSystem::clone(irr::scene::ISceneNode* newParent,irr::scene::ISceneManager* newManager)
 	{
-		CSPKParticleSystemNode* nb = new CSPKParticleSystemNode(*this,newParent,newManager);
+		IRRSystem* nb = new IRRSystem(*this,newParent,newManager);
 		if (Parent != NULL)
 			nb->drop();
 		return nb;
 	}
 
-	const irr::core::aabbox3d<irr::f32>& CSPKParticleSystemNode::getBoundingBox() const
+	const irr::core::aabbox3d<irr::f32>& IRRSystem::getBoundingBox() const
     {
-		BBox.MaxEdge = SPK::IRR::spk2irr(getAABBMax());
-		BBox.MinEdge = SPK::IRR::spk2irr(getAABBMin());
+		BBox.MaxEdge = spk2irr(getAABBMax());
+		BBox.MinEdge = spk2irr(getAABBMin());
         return BBox;
     }
 
-	void CSPKParticleSystemNode::renderParticles() const
+	void IRRSystem::renderParticles() const
 	{
         SceneManager->getVideoDriver()->setTransform(irr::video::ETS_WORLD,AbsoluteTransformation);
-        SPK::System::renderParticles();
+        System::renderParticles();
 	}
 
-	bool CSPKParticleSystemNode::updateParticles(float deltaTime)
+	bool IRRSystem::updateParticles(float deltaTime)
 	{
 		updateCameraPosition();
-		alive = SPK::System::updateParticles(deltaTime);
+		alive = System::updateParticles(deltaTime);
 		return alive;
 	}
 
-	void CSPKParticleSystemNode::OnRegisterSceneNode()
+	void IRRSystem::OnRegisterSceneNode()
 	{
 		if (IsVisible)
 			SceneManager->registerNodeForRendering(this,irr::scene::ESNRP_TRANSPARENT_EFFECT); // Draws in transparent effect pass (may be optimized)
@@ -100,7 +100,7 @@ namespace scene
        ISceneNode::OnRegisterSceneNode();
 	}
 
-	void CSPKParticleSystemNode::OnAnimate(irr::u32 timeMs)
+	void IRRSystem::OnAnimate(irr::u32 timeMs)
 	{
 		ISceneNode::OnAnimate(timeMs);
 
@@ -113,7 +113,7 @@ namespace scene
         lastUpdatedTime = timeMs;
 	}
 
-	void CSPKParticleSystemNode::updateAbsolutePosition()
+	void IRRSystem::updateAbsolutePosition()
 	{
 		ISceneNode::updateAbsolutePosition();
 
@@ -125,9 +125,9 @@ namespace scene
 		}
 	}
 
-	void CSPKParticleSystemNode::updateCameraPosition() const
+	void IRRSystem::updateCameraPosition() const
 	{
-		for (std::vector<SPK::Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			if ((*it)->isDistanceComputationEnabled())
 			{
 				irr::core::vector3df pos = SceneManager->getActiveCamera()->getAbsolutePosition();
@@ -137,7 +137,7 @@ namespace scene
 					AbsoluteTransformation.getInversePrimitive(invTransform);
 					invTransform.transformVect(pos);
 				}
-				setCameraPosition(SPK::IRR::irr2spk(pos));
+				setCameraPosition(irr2spk(pos));
 				break;
 			}
 	}

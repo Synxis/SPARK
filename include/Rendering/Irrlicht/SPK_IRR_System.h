@@ -21,15 +21,15 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_CSPKPARTICLESYSTENODE
-#define H_SPK_CSPKPARTICLESYSTENODE
+#ifndef H_SPK_IRR_SYSTEM
+#define H_SPK_IRR_SYSTEM
 
 #include "Rendering/Irrlicht/SPK_IRR_DEF.h"
 #include "Core/SPK_System.h"
 
-namespace irr
+namespace SPK
 {
-namespace scene
+namespace IRR
 {
 	/**
 	* @brief A particle system adapted to Irrlicht
@@ -45,7 +45,7 @@ namespace scene
 	* Note also that an CSPKParticleSystemNode takes care of the camera position automatically when distance computation is enabled
 	* on one of its Group. Therefore there is no need to call System::setCameraPosition(Vector3D).
 	*/
-	class CSPKParticleSystemNode : public ISceneNode, public SPK::System
+	class IRRSystem : public irr::scene::ISceneNode, public System
 	{
 		//////////////////
 		// Constructors //
@@ -58,14 +58,14 @@ namespace scene
 		* @param worldTransformed : true to emit particles in world, false to emit them localy
 		* @param id : the ID of the node
 		*/
-		CSPKParticleSystemNode(ISceneNode* parent,ISceneManager* mgr,bool worldTransformed = true,bool initialize = true,s32 id=-1);
+		IRRSystem(irr::scene::ISceneNode* parent,irr::scene::ISceneManager* mgr,bool worldTransformed = true,bool initialize = true,irr::s32 id=-1);
 
 		/**
 		* @brief Copy constructor of CSPKParticleSystemNode
 		*/
-		CSPKParticleSystemNode(const CSPKParticleSystemNode& system,ISceneNode* newParent = NULL,ISceneManager* newManager = NULL);
+		IRRSystem(const IRRSystem& system,irr::scene::ISceneNode* newParent = NULL,irr::scene::ISceneManager* newManager = NULL);
 
-		virtual CSPKParticleSystemNode* clone(ISceneNode* newParent = NULL,ISceneManager* newManager = NULL);
+		virtual IRRSystem* clone(irr::scene::ISceneNode* newParent = NULL,irr::scene::ISceneManager* newManager = NULL);
 
 		/**
 		* @brief Enables or disables auto update
@@ -166,36 +166,43 @@ namespace scene
 		void updateCameraPosition() const;
 	};
 
-	inline void CSPKParticleSystemNode::enableAutoUpdate(bool autoUpdate, bool onlyWhenVisible)
+	inline void IRRSystem::enableAutoUpdate(bool autoUpdate, bool onlyWhenVisible)
 	{
 		this->autoUpdate = autoUpdate;
 		this->onlyWhenVisible = onlyWhenVisible;
 	}
 
-	inline bool CSPKParticleSystemNode::isAutoUpdateEnabled() const
+	inline bool IRRSystem::isAutoUpdateEnabled() const
 	{
 		return autoUpdate;
 	}
 
-    inline bool CSPKParticleSystemNode::isUpdatedOnlyWhenVisible() const
+    inline bool IRRSystem::isUpdatedOnlyWhenVisible() const
 	{
 		return onlyWhenVisible;
 	}
 
-	inline bool CSPKParticleSystemNode::isWorldTransformed() const
+	inline bool IRRSystem::isWorldTransformed() const
 	{
 		return worldTransformed;
 	}
 
-	inline bool CSPKParticleSystemNode::isAlive() const
+	inline bool IRRSystem::isAlive() const
 	{
 		return alive;
 	}
 
-	inline void CSPKParticleSystemNode::render()
+	inline void IRRSystem::render()
 	{
 		renderParticles();
 	}
+}}
+
+namespace irr
+{
+namespace scene
+{
+	typedef SPK::IRR::IRRSystem CSPKParticleSystemNode;
 }}
 
 #endif
