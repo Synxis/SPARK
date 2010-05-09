@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\DXUT11\core;..\..\DXUT11\optional"
+				AdditionalIncludeDirectories="..\DXUT11\core;..\DXUT11\optional"
 				PreprocessorDefinitions="WIN32;_DEBUG;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="0"
@@ -193,7 +193,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
+			OutputDirectory="$(SolutionDir)"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -219,7 +219,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\DXUT11\core;..\..\DXUT11\optional"
+				AdditionalIncludeDirectories="..\DXUT11\core;..\DXUT11\optional"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -400,7 +400,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\DXUT11\core;..\..\DXUT11\optional"
+				AdditionalIncludeDirectories="..\DXUT11\core;..\DXUT11\optional"
 				PreprocessorDefinitions="WIN32;NDEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -562,7 +562,7 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
-				RelativePath="..\..\DXUT\optional\directx.ico"
+				RelativePath="..\DXUT\optional\directx.ico"
 				>
 			</File>
 			<File
@@ -578,7 +578,7 @@
 			Name="DXUT"
 			>
 			<File
-				RelativePath="..\..\DXUT11\Core\DXUT.cpp"
+				RelativePath="..\DXUT11\Core\DXUT.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -630,79 +630,79 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Core\DXUT.h"
+				RelativePath="..\DXUT11\Core\DXUT.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\DXUTcamera.cpp"
+				RelativePath="..\DXUT11\Optional\DXUTcamera.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\DXUTcamera.h"
+				RelativePath="..\DXUT11\Optional\DXUTcamera.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Core\DXUTDevice11.cpp"
+				RelativePath="..\DXUT11\Core\DXUTDevice11.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Core\DXUTDevice11.h"
+				RelativePath="..\DXUT11\Core\DXUTDevice11.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Core\DXUTDevice9.cpp"
+				RelativePath="..\DXUT11\Core\DXUTDevice9.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Core\DXUTDevice9.h"
+				RelativePath="..\DXUT11\Core\DXUTDevice9.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\DXUTgui.cpp"
+				RelativePath="..\DXUT11\Optional\DXUTgui.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\DXUTgui.h"
+				RelativePath="..\DXUT11\Optional\DXUTgui.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Core\DXUTmisc.cpp"
+				RelativePath="..\DXUT11\Core\DXUTmisc.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Core\DXUTmisc.h"
+				RelativePath="..\DXUT11\Core\DXUTmisc.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\DXUTres.cpp"
+				RelativePath="..\DXUT11\Optional\DXUTres.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\DXUTres.h"
+				RelativePath="..\DXUT11\Optional\DXUTres.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\DXUTsettingsdlg.cpp"
+				RelativePath="..\DXUT11\Optional\DXUTsettingsdlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\DXUTsettingsdlg.h"
+				RelativePath="..\DXUT11\Optional\DXUTsettingsdlg.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\SDKmesh.cpp"
+				RelativePath="..\DXUT11\Optional\SDKmesh.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\SDKmesh.h"
+				RelativePath="..\DXUT11\Optional\SDKmesh.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\SDKmisc.cpp"
+				RelativePath="..\DXUT11\Optional\SDKmisc.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\DXUT11\Optional\SDKmisc.h"
+				RelativePath="..\DXUT11\Optional\SDKmisc.h"
 				>
 			</File>
 		</Filter>
