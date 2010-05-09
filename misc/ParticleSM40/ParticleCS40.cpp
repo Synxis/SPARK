@@ -693,12 +693,25 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
     case IDC_RESETPARTICLES:
         {
-            SAFE_RELEASE(g_pParticle0);
-            SAFE_RELEASE(g_pParticle1);
-            SAFE_RELEASE(g_pParticleRV0);
-            SAFE_RELEASE(g_pParticleRV1);
-            SAFE_RELEASE(g_pParticleUAV0);
-            SAFE_RELEASE(g_pParticleUAV1);
+			//--------------------------------------------------------------------------------------------------
+			SAFE_RELEASE( g_pParticle0 );
+			SAFE_RELEASE( g_pParticle1 );
+			SAFE_RELEASE( g_pParticleRV0 );
+			SAFE_RELEASE( g_pParticleRV1 );
+			SAFE_RELEASE( g_pParticleUAV0 );
+			SAFE_RELEASE( g_pParticleUAV1 );
+			//--------------------------------------------------------------------------------------------------
+			SAFE_RELEASE( g_pRandom );
+			SAFE_RELEASE( g_pRandomRV );
+			SAFE_RELEASE( g_pGroups );
+			SAFE_RELEASE( g_pGroupsRV );
+			SAFE_RELEASE( g_pInterpolators );
+			SAFE_RELEASE( g_pInterpolatorsRV );
+			SAFE_RELEASE( g_pModifiers );
+			SAFE_RELEASE( g_pModifiersRV );
+			SAFE_RELEASE( g_pZones );
+			SAFE_RELEASE( g_pZonesRV );
+			//--------------------------------------------------------------------------------------------------
             CreateBuffers(DXUTGetD3D11Device());
 
 			#ifdef EXDATA
