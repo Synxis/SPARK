@@ -83,7 +83,7 @@ namespace SPK
 		particleData = new Particle::ParticleData[pool.getNbReserved()];
 		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
 		particleExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
-		
+
 		memcpy(particleData,group.particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
 		memcpy(particleCurrentParams,group.particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
 		memcpy(particleExtendedParams,group.particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
@@ -110,10 +110,10 @@ namespace SPK
 	void Group::registerChildren(bool registerAll)
 	{
 		Registerable::registerChildren(registerAll);
-		
+
 		registerChild(model,registerAll);
 		registerChild(renderer,registerAll);
-		
+
 		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 			registerChild(*it,registerAll);
 		for (std::vector<Modifier*>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
@@ -182,6 +182,46 @@ namespace SPK
 		}
 
 		return NULL;
+	}
+
+	void Group::setModel(Model* newmodel)
+	{
+		if(!newmodel) newmodel = &defaultModel;
+		if(model == newmodel) return;
+		if(pool.getMaxTotal() == 0) return;
+
+		// delete all previous data
+		empty();
+
+		// update all
+		model = newmodel;
+
+		delete[] particleData;
+		delete[] particleCurrentParams;
+		delete[] particleExtendedParams;
+
+		particleData = new Particle::ParticleData[pool.getNbReserved()];
+		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
+		particleExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
+
+		size_t poolsize = pool.getNbTotal();
+
+		Particle* p = 0; size_t t = 0;
+		while( (p=pool.makeActive()) != 0 )
+		{
+			p->group = this;
+			p->index = t;
+			p->currentParams = particleCurrentParams + t * model->getSizeOfParticleCurrentArray();
+			p->extendedParams = particleExtendedParams + t * model->getSizeOfParticleExtendedArray();
+			p->data = particleData + t;
+			p->init();
+
+			t++;
+		}
+		pool.makeAllInactive();
+
+		// Destroys all the buffers
+		destroyAllBuffers();
 	}
 
 	void Group::setRenderer(Renderer* renderer)
@@ -254,7 +294,7 @@ namespace SPK
 		unsigned int nbManualBorn = nbBufferedParticles;
 		unsigned int nbAutoBorn = 0;
 
-		bool hasActiveEmitters = false;	
+		bool hasActiveEmitters = false;
 
 		// Updates emitters
 		activeEmitters.clear();
@@ -396,7 +436,7 @@ namespace SPK
 		// Resets old position (fix 1.04.00)
 		p.oldPosition() = p.position();
 
-		// first parameter interpolation 
+		// first parameter interpolation
 		// must be here so that the velocity has already been initialized
 		p.interpolateParameters();
 
@@ -690,7 +730,7 @@ namespace SPK
 			{
 				do ++i;
 				while (particleData[i].sqrDist > pivot);
-				do --j;	
+				do --j;
 				while (particleData[j].sqrDist < pivot);
 				if (i < j)
 					swapParticles(pool[i],pool[j]);

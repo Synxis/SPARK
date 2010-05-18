@@ -40,7 +40,7 @@ namespace SPK
 	class Model;
 	class Buffer;
 	class BufferCreator;
-	
+
 	/**
 	* @class Group
 	* @brief A group of many particles
@@ -104,6 +104,16 @@ namespace SPK
 		/////////////
 		// Setters //
 		/////////////
+
+		/**
+		* @brief change the Model of this Group
+		*
+		* If the model parameter is set to NULL, the default model will be used. No changes are done if the model parameter is equal
+		* to the Model of this Group. Changing the Model of this Group will empty it.
+		*
+		* @param model : the Model of this Group
+		*/
+		void setModel(Model* model);
 
 		/**
 		* @brief Sets the Renderer of this Group
@@ -719,7 +729,7 @@ namespace SPK
 
 		/**
 		* @brief Creates a new additional buffer attached to the Group.
-		* 
+		*
 		* Additional buffers are used to attach data to a particles. They are mainly used by renderers to store data to transfer to the GPU
 		* but can be used by the user in any other way.<br>
 		* <br>
@@ -750,8 +760,8 @@ namespace SPK
 		*/
 		void destroyBuffer(const std::string& ID) const;
 
-		/** 
-		* @brief Destroys all the buffers held by this Group 
+		/**
+		* @brief Destroys all the buffers held by this Group
 		* @since 1.03.00
 		*/
 		void destroyAllBuffers() const;
@@ -827,7 +837,7 @@ namespace SPK
 		Vector3D gravity;
 
 		// particles data
-		Pool<Particle> pool;		
+		Pool<Particle> pool;
 		Particle::ParticleData* particleData;
 		float* particleCurrentParams; // Stores the current parameters values of the particles
 		float* particleExtendedParams; // Stores the extended parameters values of the particles (final values and interpolated data)
