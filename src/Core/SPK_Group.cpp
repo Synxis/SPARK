@@ -326,7 +326,7 @@ namespace SPK
 		if (paramInterpolators[param].obj == NULL && interpolator != NULL)
 		{
 			if (particleData.parameters[param] != NULL)
-				SPK_LOG_ERROR("setParamInterpolator(Param,FloatInterpolator*) - Unexpected memory leak happened");
+				SPK_LOG_ERROR("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected memory leak happened");
 
 			// Creates the data for the parameter
 			if (system.isInitialized())
@@ -336,7 +336,7 @@ namespace SPK
 		{
 			if (particleData.parameters[param] == NULL)
 			{
-				SPK_LOG_ERROR("setParamInterpolator(Param,FloatInterpolator*) - Unexpected error happened");
+				SPK_LOG_ERROR("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected error happened");
 			}
 
 			// Destroys the data for the parameter

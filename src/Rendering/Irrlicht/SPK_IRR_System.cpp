@@ -21,7 +21,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include "Rendering/Irrlicht/SPK_IRR_SYSTEM.h"
+#include "Rendering/Irrlicht/SPK_IRR_System.h"
 #include "Core/SPK_Group.h"
 
 namespace SPK

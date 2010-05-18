@@ -26,13 +26,108 @@
 
 #include "Rendering/Irrlicht/SPK_IRR_DEF.h"
 #include "Core/SPK_RenderBuffer.h"
+#include "Core/SPK_Vector3D.h"
+#include "Core/SPK_Color.h"
 
 namespace SPK
 {
-namespace GL
+namespace IRR
 {
 	class SPK_IRR_PREFIX IRRBuffer : public RenderBuffer
 	{
+	public :
 
+		IRRBuffer(irr::IrrlichtDevice* device,size_t nbParticles,size_t nbVerticesPerParticle,size_t nbIndicesPerParticle);
+		~IRRBuffer();
+
+		inline irr::video::E_INDEX_TYPE getIndiceType() const;
+
+		inline void positionAtStart();
+
+		inline void setNextIndex(int index);
+		inline void setNextVertex(const Vector3D& vertex);
+
+		inline void setNextColor(const Color& color);
+		inline void skipNextColors(size_t nb);
+
+		inline void setNextTexCoords(float u,float v);
+		inline void skipNextTexCoords(size_t nb);
+
+		inline irr::scene::IDynamicMeshBuffer& getMeshBuffer();
+		inline const irr::scene::IDynamicMeshBuffer& getMeshBuffer() const;
+
+		void setUsed(size_t nb);
+
+	private :
+
+		irr::scene::CDynamicMeshBuffer* meshBuffer;
+		irr::IrrlichtDevice* device;
+
+		size_t nbParticles;
+		size_t nbVerticesPerParticle;
+		size_t nbIndicesPerParticle;
+
+		size_t currentIndexIndex;
+		size_t currentVertexIndex;
+		size_t currentColorIndex;
+		size_t currentTexCoordIndex;
+	};
+
+	inline irr::video::E_INDEX_TYPE IRRBuffer::getIndiceType() const
+	{
+		return nbParticles * nbVerticesPerParticle > 65536 ? irr::video::EIT_32BIT : irr::video::EIT_16BIT;
 	}
-}
+
+	inline void IRRBuffer::positionAtStart()
+	{
+		currentIndexIndex = 0;
+		currentVertexIndex = 0;
+		currentColorIndex = 0;
+		currentTexCoordIndex = 0;
+	}
+
+	inline void IRRBuffer::setNextIndex(int index)
+	{
+		meshBuffer->getIndexBuffer().setValue(currentIndexIndex++,index);
+	}
+
+	inline void IRRBuffer::setNextVertex(const Vector3D& vertex)
+	{
+		meshBuffer->getVertexBuffer()[currentVertexIndex++].Pos.set(
+			vertex.x,
+			vertex.y,
+			vertex.z);
+	}
+
+	inline void IRRBuffer::setNextColor(const Color& color)
+	{
+		meshBuffer->getVertexBuffer()[currentColorIndex++].Color.set(color.getARGB());
+	}
+
+	inline void IRRBuffer::skipNextColors(size_t nb)
+	{
+		currentColorIndex += nb;
+	}
+
+	inline void IRRBuffer::setNextTexCoords(float u,float v)
+	{
+		meshBuffer->getVertexBuffer()[currentTexCoordIndex++].TCoords.set(u,v);
+	}
+
+	inline void IRRBuffer::skipNextTexCoords(size_t nb)
+	{
+		currentTexCoordIndex += nb;
+	}
+
+	inline irr::scene::IDynamicMeshBuffer& IRRBuffer::getMeshBuffer()
+	{
+		return *meshBuffer;
+	}
+
+	inline const irr::scene::IDynamicMeshBuffer& IRRBuffer::getMeshBuffer() const
+	{
+		return *meshBuffer;
+	}
+}}
+
+#endif

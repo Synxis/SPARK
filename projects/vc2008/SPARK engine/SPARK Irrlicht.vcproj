@@ -312,6 +312,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\..\src\Rendering\Irrlicht\SPK_IRR_Buffer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Rendering\Irrlicht\SPK_IRR_System.cpp"
 				>
 			</File>

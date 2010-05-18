@@ -75,7 +75,7 @@ namespace GL
 		switch(texturingMode)
 		{
 		case TEXTURE_MODE_2D :
-			// Creates and inits the 2D TexCoord buffer if necessery
+			// Creates and inits the 2D TexCoord buffer if necessary
 			if (buffer.getNbTexCoords() != 2)
 			{
 				buffer.setNbTexCoords(2);
