@@ -190,14 +190,14 @@ namespace SPK
 		if(model == newmodel) return;
 		if(pool.getMaxTotal() == 0) return;
 
-		// delete all previous data
+		// empty and change model
 		empty();
 
-		// update all
 		decrementChildReference(model);
 		incrementChildReference(newmodel);
 		model = newmodel;
 
+		// recreate data
 		delete[] particleData;
 		delete[] particleCurrentParams;
 		delete[] particleExtendedParams;
@@ -206,22 +206,7 @@ namespace SPK
 		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
 		particleExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
 
-		size_t poolsize = pool.getNbTotal();
-
-		// TODO useful ?
-		Particle* p = 0; size_t t = 0;
-		while( (p=pool.makeActive()) != 0 )
-		{
-			p->group = this;
-			p->index = t;
-			p->currentParams = particleCurrentParams + t * model->getSizeOfParticleCurrentArray();
-			p->extendedParams = particleExtendedParams + t * model->getSizeOfParticleExtendedArray();
-			p->data = particleData + t;
-			p->init();
-
-			t++;
-		}
-		pool.makeAllInactive();
+		pool.clear();
 
 		// Destroys all the buffers
 		destroyAllBuffers();
