@@ -195,7 +195,7 @@ namespace SPK
 
 		// update all
 		decrementChildReference(model);
-		incrementChildReference(newModel);
+		incrementChildReference(newmodel);
 		model = newmodel;
 
 		delete[] particleData;
