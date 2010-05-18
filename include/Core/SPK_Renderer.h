@@ -63,8 +63,8 @@ namespace SPK
 		// Setters //
 		/////////////
 
-		inline void enableRenderingOption(RenderingOption option,bool enable);
-		inline void setAlphaTestThreshold(float alphaThreshold);
+		virtual inline void enableRenderingOption(RenderingOption option,bool enable);
+		virtual inline void setAlphaTestThreshold(float alphaThreshold);
 		inline void setActive(bool active);
 		virtual void setBlending(Blending blendMode) = 0;
 		
@@ -72,8 +72,8 @@ namespace SPK
 		// Getters //
 		/////////////
 
-		inline bool isRenderingOptionEnabled(RenderingOption option) const;
-		inline float getAlphaTestThreshold() const;
+		virtual inline bool isRenderingOptionEnabled(RenderingOption option) const;
+		virtual inline float getAlphaTestThreshold() const;
 		inline bool isActive() const;
 
 	protected :

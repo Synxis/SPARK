@@ -46,6 +46,10 @@ namespace GL
 			destBlending = GL_ONE_MINUS_SRC_ALPHA;
 			blendingEnabled = true;
 			break;
+
+		default :
+			SPK_LOG_WARNING("GLRenderer::setBlending(Blending) - Unsupported blending mode. Nothing happens");
+			break;
 		}
 	}
 

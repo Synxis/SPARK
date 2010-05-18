@@ -316,6 +316,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\Rendering\Irrlicht\SPK_IRR_Renderer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Rendering\Irrlicht\SPK_IRR_System.cpp"
 				>
 			</File>
@@ -335,6 +339,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\Rendering\Irrlicht\SPK_IRR_DEF.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\Rendering\Irrlicht\SPK_IRR_Renderer.h"
 				>
 			</File>
 			<File
