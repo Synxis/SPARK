@@ -194,6 +194,8 @@ namespace SPK
 		empty();
 
 		// update all
+		decrementChildReference(model);
+		incrementChildReference(newModel);
 		model = newmodel;
 
 		delete[] particleData;
@@ -206,6 +208,7 @@ namespace SPK
 
 		size_t poolsize = pool.getNbTotal();
 
+		// TODO useful ?
 		Particle* p = 0; size_t t = 0;
 		while( (p=pool.makeActive()) != 0 )
 		{
