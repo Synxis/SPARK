@@ -82,6 +82,12 @@ namespace SPK
 		Group* createGroup(size_t capacity);
 
 		/**
+		* @brief Adds a group to the system which is a copy of an existing group
+		*
+		*/
+		Group* createGroup(const Group& group);
+
+		/**
 		* @brief Removes a group from the system
 		*
 		* If the group cannot be found, nothing happens.

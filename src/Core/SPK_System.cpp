@@ -66,9 +66,16 @@ namespace SPK
 			return NULL;
 		}
 
-		Group* group = new Group(*this,capacity);
-		groups.push_back(group);
-		return group;
+		Group* newGroup = new Group(*this,capacity);
+		groups.push_back(newGroup);
+		return newGroup;
+	}
+
+	Group* System::createGroup(const Group& group)
+	{
+		Group* newGroup = new Group(*this,group);
+		groups.push_back(newGroup);
+		return newGroup;
 	}
 
 	void System::destroyGroup(Group* group)
