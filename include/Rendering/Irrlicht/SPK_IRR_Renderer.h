@@ -113,7 +113,7 @@ namespace IRR
 	protected :
 
 		irr::IrrlichtDevice* device;	// the device
-		irr::video::SMaterial material;	// the material
+		mutable irr::video::SMaterial material;	// the material
 
 		IRRRenderer(irr::IrrlichtDevice* device,bool NEEDS_DATASET = false);
 

@@ -27,6 +27,15 @@
 // Defines
 #include "Rendering/Irrlicht/SPK_IRR_DEF.h"
 
+// Buffer
+#include "Rendering/Irrlicht/SPK_IRR_Buffer.h"
+
+// Mother Renderer
+#include "Rendering/Irrlicht/SPK_IRR_Renderer.h"
+
+// Renderers
+#include "Rendering/Irrlicht/SPK_IRR_PointRenderer.h"
+
 // System
 #include "Rendering/Irrlicht/SPK_IRR_System.h"
 
