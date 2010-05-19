@@ -61,20 +61,7 @@ namespace GL
 		*/
 		static inline GLPointRenderer* create(float screenSize = 1.0f);
 
-		/////////////
-		// Setters //
-		/////////////
-
 		virtual bool setType(PointType type);
-
-		/**
-		* @brief Sets the texture of this GLPointRenderer
-		*
-		* Note that the texture is only used if point sprites are used (type is set to SPK::POINT_SPRITE)
-		*
-		* @param textureIndex : the index of the OpenGL texture of this GLPointRenderer
-		*/
-		inline void setTexture(GLuint textureIndex);
 
 		/**
 		* @brief Sets the way size of points is computed in this GLPointRenderer
@@ -89,9 +76,14 @@ namespace GL
 		*/
 		bool enableWorldSize(bool worldSizeEnabled);
 
-		/////////////
-		// Getters //
-		/////////////
+		/**
+		* @brief Sets the texture of this GLPointRenderer
+		*
+		* Note that the texture is only used if point sprites are used (type is set to SPK::POINT_SPRITE)
+		*
+		* @param textureIndex : the index of the OpenGL texture of this GLPointRenderer
+		*/
+		inline void setTexture(GLuint textureIndex);
 
 		/**
 		* @brief Gets the texture of this GLPointRenderer
@@ -99,20 +91,9 @@ namespace GL
 		*/
 		inline GLuint getTexture() const;
 
-		/**
-		* @brief Tells whether world size is enabled or not in this GLPointRenderer
-		* @return true if world size is enabled, false if not
-		*/
-		inline bool isWorldSizeEnabled() const;
-
 	private :
 
 		GLuint textureIndex;
-		bool worldSize;
-
-		//////////////////
-		// Constructors //
-		//////////////////
 
 		/** 
 		* @brief Constructor of GLPointRenderer
@@ -128,8 +109,7 @@ namespace GL
 		GLRenderer(false),
 		PointRendererInterface(POINT_TYPE_SQUARE,screenSize),
 		GLExtHandler(),
-		textureIndex(0),
-		worldSize(false)
+		textureIndex(0)
 	{}
 
 	inline GLPointRenderer* GLPointRenderer::create(float screenSize)
@@ -145,11 +125,6 @@ namespace GL
 	inline GLuint GLPointRenderer::getTexture() const
 	{
 		return textureIndex;
-	}
-
-	inline bool GLPointRenderer::isWorldSizeEnabled() const
-	{
-		return worldSize;
 	}
 }}
 

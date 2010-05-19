@@ -51,9 +51,9 @@ namespace SPK
 		/** @brief Destructor of PointRendererInterface */
 		virtual inline ~PointRendererInterface() {}
 
-		/////////////
-		// Setters //
-		/////////////
+		//////////
+		// Type //
+		//////////
 
 		/**
 		* @brief Sets the type of points to use in this PointRendererInterface
@@ -66,20 +66,20 @@ namespace SPK
 		virtual inline bool setType(PointType type);
 
 		/**
-		* @brief Sets the size of the points in this PointRendererInterface
-		* @param size : the size of the points in this PointRendererInterface
-		*/
-		virtual inline void setScreenSize(float screenSize);
-
-		/////////////
-		// Getters //
-		/////////////
-
-		/**
 		* @brief Gets the type of points in this PointRendererInterface
 		* @return the type of points in this PointRendererInterface
 		*/
 		inline PointType getType() const;
+
+		////////////////
+		// point size //
+		////////////////
+
+		/**
+		* @brief Sets the size of the points in this PointRendererInterface
+		* @param size : the size of the points in this PointRendererInterface
+		*/
+		virtual inline void setScreenSize(float screenSize);
 
 		/**
 		* @brief Gets the size of points in this PointRendererInterface
@@ -87,10 +87,24 @@ namespace SPK
 		*/
 		inline float getScreenSize() const;
 
+		/**
+		* @brief Sets the way size of points is computed
+		* @param worldSizeEnabled : true to enable universe size, false to use screen size
+		* @return true the type of size can be set, false otherwise
+		*/
+		virtual inline bool enableWorldSize(bool worldSizeEnabled);
+
+		/**
+		* @brief Tells whether world size is enabled or not in this GLPointRenderer
+		* @return true if world size is enabled, false if not
+		*/
+		inline bool isWorldSizeEnabled() const;
+
 	protected :
 
 		PointType type;
 		float screenSize;
+		bool worldSize;
 
 		/////////////////
 		// Constructor //
@@ -106,7 +120,8 @@ namespace SPK
 
 	inline PointRendererInterface::PointRendererInterface(PointType type,float screenSize) :
 		type(type),
-		screenSize(screenSize)
+		screenSize(screenSize),
+		worldSize(false)
 	{}
 
 	inline bool PointRendererInterface::setType(PointType type)
@@ -115,19 +130,30 @@ namespace SPK
 		return true;
 	}
 
-	inline void PointRendererInterface::setScreenSize(float screenSize)
-	{
-		this->screenSize = screenSize;
-	}
-
 	inline PointType PointRendererInterface::getType() const
 	{
 		return type;
 	}
 
+	inline void PointRendererInterface::setScreenSize(float screenSize)
+	{
+		this->screenSize = screenSize;
+	}
+
 	inline float PointRendererInterface::getScreenSize() const
 	{
 		return screenSize;
+	}
+
+	inline bool PointRendererInterface::enableWorldSize(bool worldSizeEnabled)
+	{
+		worldSize = worldSizeEnabled;
+		return true;
+	}
+
+	inline bool PointRendererInterface::isWorldSizeEnabled() const
+	{
+		return worldSize;
 	}
 }
 
