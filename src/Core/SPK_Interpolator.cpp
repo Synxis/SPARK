@@ -83,11 +83,11 @@ namespace SPK
 			}
 
 			// Else finds the current X in the range
-			float newX = (currentKey.x - graph.begin()->x) / (graph.end()->x - graph.begin()->x);
+			float newX = (currentKey.x - graph.begin()->x) / (graph.rbegin()->x - graph.begin()->x);
 			newX -= static_cast<int>(newX);
 			if (newX < 0.0f)
 				newX = 1.0f + newX;
-			currentKey.x = graph.begin()->x + newX * (graph.end()->x - graph.begin()->x);
+			currentKey.x = graph.begin()->x + newX * (graph.rbegin()->x - graph.begin()->x);
 		}
 
 		// Gets the entry that is immediatly after the current X
