@@ -45,8 +45,10 @@ namespace IRR
 	* Note also that an CSPKParticleSystemNode takes care of the camera position automatically when distance computation is enabled
 	* on one of its Group. Therefore there is no need to call System::setCameraPosition(Vector3D).
 	*/
-	class IRRSystem : public irr::scene::ISceneNode, public System
+	class SPK_IRR_PREFIX IRRSystem : public irr::scene::ISceneNode, public System
 	{
+	public :
+
 		//////////////////
 		// Constructors //
 		//////////////////

@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Test", "SPARK demos\SPARK Test.vcproj", "{A536B445-EACD-43C1-AC18-8167468D6285}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Test Irrlicht", "SPARK demos\SPARK Test Irrlicht.vcproj", "{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug DLL|Win32 = Debug DLL|Win32
@@ -19,6 +21,14 @@ Global
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Release DLL|Win32.Build.0 = Release DLL|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Release static|Win32.ActiveCfg = Release static|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Release static|Win32.Build.0 = Release static|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug DLL|Win32.ActiveCfg = Debug DLL|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug DLL|Win32.Build.0 = Debug DLL|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug static|Win32.ActiveCfg = Debug static|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug static|Win32.Build.0 = Debug static|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release DLL|Win32.Build.0 = Release DLL|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release static|Win32.ActiveCfg = Release static|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release static|Win32.Build.0 = Release static|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
