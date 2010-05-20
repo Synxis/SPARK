@@ -65,6 +65,8 @@ namespace IRR
 
 		// Reimplemented from PointRendererInterface
 		virtual bool setType(PointType type);
+		virtual inline void setScreenSize(float screenSize);
+		virtual bool enableWorldSize(bool worldSizeEnabled);
 
 		//////////////
 		// Textures //
@@ -113,6 +115,11 @@ namespace IRR
 	inline IRRPointRenderer* IRRPointRenderer::create(irr::IrrlichtDevice* d,float screenSize)
 	{
 		return new IRRPointRenderer(d,screenSize);
+	}
+
+	inline void IRRPointRenderer::setScreenSize(float screenSize)
+	{
+		material.Thickness = this->screenSize = screenSize;
 	}
 	
 	inline void IRRPointRenderer::setTexture(irr::video::ITexture* texture)

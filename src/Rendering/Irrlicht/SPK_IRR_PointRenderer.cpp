@@ -53,6 +53,13 @@ namespace IRR
 		}
 	}
 
+	bool IRRPointRenderer::enableWorldSize(bool worldSizeEnabled)
+	{
+		if (worldSizeEnabled)
+			SPK_LOG_WARNING("IRRPointRenderer::enableWorldSize(bool) - Size cannot be defined in world coordinates with the Irrlicht module");
+		return !worldSizeEnabled;
+	}
+
 	RenderBuffer* IRRPointRenderer::attachRenderBuffer(const Group& group) const
 	{
 		// Creates the render buffer
@@ -79,8 +86,6 @@ namespace IRR
 			buffer.setNextColor(particleIt->getColor());
 		}
 		buffer.getMeshBuffer().setDirty(irr::scene::EBT_VERTEX);
-
-		material.Thickness = worldSize ? group.getRadius() : getScreenSize();
 
 		irr::video::IVideoDriver* driver = device->getVideoDriver();
         driver->setMaterial(material);
