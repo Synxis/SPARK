@@ -43,10 +43,6 @@ namespace GL
 	* Below are the parameters of Particle that are used in this Renderer (others have no effects) :
 	* <ul>
 	* <li>SPK::PARAM_SIZE</li>
-	* <li>SPK::PARAM_RED</li>
-	* <li>SPK::PARAM_GREEN</li>
-	* <li>SPK::PARAM_BLUE</li>
-	* <li>SPK::PARAM_ALPHA (only if blending is enabled)</li>
 	* <li>SPK::PARAM_ANGLE</li>
 	* <li>SPK::PARAM_TEXTURE_INDEX (only if not in TEXTURE_NONE mode)</li>
 	* </ul>

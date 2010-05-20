@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK Irrlicht Rendering library												//
-// Copyright (C) 2009															//
-// Thibault Lescoat -  info-tibo <at> orange <dot> fr							//
+// Copyright (C) 2008-2010														//
 // Julien Fryer - julienfryer@gmail.com											//
+// Thibault Lescoat - info-tibo <at> orange <dot> fr							//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -51,7 +51,7 @@ namespace IRR
 	class SPK_IRR_PREFIX IRRPointRenderer :	public IRRRenderer,
 											public PointRendererInterface
 	{
-		SPK_IMPLEMENT_REGISTERABLE(IRRPointRenderer)
+	SPK_IMPLEMENT_REGISTERABLE(IRRPointRenderer)
 
 	public :
 

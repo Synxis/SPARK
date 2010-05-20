@@ -35,6 +35,7 @@
 
 // Renderers
 #include "Rendering/Irrlicht/SPK_IRR_PointRenderer.h"
+#include "Rendering/Irrlicht/SPK_IRR_QuadRenderer.h"
 
 // System
 #include "Rendering/Irrlicht/SPK_IRR_System.h"

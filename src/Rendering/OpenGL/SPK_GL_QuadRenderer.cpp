@@ -55,6 +55,7 @@ namespace GL
 	{
 		SPK_ASSERT(renderBuffer != NULL,"GLQuadRenderer::render(const Group&,const DataSet*,RenderBuffer*) - renderBuffer must not be NULL");
 		GLBuffer& buffer = dynamic_cast<GLBuffer&>(*renderBuffer);
+		buffer.positionAtStart(); // Repositions all the buffers at the start
 
 		float oldModelView[16];
 		for (int i = 0; i < 16; ++i)
@@ -155,7 +156,6 @@ namespace GL
 			Vector3D(invModelView[12],invModelView[13],invModelView[14]));
 
 		// Fills the buffers
-		buffer.positionAtStart(); // Repositions all the buffers at the start
 		if (globalOrientation)
 		{
 			computeGlobalOrientation3D(group);

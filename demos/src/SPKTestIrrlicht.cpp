@@ -86,8 +86,8 @@ int main(int argc, char *argv[])
     device->setWindowCaption(L"SPARK Irrlicht test");
 	device->getCursorControl()->setVisible(false);
     irr::scene::ICameraSceneNode* cam = smgr->addCameraSceneNodeFPS(smgr->getRootSceneNode(),100.0f,0.0005f);
-    cam->setPosition(irr::core::vector3df(0.0f,2.5f,2.0f));
-    cam->setTarget(irr::core::vector3df(0.0f,0.0f,0.3f));
+    cam->setPosition(irr::core::vector3df(0.0f,0.0f,1.5f));
+    cam->setTarget(irr::core::vector3df(0.0f,-0.2f,0.0f));
     cam->setNearValue(0.05f);
 
 	// Inits Particle Engine
@@ -99,9 +99,9 @@ int main(int argc, char *argv[])
 	system->enableAABBComputation(true);
 	system->drop(); // We let the scene manager taking care of the system life time
 
-	SPK::IRR::IRRPointRenderer* pointRenderer = SPK::IRR::IRRPointRenderer::create(device,32.0);
-	pointRenderer->setBlending(SPK::BLENDING_ADD);
-	pointRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
+	SPK::IRR::IRRQuadRenderer* quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
+	quadRenderer->setBlending(SPK::BLENDING_ADD);
+	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 
 	SPK::RandomEmitter* emitter = SPK::RandomEmitter::create();
 	emitter->setZone(SPK::Point::create());
@@ -117,12 +117,17 @@ int main(int argc, char *argv[])
 	graphInterpolator->addEntry(1.0f,0x0000FF88);
 
 	SPK::Group* group = system->createGroup(100);
+	group->setRadius(0.05f);
 	group->setLifeTime(1.0f,2.0f);
 	group->setColorInterpolator(graphInterpolator);
+	group->setParamInterpolator(SPK::PARAM_SIZE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
+	group->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-2.0f,2.0f));
+	group->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
 	group->addEmitter(emitter);
 	group->addModifier(gravity);
 	group->addModifier(friction);
-	group->setRenderer(pointRenderer);
+	group->addModifier(SPK::Rotator::create());
+	group->setRenderer(quadRenderer);
 
 	while(device->run())
 	{

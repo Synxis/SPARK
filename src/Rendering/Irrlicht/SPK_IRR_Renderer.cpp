@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
-// SPARK Irrlicht Rendering library												//
-// Copyright (C) 2009															//
-// Thibault Lescoat -  info-tibo <at> orange <dot> fr							//
+// SPARK particle engine														//
+// Copyright (C) 2008-2010														//
 // Julien Fryer - julienfryer@gmail.com											//
+// Thibault Lescoat - info-tibo <at> orange <dot> fr							//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
