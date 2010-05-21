@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 	// Sets the update step
 	SPK::System::setClampStep(true,0.1f);			// clamp the step to 100 ms
 	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
-
+	
 	SPK::IRR::IRRSystem* system = new SPK::IRR::IRRSystem(smgr->getRootSceneNode(),smgr);
 	system->enableAABBComputation(true);
 	system->drop(); // We let the scene manager taking care of the system life time
@@ -102,11 +102,13 @@ int main(int argc, char *argv[])
 	SPK::IRR::IRRQuadRenderer* quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
 	quadRenderer->setBlending(SPK::BLENDING_ADD);
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
+	quadRenderer->setTexture(driver->getTexture("res\\flare.bmp"));
+	quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
 
 	SPK::RandomEmitter* emitter = SPK::RandomEmitter::create();
 	emitter->setZone(SPK::Point::create());
 	emitter->setForce(0.4f,0.6f);
-	emitter->setFlow(50);
+	emitter->setFlow(200);
 
 	SPK::Gravity* gravity = SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f));
 	SPK::Friction* friction = SPK::Friction::create(0.2f);
@@ -116,8 +118,8 @@ int main(int argc, char *argv[])
 	graphInterpolator->addEntry(0.5f,0x00FF0088);
 	graphInterpolator->addEntry(1.0f,0x0000FF88);
 
-	SPK::Group* group = system->createGroup(100);
-	group->setRadius(0.05f);
+	SPK::Group* group = system->createGroup(400);
+	group->setRadius(0.15f);
 	group->setLifeTime(1.0f,2.0f);
 	group->setColorInterpolator(graphInterpolator);
 	group->setParamInterpolator(SPK::PARAM_SIZE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
