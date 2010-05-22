@@ -91,12 +91,14 @@
 		</Build>
 		<Unit filename="..\..\..\include\Rendering\Irrlicht\SPK_IRR_Buffer.h" />
 		<Unit filename="..\..\..\include\Rendering\Irrlicht\SPK_IRR_DEF.h" />
+		<Unit filename="..\..\..\include\Rendering\Irrlicht\SPK_IRR_LineRenderer.h" />
 		<Unit filename="..\..\..\include\Rendering\Irrlicht\SPK_IRR_PointRenderer.h" />
 		<Unit filename="..\..\..\include\Rendering\Irrlicht\SPK_IRR_QuadRenderer.h" />
 		<Unit filename="..\..\..\include\Rendering\Irrlicht\SPK_IRR_Renderer.h" />
 		<Unit filename="..\..\..\include\Rendering\Irrlicht\SPK_IRR_System.h" />
 		<Unit filename="..\..\..\include\SPARK_IRR.h" />
 		<Unit filename="..\..\..\src\Rendering\Irrlicht\SPK_IRR_Buffer.cpp" />
+		<Unit filename="..\..\..\src\Rendering\Irrlicht\SPK_IRR_LineRenderer.cpp" />
 		<Unit filename="..\..\..\src\Rendering\Irrlicht\SPK_IRR_PointRenderer.cpp" />
 		<Unit filename="..\..\..\src\Rendering\Irrlicht\SPK_IRR_QuadRenderer.cpp" />
 		<Unit filename="..\..\..\src\Rendering\Irrlicht\SPK_IRR_Renderer.cpp" />
