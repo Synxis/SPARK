@@ -32,10 +32,10 @@ namespace SPK
 {
 	bool Group::bufferManagement = true;
 
-	Group::Group(Model* model,size_t capacity) :
+	Group::Group(Model* m,size_t capacity) :
 		Registerable(),
 		Transformable(),
-		model(model != NULL ? model : &defaultModel),
+		model(m != NULL ? m : &defaultModel),
 		renderer(NULL),
 		friction(0.0f),
 		gravity(Vector3D()),
@@ -56,7 +56,7 @@ namespace SPK
 		activeModifiers(),
 		additionalBuffers(),
 		swappableBuffers()
-	{}
+	{ incrementChildReference(model); }
 
 	Group::Group(const Group& group) :
 		Registerable(group),
@@ -80,6 +80,8 @@ namespace SPK
 		additionalBuffers(),
 		swappableBuffers()
 	{
+		incrementChildReference(model);
+
 		particleData = new Particle::ParticleData[pool.getNbReserved()];
 		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
 		particleExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
