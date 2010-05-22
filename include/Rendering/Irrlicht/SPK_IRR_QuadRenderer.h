@@ -21,8 +21,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef SPK_IRR_QUADRENDERER
-#define SPK_IRR_QUADRENDERER
+#ifndef H_SPK_IRR_QUADRENDERER
+#define H_SPK_IRR_QUADRENDERER
 
 #include "Rendering/Irrlicht/SPK_IRR_Renderer.h"
 #include "Extensions/Renderers/SPK_QuadRendererInterface.h"
@@ -81,6 +81,8 @@ namespace IRR
 		* @return the texture of this renderer
 		*/
 		inline irr::video::ITexture* getTexture() const;
+
+		virtual bool setTexturingMode(TextureMode mode);
 
 		/**
 		* @brief Sets the atlas dimension of the texture in an Irrlicht way

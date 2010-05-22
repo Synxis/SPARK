@@ -37,6 +37,18 @@ namespace IRR
 		Oriented3DRendererInterface()
 	{}
 
+	bool IRRQuadRenderer::setTexturingMode(TextureMode mode)
+	{
+		if (mode == TEXTURE_MODE_3D)
+		{
+			SPK_LOG_WARNING("IRRQuadRenderer::setTexturingMode(TextureMode) - Textures 3D are not supported by Irrlicht - Call is ignored");
+			return false;
+		}
+		
+		texturingMode = mode;
+		return true;
+	}
+
 	RenderBuffer* IRRQuadRenderer::attachRenderBuffer(const Group& group) const
 	{
 		// Creates the render buffer
@@ -71,7 +83,7 @@ namespace IRR
 
 	void IRRQuadRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const
 	{
-		SPK_ASSERT(renderBuffer != NULL,"IRRPointRenderer::render(const Group&,const DataSet*,RenderBuffer*) - renderBuffer must not be NULL");
+		SPK_ASSERT(renderBuffer != NULL,"IRRQuadRenderer::render(const Group&,const DataSet*,RenderBuffer*) - renderBuffer must not be NULL");
 		IRRBuffer& buffer = dynamic_cast<IRRBuffer&>(*renderBuffer);
 		buffer.positionAtStart(); // Repositions all the buffers at the start
 

@@ -21,8 +21,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef SPK_IRR_POINTRENDERER
-#define SPK_IRR_POINTRENDERER
+#ifndef H_SPK_IRR_POINTRENDERER
+#define H_SPK_IRR_POINTRENDERER
 
 #include "Rendering/Irrlicht/SPK_IRR_Renderer.h"
 #include "Extensions/Renderers/SPK_PointRendererInterface.h"
