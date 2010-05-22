@@ -188,7 +188,6 @@ namespace SPK
 	{
 		if(!newmodel) newmodel = &defaultModel;
 		if(model == newmodel) return;
-		if(pool.getMaxTotal() == 0) return;
 
 		// empty and change model
 		empty();
