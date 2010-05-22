@@ -59,14 +59,14 @@ namespace IRR
 		*
 		* This method allows to set any blending mode supported by Irrlicht.<br>
 		* Note that a simpler helper method exist to set the most common blending modes :<br>
-		* <i>setBlending(BlendingMode)</i>
+		* <i>setBlendMode(BlendingMode)</i>
 		*
 		* @param srcFunc : the blending source function
 		* @param destFunc : the blending destination function
 		* @param alphaSrc : the alpha source
 		*/
-		void setBlending(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc);
-		virtual void setBlending(Blending blendMode);
+		void setBlendMode(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc);
+		virtual void setBlendMode(BlendMode blendMode);
 
 		virtual void enableRenderingOption(RenderingOption renderingHint,bool enable);
 		virtual void setAlphaTestThreshold(float alphaThreshold);

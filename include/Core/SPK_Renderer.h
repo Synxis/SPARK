@@ -33,11 +33,11 @@ namespace SPK
 	class Vector3D;
 	class RenderBuffer;
 
-	enum Blending
+	enum BlendMode
 	{
-		BLENDING_NONE,
-		BLENDING_ALPHA,
-		BLENDING_ADD,
+		BLEND_MODE_NONE,
+		BLEND_MODE_ALPHA,
+		BLEND_MODE_ADD,
 	};
 
 	enum RenderingOption
@@ -66,7 +66,7 @@ namespace SPK
 		virtual inline void enableRenderingOption(RenderingOption option,bool enable);
 		virtual inline void setAlphaTestThreshold(float alphaThreshold);
 		inline void setActive(bool active);
-		virtual void setBlending(Blending blendMode) = 0;
+		virtual void setBlendMode(BlendMode blendMode) = 0;
 		
 		/////////////
 		// Getters //

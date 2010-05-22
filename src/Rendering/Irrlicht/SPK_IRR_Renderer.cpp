@@ -35,10 +35,10 @@ namespace IRR
 		material.Lighting = false;										// No lights per default
 		material.BackfaceCulling = false;								// Deactivates backface culling
 		material.MaterialType = irr::video::EMT_ONETEXTURE_BLEND;		// To allow complex blending functions
-		setBlending(BLENDING_NONE);										// Blending is disabled per default
+		setBlendMode(BLEND_MODE_NONE);										// BlendMode is disabled per default
 	}
 
-	void IRRRenderer::setBlending(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc)
+	void IRRRenderer::setBlendMode(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc)
 	{
 		blendSrcFunc = srcFunc;
 		blendDestFunc = destFunc;
@@ -46,30 +46,30 @@ namespace IRR
 		updateMaterialBlendingMode();
 	}
 
-	void IRRRenderer::setBlending(Blending blendMode)
+	void IRRRenderer::setBlendMode(BlendMode blendMode)
 	{
 		switch(blendMode)
 		{
-		case BLENDING_NONE :
+		case BLEND_MODE_NONE :
 			blendSrcFunc = irr::video::EBF_ONE;
 			blendDestFunc = irr::video::EBF_ZERO;
 			alphaSource = irr::video::EAS_NONE;
 			break;
 
-		case BLENDING_ADD :
+		case BLEND_MODE_ADD :
 			blendSrcFunc = irr::video::EBF_SRC_ALPHA;
 			blendDestFunc = irr::video::EBF_ONE;
 			alphaSource = irr::video::EAS_VERTEX_COLOR | irr::video::EAS_TEXTURE;
 			break;
 
-		case BLENDING_ALPHA :
+		case BLEND_MODE_ALPHA :
 			blendSrcFunc = irr::video::EBF_SRC_ALPHA;
 			blendDestFunc = irr::video::EBF_ONE_MINUS_SRC_ALPHA;
 			alphaSource = irr::video::EAS_VERTEX_COLOR | irr::video::EAS_TEXTURE;
 			break;
 
 		default :
-			SPK_LOG_WARNING("IRRRenderer::setBlending(Blending) - Unsupported blending mode. Nothing happens");
+			SPK_LOG_WARNING("IRRRenderer::setBlendMode(BlendMode) - Unsupported blending mode. Nothing happens");
 			break;
 		}
 		updateMaterialBlendingMode();

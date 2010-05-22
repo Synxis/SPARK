@@ -25,30 +25,30 @@ namespace SPK
 {
 namespace GL
 {
-	void GLRenderer::setBlending(Blending blendMode)
+	void GLRenderer::setBlendMode(BlendMode blendMode)
 	{
 		switch(blendMode)
 		{
-		case BLENDING_NONE :
+		case BLEND_MODE_NONE :
 			srcBlending = GL_ONE;
 			destBlending = GL_ZERO;
 			blendingEnabled = false;
 			break;
 
-		case BLENDING_ADD :
+		case BLEND_MODE_ADD :
 			srcBlending = GL_SRC_ALPHA;
 			destBlending = GL_ONE;
 			blendingEnabled = true;
 			break;
 
-		case BLENDING_ALPHA :
+		case BLEND_MODE_ALPHA :
 			srcBlending = GL_SRC_ALPHA;
 			destBlending = GL_ONE_MINUS_SRC_ALPHA;
 			blendingEnabled = true;
 			break;
 
 		default :
-			SPK_LOG_WARNING("GLRenderer::setBlending(Blending) - Unsupported blending mode. Nothing happens");
+			SPK_LOG_WARNING("GLRenderer::setBlendMode(BlendMode) - Unsupported blending mode. Nothing happens");
 			break;
 		}
 	}
