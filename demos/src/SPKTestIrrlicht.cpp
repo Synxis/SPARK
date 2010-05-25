@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 	system->drop(); // We let the scene manager taking care of the system life time
 
 	SPK::IRR::IRRQuadRenderer* quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
-	quadRenderer->setBlending(SPK::BLENDING_ADD);
+	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 	quadRenderer->setTexture(driver->getTexture("res\\flare.bmp"));
 	quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);

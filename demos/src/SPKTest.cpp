@@ -124,12 +124,12 @@ int main(int argc, char *argv[])
 	system->enableAABBComputation(true);
 
 	SPK::GL::GLQuadRenderer* quadRenderer = SPK::GL::GLQuadRenderer::create();
-	quadRenderer->setBlending(SPK::BLENDING_ADD);
+	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 
 	SPK::GL::GLLineTrailRenderer* lineTrailRenderer = SPK::GL::GLLineTrailRenderer::create();
 	//lineTrailRenderer->setNbSamples(32);
-	lineTrailRenderer->setBlending(SPK::BLENDING_ADD);
+	lineTrailRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	lineTrailRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 
 	SPK::RandomEmitter* emitter = SPK::RandomEmitter::create();
