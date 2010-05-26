@@ -20,6 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #include "Core/SPK_Registerable.h"
+#include "Core/SPK_Logger.h"
 
 namespace SPK
 {
@@ -30,6 +31,7 @@ namespace SPK
 #endif
 
 	Registerable::Registerable() :
+		Nameable(),
 		nbReferences(0),
 		shared(false),
 		destroyable(true)
@@ -40,6 +42,7 @@ namespace SPK
 	}
 
 	Registerable::Registerable(const Registerable& registerable) :
+		Nameable(registerable),
 		nbReferences(0),
 		shared(registerable.shared),
 		destroyable(true)
@@ -152,9 +155,14 @@ namespace SPK
 #ifdef _DEBUG
 	void Registerable::dumpMemory()
 	{
-		SPK_LOG_INFO("Nb allocated registerable : " << debugSet.size());
+		SPK_LOG_INFO("Nb allocated registerables : " << debugSet.size());
 		for (std::set<const Registerable*>::iterator it = debugSet.begin(); it != debugSet.end(); ++it)
-			SPK_LOG_INFO(*it << " : " << (*it)->getClassName().c_str());
+		{
+			std::string flag;
+			if ((*it)->isShared()) flag += 'S';
+			if ((*it)->isDestroyable()) flag += 'D';
+			SPK_LOG_INFO(*it << " - " << (*it)->getClassName().c_str() << " - " << (*it)->getNbReferences() << " - " << flag);
+		}
 	}
 #endif
 }

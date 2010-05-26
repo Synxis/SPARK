@@ -44,6 +44,7 @@ namespace SPK
 	};
 
 	Group::Group(System& system,size_t capacity) :
+		Nameable(),
 		system(system),
 		nbEnabledParameters(0),
 		minLifeTime(1.0f),
@@ -63,6 +64,7 @@ namespace SPK
 	}
 
 	Group::Group(System& system,const Group& group) :
+		Nameable(group),
 		system(system),
 		nbEnabledParameters(0),
 		minLifeTime(group.minLifeTime),

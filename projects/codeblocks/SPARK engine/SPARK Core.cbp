@@ -91,6 +91,7 @@
 		<Unit filename="..\..\..\include\Core\SPK_Iterator.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Logger.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Modifier.h" />
+		<Unit filename="..\..\..\include\Core\SPK_Nameable.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Particle.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Registerable.h" />
 		<Unit filename="..\..\..\include\Core\SPK_RenderBuffer.h" />

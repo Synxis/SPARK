@@ -29,6 +29,7 @@
 
 #include "Core/SPK_DEF.h"
 #include "Core/SPK_Logger.h"
+#include "Core/SPK_Nameable.h"
 #include "Core/SPK_Vector3D.h"
 #include "Core/SPK_Color.h"
 #include "Core/SPK_Interpolator.h"
@@ -46,7 +47,7 @@ namespace SPK
 	/**
 	* @brief Group of particles
 	*/
-	class SPK_PREFIX Group
+	class SPK_PREFIX Group : public Nameable
 	{
 	friend class Particle;
 	friend class System;

@@ -39,7 +39,8 @@ namespace SPK
 	Vector3D System::cameraPosition;
 
 	System::System(const System& system) :
-		Transformable(),
+		Transformable(system),
+		Nameable(system),
 		deltaStep(0.0f),
 		AABBComputationEnabled(system.AABBComputationEnabled),
 		AABBMin(system.AABBMin),

@@ -28,7 +28,7 @@
 #endif
 
 #include "Core/SPK_DEF.h"
-#include "Core/SPK_Logger.h"
+#include "Core/SPK_Nameable.h"
 
 // A macro implementing the clone method for Registerable children
 #define SPK_IMPLEMENT_REGISTERABLE(ClassName) \
@@ -44,7 +44,7 @@ virtual std::string getClassName() const {return #ClassName;}
 
 namespace SPK
 {
-	class SPK_PREFIX Registerable
+	class SPK_PREFIX Registerable : public Nameable
 	{
 	friend class System;
 	friend class Group;

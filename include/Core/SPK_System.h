@@ -26,6 +26,7 @@
 
 #include "Core/SPK_DEF.h"
 #include "Core/SPK_Logger.h"
+#include "Core/SPK_Nameable.h"
 #include "Core/SPK_Transformable.h"
 #include "Core/SPK_Vector3D.h"
 
@@ -47,7 +48,8 @@ namespace SPK
 	/**
 	* @brief A class defining a complete system of particles
 	*/
-	class SPK_PREFIX System : public Transformable
+	class SPK_PREFIX System : public Transformable,
+							  public Nameable
 	{
 	public :
 
@@ -292,6 +294,7 @@ namespace SPK
 	};
 
 	inline System::System(bool initialize) :
+		Nameable(),
 		groups(),
 		deltaStep(0.0f),
 		AABBComputationEnabled(false),
