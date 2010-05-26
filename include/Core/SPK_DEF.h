@@ -46,8 +46,8 @@
 #define SPK_PREFIX
 #endif
 
-#define SPK_RANDOM(min,max) SPK::SPKMain::getInstance().generateRandom(min,max)
-#define SPK_DEFAULT_ZONE	SPK::SPKMain::getInstance().getDefaultZone()
+#define SPK_RANDOM(min,max) SPK::SPKContext::getInstance().generateRandom(min,max)
+#define SPK_DEFAULT_ZONE	SPK::SPKContext::getInstance().getDefaultZone()
 
 namespace SPK
 {
@@ -62,40 +62,37 @@ namespace SPK
 		PARAM_ROTATION_SPEED = 4,
 	};
 
-	class SPK_PREFIX SPKMain
+	class SPK_PREFIX SPKContext
 	{
 	public :
 
-		static inline SPKMain& getInstance();
+		static inline SPKContext& getInstance();
 
-		inline Zone* getDefaultZone();
+		void release();
+
+		Zone* getDefaultZone();
 
 		template<typename T>
 		inline T generateRandom(const T& min,const T& max);
 
 	private :
 
-		static SPKMain instance;
+		static SPKContext instance;
 
 		Zone* defaultZone;
 		unsigned int randomSeed;
 
-		SPKMain();
-		~SPKMain();
+		SPKContext();
+		~SPKContext();
 	};
 
-	inline SPKMain& SPKMain::getInstance()
+	inline SPKContext& SPKContext::getInstance()
 	{
 		return instance;
 	}
 
-	inline Zone* SPKMain::getDefaultZone()
-	{
-		return defaultZone;
-	}
-
 	template<typename T>
-	inline T SPKMain::generateRandom(const T& min,const T& max)
+	inline T SPKContext::generateRandom(const T& min,const T& max)
     {
 		// optimized standard minimal
 		long tmp0 = 16807L * (randomSeed & 0xFFFFL);

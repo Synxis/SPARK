@@ -252,7 +252,7 @@ namespace SPK
 
 	// Specialization of the random generation of colors
 	template<>
-	inline Color SPKMain::generateRandom(const Color& c0,const Color& c1)
+	inline Color SPKContext::generateRandom(const Color& c0,const Color& c1)
 	{
 		return Color(
 			generateRandom(c0.getR(),c1.getR()),

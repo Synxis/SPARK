@@ -743,7 +743,7 @@ namespace SPK
 
 	// Specialization of the random generation of colors
 	template<>
-	inline Vector3D SPKMain::generateRandom(const Vector3D& v0,const Vector3D& v1)
+	inline Vector3D SPKContext::generateRandom(const Vector3D& v0,const Vector3D& v1)
 	{
 		return Vector3D(
 			generateRandom(v0.x,v1.x),
