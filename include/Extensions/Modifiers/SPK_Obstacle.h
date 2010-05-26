@@ -83,6 +83,8 @@ namespace SPK
 		*/
 		inline float getFriction() const;
 
+		virtual Nameable* findByName(const std::string& name);
+
 	protected :
 
 		void propagateUpdateTransform();

@@ -58,6 +58,8 @@ namespace SPK
 
 		void resetPool();
 
+		virtual Nameable* findByName(const std::string& name);
+
 	private :
 
 		unsigned int minNb;

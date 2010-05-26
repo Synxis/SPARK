@@ -287,6 +287,8 @@ namespace SPK
 		inline DataSet* getRendererDataSet();
 		inline RenderBuffer* getRenderBuffer();
 
+		virtual Nameable* findByName(const std::string& name);
+
 	private :
 
 		static const size_t NB_PARAMETERS = 5;

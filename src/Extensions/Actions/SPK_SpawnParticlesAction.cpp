@@ -145,4 +145,15 @@ namespace SPK
 		}
 		emitterPool.clear();
 	}
+
+	Nameable* SpawnParticlesAction::findByName(const std::string& name)
+	{
+		Nameable* object = Nameable::findByName(name);
+		if (object != NULL) return object;
+
+		if (baseEmitter != NULL)
+			object = baseEmitter->findByName(name);
+
+		return object;
+	}
 }

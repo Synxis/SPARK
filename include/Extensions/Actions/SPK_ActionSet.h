@@ -45,6 +45,8 @@ namespace SPK
 
 		virtual void apply(Particle& particle) const;
 
+		virtual Nameable* findByName(const std::string& name);
+
 	private :
 
 		inline ActionSet() {}

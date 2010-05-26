@@ -73,4 +73,18 @@ namespace SPK
 		for (std::vector<Action*>::const_iterator it = actions.begin(); it != actions.end(); ++it)
 			(*it)->apply(particle);
 	}
+
+	Nameable* ActionSet::findByName(const std::string& name)
+	{
+		Nameable* object = Nameable::findByName(name);
+		if (object != NULL) return object;
+
+		for (std::vector<Action*>::const_iterator it = actions.begin(); it != actions.end(); ++it)
+		{
+			object = (*it)->findByName(name);
+			if (object != NULL) return object;
+		}
+
+		return NULL;
+	}
 }

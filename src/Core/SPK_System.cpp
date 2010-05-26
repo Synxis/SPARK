@@ -190,6 +190,20 @@ namespace SPK
 			(*it)->initData();
 	}
 
+	Nameable* System::findByName(const std::string& name)
+	{
+		Nameable* object = Nameable::findByName(name);
+		if (object != NULL) return object;
+
+		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		{
+			object = (*it)->findByName(name);
+			if (object != NULL) return object;
+		}
+
+		return NULL;
+	}
+
 	bool System::innerUpdate(float deltaTime)
 	{
 		bool alive = false;

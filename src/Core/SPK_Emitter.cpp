@@ -104,4 +104,12 @@ namespace SPK
 		zone->generatePosition(particle.position(),full);
 		generateVelocity(particle,SPK_RANDOM(forceMin,forceMax) / particle.getParam(PARAM_MASS));
 	}
+
+	Nameable* Emitter::findByName(const std::string& name)
+	{
+		Nameable* object = Nameable::findByName(name);
+		if (object != NULL) return object;
+
+		return zone->findByName(name);
+	}
 }

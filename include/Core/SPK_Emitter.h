@@ -177,6 +177,8 @@ namespace SPK
 
 		void emit(Particle& particle) const;
 
+		virtual Nameable* findByName(const std::string& name);
+
 	protected :
 
 		Emitter(Zone* zone = NULL,

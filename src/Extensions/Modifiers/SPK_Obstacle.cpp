@@ -79,6 +79,17 @@ namespace SPK
 		}
 	}
 
+	Nameable* Obstacle::findByName(const std::string& name)
+	{
+		Nameable* object = Nameable::findByName(name);
+		if (object != NULL) return object;
+
+		if (zone != NULL)
+			object = zone->findByName(name);
+
+		return object;
+	}
+
 	void Obstacle::propagateUpdateTransform()
 	{
 		if (!zone->isShared())

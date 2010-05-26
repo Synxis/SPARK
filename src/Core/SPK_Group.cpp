@@ -856,4 +856,55 @@ namespace SPK
 		}
 		this->radius = radius;
 	}
+
+	Nameable* Group::findByName(const std::string& name)
+	{
+		Nameable* object = Nameable::findByName(name);
+		if (object != NULL) return object;
+
+		if (renderer.obj != NULL)
+		{
+			object = renderer.obj->findByName(name);
+			if (object != NULL) return object;
+		}
+
+		if (colorInterpolator.obj != NULL)
+		{
+			object = colorInterpolator.obj->findByName(name);
+			if (object != NULL) return object;
+		}
+
+		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+			if (paramInterpolators[i].obj != NULL)
+			{
+				object = paramInterpolators[i].obj->findByName(name);
+				if (object != NULL) return object;
+			}
+
+		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+		{
+			object = (*it)->findByName(name);
+			if (object != NULL) return object;
+		}
+
+		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+		{
+			object = it->obj->findByName(name);
+			if (object != NULL) return object;
+		}
+
+		if (birthAction != NULL)
+		{
+			object = birthAction->findByName(name);
+			if (object != NULL) return object;
+		}
+
+		if (deathAction != NULL)
+		{
+			object = deathAction->findByName(name);
+			if (object != NULL) return object;
+		}
+
+		return NULL;
+	}
 }

@@ -262,6 +262,8 @@ namespace SPK
 		void initialize();
 		inline bool isInitialized() const;
 
+		virtual Nameable* findByName(const std::string& name);
+
 	protected :
 
 		std::vector<Group*> groups; // vector containing all the groups of the system
