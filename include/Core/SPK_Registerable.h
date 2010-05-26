@@ -37,10 +37,10 @@ private : \
 virtual ClassName* clone() const \
 { \
 	return new ClassName(*this); \
-} /*\
+} \
 \
 public : \
-virtual std::string getClassName() const {return #ClassName;}*/
+virtual std::string getClassName() const {return #ClassName;}
 
 namespace SPK
 {
@@ -65,6 +65,12 @@ namespace SPK
 
 		bool destroy(bool decrement = true);
 
+		virtual std::string getClassName() const = 0;
+
+#ifdef _DEBUG
+		static void dumpMemory();
+#endif
+
 	protected :
 
 		Registerable();
@@ -81,7 +87,7 @@ namespace SPK
 		static std::map<const Registerable*,Registerable*> copyBuffer;
 
 #ifdef _DEBUG
-//		static std::set<const Registerable*> Registerable::debugBuffer;
+		static std::set<const Registerable*> Registerable::debugSet;
 #endif
 
 		unsigned int nbReferences;

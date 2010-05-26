@@ -26,7 +26,7 @@ namespace SPK
 	std::map<const Registerable*,Registerable*> Registerable::copyBuffer;
 
 #if _DEBUG
-//	std::set<const Registerable*> Registerable::debugBuffer;
+	std::set<const Registerable*> Registerable::debugSet;
 #endif
 
 	Registerable::Registerable() :
@@ -35,7 +35,7 @@ namespace SPK
 		destroyable(true)
 	{
 #if _DEBUG
-//		debugBuffer.insert(this);
+		debugSet.insert(this);
 #endif
 	}
 
@@ -45,7 +45,7 @@ namespace SPK
 		destroyable(true)
 	{
 #if _DEBUG
-//		debugBuffer.insert(this);
+		debugSet.insert(this);
 #endif		
 	}
 
@@ -57,7 +57,7 @@ namespace SPK
 		}
 
 #if _DEBUG
-//		debugBuffer.erase(this);
+		debugSet.erase(this);
 #endif	
 	}
 
@@ -148,4 +148,13 @@ namespace SPK
 			clone->increment();
 		return clone;
 	}
+
+#ifdef _DEBUG
+	void Registerable::dumpMemory()
+	{
+		SPK_LOG_INFO("Nb allocated registerable : " << debugSet.size());
+		for (std::set<const Registerable*>::iterator it = debugSet.begin(); it != debugSet.end(); ++it)
+			SPK_LOG_INFO(*it << " : " << (*it)->getClassName().c_str());
+	}
+#endif
 }
