@@ -454,7 +454,7 @@ namespace SPK
 		void detachDataSet(DataSet* dataHandler);
 
 		void sortParticles(int start,int end);
-		void propagateUpdateTransform();
+		virtual void propagateUpdateTransform();
 
 		void sortParticles();
 		void computeAABB();

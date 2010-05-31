@@ -87,7 +87,7 @@ namespace SPK
 
 	protected :
 
-		void propagateUpdateTransform();
+		virtual void propagateUpdateTransform();
 
 	private :
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="SPARK Engine workspace">
-		<Project filename="SPARK engine\SPARK Core.cbp" />
+		<Project filename="SPARK engine\SPARK Core.cbp" active="1" />
 		<Project filename="SPARK engine\SPARK OpenGL.cbp">
 			<Depends filename="SPARK engine\SPARK Core.cbp" />
 		</Project>
-		<Project filename="SPARK engine\SPARK Irrlicht.cbp" active="1">
+		<Project filename="SPARK engine\SPARK Irrlicht.cbp">
 			<Depends filename="SPARK engine\SPARK Core.cbp" />
 		</Project>
 	</Workspace>

@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	//!IRRLICHT
     video::E_DRIVER_TYPE chosenDriver = video::EDT_OPENGL;
 #ifdef _WIN32
-	if(MessageBoxA(0,"Do you want to use DirectX 9 ?","SPARK Irrlicht test",MB_YESNO) == 6)
+	if(MessageBoxA(0,"Do you want to use DirectX 9 ? (else OpenGL)","SPARK Irrlicht test",MB_YESNO | MB_ICONQUESTION) == IDYES)
         chosenDriver = video::EDT_DIRECT3D9;
 #endif
 
@@ -105,13 +105,9 @@ int main(int argc, char *argv[])
 	quadRenderer->setTexture(driver->getTexture("res\\flare.bmp"));
 	quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
 
-	SPK::RandomEmitter* emitter = SPK::RandomEmitter::create();
-	emitter->setZone(SPK::Point::create());
+	SPK::RandomEmitter* emitter = SPK::RandomEmitter::create(SPK::Point::create());
 	emitter->setForce(0.4f,0.6f);
 	emitter->setFlow(200);
-
-	SPK::Gravity* gravity = SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f));
-	SPK::Friction* friction = SPK::Friction::create(0.2f);
 
 	SPK::ColorGraphInterpolator* graphInterpolator = SPK::ColorGraphInterpolator::create();
 	graphInterpolator->addEntry(0.0f,0xFF000088);
@@ -123,12 +119,10 @@ int main(int argc, char *argv[])
 	group->setLifeTime(1.0f,2.0f);
 	group->setColorInterpolator(graphInterpolator);
 	group->setParamInterpolator(SPK::PARAM_SIZE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
-	group->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-2.0f,2.0f));
-	group->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
+	//group->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
 	group->addEmitter(emitter);
-	group->addModifier(gravity);
-	group->addModifier(friction);
-	group->addModifier(SPK::Rotator::create());
+	group->addModifier(SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f)));
+	group->addModifier(SPK::Friction::create(0.2f));
 	group->setRenderer(quadRenderer);
 
 	while(device->run())

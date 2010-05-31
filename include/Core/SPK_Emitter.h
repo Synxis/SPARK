@@ -48,11 +48,6 @@ namespace SPK
 
 	public :
 
-		////////////////
-		// Destructor //
-		////////////////
-
-		/** @brief Destructor of emitter */
 		virtual ~Emitter();
 
 		////////////
@@ -190,7 +185,7 @@ namespace SPK
 
 		Emitter(const Emitter& emitter);
 
-		void propagateUpdateTransform();
+		virtual void propagateUpdateTransform();
 
 	private :
 

@@ -63,6 +63,7 @@
 #include "Extensions/Emitters/SPK_RandomEmitter.h"
 #include "Extensions/Emitters/SPK_StraightEmitter.h"
 #include "Extensions/Emitters/SPK_SphericEmitter.h"
+#include "Extensions/Emitters/SPK_NormalEmitter.h"
 
 // Modifiers
 #include "Extensions/Modifiers/SPK_BasicModifiers.h"

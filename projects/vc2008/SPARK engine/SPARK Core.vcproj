@@ -352,6 +352,10 @@
 					Name="Emitters"
 					>
 					<File
+						RelativePath="..\..\..\src\Extensions\Emitters\SPK_NormalEmitter.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\Emitters\SPK_RandomEmitter.cpp"
 						>
 					</File>
@@ -545,6 +549,10 @@
 				<Filter
 					Name="Emitters"
 					>
+					<File
+						RelativePath="..\..\..\include\Extensions\Emitters\SPK_NormalEmitter.h"
+						>
+					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Emitters\SPK_RandomEmitter.h"
 						>
