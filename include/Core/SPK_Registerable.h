@@ -23,9 +23,6 @@
 #define H_SPK_REGISTERABLE
 
 #include <map>
-#ifdef _DEBUG
-#include <set>
-#endif
 
 #include "Core/SPK_DEF.h"
 #include "Core/SPK_Nameable.h"
@@ -48,6 +45,7 @@ namespace SPK
 	{
 	friend class System;
 	friend class Group;
+	friend class SPKContext;
 
 	public :
 
@@ -67,10 +65,6 @@ namespace SPK
 
 		virtual std::string getClassName() const = 0;
 
-#ifdef _DEBUG
-		static void dumpMemory();
-#endif
-
 	protected :
 
 		Registerable();
@@ -85,10 +79,6 @@ namespace SPK
 	private :
 
 		static std::map<const Registerable*,Registerable*> copyBuffer;
-
-#ifdef _DEBUG
-		static std::set<const Registerable*> Registerable::debugSet;
-#endif
 
 		unsigned int nbReferences;
 		bool shared;

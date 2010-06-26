@@ -26,31 +26,19 @@ namespace SPK
 {
 	std::map<const Registerable*,Registerable*> Registerable::copyBuffer;
 
-#if _DEBUG
-	std::set<const Registerable*> Registerable::debugSet;
-#endif
-
 	Registerable::Registerable() :
 		Nameable(),
 		nbReferences(0),
 		shared(false),
 		destroyable(true)
-	{
-#if _DEBUG
-		debugSet.insert(this);
-#endif
-	}
+	{}
 
 	Registerable::Registerable(const Registerable& registerable) :
 		Nameable(registerable),
 		nbReferences(0),
 		shared(registerable.shared),
 		destroyable(true)
-	{
-#if _DEBUG
-		debugSet.insert(this);
-#endif		
-	}
+	{}
 
 	Registerable::~Registerable()
 	{
@@ -58,10 +46,6 @@ namespace SPK
 		{
 			SPK_LOG_WARNING("Registerable::~Registerable() - The number of references of the object is not 0 during destruction");
 		}
-
-#if _DEBUG
-		debugSet.erase(this);
-#endif	
 	}
 
 	void Registerable::decrement()
@@ -151,18 +135,4 @@ namespace SPK
 			clone->increment();
 		return clone;
 	}
-
-#ifdef _DEBUG
-	void Registerable::dumpMemory()
-	{
-		SPK_LOG_INFO("Nb allocated registerables : " << debugSet.size());
-		for (std::set<const Registerable*>::iterator it = debugSet.begin(); it != debugSet.end(); ++it)
-		{
-			std::string flag;
-			if ((*it)->isShared()) flag += 'S';
-			if ((*it)->isDestroyable()) flag += 'D';
-			SPK_LOG_INFO(*it << " - " << (*it)->getClassName().c_str() << " - " << (*it)->getNbReferences() << " - " << flag);
-		}
-	}
-#endif
 }
