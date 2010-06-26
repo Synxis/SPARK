@@ -23,6 +23,14 @@
 
 namespace SPK
 {
+	void Plane::setNormal(const Vector3D& normal)
+	{
+		this->normal = normal;
+		this->normal.normalize();
+		tNormal = this->normal;
+		notifyForTransformUpdate();
+	}
+
 	bool Plane::intersects(const Vector3D& v0,const Vector3D& v1,float radius) const
 	{
 		float dist0 = dotProduct(tNormal,v0 - getTransformedPosition());

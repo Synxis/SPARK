@@ -23,7 +23,6 @@
 #define H_SPK_PLANE
 
 #include "Core/SPK_Zone.h"
-#include "Core/SPK_Particle.h"
 
 namespace SPK
 {
@@ -70,7 +69,7 @@ namespace SPK
 		*
 		* @param normal :  the normal of this Plane
 		*/
-		inline void setNormal(const Vector3D& normal);
+		void setNormal(const Vector3D& normal);
 
 		/**
 		* @brief Gets the normal of this Plane
@@ -88,10 +87,10 @@ namespace SPK
 		// Interface //
 		///////////////
 
-		virtual void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
-		virtual bool contains(const Vector3D& v,float radius = 0.0f) const;
+		virtual inline void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
+		virtual inline bool contains(const Vector3D& v,float radius = 0.0f) const;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f) const;
-		virtual Vector3D computeNormal(const Vector3D& v) const;
+		virtual inline Vector3D computeNormal(const Vector3D& v) const;
 
 	protected :
 
@@ -114,14 +113,6 @@ namespace SPK
 	inline Plane* Plane::create(const Vector3D& position,const Vector3D& normal)
 	{
 		return new Plane(position,normal);
-	}
-		
-	inline void Plane::setNormal(const Vector3D& normal)
-	{
-		this->normal = normal;
-		this->normal.normalize();
-		tNormal = this->normal;
-		notifyForTransformUpdate();
 	}
 
 	inline const Vector3D& Plane::getNormal() const

@@ -37,7 +37,7 @@ float angleX = -90.0f;
 float angleY = 0.0f;
 const float CAM_POS_Z = 3.0f;
 
-// Draws the bounding box for a particle group
+// Draws the bounding box for a particle system
 void drawBoundingBox(const SPK::System& system)
 {
 	if (!system.isAABBComputationEnabled())
