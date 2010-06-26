@@ -44,7 +44,7 @@ namespace SPK
 		priorityLevel(LOG_PRIORITY_WARNING), // default priority level is WARNING in release
 #endif
 		innerStream(&std::cout),
-		prefixFlag(LOG_PREFIX_TIME | LOG_PREFIX_LIB)
+		prefixFlag(LOG_PREFIX_TIME | LOG_PREFIX_LIB | LOG_PREFIX_PRIORITY)
 	{}
 
 	Logger& Logger::getInstance()
