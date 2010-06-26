@@ -1,34 +1,72 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Test", "SPARK demos\SPARK Test.vcproj", "{A536B445-EACD-43C1-AC18-8167468D6285}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Test Irrlicht", "SPARK demos\SPARK Test Irrlicht.vcproj", "{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Test DX9", "SPARK demos\SPARK Test DX9.vcproj", "{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Test DXUT9", "SPARK demos\SPARK Test DXUT9.vcproj", "{85F1C902-15F9-43DF-ADEC-606069C749BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug DLL|Win32 = Debug DLL|Win32
 		Debug static|Win32 = Debug static|Win32
+		Debug|Win32 = Debug|Win32
 		Release DLL|Win32 = Release DLL|Win32
 		Release static|Win32 = Release static|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug DLL|Win32.ActiveCfg = Debug DLL|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug DLL|Win32.Build.0 = Debug DLL|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug static|Win32.ActiveCfg = Debug static|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug static|Win32.Build.0 = Debug static|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug|Win32.ActiveCfg = Debug DLL|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Debug|Win32.Build.0 = Debug DLL|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Release DLL|Win32.Build.0 = Release DLL|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Release static|Win32.ActiveCfg = Release static|Win32
 		{A536B445-EACD-43C1-AC18-8167468D6285}.Release static|Win32.Build.0 = Release static|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Release|Win32.ActiveCfg = Release DLL|Win32
+		{A536B445-EACD-43C1-AC18-8167468D6285}.Release|Win32.Build.0 = Release DLL|Win32
 		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug DLL|Win32.ActiveCfg = Debug DLL|Win32
 		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug DLL|Win32.Build.0 = Debug DLL|Win32
 		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug static|Win32.ActiveCfg = Debug static|Win32
 		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug static|Win32.Build.0 = Debug static|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug|Win32.ActiveCfg = Debug DLL|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Debug|Win32.Build.0 = Debug DLL|Win32
 		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
 		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release DLL|Win32.Build.0 = Release DLL|Win32
 		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release static|Win32.ActiveCfg = Release static|Win32
 		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release static|Win32.Build.0 = Release static|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release|Win32.ActiveCfg = Release DLL|Win32
+		{11B3C364-3E24-4D8A-AB7C-DAC382DDD592}.Release|Win32.Build.0 = Release DLL|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Debug DLL|Win32.ActiveCfg = Debug DLL|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Debug DLL|Win32.Build.0 = Debug DLL|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Debug static|Win32.ActiveCfg = Debug static|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Debug static|Win32.Build.0 = Debug static|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Debug|Win32.ActiveCfg = Debug DLL|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Debug|Win32.Build.0 = Debug DLL|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Release DLL|Win32.Build.0 = Release DLL|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Release static|Win32.ActiveCfg = Release static|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Release static|Win32.Build.0 = Release static|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Release|Win32.ActiveCfg = Release DLL|Win32
+		{95A17D1A-DBE3-42D1-A22E-6A27007FF2F5}.Release|Win32.Build.0 = Release DLL|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Debug DLL|Win32.ActiveCfg = Debug DLL|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Debug DLL|Win32.Build.0 = Debug DLL|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Debug static|Win32.ActiveCfg = Debug static|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Debug static|Win32.Build.0 = Debug static|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Debug|Win32.ActiveCfg = Debug DLL|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Debug|Win32.Build.0 = Debug DLL|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Release DLL|Win32.Build.0 = Release DLL|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Release static|Win32.ActiveCfg = Release static|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Release static|Win32.Build.0 = Release static|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Release|Win32.ActiveCfg = Release DLL|Win32
+		{85F1C902-15F9-43DF-ADEC-606069C749BC}.Release|Win32.Build.0 = Release DLL|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
