@@ -85,8 +85,43 @@ namespace SPK
 
 	bool Ring::intersects(const Vector3D& v0,const Vector3D& v1,float radius) const
 	{
-		SPK_LOG_WARNING("Ring::intersects(const Vector3D&,const Vector3D&,float) - Intersection with a ring is not yet implemented");
-		return false;
+		Vector3D r0 = v0 - getTransformedPosition();
+		float dist0 = dotProduct(tNormal,r0);
+		
+		if (std::abs(dist0) < radius)
+			return false; // the particle is already intersecting the plane, the intersection is ignored
+
+		Vector3D r1 = v1 - getTransformedPosition();
+		float dist1 = dotProduct(tNormal,r1);
+
+		if (std::abs(dist1) >= radius)
+		{
+			float dist1Bis = dist1;
+			if (dist1Bis > 0.0f)
+				dist1Bis -= radius;
+			else
+				dist1Bis += radius;
+
+			if ((dist0 < 0.0f) == (dist1Bis < 0.0f)) // both particles are on the same side
+				return false;
+		}
+
+		// The particle is intersecting the plane but is it within the ring ?
+		// Projects on the ring's plane
+		r0 -= dist0 * tNormal;
+		r1 -= dist1 * tNormal;
+
+		float minSqrRadius = minRadius - radius;
+		float maxSqrRadius = maxRadius + radius;
+		
+		if (minSqrRadius > 0.0f)
+			minSqrRadius *= minSqrRadius;
+		maxSqrRadius *= maxSqrRadius;
+
+		float r0SqrNorm = r0.getSqrNorm();
+		float r1SqrNorm = r1.getSqrNorm();
+
+		return ((r0SqrNorm >= minSqrRadius && r0SqrNorm <= maxSqrRadius) || (r1SqrNorm >= minSqrRadius && r1SqrNorm <= maxSqrRadius));
 	}
 
 	void Ring::innerUpdateTransform()
