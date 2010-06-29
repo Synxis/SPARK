@@ -63,6 +63,7 @@ namespace SPK
 		{
 			if (zone->intersects(particleIt->oldPosition(),particleIt->position(),particleIt->getParam(PARAM_SIZE) * group.getRadius()))
 			{
+				Vector3D oldVelocity = particleIt->position() - particleIt->oldPosition(); 
 				particleIt->position() = particleIt->oldPosition();
 
 				Vector3D& velocity = particleIt->velocity();
@@ -70,10 +71,12 @@ namespace SPK
 
 				float dist = dotProduct(velocity,normal);
 
-				normal *= dist;
+				normal *= dist - 0.001f;
 				velocity -= normal;			// tangent component
 				velocity *= friction;
 				normal *= bouncingRatio;	// normal component
+				if (dist > 0.0f)
+					normal.revert();
 				velocity -= normal;
 			}
 		}

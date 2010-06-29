@@ -178,7 +178,7 @@ namespace SPK
 
 	inline Vector3D Ring::computeNormal(const Vector3D& point) const
 	{
-		return tNormal;
+		return dotProduct(tNormal,point - getTransformedPosition()) ? -tNormal : tNormal;
 	}
 }
 

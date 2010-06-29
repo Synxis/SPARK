@@ -87,6 +87,8 @@ namespace SPK
 	{
 		Vector3D normal(v - getTransformedPosition());
 		normalizeOrRandomize(normal);
+		if (contains(v))
+			normal.revert();
 		return normal;
 	}	
 }

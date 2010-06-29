@@ -132,12 +132,12 @@ namespace SPK
 
 	inline bool Plane::contains(const Vector3D& v,float radius) const
 	{
-		return dotProduct(normal,v - getTransformedPosition()) <= -radius;
+		return dotProduct(tNormal,v - getTransformedPosition()) <= -radius;
 	}
 
 	inline Vector3D Plane::computeNormal(const Vector3D& point) const
 	{
-		return tNormal;
+		return contains(point) ? -tNormal : tNormal;
 	}
 }
 
