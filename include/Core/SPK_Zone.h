@@ -72,8 +72,8 @@ namespace SPK
 		/**
 		* Performs a check for a particle on the zone
 		* @param particle : the particle which is tested
-		* @param zoneTest : the type of the check to perform
-		* @return true if the check is fullfilled, false otherwise
+		* @param zoneTest : the type of test to perform
+		* @return true if the test is fullfilled, false otherwise
 		*/
 		inline bool check(const Particle& particle,ZoneTest zoneTest) const;
 
