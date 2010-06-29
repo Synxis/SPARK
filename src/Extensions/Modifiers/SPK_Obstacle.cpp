@@ -25,13 +25,14 @@
 
 namespace SPK
 {
-	Obstacle::Obstacle(Zone* zone,float bouncingRatio,float friction) :
+	Obstacle::Obstacle(Zone* zone,float bouncingRatio,float friction,ZoneTest zoneTest) :
 		Modifier(MODIFIER_PRIORITY_COLLISION,false,false),
-		zone(zone),
+		zone(NULL),
 		bouncingRatio(bouncingRatio),
-		friction(friction)
+		friction(friction),
+		zoneTest(ZONE_TEST_INTERSECT)
 	{
-		incrementChild(zone);
+		setZone(zone,zoneTest);
 	}
 
 	Obstacle::Obstacle(const Obstacle& obstacle) :
@@ -47,11 +48,23 @@ namespace SPK
 		destroyChild(zone);
 	}
 
-	void Obstacle::setZone(Zone* zone)
+	void Obstacle::setZone(Zone* zone,ZoneTest zoneTest)
 	{
 		decrementChild(this->zone);
 		this->zone = zone;
 		incrementChild(zone);
+
+		switch(zoneTest)
+		{
+		case ZONE_TEST_INTERSECT :
+		case ZONE_TEST_ENTER :
+		case ZONE_TEST_LEAVE :
+			this->zoneTest = zoneTest;
+			break;
+
+		default :
+			SPK_LOG_WARNING("Zone::setZone(Zone*,ZoneTest) - This ZoneTest is not valid for an obstacle, nothing happens");
+		}
 	}
 
 	void Obstacle::modify(Group& group,DataSet* dataSet,float deltaTime) const
@@ -61,9 +74,8 @@ namespace SPK
 
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
-			if (zone->intersects(particleIt->oldPosition(),particleIt->position(),particleIt->getParam(PARAM_SIZE) * group.getRadius()))
-			{
-				Vector3D oldVelocity = particleIt->position() - particleIt->oldPosition(); 
+			if (zone->check(*particleIt,zoneTest))
+			{ 
 				particleIt->position() = particleIt->oldPosition();
 
 				Vector3D& velocity = particleIt->velocity();

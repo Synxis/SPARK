@@ -344,6 +344,10 @@
 					RelativePath="..\..\..\src\Core\SPK_Transformable.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\..\src\Core\SPK_Zone.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Extensions"

@@ -29,8 +29,20 @@
 
 namespace SPK
 {
-	class Zone : public Registerable, 
-				 public Transformable
+	class Particle;
+
+	/** Constants defining the tests that can be performed for particles on zones */
+	enum ZoneTest
+	{
+		ZONE_TEST_INSIDE,		/** Is the particle inside the zone ? */
+		ZONE_TEST_OUTSIDE,		/** Is the particle outside the zone ? */
+		ZONE_TEST_INTERSECT,	/** Does the particle intersect the zone ? */
+		ZONE_TEST_ENTER,		/** Does the particle enter the zone ? */
+		ZONE_TEST_LEAVE,		/** Does the particle leave the zone ? */
+	};
+
+	class SPK_PREFIX Zone : public Registerable, 
+							public Transformable
 	{
 	public :
 
@@ -56,7 +68,14 @@ namespace SPK
 		virtual bool contains(const Vector3D& v,float radius = 0.0f) const = 0;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f) const = 0;
 		virtual Vector3D computeNormal(const Vector3D& v) const = 0;
-		//virtual void moveAtBorder(Vector3D& v,bool inside) const = 0;
+		
+		/**
+		* Performs a check for a particle on the zone
+		* @param particle : the particle which is tested
+		* @param zoneTest : the type of the check to perform
+		* @return true if the check is fullfilled, false otherwise
+		*/
+		inline bool check(const Particle& particle,ZoneTest zoneTest) const;
 
 	protected :
 
@@ -69,6 +88,16 @@ namespace SPK
 
 		Vector3D position;
 		Vector3D tPosition;
+
+		typedef bool (Zone::*checkFn)(const Particle&) const;
+		static const size_t NB_TEST_TYPES = 5;
+		static checkFn TEST_FN[NB_TEST_TYPES];
+
+		bool checkInside(const Particle& particle) const;
+		bool checkOutside(const Particle& particle) const;
+		bool checkIntersect(const Particle& particle) const;
+		bool checkEnter(const Particle& particle) const;
+		bool checkLeave(const Particle& particle) const;
 	};
 
 	inline Zone::Zone(const Vector3D& position) :
@@ -92,6 +121,12 @@ namespace SPK
 	inline const Vector3D& Zone::getTransformedPosition() const
 	{
 		return tPosition;
+	}
+
+	
+	inline bool Zone::check(const Particle &particle, ZoneTest zoneTest) const
+	{
+		return (this->*Zone::TEST_FN[zoneTest])(particle);
 	}
 
 	inline void Zone::innerUpdateTransform()
