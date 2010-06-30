@@ -337,6 +337,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\Core\SPK_Renderer.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\Core\SPK_System.cpp"
 					>
 				</File>

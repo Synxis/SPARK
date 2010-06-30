@@ -46,8 +46,16 @@ namespace SPK
 		RENDERING_OPTION_DEPTH_WRITE = 1 << 1,
 	};
 
-	class Renderer :	public Registerable,
-						public DataHandler
+	/** Constants to specify whether to compute stuff on GPU if possible */
+	enum ShaderHint
+	{
+		SHADER_HINT_NONE,		/**< Dont use shaders */
+		SHADER_HINT_VERTEX,		/**< Use vertex shader for computation when possible */
+		SHADER_HINT_GEOMETRY,	/**< Use geometry shader for computation when possible (else fallback to vertex shader if possible) */
+	};
+
+	class SPK_PREFIX Renderer :	public Registerable,
+								public DataHandler
 	{
 	friend class Group;
 
@@ -63,6 +71,18 @@ namespace SPK
 		// Setters //
 		/////////////
 
+		/**
+		* Specifies whether to use shader or not if possible
+		* @param hint : the shader hint
+		*/
+		static inline void useShaderHint(ShaderHint hint);
+
+		/**
+		* Specifies whether to use vbo to transfer data to GPU if possible
+		* @param hint : the vbo hint
+		*/
+		static inline void useVBOHint(bool hint);
+
 		virtual inline void enableRenderingOption(RenderingOption option,bool enable);
 		virtual inline void setAlphaTestThreshold(float alphaThreshold);
 		inline void setActive(bool active);
@@ -71,6 +91,18 @@ namespace SPK
 		/////////////
 		// Getters //
 		/////////////
+
+		/**
+		* Gets the shader hint
+		* @return : the shader hint
+		*/
+		static ShaderHint getShaderHint();
+
+		/**
+		* Gets the vbo hint
+		* @return : the vbo hint
+		*/
+		static bool getVBOHint();
 
 		virtual inline bool isRenderingOptionEnabled(RenderingOption option) const;
 		virtual inline float getAlphaTestThreshold() const;
@@ -85,6 +117,10 @@ namespace SPK
 		inline Renderer(bool NEEDS_DATASET);
 
 	private :
+
+		// Rendering hints
+		static ShaderHint shaderHint;
+		static bool vboHint;
 
 		bool active;
 
@@ -124,6 +160,16 @@ namespace SPK
 	inline void Renderer::setActive(bool active)
 	{
 		this->active = active;
+	}
+
+	inline ShaderHint Renderer::getShaderHint()
+	{
+		return shaderHint;
+	}
+
+	inline bool Renderer::getVBOHint()
+	{
+		return vboHint;
 	}
 
 	inline bool Renderer::isRenderingOptionEnabled(RenderingOption option) const

@@ -34,11 +34,11 @@ namespace SPK
 	/** Constants defining the tests that can be performed for particles on zones */
 	enum ZoneTest
 	{
-		ZONE_TEST_INSIDE,		/** Is the particle inside the zone ? */
-		ZONE_TEST_OUTSIDE,		/** Is the particle outside the zone ? */
-		ZONE_TEST_INTERSECT,	/** Does the particle intersect the zone ? */
-		ZONE_TEST_ENTER,		/** Does the particle enter the zone ? */
-		ZONE_TEST_LEAVE,		/** Does the particle leave the zone ? */
+		ZONE_TEST_INSIDE,		/**< Is the particle inside the zone ? */
+		ZONE_TEST_OUTSIDE,		/**< Is the particle outside the zone ? */
+		ZONE_TEST_INTERSECT,	/**< Does the particle intersect the zone ? */
+		ZONE_TEST_ENTER,		/**< Does the particle enter the zone ? */
+		ZONE_TEST_LEAVE,		/**< Does the particle leave the zone ? */
 	};
 
 	class SPK_PREFIX Zone : public Registerable, 

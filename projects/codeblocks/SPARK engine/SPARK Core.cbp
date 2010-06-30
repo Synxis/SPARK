@@ -130,6 +130,7 @@
 		<Unit filename="..\..\..\src\Core\SPK_Group.cpp" />
 		<Unit filename="..\..\..\src\Core\SPK_Logger.cpp" />
 		<Unit filename="..\..\..\src\Core\SPK_Registerable.cpp" />
+		<Unit filename="..\..\..\src\Core\SPK_Renderer.cpp" />
 		<Unit filename="..\..\..\src\Core\SPK_System.cpp" />
 		<Unit filename="..\..\..\src\Core\SPK_Transformable.cpp" />
 		<Unit filename="..\..\..\src\Core\SPK_Zone.cpp" />
