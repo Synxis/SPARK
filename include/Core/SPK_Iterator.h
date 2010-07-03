@@ -40,8 +40,8 @@ namespace SPK
 
 		Iterator(T& t);
 
-		inline Particle& operator*();
-		inline Particle* operator->();
+		inline Particle& operator*() const;
+		inline Particle* operator->() const;
 
 		inline Iterator& operator++();
 		inline Iterator operator++(int);
@@ -50,7 +50,7 @@ namespace SPK
 
 	private :
 
-		Particle particle;
+		mutable Particle particle;
 	};
 
 	template<typename T>
@@ -60,8 +60,8 @@ namespace SPK
 
 		ConstIterator(const T& t);
 
-		inline const Particle& operator*();
-		inline const Particle* operator->();
+		inline const Particle& operator*() const;
+		inline const Particle* operator->() const;
 
 		inline ConstIterator& operator++();
 		inline ConstIterator operator++(int);
@@ -76,18 +76,27 @@ namespace SPK
 	typedef Iterator<Group> GroupIterator;
 	typedef ConstIterator<Group> ConstGroupIterator;
 
+	template<typename T>
+	inline bool operator!=(const Iterator<T>& it0,const Iterator<T>& it1) { return it0->getIndex() != it1->getIndex(); }
+	template<typename T>
+	inline bool operator!=(const ConstIterator<T>& it0,const ConstIterator<T>& it1) { return it0->getIndex() != it1->getIndex(); }
+	template<typename T>
+	inline bool operator!=(const ConstIterator<T>& it0,const Iterator<T>& it1) { return it0->getIndex() != it1->getIndex(); }
+	template<typename T>
+	inline bool operator!=(const Iterator<T>& it0,const ConstIterator<T>& it1) { return it0->getIndex() != it1->getIndex(); }
+
 	inline Iterator<Group>::Iterator(Group& group) :
 		particle(group,0)
 	{
 		SPK_ASSERT(group.getSystem().isInitialized(),"Iterator::Iterator(Group&) - An iterator from an uninitialized group cannot be retrieved");
 	}
 
-	inline Particle& Iterator<Group>::operator*()
+	inline Particle& Iterator<Group>::operator*() const
 	{ 
 		return particle;
 	}
 		
-	inline Particle* Iterator<Group>::operator->() 
+	inline Particle* Iterator<Group>::operator->() const 
 	{
 		return &particle;
 	}
@@ -115,12 +124,12 @@ namespace SPK
 		SPK_ASSERT(group.getSystem().isInitialized(),"ConstIterator::ConstIterator(Group&) - An const iterator from a uninitialized group cannot be retrieved");	
 	}
 
-	inline const Particle& ConstIterator<Group>::operator*()
+	inline const Particle& ConstIterator<Group>::operator*() const
 	{ 
 		return particle;
 	}
 		
-	inline const Particle* ConstIterator<Group>::operator->() 
+	inline const Particle* ConstIterator<Group>::operator->() const 
 	{
 		return &particle;
 	}
