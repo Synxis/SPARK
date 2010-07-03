@@ -55,7 +55,7 @@ namespace SPK
 
 	enum Param
 	{
-		PARAM_SIZE = 0,
+		PARAM_SCALE = 0,
 		PARAM_MASS = 1,
 		PARAM_ANGLE = 2,
 		PARAM_TEXTURE_INDEX = 3,

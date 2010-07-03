@@ -36,7 +36,7 @@ namespace SPK
 {
 	const float Group::DEFAULT_VALUES[NB_PARAMETERS] =
 	{
-		1.0f,	// PARAM_SIZE
+		1.0f,	// PARAM_SCALE
 		1.0f,	// PARAM_MASS
 		0.0f,	// PARAM_ANGLE
 		0.0f,	// PARAM_TEXTURE_INDEX

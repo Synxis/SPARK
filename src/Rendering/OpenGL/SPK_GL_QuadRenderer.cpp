@@ -180,10 +180,10 @@ namespace GL
 		float diagonal = group.getRadius() * std::sqrt(scaleX * scaleX + scaleY * scaleY);
 		Vector3D diagV(diagonal,diagonal,diagonal);
 
-		if (group.isEnabled(PARAM_SIZE))
+		if (group.isEnabled(PARAM_SCALE))
 			for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 			{
-				Vector3D scaledDiagV = diagV * particleIt->getParamNC(PARAM_SIZE);
+				Vector3D scaledDiagV = diagV * particleIt->getParamNC(PARAM_SCALE);
 				AABBMin.setMin(particleIt->position() - scaledDiagV);
 				AABBMax.setMax(particleIt->position() + scaledDiagV);
 			}

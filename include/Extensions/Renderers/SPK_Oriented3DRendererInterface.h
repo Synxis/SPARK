@@ -337,7 +337,7 @@ namespace SPK
 
 	inline void Oriented3DRendererInterface::scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
 	{
-		float size = particle.getParam(PARAM_SIZE);
+		float size = particle.getParam(PARAM_SCALE);
 
 		sideQuad = side;
 		sideQuad *= size * scaleX;
@@ -348,7 +348,7 @@ namespace SPK
 
 	inline void Oriented3DRendererInterface::rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
 	{
-		float size = particle.getParam(PARAM_SIZE);
+		float size = particle.getParam(PARAM_SCALE);
 
 		float angleTexture = particle.getParamNC(PARAM_ANGLE);
 		float cosA = cos(angleTexture);

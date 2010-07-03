@@ -149,7 +149,7 @@ namespace SPK
 		* @param type : the type of value used to interpolate
 		* @param param : the parameter used to interpolate when the type is INTERPOLATOR_PARAM.
 		*/
-		inline void setType(InterpolationType type,Param param = PARAM_SIZE);
+		inline void setType(InterpolationType type,Param param = PARAM_SCALE);
 
 		/**
 		* @brief Gets the type of value used to interpolate
@@ -318,7 +318,7 @@ namespace SPK
 		Interpolator<T>(true),
 		graph(),
 		type(INTERPOLATOR_LIFETIME),
-		param(PARAM_SIZE),
+		param(PARAM_SCALE),
 		scaleXVariation(0.0f),
 		offsetXVariation(0.0f),
 		loopingEnabled(false)
