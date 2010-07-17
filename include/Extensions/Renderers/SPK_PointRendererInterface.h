@@ -87,6 +87,9 @@ namespace SPK
 		*/
 		inline float getScreenSize() const;
 
+		virtual inline void setWorldScale(float worldScale);
+		inline float getWorldScale() const;
+
 		/**
 		* @brief Sets the way size of points is computed
 		* @param worldSizeEnabled : true to enable universe size, false to use screen size
@@ -103,8 +106,13 @@ namespace SPK
 	protected :
 
 		PointType type;
-		float screenSize;
 		bool worldSize;
+
+		union 
+		{
+			float screenSize;
+			float worldScale;
+		};
 
 		/////////////////
 		// Constructor //
@@ -143,6 +151,16 @@ namespace SPK
 	inline float PointRendererInterface::getScreenSize() const
 	{
 		return screenSize;
+	}
+
+	inline void PointRendererInterface::setWorldScale(float worldScale)
+	{
+		this->worldScale = worldScale;
+	}
+
+	inline float PointRendererInterface::getWorldScale() const
+	{
+		return worldScale;
 	}
 
 	inline bool PointRendererInterface::enableWorldSize(bool worldSizeEnabled)

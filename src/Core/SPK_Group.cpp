@@ -55,7 +55,8 @@ namespace SPK
 		sortingEnabled(false),
 		AABBMin(),
 		AABBMax(),
-		radius(0.0f),
+		graphicalRadius(0.0f),
+		physicalRadius(0.0f),
 		nbBufferedParticles(0),
 		birthAction(NULL),
 		deathAction(NULL)
@@ -75,7 +76,8 @@ namespace SPK
 		sortingEnabled(group.sortingEnabled),
 		AABBMin(group.AABBMin),
 		AABBMax(group.AABBMax),
-		radius(group.radius),
+		graphicalRadius(group.graphicalRadius),
+		physicalRadius(group.physicalRadius),
 		nbBufferedParticles(0)
 	{
 		reallocate(group.getCapacity());
@@ -490,7 +492,7 @@ namespace SPK
 			CreationData& creationData = creationBuffer.front();
 
 			if (creationData.zone != NULL)
-				creationData.zone->generatePosition(particle.position(),creationData.full);
+				creationData.zone->generatePosition(particle.position(),creationData.full,physicalRadius * particle.getParam(PARAM_SCALE));
 			else
 				particle.position() = creationData.position;
 
@@ -847,14 +849,24 @@ namespace SPK
 		return NULL;
 	}
 
-	void Group::setRadius(float radius)
+	void Group::setGraphicalRadius(float radius)
 	{
 		if (radius < 0)
 		{
 			radius = 0.0f;
-			SPK_LOG_WARNING("Group::setRadius(float) - The radius cannot be set to a negative value - 0 is used");
+			SPK_LOG_WARNING("Group::setGraphicalRadius(float) - The radius cannot be set to a negative value - 0 is used");
 		}
-		this->radius = radius;
+		graphicalRadius = radius;
+	}
+
+	void Group::setPhysicalRadius(float radius)
+	{
+		if (radius < 0)
+		{
+			radius = 0.0f;
+			SPK_LOG_WARNING("Group::setPhysicalRadius(float) - The radius cannot be set to a negative value - 0 is used");
+		}
+		physicalRadius = radius;
 	}
 
 	Nameable* Group::findByName(const std::string& name)

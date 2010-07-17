@@ -105,8 +105,11 @@ namespace SPK
 		inline const void* getVelocityAddress() const;
 		inline const void* getParamAddress(Param param) const;
 
-		void setRadius(float radius);
-		inline float getRadius() const;
+		inline void setRadius(float radius);
+		void setGraphicalRadius(float radius);
+		void setPhysicalRadius(float radius);
+		inline float getGraphicalRadius() const;
+		inline float getPhysicalRadius() const;
 
 		/**
 		* @brief Gets a Vector3D holding the minimum coordinates of the AABB of the Group.
@@ -433,7 +436,8 @@ namespace SPK
 		Vector3D AABBMin;
 		Vector3D AABBMax;
 
-		float radius;
+		float physicalRadius;
+		float graphicalRadius;
 
 		Group(System& system,size_t capacity);
 		Group(System& system,const Group& group);
@@ -607,9 +611,20 @@ namespace SPK
 		return AABBMax;
 	}
 
-	inline float Group::getRadius() const
+	inline void Group::setRadius(float radius)
 	{
-		return radius;
+		setGraphicalRadius(radius);
+		setPhysicalRadius(radius);
+	}
+
+	inline float Group::getGraphicalRadius() const
+	{
+		return graphicalRadius;
+	}
+
+	inline float Group::getPhysicalRadius() const
+	{
+		return physicalRadius;
 	}
 
 	inline void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity)

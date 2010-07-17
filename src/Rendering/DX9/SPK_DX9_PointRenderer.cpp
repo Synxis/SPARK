@@ -82,7 +82,7 @@ namespace DX9
 
 		if (worldSize)
 		{
-			enablePointParameter(group.getRadius(), true);
+			enablePointParameter(group.getGraphicalRadius() * worldScale * 2.0f, true);
 			DX9Info::getDevice()->SetRenderState(D3DRS_POINTSCALEENABLE, true);
 		}
 		else
@@ -109,7 +109,7 @@ namespace DX9
 	{
 		if (isWorldSizeEnabled())
 		{
-			float radius = group.getRadius();
+			float radius = group.getGraphicalRadius();
 			for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 			{
 				AABBMin.setMin(particleIt->position() - radius);

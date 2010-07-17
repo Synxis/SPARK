@@ -80,7 +80,7 @@ namespace GL
 		}
 
 		if (worldSize)
-			enablePointParameterGLExt(group.getRadius(),true);
+			enablePointParameterGLExt(group.getGraphicalRadius() * worldScale * 2.0f,true);
 		else
 		{
 			glPointSize(screenSize);
@@ -107,7 +107,7 @@ namespace GL
 	{
 		if (isWorldSizeEnabled())
 		{
-			float radius = group.getRadius();
+			float radius = group.getGraphicalRadius();
 			for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 			{
 				AABBMin.setMin(particleIt->position() - radius);

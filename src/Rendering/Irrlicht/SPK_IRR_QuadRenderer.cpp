@@ -150,7 +150,7 @@ namespace IRR
 
 	void IRRQuadRenderer::computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const
 	{
-		float diagonal = group.getRadius() * std::sqrt(scaleX * scaleX + scaleY * scaleY);
+		float diagonal = group.getGraphicalRadius() * std::sqrt(scaleX * scaleX + scaleY * scaleY);
 		Vector3D diagV(diagonal,diagonal,diagonal);
 
 		if (group.isEnabled(PARAM_SCALE))

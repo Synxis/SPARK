@@ -288,10 +288,10 @@ namespace SPK
 		}
 
 		up.normalize();
-		up *= group.getRadius();
+		up *= group.getGraphicalRadius();
 
 		side.normalize();
-		side *= group.getRadius();
+		side *= group.getGraphicalRadius();
 	}
 	
 	inline void Oriented3DRendererInterface::computeSingleOrientation3D(const Particle& particle) const
@@ -329,10 +329,10 @@ namespace SPK
 		}
 
 		side.normalize();
-		side *= particle.getGroup().getRadius();
+		side *= particle.getGroup().getGraphicalRadius();
 
 		up.normalize();
-		up *= particle.getGroup().getRadius();
+		up *= particle.getGroup().getGraphicalRadius();
 	}
 
 	inline void Oriented3DRendererInterface::scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
