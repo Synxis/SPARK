@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 	group->setRadius(0.15f);
 	group->setLifeTime(1.0f,2.0f);
 	group->setColorInterpolator(graphInterpolator);
-	group->setParamInterpolator(SPK::PARAM_SIZE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
+	group->setParamInterpolator(SPK::PARAM_SCALE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
 	//group->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
 	group->addEmitter(emitter);
 	group->addModifier(SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f)));

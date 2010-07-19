@@ -45,6 +45,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				FloatingPointModel="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -118,6 +119,7 @@
 				PreprocessorDefinitions="NDEBUG"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
+				FloatingPointModel="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -192,6 +194,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				FloatingPointModel="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -265,6 +268,7 @@
 				PreprocessorDefinitions="NDEBUG;SPK_IMPORT"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
+				FloatingPointModel="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>

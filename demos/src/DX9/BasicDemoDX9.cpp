@@ -332,7 +332,7 @@ void Init()
 	g_pGroup1->setLifeTime(1.0f,2.0f);
 	//group1->setColorInterpolator(SPK::ColorDefaultInitializer::create(0xFFFF2288));
 	g_pGroup1->setColorInterpolator(g_pGraphInterpolator);
-	g_pGroup1->setParamInterpolator(SPK::PARAM_SIZE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
+	g_pGroup1->setParamInterpolator(SPK::PARAM_SCALE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
 	g_pGroup1->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-2.0f,2.0f));
 	g_pGroup1->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
 	g_pGroup1->addEmitter(g_pEmitter);

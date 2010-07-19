@@ -45,6 +45,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				FloatingPointModel="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -108,12 +109,14 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="false"
+				EnableFiberSafeOptimizations="false"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="NDEBUG"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
 				EnableEnhancedInstructionSet="0"
+				FloatingPointModel="2"
 				WarningLevel="3"
 				DebugInformationFormat="0"
 			/>
@@ -177,6 +180,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				FloatingPointModel="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -255,6 +259,7 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				EnableEnhancedInstructionSet="0"
+				FloatingPointModel="2"
 				WarningLevel="3"
 				DebugInformationFormat="0"
 			/>
@@ -384,7 +389,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_Collider.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_Obstacle.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_RandomForce.cpp"
 						>
 					</File>
 					<File
@@ -610,7 +623,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_Collider.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_Obstacle.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_RandomForce.h"
 						>
 					</File>
 					<File
