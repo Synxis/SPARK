@@ -113,6 +113,7 @@
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_RandomInterpolator.h" />
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_SimpleInterpolator.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_BasicModifiers.h" />
+		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Collider.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Obstacle.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Rotator.h" />
 		<Unit filename="..\..\..\include\Extensions\Renderers\SPK_LineRendererInterface.h" />
@@ -141,6 +142,7 @@
 		<Unit filename="..\..\..\src\Extensions\Emitters\SPK_SphericEmitter.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Emitters\SPK_StraightEmitter.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_BasicModifiers.cpp" />
+		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Collider.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Obstacle.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Rotator.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Renderers\SPK_Oriented3DRendererInterface.cpp" />

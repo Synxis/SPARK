@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Test DXUT9", "SPARK d
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Flakes", "SPARK demos\SPARK Flakes.vcproj", "{DE98E940-66AF-4631-86C3-8C6F7D066CF9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPARK Collision", "SPARK demos\SPARK Collision.vcproj", "{76D14282-FBE6-454A-BD97-3191A564DEB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug DLL|Win32 = Debug DLL|Win32
@@ -81,6 +83,18 @@ Global
 		{DE98E940-66AF-4631-86C3-8C6F7D066CF9}.Release static|Win32.Build.0 = Release static|Win32
 		{DE98E940-66AF-4631-86C3-8C6F7D066CF9}.Release|Win32.ActiveCfg = Release DLL|Win32
 		{DE98E940-66AF-4631-86C3-8C6F7D066CF9}.Release|Win32.Build.0 = Release DLL|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Debug DLL|Win32.ActiveCfg = Debug DLL|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Debug DLL|Win32.Build.0 = Debug DLL|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Debug static|Win32.ActiveCfg = Debug static|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Debug static|Win32.Build.0 = Debug static|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Debug|Win32.ActiveCfg = Debug DLL|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Debug|Win32.Build.0 = Debug DLL|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Release DLL|Win32.ActiveCfg = Release DLL|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Release DLL|Win32.Build.0 = Release DLL|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Release static|Win32.ActiveCfg = Release static|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Release static|Win32.Build.0 = Release static|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Release|Win32.ActiveCfg = Release DLL|Win32
+		{76D14282-FBE6-454A-BD97-3191A564DEB9}.Release|Win32.Build.0 = Release DLL|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

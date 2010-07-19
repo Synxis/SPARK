@@ -70,6 +70,7 @@
 #include "Extensions/Modifiers/SPK_BasicModifiers.h"
 #include "Extensions/Modifiers/SPK_Obstacle.h"
 #include "Extensions/Modifiers/SPK_Rotator.h"
+#include "Extensions/Modifiers/SPK_Collider.h"
 
 // Actions
 #include "Extensions/Actions/SPK_ActionSet.h"
