@@ -31,7 +31,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="libopengl32.a" />
-					<Add library="liibsfml-graphics-d.a" />
+					<Add library="libsfml-graphics-d.a" />
 					<Add library="libsfml-window-d.a" />
 					<Add library="..\..\..\lib\mingw\dynamic\libSPARK_debug.a" />
 					<Add library="..\..\..\lib\mingw\dynamic\libSPARK_GL_debug.a" />
