@@ -43,6 +43,7 @@ namespace SPK
 	class Action;
 	class DataSet;
 	class RenderBuffer;
+	class System;
 
 	/**
 	* @brief Group of particles

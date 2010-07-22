@@ -28,6 +28,8 @@
 
 namespace SPK
 {
+	class Group;
+
 	class DataHandler
 	{
 	friend class Group;
