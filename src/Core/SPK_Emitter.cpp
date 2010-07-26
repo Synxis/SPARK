@@ -35,7 +35,6 @@ namespace SPK
 		flow(0.0f),
 		forceMin(0.0f),
 		forceMax(0.0f),
-		fraction(random(0.0f,1.0f)),
 		active(true)
 	{}
 
@@ -108,14 +107,12 @@ namespace SPK
 		}
 		else
 		{
-			fraction += flow * deltaTime;
-			nbBorn = static_cast<int>(fraction);
+			nbBorn = static_cast<int>(random(0.0f,1.0f) + flow * deltaTime);
 			if (tank >= 0)
 			{
 				nbBorn = std::min(tank,nbBorn);
 				tank -= nbBorn;
 			}
-			fraction -= nbBorn;
 		}
 		return static_cast<unsigned int>(nbBorn);
 	}

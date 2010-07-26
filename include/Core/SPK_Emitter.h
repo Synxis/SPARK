@@ -258,8 +258,6 @@ namespace SPK
 		float forceMin;
 		float forceMax;
 
-		mutable float fraction;
-
 		unsigned int updateNumber(float deltaTime);
 
 		/////////////////////////

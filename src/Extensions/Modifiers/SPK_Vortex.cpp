@@ -56,7 +56,28 @@ namespace SPK
 				particle.kill();
 			return;
 		}
-	
+
+		float angle = angularSpeedEnabled ? rotationSpeed * deltaTime : (dist == 0.0f ? 0.0f : rotationSpeed * deltaTime / dist);
+
+		// compute ortho base
+		Vector3D a = (particle.position() - rotationCenter) / dist;
+		Vector3D tmp1 = tDirection, tmp2 = a;
+		tmp1.normalize();
+		tmp2.crossProduct(tmp1*(-1));
+        Vector3D b = tmp2;
+
+        float endRadius = linearSpeedEnabled ? dist * (1 - attractionSpeed * deltaTime) : dist - attractionSpeed * deltaTime;
+
+        if (endRadius <= eyeRadius && killingParticleEnabled)
+		{
+		    endRadius = eyeRadius;
+		    if (killingParticleEnabled)
+                particle.kill();
+		}
+
+        particle.position() = rotationCenter + a * endRadius * std::cos(angle) + b * endRadius * std::sin(angle);
+/*
+// OLD CODE:
 		// The following is not mathematically correct when the speed is not angular and there's a attraction but is ok anyway
 		float angle = angularSpeedEnabled ? rotationSpeed * deltaTime : rotationSpeed * deltaTime / dist;
 		float s = std::sin(angle);
@@ -89,6 +110,7 @@ namespace SPK
 		}
 
 		particle.position() += rotationCenter;
+*/
 	}
 
 	void Vortex::innerUpdateTransform()
