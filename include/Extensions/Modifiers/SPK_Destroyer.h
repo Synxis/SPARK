@@ -49,13 +49,13 @@ namespace SPK
 		virtual inline void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-	static inline Destroyer* Destroyer::create(Zone* zone,ZoneTest zoneTest)
+	inline Destroyer* Destroyer::create(Zone* zone,ZoneTest zoneTest)
 	{
 		return new Destroyer(zone,zoneTest);
 	}
 
-	inline Destroyer::Destroyer(Zone* zone = NULL,ZoneTest trigger) :
-		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_FLAG_ALL,zone,zoneTest)
+	inline Destroyer::Destroyer(Zone* zone,ZoneTest zoneTest) :
+		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_FLAG_ALL,zoneTest,zone)
 	{}
 
 	inline void Destroyer::modify(Group& group,DataSet* dataSet,float deltaTime) const
