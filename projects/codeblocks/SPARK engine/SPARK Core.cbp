@@ -115,6 +115,7 @@
 		<Unit filename="..\..\..\include\Extensions\Interpolators\SPK_SimpleInterpolator.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_BasicModifiers.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Collider.h" />
+		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Destroyer.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Obstacle.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Rotator.h" />
 		<Unit filename="..\..\..\include\Extensions\Renderers\SPK_LineRendererInterface.h" />

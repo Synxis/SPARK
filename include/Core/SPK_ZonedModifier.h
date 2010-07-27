@@ -67,6 +67,12 @@ namespace SPK
 		void setZone(Zone* zone);
 
 		/**
+		* @brief Gets the zone
+		* @return the zone
+		*/
+		inline Zone* getZone() const;
+
+		/**
 		* @brief Sets the zone test
 		*
 		* If the zone test is not valid for this zonedModifier, 
@@ -76,12 +82,6 @@ namespace SPK
 		*/
 		void setZoneTest(ZoneTest zoneTest);
 		
-		/**
-		* @brief Gets the zone
-		* @return the zone
-		*/
-		inline Zone* getZone() const;
-
 		/**
 		* @brief Gets the zone test
 		* @return the zone test

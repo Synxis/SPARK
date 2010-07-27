@@ -631,6 +631,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_Destroyer.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_Obstacle.h"
 						>
 					</File>
