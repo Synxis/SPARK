@@ -26,60 +26,21 @@
 namespace SPK
 {
 	Obstacle::Obstacle(Zone* zone,float bouncingRatio,float friction,ZoneTest zoneTest) :
-		Modifier(MODIFIER_PRIORITY_COLLISION,false,false),
-		zone(NULL),
+		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_FLAG_INTERSECT | ZONE_TEST_FLAG_ENTER | ZONE_TEST_FLAG_LEAVE,zoneTest,zone),
 		bouncingRatio(bouncingRatio),
-		friction(friction),
-		zoneTest(ZONE_TEST_INTERSECT)
-	{
-		setZone(zone,zoneTest);
-	}
-
-	Obstacle::Obstacle(const Obstacle& obstacle) :
-		Modifier(obstacle),
-		bouncingRatio(obstacle.bouncingRatio),
-		friction(obstacle.friction)
-	{
-		zone = dynamic_cast<Zone*>(copyChild(obstacle.zone));
-	}
-
-	Obstacle::~Obstacle()
-	{
-		destroyChild(zone);
-	}
-
-	void Obstacle::setZone(Zone* zone,ZoneTest zoneTest)
-	{
-		decrementChild(this->zone);
-		this->zone = zone;
-		incrementChild(zone);
-
-		switch(zoneTest)
-		{
-		case ZONE_TEST_INTERSECT :
-		case ZONE_TEST_ENTER :
-		case ZONE_TEST_LEAVE :
-			this->zoneTest = zoneTest;
-			break;
-
-		default :
-			SPK_LOG_WARNING("Zone::setZone(Zone*,ZoneTest) - This ZoneTest is not valid for an obstacle, nothing happens");
-		}
-	}
+		friction(friction)
+	{}
 
 	void Obstacle::modify(Group& group,DataSet* dataSet,float deltaTime) const
 	{
-		if (zone == NULL)
-			return;
-
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
-			if (zone->check(*particleIt,zoneTest))
+			if (checkZone(*particleIt))
 			{ 
 				particleIt->position() = particleIt->oldPosition();
 
 				Vector3D& velocity = particleIt->velocity();
-				Vector3D normal = zone->computeNormal(particleIt->position());
+				Vector3D normal = getZone()->computeNormal(particleIt->position());
 
 				float dist = dotProduct(velocity,normal);
 
@@ -92,22 +53,5 @@ namespace SPK
 				velocity -= normal;
 			}
 		}
-	}
-
-	Nameable* Obstacle::findByName(const std::string& name)
-	{
-		Nameable* object = Nameable::findByName(name);
-		if (object != NULL) return object;
-
-		if (zone != NULL)
-			object = zone->findByName(name);
-
-		return object;
-	}
-
-	void Obstacle::propagateUpdateTransform()
-	{
-		if (!zone->isShared())
-			zone->updateTransform(this);
 	}
 }

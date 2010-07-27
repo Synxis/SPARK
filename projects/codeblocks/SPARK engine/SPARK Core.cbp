@@ -100,6 +100,7 @@
 		<Unit filename="..\..\..\include\Core\SPK_Transformable.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Vector3D.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Zone.h" />
+		<Unit filename="..\..\..\include\Core\SPK_ZonedModifier.h" />
 		<Unit filename="..\..\..\include\Extensions\Actions\SPK_ActionSet.h" />
 		<Unit filename="..\..\..\include\Extensions\Actions\SPK_SpawnParticlesAction.h" />
 		<Unit filename="..\..\..\include\Extensions\Emitters\SPK_NormalEmitter.h" />
@@ -135,6 +136,7 @@
 		<Unit filename="..\..\..\src\Core\SPK_System.cpp" />
 		<Unit filename="..\..\..\src\Core\SPK_Transformable.cpp" />
 		<Unit filename="..\..\..\src\Core\SPK_Zone.cpp" />
+		<Unit filename="..\..\..\src\Core\SPK_ZonedModifier.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Actions\SPK_ActionSet.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Actions\SPK_SpawnParticlesAction.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Emitters\SPK_NormalEmitter.cpp" />

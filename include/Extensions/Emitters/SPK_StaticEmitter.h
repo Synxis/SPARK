@@ -45,9 +45,7 @@ namespace SPK
 			Zone* zone = NULL,
 			bool full = true,
 			int tank = -1,
-			float flow = 1.0f,
-			float forceMin = 1.0f,
-			float forceMax = 1.0f);
+			float flow = 1.0f);
 
 	private :
 
@@ -55,20 +53,18 @@ namespace SPK
 			Zone* zone = NULL,
 			bool full = true,
 			int tank = -1,
-			float flow = 1.0f,
-			float forceMin = 1.0f,
-			float forceMax = 1.0f);
+			float flow = 1.0f);
 
 		virtual inline void generateVelocity(Particle& particle,float speed) const;
 	};
 
-	inline StaticEmitter::StaticEmitter(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax) :
-		Emitter(zone,full,tank,flow,forceMin,forceMax)
+	inline StaticEmitter::StaticEmitter(Zone* zone,bool full,int tank,float flow) :
+		Emitter(zone,full,tank,flow)
 	{}
 
-	inline StaticEmitter* StaticEmitter::create(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax)
+	inline StaticEmitter* StaticEmitter::create(Zone* zone,bool full,int tank,float flow)
 	{
-		return new StaticEmitter(zone,full,tank,flow,forceMin,forceMax);
+		return new StaticEmitter(zone,full,tank,flow);
 	}
 
 	inline void StaticEmitter::generateVelocity(Particle& particle,float speed) const

@@ -39,6 +39,7 @@
 #include "Core/SPK_Interpolator.h"
 #include "Core/SPK_Emitter.h"
 #include "Core/SPK_Modifier.h"
+#include "Core/SPK_ZonedModifier.h"
 #include "Core/SPK_Renderer.h"
 #include "Core/SPK_Action.h"
 #include "Core/SPK_Group.h"

@@ -357,6 +357,10 @@
 					RelativePath="..\..\..\src\Core\SPK_Zone.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\..\src\Core\SPK_ZonedModifier.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Extensions"
@@ -537,6 +541,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\Core\SPK_Zone.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\Core\SPK_ZonedModifier.h"
 					>
 				</File>
 			</Filter>

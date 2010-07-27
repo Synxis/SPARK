@@ -22,30 +22,18 @@
 #ifndef H_SPK_OBSTACLE
 #define H_SPK_OBSTACLE
 
-#include "Core/SPK_Modifier.h"
+#include "Core/SPK_ZonedModifier.h"
 #include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Zone.h"
 
 namespace SPK
 {
-	class SPK_PREFIX Obstacle : public Modifier
+	class SPK_PREFIX Obstacle : public ZonedModifier
 	{
 	SPK_IMPLEMENT_REGISTERABLE(Obstacle)
 
 	public :
 
 		static inline Obstacle* create(Zone* zone = NULL,float bouncingRatio = 1.0f,float friction = 1.0f,ZoneTest zoneTest = ZONE_TEST_INTERSECT);
-
-		virtual ~Obstacle();
-
-		//////////
-		// Zone //
-		//////////
-
-		void setZone(Zone* zone,ZoneTest zoneTest = ZONE_TEST_INTERSECT);
-		
-		inline Zone* getZone() const;
-		inline ZoneTest getZoneTest() const;
 
 		////////////////////
 		// Bouncing ratio //
@@ -85,24 +73,12 @@ namespace SPK
 		*/
 		inline float getFriction() const;
 
-		virtual Nameable* findByName(const std::string& name);
-
-	protected :
-
-		virtual void propagateUpdateTransform();
-
 	private :
-
-		Zone* zone;
 
 		float bouncingRatio;
 		float friction;
 
-		ZoneTest zoneTest;
-
 		Obstacle(Zone* zone = NULL,float bouncingRatio = 1.0f,float friction = 1.0f,ZoneTest zoneTest = ZONE_TEST_INTERSECT);
-
-		Obstacle(const Obstacle& obstacle);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
@@ -110,16 +86,6 @@ namespace SPK
 	inline Obstacle* Obstacle::create(Zone* zone,float bouncingRatio,float friction,ZoneTest zoneTest)
 	{
 		return new Obstacle(zone,bouncingRatio,friction,zoneTest);
-	}
-
-	inline Zone* Obstacle::getZone() const
-	{
-		return zone;
-	}
-
-	inline ZoneTest Obstacle::getZoneTest() const
-	{
-		return zoneTest;
 	}
 
 	inline void Obstacle::setBouncingRatio(float bouncingRatio)
