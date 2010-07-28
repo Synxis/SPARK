@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #ifndef H_SPK_COLLIDER
-#define H_SPK_COLLIDEr
+#define H_SPK_COLLIDER
 
 #include "Core/SPK_Modifier.h"
 

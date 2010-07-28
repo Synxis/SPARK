@@ -73,6 +73,7 @@
 #include "Extensions/Modifiers/SPK_Rotator.h"
 #include "Extensions/Modifiers/SPK_Collider.h"
 #include "Extensions/Modifiers/SPK_Destroyer.h"
+#include "Extensions/Modifiers/SPK_Vortex.h"
 
 // Actions
 #include "Extensions/Actions/SPK_ActionSet.h"
