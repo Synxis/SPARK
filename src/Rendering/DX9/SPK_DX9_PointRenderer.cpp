@@ -31,13 +31,13 @@ namespace SPK
 {
 namespace DX9
 {
-	const float DX9PointRenderer::QUADRATIC_SCREEN[3] = {1.0f,0.0f,0.0f};
+	const float DX9PointRenderer::QUADRATIC_SCREEN[3] = {1.0f, 0.0f, 0.0f};
 
 	float DX9PointRenderer::pixelPerUnit = 1024.0f;
 
-	const float DX9PointRenderer::POINT_SIZE_CURRENT	= 32.0f;
-	const float DX9PointRenderer::POINT_SIZE_MIN		= 1.0f;
-	const float DX9PointRenderer::POINT_SIZE_MAX		= 1024.0f;
+	const float DX9PointRenderer::POINT_SIZE_CURRENT 	= 32.0f;
+	const float DX9PointRenderer::POINT_SIZE_MIN 		= 1.0f;
+	const float DX9PointRenderer::POINT_SIZE_MAX 		= 1024.0f;
 
 	bool DX9PointRenderer::setType(PointType type)
 	{
