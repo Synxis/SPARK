@@ -49,11 +49,9 @@
 	inline FLOAT DWtoF(DWORD dw)	{ return *((FLOAT*)&dw); }
 
 	#ifndef SAFE_DELETE
-		//#define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=NULL; } }
 		#define SAFE_DELETE(p)			{ delete (p); p = NULL;  }
 	#endif    
 	#ifndef SAFE_DELETE_ARRAY
-		//#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=NULL; } }
 		#define SAFE_DELETE_ARRAY(p)	{ delete [](p); p = NULL; }
 	#endif    
 	#ifndef SAFE_RELEASE
