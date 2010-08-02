@@ -57,60 +57,21 @@ namespace SPK
 			return;
 		}
 
-		float angle = angularSpeedEnabled ? rotationSpeed * deltaTime : (dist == 0.0f ? 0.0f : rotationSpeed * deltaTime / dist);
+		float angle = angularSpeedEnabled ? rotationSpeed * deltaTime : rotationSpeed * deltaTime / dist;
 
-		// compute ortho base
-		Vector3D a = (particle.position() - rotationCenter) / dist;
-		Vector3D tmp1 = tDirection, tmp2 = a;
-		tmp1.normalize();
-		tmp2.crossProduct(tmp1*(-1));
-        Vector3D b = tmp2;
+		// Computes ortho base
+		Vector3D normal = (particle.position() - rotationCenter) / dist;
+        Vector3D tangent = crossProduct(tDirection,normal);
 
-        float endRadius = linearSpeedEnabled ? dist * (1 - attractionSpeed * deltaTime) : dist - attractionSpeed * deltaTime;
-
-        if (endRadius <= eyeRadius && killingParticleEnabled)
+        float endRadius = linearSpeedEnabled ? dist * (1.0f - attractionSpeed * deltaTime) : dist - attractionSpeed * deltaTime;
+        if (endRadius <= eyeRadius)
 		{
 		    endRadius = eyeRadius;
 		    if (killingParticleEnabled)
                 particle.kill();
 		}
 
-        particle.position() = rotationCenter + a * endRadius * std::cos(angle) + b * endRadius * std::sin(angle);
-/*
-// OLD CODE:
-		// The following is not mathematically correct when the speed is not angular and there's a attraction but is ok anyway
-		float angle = angularSpeedEnabled ? rotationSpeed * deltaTime : rotationSpeed * deltaTime / dist;
-		float s = std::sin(angle);
-		float c = std::cos(angle);
-		float t = 1 - c;
-
-		// Rotates the particle
-		Vector3D tmp = particle.position() - rotationCenter;
-		particle.position().x = tmp.x * (t * tDirection.x * tDirection.x + c)
-			+ tmp.y * (t * tDirection.x * tDirection.y + s * tDirection.z)
-			+ tmp.z * (t * tDirection.x * tDirection.z - s * tDirection.y); 
-		particle.position().y = tmp.x * (t * tDirection.x * tDirection.y - s * tDirection.z)
-			+ tmp.y * (t * tDirection.y * tDirection.y + c)
-			+ tmp.z * (t * tDirection.y * tDirection.z + s * tDirection.x);
-		particle.position().z = tmp.x * (t * tDirection.x * tDirection.z + s * tDirection.y)
-			+ tmp.y * (t * tDirection.y * tDirection.z - s * tDirection.x)
-			+ tmp.z * (t * tDirection.z * tDirection.z + c);
-
-		// Attracts the particle towards the vortex (or repels it)
-		if (attractionSpeed != 0.0f)
-		{
-			float move = linearSpeedEnabled ? attractionSpeed * deltaTime * dist : attractionSpeed * deltaTime;
-			if (move >= dist - eyeRadius)
-			{
-				move = dist - eyeRadius;
-				if (killingParticleEnabled)
-					particle.kill();
-			}
-			particle.position() *= 1.0f - move / dist;
-		}
-
-		particle.position() += rotationCenter;
-*/
+        particle.position() = rotationCenter + normal * endRadius * std::cos(angle) + tangent * endRadius * std::sin(angle);
 	}
 
 	void Vortex::innerUpdateTransform()
