@@ -90,6 +90,13 @@ namespace IRR
 	bool IRRSystem::updateParticles(float deltaTime)
 	{
 		updateCameraPosition();
+
+		if (!isAABBComputationEnabled() && AutomaticCullingState != irr::scene::EAC_OFF)
+		{
+			SPK_LOG_INFO("IRRSystem::updateParticles(float) - The culling is activated for the system but not the bounding box computation - BB computation is enabled");
+			enableAABBComputation(true);
+		}
+
 		alive = System::updateParticles(deltaTime);
 		return alive;
 	}
@@ -125,13 +132,6 @@ namespace IRR
 			updateTransform();
 			AbsoluteTransformation.makeIdentity();
 		}
-	}
-
-	void IRRSystem::enableAABBComputation(bool AABB)
-	{
-		System::enableAABBComputation(AABB);
-		if (!AABB && AutomaticCullingState != irr::scene::EAC_OFF)
-			SPK_LOG_WARNING("IRRSystem::enableAABBComputation(bool) - The culling is activated for the system but not the bounding box computation - Incorrect culling can occur");
 	}
 
 	void IRRSystem::updateCameraPosition() const
