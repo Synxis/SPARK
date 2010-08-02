@@ -259,7 +259,7 @@ namespace SPK
 			nbBorn = tank > 0 ? tank : 0;
 			tank = 0;
 		}
-		else
+		else if (tank != 0)
 		{
 			fraction += flow * deltaTime;
 			nbBorn = static_cast<size_t>(fraction);
@@ -271,6 +271,8 @@ namespace SPK
 			}
 			fraction -= nbBorn;
 		}
+		else 
+			nbBorn = 0;
 		return nbBorn;
 	}
 
