@@ -465,6 +465,7 @@ namespace SPK
 		void computeAABB();
 
 		void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,Zone* zone,Emitter* emitter,bool full = false);
+		void emptyBufferedParticles();
 
 		// creation data
 		std::deque<CreationData> creationBuffer;

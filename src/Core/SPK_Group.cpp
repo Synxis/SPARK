@@ -108,6 +108,8 @@ namespace SPK
 
 	Group::~Group()
 	{
+		destroyAllAdditionnalData();
+
 		delete[] particleData.positions;
 		delete[] particleData.velocities;
 		delete[] particleData.oldPositions;
@@ -123,8 +125,6 @@ namespace SPK
 		Registerable::destroyChild(colorInterpolator.obj);
 		Registerable::destroyChild(renderer.obj);
 
-		destroyRenderBuffer();
-
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
 			Registerable::destroyChild(paramInterpolators[i].obj);
 
@@ -137,11 +137,7 @@ namespace SPK
 		Registerable::destroyChild(birthAction);
 		Registerable::destroyChild(deathAction);
 
-		for (std::deque<CreationData>::const_iterator it = creationBuffer.begin(); it != creationBuffer.end(); ++it)
-		{
-			Registerable::decrementChild(it->emitter);
-			Registerable::decrementChild(it->zone);
-		}
+		emptyBufferedParticles();
 	}
 
 	Particle Group::getParticle(size_t index)
@@ -267,6 +263,8 @@ namespace SPK
 			for (size_t i = 0; i < particleData.nbParticles; ++i)
 				particleData.sqrDists[i] = getSqrDist(particleData.positions[i],System::getCameraPosition());
 		}
+
+		emptyBufferedParticles();
 
 		return hasAliveEmitters || particleData.nbParticles > 0;
 	}
@@ -749,6 +747,9 @@ namespace SPK
 
 	void Group::flushBufferedParticles()
 	{
+		if (nbBufferedParticles == 0)
+			return;
+
 		prepareAdditionnalData();
 
 		unsigned int nbManualBorn = nbBufferedParticles;
@@ -759,6 +760,11 @@ namespace SPK
 		while(nbManualBorn > 0)
 			initParticle(particleData.nbParticles++,dummy,nbManualBorn);
 
+		emptyBufferedParticles();
+	}
+
+	void Group::emptyBufferedParticles()
+	{
 		if (nbBufferedParticles > 0)
 		{
 			for (std::deque<CreationData>::const_iterator it = creationBuffer.begin(); it != creationBuffer.end(); ++it)
