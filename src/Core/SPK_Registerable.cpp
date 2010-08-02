@@ -44,7 +44,7 @@ namespace SPK
 	{
 		if (nbReferences != 0)
 		{
-			SPK_LOG_WARNING("Registerable::~Registerable() - The number of references of the object is not 0 during destruction");
+			SPK_LOG_ERROR("Registerable::~Registerable() - The number of references of the object is not 0 during destruction");
 		}
 	}
 
@@ -52,7 +52,7 @@ namespace SPK
 	{
 		if (nbReferences == 0)
 		{
-			SPK_LOG_WARNING("Registerable::decrement() - Wrong counting of references of the objects. A call to increment() is missing");
+			SPK_LOG_ERROR("Registerable::decrement() - Wrong counting of references of the objects. A call to increment() is missing");
 		}
 		else		
 			--nbReferences;

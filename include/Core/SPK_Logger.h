@@ -59,12 +59,13 @@
 
 namespace SPK
 {
+	/** @brief Constants defining the priority of a logged entry */
 	enum LogPriority
 	{
 		LOG_PRIORITY_DEBUG = 0,		/**< Debug priority (lower) */
 		LOG_PRIORITY_INFO = 1,		/**< Info priority (standard) */
-		LOG_PRIORITY_WARNING = 2,	/**< Warning priority (failed assertions in release...) */
-		LOG_PRIORITY_ERROR = 3,		/**< Error priority (fatal error that are very likely to cause a crash) */
+		LOG_PRIORITY_WARNING = 2,	/**< Warning priority (bad coding style that may not be fatal) */
+		LOG_PRIORITY_ERROR = 3,		/**< Error priority (fatal error that are very likely to cause a crash at some point) */
 	};
 
 	/** @brief Constants defining the format of the prefix of each message */
@@ -150,7 +151,7 @@ namespace SPK
 		*
 		* The prefix flag defines the format of the prefix of each entry logged in.<br>
 		* It is defined by ORed values of the enumeration Prefix.<br>
-		* By default the prefix flag is set to <i>PREFIX_TIME | PREFIX_LIB</i>.
+		* By default the prefix flag is set to <i>LOG_PREFIX_TIME | LOG_PREFIX_LIB | LOG_PREFIX_PRIORITY</i>.
 		*
 		* @param prefixFlag : the prefix flag of the logger 
 		*/
@@ -243,7 +244,7 @@ namespace SPK
 		int prefixFlag;
 		bool enabled;
 
-		// private constructor an destructor (singleton pattern)
+		// private constructor and destructor (singleton pattern)
 		Logger();
 		~Logger(){}
 

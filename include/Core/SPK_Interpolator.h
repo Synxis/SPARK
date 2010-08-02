@@ -34,7 +34,8 @@ namespace SPK
 	class DataSet;
 
 	template<typename T>
-	class Interpolator : public Registerable, public DataHandler
+	class Interpolator :	public Registerable,
+							public DataHandler
 	{
 	friend class Group;
 
