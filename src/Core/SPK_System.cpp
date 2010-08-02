@@ -301,8 +301,9 @@ namespace SPK
 
 		if ((!boundingBoxEnabled)||(!hasGroupsWithAABB))
 		{
-			AABBMin.set(0.0f,0.0f,0.0f);
-			AABBMax.set(0.0f,0.0f,0.0f);
+			const Vector3D pos = getWorldTransformPos();
+			AABBMin.set(pos.x,pos.y,pos.z);
+			AABBMax.set(pos.x,pos.y,pos.z);
 		}
 	}
 
