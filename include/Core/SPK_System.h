@@ -146,7 +146,7 @@ namespace SPK
 		* @brief Enables or disables the computation of the axis aligned bounding box for this System
 		* @param AABB : true to enable the computing of the AABB of this System, false to disable it
 		*/
-		inline void enableAABBComputation(bool AABB);
+		virtual inline void enableAABBComputation(bool AABB);
 
 		/**
 		* @brief Tells whether the computation of the axis aligned bouding box is enabled

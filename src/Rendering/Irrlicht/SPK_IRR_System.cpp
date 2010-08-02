@@ -41,7 +41,9 @@ namespace IRR
 			onlyWhenVisible(false),
 			alive(true),
 			lastUpdatedTime(0)
-    {}
+    {
+		enableAABBComputation(true); // as culling is enabled by default in Irrlicht		
+	}
 
 	IRRSystem::IRRSystem(
 		const IRRSystem& system,
@@ -123,6 +125,13 @@ namespace IRR
 			updateTransform();
 			AbsoluteTransformation.makeIdentity();
 		}
+	}
+
+	void IRRSystem::enableAABBComputation(bool AABB)
+	{
+		System::enableAABBComputation(AABB);
+		if (!AABB && AutomaticCullingState != irr::scene::EAC_OFF)
+			SPK_LOG_WARNING("IRRSystem::enableAABBComputation(bool) - The culling is activated for the system but not the bounding box computation - Incorrect culling can occur");
 	}
 
 	void IRRSystem::updateCameraPosition() const

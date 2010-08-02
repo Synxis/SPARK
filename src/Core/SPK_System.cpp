@@ -161,8 +161,8 @@ namespace SPK
 		}
 		else
 		{
-			AABBMin.set(0.0f,0.0f,0.0f);
-			AABBMax.set(0.0f,0.0f,0.0f);
+			Vector3D pos = getWorldTransformPos();
+			AABBMin = AABBMax = pos;
 		}
 
 		return alive;

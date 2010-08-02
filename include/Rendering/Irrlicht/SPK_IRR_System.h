@@ -151,6 +151,8 @@ namespace IRR
 
 		/** @brief Updates the absolute transformation of this Irrlicht Node */
 		virtual void updateAbsolutePosition();
+
+		virtual void enableAABBComputation(bool AABB);
 	
 	private :
 
