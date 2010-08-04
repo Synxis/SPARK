@@ -82,6 +82,8 @@ namespace SPK
 		Vector3D side = crossProduct(look,up);
 		side.normalize();
 
+		up = crossProduct(side,look);
+
 		local[0] = side.x;
 		local[1] = side.y;
 		local[2] = side.z;
@@ -99,10 +101,11 @@ namespace SPK
 	void Transformable::setTransformOrientationLH(Vector3D look,Vector3D up)
 	{
 		look.normalize();
-		up.normalize();
 
 		Vector3D side = crossProduct(look,up);
 		side.normalize();
+
+		up = crossProduct(side,look);
 
 		local[0] = side.x;
 		local[1] = side.y;
