@@ -43,7 +43,6 @@ namespace SPK
 		minNb(action.minNb),
 		maxNb(action.maxNb),
 		groupIndex(action.groupIndex),
-		invalidBaseEmitter(action.invalidBaseEmitter),
 		emitterPool()
 	{
 		baseEmitter = dynamic_cast<Emitter*>(copyChild(action.baseEmitter));
@@ -76,25 +75,12 @@ namespace SPK
 		decrementChild(baseEmitter);
 		baseEmitter = emitter;
 		incrementChild(baseEmitter);
-
-		if (baseEmitter == NULL)
-			invalidBaseEmitter = true;
-		else if (baseEmitter->getZone()->isShared())
-		{
-			invalidBaseEmitter = true;
-			SPK_LOG_WARNING("SpawnParticlesAction::setEmitter(Emitter*) - The base emitter is invalid (its zone is shared) and cannot be used");
-		}
-		else
-			invalidBaseEmitter = false;
 	}
 
 	void SpawnParticlesAction::apply(Particle& particle) const
 	{
-		if (invalidBaseEmitter)
-		{
-			SPK_LOG_WARNING("SpawnParticlesAction::apply(Particle&) - The base emitter of the spawn particle action is invalid, nothing happens");
+		if (!checkEmitterValidity())
 			return;
-		}
 
 		EmitterPair& emitterPair = getNextAvailableEmitter();
 
@@ -108,6 +94,22 @@ namespace SPK
 		Group* group = particle.getGroup().getSystem().getGroup(groupIndex);
 		emitterPair.group = group;
 		group->addParticles(SPK_RANDOM(minNb,maxNb + 1),emitter);
+	}
+
+	bool SpawnParticlesAction::checkEmitterValidity() const
+	{
+		if (baseEmitter == NULL)
+		{
+			SPK_LOG_WARNING("SpawnParticlesAction::checkEmitterValidity() - The base emitter is NULL and cannot be used");
+			return false;
+		}
+		else if (baseEmitter->getZone()->isShared())
+		{
+			SPK_LOG_WARNING("SpawnParticlesAction::checkEmitterValidity() - The base emitter is invalid (its zone is shared) and cannot be used");
+			return false;
+		}
+
+		return true;
 	}
 
 	SpawnParticlesAction::EmitterPair& SpawnParticlesAction::getNextAvailableEmitter() const
@@ -128,7 +130,7 @@ namespace SPK
 		return emitterPool.back();
 	}
 
-	void SpawnParticlesAction::flushCurrentGroups()
+	void SpawnParticlesAction::flushCurrentGroups() const
 	{
 		for (std::deque<EmitterPair>::const_iterator it = emitterPool.begin(); it != emitterPool.end(); ++it)
 			if (it->obj->getNbReferences() > 1)

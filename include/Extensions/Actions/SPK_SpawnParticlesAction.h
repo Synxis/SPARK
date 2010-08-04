@@ -66,7 +66,6 @@ namespace SPK
 		unsigned int maxNb;
 
 		Emitter* baseEmitter;
-		bool invalidBaseEmitter;
 
 		size_t groupIndex;
 
@@ -90,8 +89,9 @@ namespace SPK
 
 		SpawnParticlesAction(const SpawnParticlesAction& action);
 
+		bool checkEmitterValidity() const;
 		EmitterPair& getNextAvailableEmitter() const;
-		void flushCurrentGroups();
+		void flushCurrentGroups() const;
 	};
 
 	inline void SpawnParticlesAction::setNb(unsigned int nb)
