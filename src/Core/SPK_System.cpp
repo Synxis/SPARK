@@ -161,7 +161,7 @@ namespace SPK
 		}
 		else
 		{
-			Vector3D pos = getWorldTransformPos();
+			const Vector3D pos = getWorldTransformPos();
 			AABBMin = AABBMax = pos;
 		}
 

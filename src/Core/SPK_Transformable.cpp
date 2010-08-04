@@ -80,6 +80,8 @@ namespace SPK
 		Vector3D side = crossProduct(look,up);
 		side.normalize();
 
+		up = crossProduct(side,look);
+
 		local[0] = side.x;
 		local[1] = side.y;
 		local[2] = side.z;
@@ -97,10 +99,11 @@ namespace SPK
 	void Transformable::setTransformOrientationLH(Vector3D look,Vector3D up)
 	{
 		look.normalize();
-		up.normalize();
 
 		Vector3D side = crossProduct(look,up);
 		side.normalize();
+
+		up = crossProduct(side,look);
 
 		local[0] = side.x;
 		local[1] = side.y;
@@ -124,15 +127,15 @@ namespace SPK
 		float a = 1 - c;
 		Vector3D axis2(axis.x * axis.x,axis.y * axis.y,axis.z * axis.z);
 
-		local[0] = axis2.x + (1 - axis2.x) * c;
+		local[0] = axis2.x + (1.0f - axis2.x) * c;
 		local[1] = axis.x * axis.y * a + axis.z * s;
 		local[2] = axis.x * axis.z * a - axis.y * s;
 		local[4] = axis.x * axis.y * a - axis.z * s;
-		local[5] = axis2.y + (1 - axis2.y) * c;
+		local[5] = axis2.y + (1.0f - axis2.y) * c;
 		local[6] = axis.y * axis.z * a + axis.x * s;
 		local[8] = axis.x * axis.z * a + axis.y * s;
 		local[9] = axis.y * axis.z * a - axis.x * s;
-		local[10] = axis2.z + (1 - axis2.z) * c;
+		local[10] = axis2.z + (1.0f - axis2.z) * c;
 
 		localIdentity = false;
 		notifyForTransformUpdate();
