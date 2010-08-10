@@ -124,7 +124,7 @@ namespace SPK
 		return clone;
 	}
 
-	Registerable* Registerable::copyRegisterable(Registerable* registerable,bool increment)
+	Registerable* Registerable::copyRegisterable(const Registerable* registerable,bool increment)
 	{
 		if (registerable == NULL)
 			return NULL;

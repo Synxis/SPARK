@@ -31,11 +31,77 @@
 
 #include <SDL.h>
 #include <SPARK.h>
+#include <Extensions/Modifiers/SPK_RandomForce.h>
 #include <SPARK_GL.h>
 
-float angleX = -90.0f;
+float angleX = 0.0f;
 float angleY = 0.0f;
 const float CAM_POS_Z = 3.0f;
+
+// Loads a texture
+bool loadTexture(GLuint& index,char* path,GLuint type,GLuint clamp,bool mipmap)
+{
+	SDL_Surface *particleImg; 
+	particleImg = SDL_LoadBMP(path);
+	if (particleImg == NULL)
+	{
+		std::cout << "Unable to load bitmap :" << SDL_GetError() << std::endl;
+		return false;
+	}
+
+	// converts from BGR to RGB
+	if ((type == GL_RGB)||(type == GL_RGBA))
+	{
+		const int offset = (type == GL_RGB ? 3 : 4);
+		unsigned char* iterator = static_cast<unsigned char*>(particleImg->pixels);
+		unsigned char *tmp0,*tmp1;
+		for (int i = 0; i < particleImg->w * particleImg->h; ++i)
+		{
+			tmp0 = iterator;
+			tmp1 = iterator + 2;
+			std::swap(*tmp0,*tmp1);
+			iterator += offset;
+		}
+	}
+
+	glGenTextures(1,&index);
+	glBindTexture(GL_TEXTURE_2D,index);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,clamp);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,clamp);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+	if (mipmap)
+	{
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+
+		gluBuild2DMipmaps(GL_TEXTURE_2D,
+			type,
+			particleImg->w,
+			particleImg->h,
+			type,
+			GL_UNSIGNED_BYTE,
+			particleImg->pixels);
+	}
+	else
+	{
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D,
+			0,
+			type,
+			particleImg->w,
+			particleImg->h,
+			0,
+			type,
+			GL_UNSIGNED_BYTE,
+			particleImg->pixels);
+	}
+
+	SDL_FreeSurface(particleImg);
+
+	return true;
+}
 
 // Draws the bounding box for a particle system
 void drawBoundingBox(const SPK::System& system)
@@ -108,6 +174,11 @@ int main(int argc, char *argv[])
 	int screenHeight = screen.h;
 	float screenRatio = (float)screen.w / (float)screen.h;
 
+	// Loads particle texture
+	GLuint textureParticle;
+	if (!loadTexture(textureParticle,"res/explosion.bmp",GL_LUMINANCE,GL_CLAMP,true))
+		return 1;
+
 	// inits openGL
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 	glViewport(0,0,screenWidth,screenHeight);
@@ -121,56 +192,33 @@ int main(int argc, char *argv[])
 	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
 	SPK::System* system = new SPK::System(true);
-	system->enableAABBComputation(true);
+	
+	SPK::GL::GLQuadRenderer* renderer = SPK::GL::GLQuadRenderer::create();
+	renderer->setBlendMode(SPK::BLEND_MODE_ADD);
+	renderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
+	renderer->setTexture(textureParticle);
+	renderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
+	renderer->setAtlasDimensions(2,2);
 
-	SPK::GL::GLQuadRenderer* quadRenderer = SPK::GL::GLQuadRenderer::create();
-	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
-	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
+	SPK::SphericEmitter* emitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,-1.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(),true,-1,100.0f,0.2,0.5);
 
-	SPK::GL::GLLineTrailRenderer* lineTrailRenderer = SPK::GL::GLLineTrailRenderer::create();
-	//lineTrailRenderer->setNbSamples(32);
-	lineTrailRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
-	lineTrailRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
+	SPK::Group* phantomGroup = system->createGroup(40);
+	phantomGroup->setLifeTime(5.0f,5.0f);
+	phantomGroup->setRadius(0.06f);
+	phantomGroup->addEmitter(SPK::SphericEmitter::create(SPK::Vector3D(0.0f,1.0f,0.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),true,-1,2.0f,1.2f,2.0f));
+	phantomGroup->addModifier(SPK::Gravity::create(SPK::Vector3D(0.0f,-1.0f,0.0f)));
+	phantomGroup->addModifier(SPK::Obstacle::create(SPK::Plane::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),0.8f));
+	phantomGroup->addModifier(SPK::EmitterAttacher::create(1,emitter,true));
 
-	SPK::RandomEmitter* emitter = SPK::RandomEmitter::create();
-	emitter->setZone(SPK::Point::create());
-	emitter->setForce(0.4f,0.6f);
-	emitter->setFlow(50);
-
-	SPK::Gravity* gravity = SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f));
-	SPK::Friction* friction = SPK::Friction::create(0.2f);
-
-	SPK::ColorGraphInterpolator* graphInterpolator = SPK::ColorGraphInterpolator::create();
-	graphInterpolator->addEntry(0.0f,0xFF000088);
-	graphInterpolator->addEntry(0.5f,0x00FF0088);
-	graphInterpolator->addEntry(1.0f,0x0000FF88);
-
-	SPK::Obstacle* obstacle = SPK::Obstacle::create(SPK::Plane::create(SPK::Vector3D(0.0f,-0.8f,0.0f),SPK::Vector3D(0.0f,1.0f,0.0f)));
-
-	SPK::Group* group1 = system->createGroup(100);
-	group1->setRadius(0.05f);
-	group1->setLifeTime(1.0f,2.0f);
-	//group1->setColorInterpolator(SPK::ColorDefaultInitializer::create(0xFFFF2288));
-	group1->setColorInterpolator(graphInterpolator);
-	group1->setParamInterpolator(SPK::PARAM_SIZE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
-	group1->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-2.0f,2.0f));
-	group1->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
-	group1->addEmitter(emitter);
-	group1->addModifier(gravity);
-	group1->addModifier(friction);
-	group1->addModifier(obstacle);
-	group1->addModifier(SPK::Rotator::create());
-	group1->setRenderer(quadRenderer);
-	group1->setDeathAction(SPK::SpawnParticlesAction::create(5,10,1,emitter));
-
-	SPK::Group* group2 = system->createGroup(1000);
-	group2->setRadius(0.0f);
-	group2->setLifeTime(1.0f,1.0f);
-	group2->setColorInterpolator(SPK::ColorSimpleInterpolator::create(0xFF000088,0x0000FF00));
-	group2->addModifier(gravity);
-	group2->addModifier(friction);
-	group2->addModifier(obstacle);
-	group2->setRenderer(lineTrailRenderer);
+	SPK::Group* trailGroup = system->createGroup(1000);
+	trailGroup->setLifeTime(0.5f,1.0f);
+	trailGroup->setRadius(0.06f);
+	trailGroup->setRenderer(renderer);
+	trailGroup->setColorInterpolator(SPK::ColorSimpleInterpolator::create(0xFF802080,0xFF000000));
+	trailGroup->setParamInterpolator(SPK::PARAM_TEXTURE_INDEX,SPK::FloatRandomInitializer::create(0.0f,4.0f));
+	trailGroup->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-0.1f,1.0f));
+	trailGroup->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2.0f * 3.14159f));
+	trailGroup->addModifier(SPK::Rotator::create());
 
 	float deltaTime = 0.0f;
 
@@ -185,11 +233,11 @@ int main(int argc, char *argv[])
 		while (SDL_PollEvent(&event))
 		{
 			// if esc is pressed, exit
-			if ((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_ESCAPE))
+			if ((event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) || event.type == SDL_QUIT)
 				exit = true;
 
 			// if pause is pressed, the system is paused
-			if ((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_PAUSE))
+			if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_PAUSE)
 				paused = !paused;
 
 			// Moves the camera with the mouse
@@ -207,16 +255,16 @@ int main(int argc, char *argv[])
 	
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();  
-		glTranslatef(0.0f,0.2f,-CAM_POS_Z);
+		glTranslatef(0.0f,0.0f/*0.2f*/,-CAM_POS_Z);
 		glRotatef(angleX,1.0f,0.0f,0.0f);
 		glRotatef(angleY,0.0f,1.0f,0.0f);
 
 		glColor4f(0.5f,0.0f,0.0f,1.0f);
 		glBegin(GL_QUADS);
-		glVertex3f(-1.0f,-0.8f,-1.0f);
-		glVertex3f(-1.0f,-0.8f,1.0f);
-		glVertex3f(1.0f,-0.8f,1.0f);
-		glVertex3f(1.0f,-0.8f,-1.0f);
+		glVertex3f(-1.0f,-1.0f,-1.0f);
+		glVertex3f(-1.0f,-1.0f,1.0f);
+		glVertex3f(1.0f,-1.0f,1.0f);
+		glVertex3f(1.0f,-1.0f,-1.0f);
 		glEnd();
 
 		drawBoundingBox(*system);

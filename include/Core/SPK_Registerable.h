@@ -63,6 +63,8 @@ namespace SPK
 
 		bool destroy(bool decrement = true);
 
+		static Registerable* copyRegisterable(const Registerable* registerable,bool increment = true);
+
 		virtual std::string getClassName() const = 0;
 
 	protected :
@@ -74,7 +76,6 @@ namespace SPK
 		static void decrementChild(Registerable* registerable);
 		static bool destroyChild(Registerable* registerable);
 		static Registerable* copyChild(Registerable* registerable,bool increment = true);
-		static Registerable* copyRegisterable(Registerable* registerable,bool increment = true);
 
 	private :
 

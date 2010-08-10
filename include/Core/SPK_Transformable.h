@@ -342,7 +342,7 @@ namespace SPK
 		inline bool isTransformUpdateNotified() const;
 
 		/**
-		* @brief Notifies the Transformable for a update need
+		* @brief Notifies the Transformable for an update need
 		*
 		* This method has to be called when modifying a parameter that impose the transform's recomputation.
 		*/

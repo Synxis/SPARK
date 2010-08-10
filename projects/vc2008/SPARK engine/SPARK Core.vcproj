@@ -397,6 +397,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_EmitterAttacher.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_Obstacle.cpp"
 						>
 					</File>
@@ -582,6 +586,10 @@
 				<Filter
 					Name="Emitters"
 					>
+					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_EmitterAttacher.h"
+						>
+					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Emitters\SPK_NormalEmitter.h"
 						>
