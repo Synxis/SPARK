@@ -143,7 +143,7 @@ namespace SPK
 		for (std::deque<EmitterPair>::const_iterator it = emitterPool.begin(); it != emitterPool.end(); ++it)
 		{
 			it->obj->decrement();
-			delete it->obj;
+			SPK_DELETE(it->obj);
 		}
 		emitterPool.clear();
 	}

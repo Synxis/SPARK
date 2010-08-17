@@ -62,7 +62,7 @@ namespace SPK
 
 	inline Rotator* Rotator::create()
 	{
-		return new Rotator;
+		return SPK_NEW(Rotator);
 	}
 }
 

@@ -50,7 +50,7 @@ namespace SPK
 
 	inline Point* Point::create(const Vector3D& position)
 	{
-		return new Point(position);
+		return SPK_NEW(Point,position);
 	}
 
 	inline void Point::generatePosition(Vector3D& v,bool full,float radius) const

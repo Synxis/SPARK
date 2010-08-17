@@ -48,7 +48,7 @@ namespace GL
 
 	RenderBuffer* GLQuadRenderer::attachRenderBuffer(const Group& group) const
 	{
-		return new GLBuffer(group.getCapacity() << 2);
+		return SPK_NEW(GLBuffer,group.getCapacity() << 2);
 	}
 
 	void GLQuadRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const

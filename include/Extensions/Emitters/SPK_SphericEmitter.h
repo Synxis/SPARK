@@ -168,7 +168,7 @@ namespace SPK
 		float forceMin,
 		float forceMax)
 	{
-		return new SphericEmitter(direction,angleMin,angleMax,zone,full,tank,flow,forceMin,forceMax);
+		return SPK_NEW(SphericEmitter,direction,angleMin,angleMax,zone,full,tank,flow,forceMin,forceMax);
 	}
 
 	inline const Vector3D& SphericEmitter::getDirection() const

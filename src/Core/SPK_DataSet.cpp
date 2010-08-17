@@ -30,8 +30,8 @@ namespace SPK
 
 		if (this->nbData != nbData)
 		{
-			delete[] dataArray;
-			dataArray = new Data*[nbData];
+			SPK_DELETE_ARRAY(dataArray);
+			dataArray = SPK_NEW_ARRAY(Data*,nbData);
 			for (size_t i = 0; i < nbData; ++i)
 				dataArray[i] = NULL;
 			this->nbData = nbData;
@@ -40,7 +40,7 @@ namespace SPK
 
 	void DataSet::setData(size_t index,Data* data)
 	{
-		delete dataArray[index];
+		SPK_DELETE(dataArray[index]);
 		dataArray[index] = data;
 	}
 

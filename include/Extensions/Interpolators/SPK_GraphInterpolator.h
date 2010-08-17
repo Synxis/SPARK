@@ -310,7 +310,7 @@ namespace SPK
 	template<typename T>
 	inline GraphInterpolator<T>* GraphInterpolator<T>::create()
 	{
-		return new GraphInterpolator<T>;
+		return SPK_NEW(GraphInterpolator<T>);
 	}
 
 	template<typename T>
@@ -445,9 +445,9 @@ namespace SPK
 	void GraphInterpolator<T>::createData(DataSet& dataSet,const Group& group) const
 	{
 		dataSet.init(NB_DATA);
-		FloatArrayData* offsetXDataPtr = new FloatArrayData(group.getCapacity(),1);
-		FloatArrayData* scaleXDataPtr = new FloatArrayData(group.getCapacity(),1);
-		FloatArrayData* ratioYDataPtr = new FloatArrayData(group.getCapacity(),1);
+		FloatArrayData* offsetXDataPtr = SPK_NEW(FloatArrayData,group.getCapacity(),1);
+		FloatArrayData* scaleXDataPtr = SPK_NEW(FloatArrayData,group.getCapacity(),1);
+		FloatArrayData* ratioYDataPtr = SPK_NEW(FloatArrayData,group.getCapacity(),1);
 
 		dataSet.setData(OFFSET_X_DATA_INDEX,offsetXDataPtr);
 		dataSet.setData(SCALE_X_DATA_INDEX,scaleXDataPtr);

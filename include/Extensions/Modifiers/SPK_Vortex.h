@@ -230,7 +230,7 @@ namespace SPK
 
 	inline Vortex* Vortex::create(const Vector3D& position,const Vector3D& direction,float rotationSpeed,float attractionSpeed)
 	{
-		return new Vortex(position,direction,rotationSpeed,attractionSpeed);
+		return SPK_NEW(Vortex,position,direction,rotationSpeed,attractionSpeed);
 	}
 
 	inline void Vortex::setPosition(const Vector3D& position)

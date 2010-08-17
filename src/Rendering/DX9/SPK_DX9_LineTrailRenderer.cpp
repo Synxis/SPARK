@@ -64,10 +64,10 @@ namespace DX9
 	void DX9LineTrailRenderer::createData(DataSet& dataSet,const Group& group) const
 	{
 		dataSet.init(NB_DATA);
-		dataSet.setData(VERTEX_BUFFER_INDEX,new Vector3DArrayData(group.getCapacity(),nbSamples + 2));
-		dataSet.setData(COLOR_BUFFER_INDEX,new ColorArrayData(group.getCapacity(),nbSamples + 2));
-		dataSet.setData(AGE_DATA_INDEX,new FloatArrayData(group.getCapacity(),nbSamples));
-		dataSet.setData(START_ALPHA_DATA_INDEX,new ArrayData<unsigned char>(group.getCapacity(),nbSamples));
+		dataSet.setData(VERTEX_BUFFER_INDEX,SPK_NEW(Vector3DArrayData,group.getCapacity(),nbSamples + 2));
+		dataSet.setData(COLOR_BUFFER_INDEX,SPK_NEW(ColorArrayData,group.getCapacity(),nbSamples + 2));
+		dataSet.setData(AGE_DATA_INDEX,SPK_NEW(FloatArrayData,group.getCapacity(),nbSamples));
+		dataSet.setData(START_ALPHA_DATA_INDEX,SPK_NEW(ArrayData<unsigned char>,group.getCapacity(),nbSamples));
 
 		// Inits the buffers
 		for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
@@ -165,7 +165,7 @@ namespace DX9
 		BufferInfo info;
 		ZeroMemory(&info, sizeof(info));
 		info.nbVertices = group.getCapacity() * (nbSamples + 2);
-		return new DX9Buffer(info);
+		return SPK_NEW(DX9Buffer,info);
 	}
 
 	void DX9LineTrailRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const

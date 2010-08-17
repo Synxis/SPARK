@@ -57,7 +57,7 @@ namespace DX9
 		BufferInfo info;
 		ZeroMemory(&info, sizeof(info));
 		info.nbVertices = group.getCapacity();
-		return new DX9Buffer(info);
+		return SPK_NEW(DX9Buffer,info);
 	}
 
 	void DX9PointRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const

@@ -36,7 +36,7 @@ namespace GL
 
 	RenderBuffer* GLLineRenderer::attachRenderBuffer(const Group& group) const
 	{
-		return new GLBuffer(group.getCapacity() << 1);
+		return SPK_NEW(GLBuffer,group.getCapacity() << 1);
 	}
 
 	void GLLineRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const

@@ -67,7 +67,7 @@ namespace SPK
 
 	inline RandomEmitter* RandomEmitter::create(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax)
 	{
-		return new RandomEmitter(zone,full,tank,flow,forceMin,forceMax);
+		return SPK_NEW(RandomEmitter,zone,full,tank,flow,forceMin,forceMax);
 	}
 }
 

@@ -79,7 +79,7 @@ namespace DX9
 
 	inline DX9LineRenderer* DX9LineRenderer::create(float length)
 	{
-		return new DX9LineRenderer(length);
+		return SPK_NEW(DX9LineRenderer,length);
 	}
 }}
 

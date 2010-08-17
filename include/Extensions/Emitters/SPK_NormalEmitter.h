@@ -124,7 +124,7 @@ namespace SPK
 		Zone* normalZone,
 		bool inverted)
 	{
-		return new NormalEmitter(
+		return SPK_NEW(NormalEmitter,
 			zone,
 			full,
 			tank,

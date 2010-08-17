@@ -148,7 +148,7 @@ namespace SPK
 		float minRadius,
 		float maxRadius)
 	{
-		return new Ring(position,normal,minRadius,maxRadius);
+		return SPK_NEW(Ring,position,normal,minRadius,maxRadius);
 	}
 
 	inline const Vector3D& Ring::getNormal() const

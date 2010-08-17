@@ -70,13 +70,13 @@ namespace SPK
 		totalSize(nbParticles * sizePerParticle),
 		sizePerParticle(sizePerParticle)
 	{
-		data = new T[totalSize];
+		data = SPK_NEW_ARRAY(T,totalSize);
 	}
 
 	template<typename T>
 	inline ArrayData<T>::~ArrayData()
 	{
-		delete[] data;
+		SPK_DELETE_ARRAY(data);
 	}
 
 	template<typename T>

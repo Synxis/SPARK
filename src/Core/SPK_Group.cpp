@@ -110,17 +110,17 @@ namespace SPK
 	{
 		destroyAllAdditionnalData();
 
-		delete[] particleData.positions;
-		delete[] particleData.velocities;
-		delete[] particleData.oldPositions;
-		delete[] particleData.ages;
-		delete[] particleData.lifeTimes;
-		delete[] particleData.energies;
-		delete[] particleData.sqrDists;
-		delete[] particleData.colors;
+		SPK_DELETE_ARRAY(particleData.positions);
+		SPK_DELETE_ARRAY(particleData.velocities);
+		SPK_DELETE_ARRAY(particleData.oldPositions);
+		SPK_DELETE_ARRAY(particleData.ages);
+		SPK_DELETE_ARRAY(particleData.lifeTimes);
+		SPK_DELETE_ARRAY(particleData.energies);
+		SPK_DELETE_ARRAY(particleData.sqrDists);
+		SPK_DELETE_ARRAY(particleData.colors);
 
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
-			delete[] particleData.parameters[i];
+			SPK_DELETE_ARRAY(particleData.parameters[i]);
 
 		Registerable::destroyChild(colorInterpolator.obj);
 		Registerable::destroyChild(renderer.obj);
@@ -332,7 +332,7 @@ namespace SPK
 
 			// Creates the data for the parameter
 			if (system.isInitialized())
-				particleData.parameters[param] = new float[particleData.maxParticles];
+				particleData.parameters[param] = SPK_NEW_ARRAY(float,particleData.maxParticles);
 		}
 		else if (paramInterpolators[param].obj != NULL && interpolator == NULL)
 		{
@@ -342,7 +342,7 @@ namespace SPK
 			}
 
 			// Destroys the data for the parameter
-			delete[] particleData.parameters[param];
+			SPK_DELETE_ARRAY(particleData.parameters[param]);
 			particleData.parameters[param] = NULL;
 		}
 
@@ -574,7 +574,7 @@ namespace SPK
 
 	void Group::destroyRenderBuffer()
 	{
-		delete renderer.renderBuffer;
+		SPK_DELETE(renderer.renderBuffer);
 		renderer.renderBuffer = NULL;
 	}
 

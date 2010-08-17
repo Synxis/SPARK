@@ -114,7 +114,7 @@ namespace GL
 
 	inline GLPointRenderer* GLPointRenderer::create(float screenSize)
 	{
-		return new GLPointRenderer(screenSize);
+		return SPK_NEW(GLPointRenderer,screenSize);
 	}
 		
 	inline void GLPointRenderer::setTexture(GLuint textureIndex)

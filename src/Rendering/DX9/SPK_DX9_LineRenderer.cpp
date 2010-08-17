@@ -40,7 +40,7 @@ namespace DX9
 		BufferInfo info;
 		ZeroMemory(&info, sizeof(info));
 		info.nbVertices = group.getCapacity() << 1;
-		return new DX9Buffer(info);
+		return SPK_NEW(DX9Buffer,info);
 	}
 
 	void DX9LineRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const

@@ -172,7 +172,7 @@ namespace GL
 
 	inline GLLineTrailRenderer* GLLineTrailRenderer::create(size_t nbSamples,float duration,float width)
 	{
-		return new GLLineTrailRenderer(nbSamples,duration,width);
+		return SPK_NEW(GLLineTrailRenderer,nbSamples,duration,width);
 	}
 
 	inline size_t GLLineTrailRenderer::getNbSamples() const

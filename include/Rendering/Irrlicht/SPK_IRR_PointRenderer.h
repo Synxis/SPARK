@@ -114,7 +114,7 @@ namespace IRR
 
 	inline IRRPointRenderer* IRRPointRenderer::create(irr::IrrlichtDevice* d,float screenSize)
 	{
-		return new IRRPointRenderer(d,screenSize);
+		return SPK_NEW(IRRPointRenderer,d,screenSize);
 	}
 
 	inline void IRRPointRenderer::setScreenSize(float screenSize)

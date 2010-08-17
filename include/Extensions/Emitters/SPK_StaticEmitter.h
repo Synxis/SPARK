@@ -64,7 +64,7 @@ namespace SPK
 
 	inline StaticEmitter* StaticEmitter::create(Zone* zone,bool full,int tank,float flow)
 	{
-		return new StaticEmitter(zone,full,tank,flow);
+		return SPK_NEW(StaticEmitter,zone,full,tank,flow);
 	}
 
 	inline void StaticEmitter::generateVelocity(Particle& particle,float speed) const

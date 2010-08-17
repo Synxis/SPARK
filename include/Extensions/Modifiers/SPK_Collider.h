@@ -102,7 +102,7 @@ namespace SPK
 
 	inline Collider* Collider::create(float elasticity)
 	{
-		return new Collider(elasticity);
+		return SPK_NEW(Collider,elasticity);
 	}
 
 	inline float Collider::getElasticity() const

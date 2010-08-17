@@ -50,14 +50,14 @@ namespace SPK
 	Logger& Logger::getInstance()
 	{
 		if (instance == NULL)
-			instance = new Logger();
+			instance = SPK_NEW(Logger);
 
 		return *instance;
 	}
 
 	void Logger::destroyInstance()
 	{
-		delete instance;
+		SPK_DELETE(instance);
 		instance = NULL;
 	}
 

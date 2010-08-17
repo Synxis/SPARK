@@ -51,7 +51,7 @@ namespace SPK
 
 	inline Destroyer* Destroyer::create(Zone* zone,ZoneTest zoneTest)
 	{
-		return new Destroyer(zone,zoneTest);
+		return SPK_NEW(Destroyer,zone,zoneTest);
 	}
 
 	inline Destroyer::Destroyer(Zone* zone,ZoneTest zoneTest) :

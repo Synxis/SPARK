@@ -60,7 +60,7 @@ namespace SPK
 	template<typename T>
 	inline DefaultInitializer<T>* DefaultInitializer<T>::create(const T& value)
 	{
-		return new DefaultInitializer<T>(value);
+		return SPK_NEW(DefaultInitializer<T>,value);
 	}
 
 	template<typename T>

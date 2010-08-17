@@ -64,7 +64,7 @@ namespace SPK
 
 	inline Sphere* Sphere::create(const Vector3D& position,float radius)
 	{
-		return new Sphere(position,radius);
+		return SPK_NEW(Sphere,position,radius);
 	}
 
 	inline float Sphere::getRadius() const

@@ -480,10 +480,10 @@ namespace SPK
 	void Group::reallocateArray(T*& t,size_t newSize,size_t copySize)
 	{
 		T* oldT = t;
-		t = new T[newSize];
+		t = SPK_NEW_ARRAY(T,newSize);
 		if (oldT != NULL && copySize != 0)
 			memcpy(oldT,t,copySize * sizeof(T));
-		delete[] oldT;
+		SPK_DELETE_ARRAY(oldT);
 	}
 
 	inline void Group::setImmortal(bool immortal)

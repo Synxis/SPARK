@@ -112,7 +112,7 @@ namespace SPK
 
 	inline Plane* Plane::create(const Vector3D& position,const Vector3D& normal)
 	{
-		return new Plane(position,normal);
+		return SPK_NEW(Plane,position,normal);
 	}
 
 	inline const Vector3D& Plane::getNormal() const

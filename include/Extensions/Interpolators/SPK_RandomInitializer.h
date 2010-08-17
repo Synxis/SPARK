@@ -63,7 +63,7 @@ namespace SPK
 	template<typename T>
 	inline RandomInitializer<T>* RandomInitializer<T>::create(const T& min,const T& max)
 	{
-		return new RandomInitializer<T>(min,max);
+		return SPK_NEW(RandomInitializer<T>,min,max);
 	}
 
 	template<typename T>

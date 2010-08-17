@@ -50,13 +50,13 @@ namespace SPK
 		Registerable::copyBuffer.clear();
 
 		for (std::vector<Group*>::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
-			groups.push_back(new Group(*this,**it));
+			groups.push_back(SPK_NEW(Group,*this,**it));
 	}
 	
 	System::~System()
 	{
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			delete *it;
+			SPK_DELETE(*it);
 	}
 
 	Group* System::createGroup(size_t capacity)
@@ -67,14 +67,14 @@ namespace SPK
 			return NULL;
 		}
 
-		Group* newGroup = new Group(*this,capacity);
+		Group* newGroup = SPK_NEW(Group,*this,capacity);
 		groups.push_back(newGroup);
 		return newGroup;
 	}
 
 	Group* System::createGroup(const Group& group)
 	{
-		Group* newGroup = new Group(*this,group);
+		Group* newGroup = SPK_NEW(Group,*this,group);
 		groups.push_back(newGroup);
 		return newGroup;
 	}
@@ -84,7 +84,7 @@ namespace SPK
 		std::vector<Group*>::iterator it = std::find(groups.begin(),groups.end(),group);
 		if (it != groups.end())
 		{
-			delete *it;
+			SPK_DELETE(*it);
 			groups.erase(it);
 		}
 		else

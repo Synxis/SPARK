@@ -97,13 +97,13 @@ namespace SPK
 
 		bool checkEmitterValidity() const;
 
-		virtual void init(const Particle& particle,DataSet* dataSet) const;
+		virtual void init(Particle& particle,DataSet* dataSet) const;
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
 	inline EmitterAttacher* EmitterAttacher::create(size_t groupIndex,Emitter* emitter,bool orientate,bool rotate)
 	{
-		return new EmitterAttacher(groupIndex,emitter,orientate,rotate);
+		return SPK_NEW(EmitterAttacher,groupIndex,emitter,orientate,rotate);
 	}
 
 	inline Emitter* EmitterAttacher::getEmitter() const

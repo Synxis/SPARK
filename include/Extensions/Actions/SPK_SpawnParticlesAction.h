@@ -30,34 +30,119 @@ namespace SPK
 {
 	class Emitter;
 
+	/**
+	* @brief An action that allows particles to spawn punctually at another particle's position
+	*
+	* This allows to have some particles spawn at some particle's position when the action is triggered.<br>
+	* Note that this is only for a punctual spawning. For a continuous spawning, consider using an EmitterAttacher.<br>
+	* <br>
+	* To set up particle spawning, an base Emitter is used. The emitter and its zone are copied and the copied emitter is transformed accordingly to
+	* the particle's position when an action is triggered.<br>
+	* <br>
+	* A pool of copied emitter is used internally to avoid creating too many emitters.
+	*/
 	class SPK_PREFIX SpawnParticlesAction : public Action
 	{
 	SPK_IMPLEMENT_REGISTERABLE(SpawnParticlesAction)
 
 	public :
 
-		static inline SpawnParticlesAction* create(unsigned int minNb = 1,
+		//////////////////////////////
+		// Constructor / Destructor //
+		//////////////////////////////
+
+		/**
+		* @brief Creates a new spawnParticles action
+		* @param minNb : the minimum number of spawned particles
+		* @param maxNb : the maximum number of spawned particles
+		* @param groupIndex : the index of the group in the system in which to spawn particles
+		* @param emitter : the emitter used to spawn particles
+		*/
+		static inline SpawnParticlesAction* create(
+			unsigned int minNb = 1,
 			unsigned int maxNb = 1,
 			size_t groupIndex = 0,
 			Emitter* emitter = NULL);
 
+		/** @brief Destructor of spawnParticles action */
 		virtual ~SpawnParticlesAction();
 
-		inline void setNb(unsigned int nb);
-		void setNb(unsigned int min,unsigned int max);
-		inline unsigned int  getMinNb() const;
-		inline unsigned int  getMaxNb() const;
+		/////////////////////////
+		// Number of particles //
+		/////////////////////////
 
+		/**
+		* @brief Sets the number of particle to spawn
+		* Note that this sets both the minimum and maximum number
+		* @param nb : the number of particles to spawn
+		*/
+		inline void setNb(unsigned int nb);
+
+		/**
+		* @brief Sets the number of particle to spawn
+		* The actual number of particle spawn is generated within [min,max]
+		* @param min : the minimum number of particles to spawn
+		* @param max : the maximum number of particles to spawn
+		*/
+		void setNb(unsigned int min,unsigned int max);
+
+		/**
+		* @brief Gets the minimum number of particles to spawn
+		* @return the minimum number of particles to spawn
+		*/
+		inline unsigned int getMinNb() const;
+
+		/**
+		* @brief Gets the maximum number of particles to spawn
+		* @return the maximum number of particles to spawn
+		*/
+		inline unsigned int getMaxNb() const;
+
+		//////////////////
+		// Base emitter //
+		//////////////////
+
+		/**
+		* @brief Sets the base emitter used to spawn particles
+		* The emitter is copied for every particle and is transformed accordingly to particle's position.<br>
+		* Note that the zone of the emitter must not be shared as its zone is copied as well, else the base emitter is considered as invalid.
+		* @param emitter : the base emitter used to create emitters
+		*/
 		void setEmitter(Emitter* emitter);
+
+		/**
+		* @brief Gets the base emitter
+		* If the base emitter is modified, a call to resetPool() will allow the changes to take effects
+		* @return the base emitter
+		*/
 		inline Emitter* getEmitter() const;
 
+		/////////////////
+		// Group index //
+		/////////////////
+
+		/**
+		* @brief Sets the index of the group in which to spawn particles
+		* The index is the index of the group within the parent system.<br>
+		* Note that setting the group index to the index of the group which owns the spawn particle action may result in infinitely growing group.
+		* @param index : the index of the group in the parent system in which to spawn particles
+		*/
 		inline void setGroupIndex(size_t index);
+
+		/**
+		* @brief Gets the index of the group within the parent system in which to spawn particles
+		* @return the index of the group in which to spawn particles
+		*/
 		inline size_t getGroupIndex() const;
 
-		virtual void apply(Particle& particle) const;
+		///////////////
+		// Interface //
+		///////////////
 
+		/** @brief Resets the pool of particles */
 		void resetPool();
 
+		virtual void apply(Particle& particle) const;
 		virtual Nameable* findByName(const std::string& name);
 
 	private :
@@ -111,7 +196,7 @@ namespace SPK
 
 	inline SpawnParticlesAction* SpawnParticlesAction::create(unsigned int minNb,unsigned int maxNb,size_t groupIndex,Emitter* emitter)
 	{
-		return new SpawnParticlesAction(minNb,maxNb,groupIndex,emitter);
+		return SPK_NEW(SpawnParticlesAction,minNb,maxNb,groupIndex,emitter);
 	}
 
 	inline Emitter* SpawnParticlesAction::getEmitter() const

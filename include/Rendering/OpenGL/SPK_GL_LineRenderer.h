@@ -79,7 +79,7 @@ namespace GL
 
 	inline GLLineRenderer* GLLineRenderer::create(float length,float width)
 	{
-		return new GLLineRenderer(length,width);
+		return SPK_NEW(GLLineRenderer,length,width);
 	}
 }}
 

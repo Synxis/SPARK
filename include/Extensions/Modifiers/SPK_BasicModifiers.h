@@ -78,7 +78,7 @@ namespace SPK
 
 	inline Gravity* Gravity::create(const Vector3D& value)
 	{
-		return new Gravity(value);
+		return SPK_NEW(Gravity,value);
 	}
 
 	inline void Gravity::setValue(const Vector3D& value)
@@ -109,7 +109,7 @@ namespace SPK
 
 	inline Friction* Friction::create(float value)
 	{
-		return new Friction(value);
+		return SPK_NEW(Friction,value);
 	}
 }
 

@@ -69,7 +69,7 @@ namespace SPK
 	template<typename T>
 	inline RandomInterpolator<T>* RandomInterpolator<T>::create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue)
 	{
-		return new RandomInterpolator<T>(minBirthValue,maxBirthValue,minDeathValue,maxDeathValue);
+		return SPK_NEW(RandomInterpolator<T>,minBirthValue,maxBirthValue,minDeathValue,maxDeathValue);
 	}
 
 	template<typename T>
@@ -118,8 +118,8 @@ namespace SPK
 	void RandomInterpolator<T>::createData(DataSet& dataSet,const Group& group) const
 	{
 		dataSet.init(NB_DATA);
-		ArrayData<T>* birthValuesDataPtr = new ArrayData<T>(group.getCapacity(),1);
-		ArrayData<T>* deathValuesDataPtr = new ArrayData<T>(group.getCapacity(),1);
+		ArrayData<T>* birthValuesDataPtr = SPK_NEW(ArrayData<T>,group.getCapacity(),1);
+		ArrayData<T>* deathValuesDataPtr = SPK_NEW(ArrayData<T>,group.getCapacity(),1);
 
 		dataSet.setData(BIRTH_VALUE_DATA_INDEX,birthValuesDataPtr);
 		dataSet.setData(DEATH_VALUE_DATA_INDEX,deathValuesDataPtr);

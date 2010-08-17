@@ -111,7 +111,7 @@ namespace DX9
 
 	inline DX9QuadRenderer* DX9QuadRenderer::create(float scaleX,float scaleY)
 	{
-		return new DX9QuadRenderer(scaleX,scaleY);
+		return SPK_NEW(DX9QuadRenderer,scaleX,scaleY);
 	}
 		
 	inline void DX9QuadRenderer::setTexture(LPDIRECT3DTEXTURE9 textureIndex)

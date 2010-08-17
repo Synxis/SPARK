@@ -63,7 +63,7 @@ namespace SPK
 	template<typename T>
 	inline SimpleInterpolator<T>* SimpleInterpolator<T>::create(const T& birthValue,const T& deathValue)
 	{
-		return new SimpleInterpolator<T>(birthValue,deathValue);
+		return SPK_NEW(SimpleInterpolator<T>,birthValue,deathValue);
 	}
 
 	template<typename T>

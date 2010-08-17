@@ -176,7 +176,7 @@ namespace DX9
 
 	inline DX9LineTrailRenderer* DX9LineTrailRenderer::create(size_t nbSamples, float duration)
 	{
-		return new DX9LineTrailRenderer(nbSamples, duration, 1.0f);
+		return SPK_NEW(DX9LineTrailRenderer,nbSamples, duration, 1.0f);
 	}
 
 	inline size_t DX9LineTrailRenderer::getNbSamples() const

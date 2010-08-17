@@ -138,7 +138,7 @@ namespace IRR
 
 	inline IRRQuadRenderer* IRRQuadRenderer::create(irr::IrrlichtDevice* d,float scaleX,float scaleY)
 	{
-		return new IRRQuadRenderer(d,scaleX,scaleY);
+		return SPK_NEW(IRRQuadRenderer,d,scaleX,scaleY);
 	}
 
 	inline void IRRQuadRenderer::setTexture(irr::video::ITexture* texture)

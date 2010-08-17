@@ -105,7 +105,7 @@ namespace SPK
 	inline DataSet::~DataSet()
 	{
 		destroyAllData();
-		delete[] dataArray;
+		SPK_DELETE_ARRAY(dataArray);
 	}
 
 	inline void DataSet::setInitialized()

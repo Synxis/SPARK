@@ -53,7 +53,7 @@ namespace SPK
 	}
 
 	EmitterAttacher::EmitterData::EmitterData(size_t nbParticles,Group* emittingGroup) :
-		data(new Emitter*[nbParticles]),
+		data(SPK_NEW_ARRAY(Emitter*,nbParticles)),
 		dataSize(nbParticles),
 		group(emittingGroup)
 	{
@@ -65,6 +65,7 @@ namespace SPK
 	{
 		for (size_t i = 0; i < dataSize; ++i)
 			destroyEmitter(i);
+		SPK_DELETE_ARRAY(data);
 	}
 
 	void EmitterAttacher::setEmitter(Emitter* emitter)
@@ -77,7 +78,7 @@ namespace SPK
 	void EmitterAttacher::createData(DataSet& dataSet,const Group& group) const
 	{
 		dataSet.init(NB_DATA);
-		dataSet.setData(EMITTER_INDEX,new EmitterData(group.getCapacity(),group.getSystem().getGroup(groupIndex)));
+		dataSet.setData(EMITTER_INDEX,SPK_NEW(EmitterData,group.getCapacity(),group.getSystem().getGroup(groupIndex)));
 	}
 
 	void EmitterAttacher::checkData(DataSet& dataSet,const Group& group) const
@@ -109,10 +110,10 @@ namespace SPK
 		return true;
 	}
 
-	void EmitterAttacher::init(const Particle& particle,DataSet* dataSet) const
+	void EmitterAttacher::init(Particle& particle,DataSet* dataSet) const
 	{
 		// Only destroy the old emitter here as we need to ensure the emitters validity
-		dynamic_cast<EmitterData*>(dataSet)->destroyEmitter(particle.getIndex());
+		SPK_GET_DATA(EmitterData,dataSet,EMITTER_INDEX).destroyEmitter(particle.getIndex());
 	}
 
 	void EmitterAttacher::modify(Group& group,DataSet* dataSet,float deltaTime) const
@@ -179,8 +180,7 @@ namespace SPK
 				group->flushBufferedParticles();
 
 			data[index]->decrement();
-			delete data[index];
-					
+			SPK_DELETE(data[index]);
 			data[index] = NULL;
 		}
 	}

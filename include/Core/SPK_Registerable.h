@@ -33,7 +33,7 @@
 private : \
 virtual ClassName* clone() const \
 { \
-	return new ClassName(*this); \
+	return SPK_NEW(ClassName,*this); \
 } \
 \
 public : \

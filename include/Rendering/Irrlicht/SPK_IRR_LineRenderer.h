@@ -79,7 +79,7 @@ namespace IRR
 
 	inline IRRLineRenderer* IRRLineRenderer::create(irr::IrrlichtDevice* d,float length,float width)
 	{
-		return new IRRLineRenderer(d,length,width);
+		return SPK_NEW(IRRLineRenderer,d,length,width);
 	}
 
 	inline void IRRLineRenderer::setWidth(float width)

@@ -90,6 +90,7 @@
 		<Unit filename="..\..\..\include\Core\SPK_Interpolator.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Iterator.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Logger.h" />
+		<Unit filename="..\..\..\include\Core\SPK_MemoryTracer.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Modifier.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Nameable.h" />
 		<Unit filename="..\..\..\include\Core\SPK_Particle.h" />

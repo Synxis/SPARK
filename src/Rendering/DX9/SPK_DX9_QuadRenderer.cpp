@@ -49,7 +49,7 @@ namespace DX9
 		ZeroMemory(&info, sizeof(info));
 		info.nbVertices = group.getCapacity() << 2;
 		info.nbIndices = group.getCapacity() * 6;
-		return new DX9Buffer(info);
+		return SPK_NEW(DX9Buffer,info);
 	}
 
 	void DX9QuadRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const

@@ -64,7 +64,7 @@ namespace SPK
 			this->decrement();
 		if (nbReferences == 0)
 		{
-			delete this;
+			SPK_DELETE(this);
 			return true;
 		}
 		return false;
@@ -90,7 +90,7 @@ namespace SPK
 		registerable->decrement();
 		if (registerable->destroyable && registerable->nbReferences == 0)
 		{
-			delete registerable;
+			SPK_DELETE(registerable);
 			return true;
 		}
 

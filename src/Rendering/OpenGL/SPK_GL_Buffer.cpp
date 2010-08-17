@@ -36,18 +36,18 @@ namespace GL
 	{
 		SPK_ASSERT(nbVertices > 0,"GLBuffer::GLBuffer(size_t,size_t) - The number of vertices cannot be 0");
 
-		vertexBuffer = new Vector3D[nbVertices];
-		colorBuffer = new Color[nbVertices];
+		vertexBuffer = SPK_NEW_ARRAY(Vector3D,nbVertices);
+		colorBuffer = SPK_NEW_ARRAY(Color,nbVertices);
 
 		if (nbTexCoords > 0)
-			texCoordBuffer = new float[nbVertices * nbTexCoords];
+			texCoordBuffer = SPK_NEW_ARRAY(float,nbVertices * nbTexCoords);
 	}
 
 	GLBuffer::~GLBuffer()
 	{
-		delete[] vertexBuffer;
-		delete[] colorBuffer;
-		delete[] texCoordBuffer;
+		SPK_DELETE_ARRAY(vertexBuffer);
+		SPK_DELETE_ARRAY(colorBuffer);
+		SPK_DELETE_ARRAY(texCoordBuffer);
 	}
 
 	void GLBuffer::setNbTexCoords(size_t nb)
@@ -55,9 +55,9 @@ namespace GL
 		if (nbTexCoords != nb)
 		{
 			nbTexCoords = nb;
-			delete[] texCoordBuffer;
+			SPK_DELETE_ARRAY(texCoordBuffer);
 			if (nbTexCoords > 0)
-				texCoordBuffer = new float[nbVertices * nbTexCoords];
+				texCoordBuffer = SPK_NEW_ARRAY(float,nbVertices * nbTexCoords);
 			currentTexCoordIndex = 0;
 		}
 	}

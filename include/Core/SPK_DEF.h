@@ -46,6 +46,8 @@
 #define SPK_PREFIX
 #endif
 
+#include "Core/SPK_MemoryTracer.h"
+
 #define SPK_RANDOM(min,max) SPK::SPKContext::getInstance().generateRandom(min,max)
 #define SPK_DEFAULT_ZONE	SPK::SPKContext::getInstance().getDefaultZone()
 

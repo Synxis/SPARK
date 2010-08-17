@@ -57,7 +57,7 @@ namespace SPK
 
 	inline ActionSet* ActionSet::create()
 	{
-		return new ActionSet;
+		return SPK_NEW(ActionSet);
 	}
 
 	inline size_t ActionSet::getNbActions() const

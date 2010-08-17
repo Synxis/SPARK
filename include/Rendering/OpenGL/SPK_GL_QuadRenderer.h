@@ -114,7 +114,7 @@ namespace GL
 
 	inline GLQuadRenderer* GLQuadRenderer::create(float scaleX,float scaleY)
 	{
-		return new GLQuadRenderer(scaleX,scaleY);
+		return SPK_NEW(GLQuadRenderer,scaleX,scaleY);
 	}
 		
 	inline void GLQuadRenderer::setTexture(GLuint textureIndex)

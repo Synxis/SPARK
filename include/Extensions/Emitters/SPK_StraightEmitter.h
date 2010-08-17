@@ -105,7 +105,7 @@ namespace SPK
 			float forceMin,
 			float forceMax)
 	{
-		return new StraightEmitter(direction,zone,full,tank,flow,forceMin,forceMax);
+		return SPK_NEW(StraightEmitter,direction,zone,full,tank,flow,forceMin,forceMax);
 	}
 
 	inline const Vector3D& StraightEmitter::getDirection() const

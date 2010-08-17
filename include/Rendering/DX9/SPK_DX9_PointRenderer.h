@@ -161,7 +161,7 @@ namespace DX9
 
 	inline DX9PointRenderer* DX9PointRenderer::create(float screenSize)
 	{
-		return new DX9PointRenderer(screenSize);
+		return SPK_NEW(DX9PointRenderer,screenSize);
 	}
 		
 	inline void DX9PointRenderer::setTexture(LPDIRECT3DTEXTURE9 textureIndex)

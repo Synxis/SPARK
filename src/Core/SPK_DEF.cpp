@@ -27,6 +27,10 @@
 
 namespace SPK
 {
+#ifdef SPK_TRACE_MEMORY
+	SPKMemoryTracer SPKMemoryTracer::instance = SPKMemoryTracer();
+#endif
+
 	SPKContext SPKContext::instance = SPKContext();
 
 	// This allows SPARK initialization at application start up
@@ -49,7 +53,7 @@ namespace SPK
 	void SPKContext::release()
 	{
 		// Default zone is destroyed
-		delete defaultZone;
+		SPK_DELETE(defaultZone);
 		defaultZone = NULL;
 
 		// Singletons are destroyed

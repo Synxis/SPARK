@@ -85,7 +85,7 @@ namespace SPK
 
 	inline Obstacle* Obstacle::create(Zone* zone,float bouncingRatio,float friction,ZoneTest zoneTest)
 	{
-		return new Obstacle(zone,bouncingRatio,friction,zoneTest);
+		return SPK_NEW(Obstacle,zone,bouncingRatio,friction,zoneTest);
 	}
 
 	inline void Obstacle::setBouncingRatio(float bouncingRatio)

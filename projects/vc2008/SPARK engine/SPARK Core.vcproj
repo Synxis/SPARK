@@ -512,6 +512,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\include\Core\SPK_MemoryTracer.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\Core\SPK_Modifier.h"
 					>
 				</File>
@@ -587,10 +591,6 @@
 					Name="Emitters"
 					>
 					<File
-						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_EmitterAttacher.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\..\include\Extensions\Emitters\SPK_NormalEmitter.h"
 						>
 					</File>
@@ -644,6 +644,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_Destroyer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_EmitterAttacher.h"
 						>
 					</File>
 					<File

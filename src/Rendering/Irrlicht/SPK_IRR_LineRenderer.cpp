@@ -40,7 +40,7 @@ namespace IRR
 	RenderBuffer* IRRLineRenderer::attachRenderBuffer(const Group& group) const
 	{
 		// Creates the render buffer
-		IRRBuffer* buffer = new IRRBuffer(device,group.getCapacity(),NB_VERTICES_PER_PARTICLE,NB_INDICES_PER_PARTICLE);
+		IRRBuffer* buffer = SPK_NEW(IRRBuffer,device,group.getCapacity(),NB_VERTICES_PER_PARTICLE,NB_INDICES_PER_PARTICLE);
 	
 		buffer->positionAtStart();
 

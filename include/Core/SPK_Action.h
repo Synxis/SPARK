@@ -29,15 +29,38 @@ namespace SPK
 {
 	class Particle;
 
+	/**
+	* @brief An abstract class that allows to perform an action on a single particle
+	*
+	* The action can be triggered by a particular event.<br>
+	* For instance by using Group::setBirthAction(Action*), the action will be triggered on a given particle when it's born.<br>
+	* The equivalent method exists with particle's death (Group::setDeathAction(Action*).<br>
+	* Some modifiers can also trigger actions. In a more general way, any object can potentially triggers actions.
+	*/
 	class Action : public Registerable
 	{
 	public :
 
+		/** @brief Destructor of action */
 		virtual inline ~Action() {}
 
+		/**
+		* @brief Activates or deactivates the action
+		* An inactive action cannot be triggered 
+		* @param active : true to activate, false to deactivate
+		*/
 		inline void setActive(bool active);
+
+		/**
+		* @brief Tells whether the action is active or not
+		* @return true if the action is active, false of not
+		*/
 		inline bool isActive() const;
 
+		/**
+		* @brief Applies the action on a given particle
+		* @param particle : the particle on which to apply the action
+		*/
 		virtual void apply(Particle& particle) const = 0;
 
 	protected :
