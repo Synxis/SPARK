@@ -117,7 +117,7 @@ namespace SPK
 			point = v;
 			Zones[t]->moveAtBorder(point,inside);
 			bool ok=true;
-			
+
 			for (size_t i = 0; i < Zones.size(); i++)
 				if(Zones[t] != Zones[i] && Zones[i]->contains(point)) ok = false;
 
@@ -135,13 +135,13 @@ namespace SPK
 	Vector3D ZoneUnion::computeNormal(const Vector3D& point) const
 	{
 		Vector3D v = point;
-		
+
 		for (size_t t = 0; t < Zones.size(); t++)
 		{
 			v = point;
 			Zones[t]->moveAtBorder(v,false);
 			bool ok=true;
-			
+
 			for (size_t i = 0; i < Zones.size(); i++)
 				if(Zones[t] != Zones[i] && Zones[i]->contains(v)) ok = false;
 

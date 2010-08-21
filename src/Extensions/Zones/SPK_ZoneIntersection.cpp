@@ -129,7 +129,7 @@ namespace SPK
 	Vector3D ZoneIntersection::computeNormal(const Vector3D& point) const
 	{
 		Vector3D v = point;
-		
+
 		for (size_t t = 0; t < Zones.size(); t++)
 		{
 			v = point;

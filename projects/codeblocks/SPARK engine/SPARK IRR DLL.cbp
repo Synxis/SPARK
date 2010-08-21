@@ -58,6 +58,7 @@
 			</Target>
 		</Build>
 		<Linker>
+			<Add option="-static-libgcc" />
 			<Add library="libIrrlicht.a" />
 		</Linker>
 		<Unit filename="..\..\..\src\SPK_IRR_ALL.cpp" />

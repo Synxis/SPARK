@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2009                                                      //
+// Copyright (C) 2008-2010                                                      //
 //  - Julien Fryer - julienfryer@gmail.com				                        //
 //  - Thibault Lescoat -  info-tibo <at> orange <dot> fr						//
 //																				//
@@ -40,7 +40,7 @@ namespace SPK
 	* </ul>
 	* Note that the direction does not have to be normalized as it is normalized internally when set.
 	*
-	* @since 1.05.02
+	* @since 1.05.03
 	*/
 	class SPK_PREFIX Cylinder : public Zone
 	{

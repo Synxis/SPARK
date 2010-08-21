@@ -48,6 +48,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Linker>
+			<Add option="-static-libgcc" />
+		</Linker>
 		<Unit filename="..\..\..\src\SPK_IRR_ALL.cpp" />
 		<Extensions>
 			<code_completion />

@@ -79,10 +79,13 @@
 		<Unit filename="..\..\..\include\Extensions\Renderers\SPK_PointRendererInterface.h" />
 		<Unit filename="..\..\..\include\Extensions\Renderers\SPK_QuadRendererInterface.h" />
 		<Unit filename="..\..\..\include\Extensions\Zones\SPK_AABox.h" />
+		<Unit filename="..\..\..\include\Extensions\Zones\SPK_Cylinder.h" />
 		<Unit filename="..\..\..\include\Extensions\Zones\SPK_Line.h" />
 		<Unit filename="..\..\..\include\Extensions\Zones\SPK_Plane.h" />
 		<Unit filename="..\..\..\include\Extensions\Zones\SPK_Point.h" />
 		<Unit filename="..\..\..\include\Extensions\Zones\SPK_Sphere.h" />
+		<Unit filename="..\..\..\include\Extensions\Zones\SPK_ZoneIntersection.h" />
+		<Unit filename="..\..\..\include\Extensions\Zones\SPK_ZoneUnion.h" />
 		<Unit filename="..\..\..\include\RenderingAPIs\Irrlicht\SPK_IRRBuffer.h" />
 		<Unit filename="..\..\..\include\RenderingAPIs\Irrlicht\SPK_IRRLineRenderer.h" />
 		<Unit filename="..\..\..\include\RenderingAPIs\Irrlicht\SPK_IRRPointRenderer.h" />
@@ -137,10 +140,13 @@
 		<Unit filename="..\..\..\src\Extensions\Renderers\SPK_QuadRendererInterface.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Zones\SPK_AABox.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Zones\SPK_Circle2D.cpp" />
+		<Unit filename="..\..\..\src\Extensions\Zones\SPK_Cylinder.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Zones\SPK_Line.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Zones\SPK_Plane.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Zones\SPK_Point.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Zones\SPK_Sphere.cpp" />
+		<Unit filename="..\..\..\src\Extensions\Zones\SPK_ZoneIntersection.cpp" />
+		<Unit filename="..\..\..\src\Extensions\Zones\SPK_ZoneUnion.cpp" />
 		<Unit filename="..\..\..\src\RenderingAPIs\Irrlicht\SPK_IRRBuffer.cpp" />
 		<Unit filename="..\..\..\src\RenderingAPIs\Irrlicht\SPK_IRRLineRenderer.cpp" />
 		<Unit filename="..\..\..\src\RenderingAPIs\Irrlicht\SPK_IRRPointRenderer.cpp" />

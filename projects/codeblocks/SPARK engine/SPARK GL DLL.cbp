@@ -58,6 +58,7 @@
 			</Target>
 		</Build>
 		<Linker>
+			<Add option="-static-libgcc" />
 			<Add library="libopengl32.a" />
 		</Linker>
 		<Unit filename="..\..\..\src\SPK_GL_All.cpp" />

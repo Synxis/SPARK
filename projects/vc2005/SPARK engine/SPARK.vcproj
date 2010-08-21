@@ -302,6 +302,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\src\Extensions\Zones\SPK_Cylinder.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\Zones\SPK_Line.cpp"
 						>
 					</File>
@@ -315,6 +319,14 @@
 					</File>
 					<File
 						RelativePath="..\..\..\src\Extensions\Zones\SPK_Sphere.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Zones\SPK_ZoneIntersection.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Zones\SPK_ZoneUnion.cpp"
 						>
 					</File>
 				</Filter>
@@ -564,6 +576,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\include\Extensions\Zones\SPK_Cylinder.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\Extensions\Zones\SPK_Line.h"
 						>
 					</File>
@@ -577,6 +593,14 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Zones\SPK_Sphere.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Zones\SPK_ZoneIntersection.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Zones\SPK_ZoneUnion.h"
 						>
 					</File>
 				</Filter>
