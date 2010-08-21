@@ -38,12 +38,12 @@ namespace IRR
 	{}
 
 	void IRRQuadRenderer::createBuffers(const Group& group)
-	{	
+	{
 		currentBuffer = dynamic_cast<IRRBuffer*>(group.createBuffer(getBufferName(),
 																	IRRBufferCreator(device,
 																		NB_VERTICES_PER_QUAD,
 																		NB_INDICES_PER_QUAD),
-																	0,
+																	getVBOFlag(),
 																	false));
 		size_t nbTotalParticles = group.getParticles().getNbReserved();
 
@@ -84,7 +84,18 @@ namespace IRR
 			vertices[NB_VERTICES_PER_QUAD*t+3].TCoords = irr::core::vector2df(0.0f,1.0f);
 		}
 
-		currentBuffer->getMeshBuffer().setDirty(irr::scene::EBT_VERTEX_AND_INDEX);
+		if (IRRBuffer::isVBOHintActivated())
+		{
+			for (size_t t = 0; t < nbTotalParticles * NB_VERTICES_PER_QUAD; t++)
+			{
+				vertices[t].Pos = irr::core::vector3df(0.0f,0.0f,0.0f);
+				vertices[t].Color = irr::video::SColor(0x00000000);
+			}
+		}
+		else
+			currentBuffer->setVBOInitialized(true);
+
+		currentBuffer->getMeshBuffer().setDirty(irr::scene::EBT_VERTEX_AND_INDEX);	 
 	}
 
 	void IRRQuadRenderer::render(const Group& group)

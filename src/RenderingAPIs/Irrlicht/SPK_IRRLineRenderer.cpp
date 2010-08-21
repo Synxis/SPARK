@@ -43,7 +43,7 @@ namespace IRR
 																	IRRBufferCreator(device,
 																		NB_VERTICES_PER_QUAD,
 																		NB_INDICES_PER_QUAD),
-																	0,
+																	getVBOFlag(),
 																	false));
 		
 		size_t nbTotalIndices = group.getParticles().getNbReserved() << 1;

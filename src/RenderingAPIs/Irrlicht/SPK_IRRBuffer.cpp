@@ -27,7 +27,7 @@ namespace SPK
 {
 namespace IRR
 {
-	bool IRRBuffer::useVBO = true;
+	bool IRRBuffer::useVBO = false;
 
 	IRRBuffer::IRRBuffer(irr::IrrlichtDevice* device,size_t nbParticles,size_t particleVertexSize,size_t particleIndexSize,irr::video::E_INDEX_TYPE indexType) :
 		Buffer(),

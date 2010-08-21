@@ -139,6 +139,7 @@ namespace IRR
 		mutable IRRBuffer* currentBuffer;
 
 		virtual inline bool checkBuffers(const Group& group);
+		static inline unsigned int getVBOFlag();
 
 	private :
 
@@ -196,8 +197,13 @@ namespace IRR
 
 	inline bool IRRRenderer::checkBuffers(const Group& group)
 	{
-		currentBuffer = dynamic_cast<IRRBuffer*>(group.getBuffer(getBufferName()));
+		currentBuffer = dynamic_cast<IRRBuffer*>(group.getBuffer(getBufferName(),getVBOFlag()));
 		return currentBuffer != NULL;
+	}
+
+	inline unsigned int IRRRenderer::getVBOFlag()
+	{
+		return IRRBuffer::isVBOHintActivated() ? 1 : 0;	
 	}
 
 	inline void IRRRenderer::updateMaterialBlendingMode()

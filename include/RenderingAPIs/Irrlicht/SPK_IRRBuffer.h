@@ -117,7 +117,7 @@ namespace IRR
 		////////////
 	
 		/**
-		* @brief Tells whether to try to store IRRBuffers on GPU or not
+		* @brief Sets whether to try to store IRRBuffers on GPU or not
 		*
 		* When creating an Irrlicht buffer, the system checks whether the VBO is activated or not.<br>
 		* If yes, VBOs may be used.<br>
@@ -130,6 +130,13 @@ namespace IRR
 		* @param activate : true to try to use VBO when creating buffers, false not to
 		*/
 		static void activateVBOHint(bool activate);
+
+		/**
+		* @brief Tells whether VBO hint is activated or not
+		* @return true if VBO hint is activated, alse if not
+		* @since 1.05.03
+		*/
+		static inline bool isVBOHintActivated();
 
     private:
 
@@ -215,6 +222,11 @@ namespace IRR
 	inline void IRRBuffer::setVBOInitialized(bool init)
 	{
 		VBOInitialized = init;
+	}
+
+	inline bool IRRBuffer::isVBOHintActivated()
+	{
+		return useVBO;
 	}
 }}
 

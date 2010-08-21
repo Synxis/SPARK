@@ -91,6 +91,11 @@ class MyEventReceiver : public IEventReceiver
                     particleSystem->empty();
                     return true;
                 }
+				if(event.KeyInput.Key == KEY_KEY_V && event.KeyInput.PressedDown==false)
+				{
+					IRRBuffer::activateVBOHint(!IRRBuffer::isVBOHintActivated());
+					return true;
+				}
             }
             else if(event.EventType == EET_MOUSE_INPUT_EVENT)
             {
@@ -319,6 +324,7 @@ int main(int argc, char *argv[])
 		smgr->drawAll();
 
 		core::stringw infos; infos+="FPS: "; infos+=driver->getFPS(); infos+=" - Nb Particles: "; infos+=particleSystem->getNbParticles();
+		infos+=" - VBO: "; infos+=(IRRBuffer::isVBOHintActivated() ? "true" : "false");
         guienv->getBuiltInFont()->draw(infos.c_str(),core::rect<s32>(0,0,170,20),video::SColor(255,255,255,255));
 
 		driver->endScene();
