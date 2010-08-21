@@ -30,23 +30,75 @@
 
 namespace SPK
 {
+	/**
+	* @brief A class that holds an array of generic type per particle
+	* Each particle can hold n variable of the given type. the whole data is stored in a unique array of size : <br>
+	* <i>max number of particles * number of variables per particles</i>
+	*/
 	template<typename T>
 	class ArrayData : public Data
 	{
 	public :
 		
+		/**
+		* @brief Constructor of arraydata
+		* @param nbParticles : the maximum number of particles
+		* @param sizePerParticle : the number of variable of type T per particle
+		*/
 		inline ArrayData<T>(size_t nbParticles,size_t sizePerParticle);
 
+		/**
+		* @brief Gets the inner array of data
+		* @return the inner array of data
+		*/
 		inline T* getData();
+
+		/**
+		* @brief Gets the inner array of data
+		* This is the constant version of the method
+		* @return the inner array of data
+		*/
 		inline const T* getData() const;
 		
+		/**
+		* @brief Gets the array of data for a given particle
+		* @return the array of data for a given particle
+		*/
 		inline T* getParticleData(size_t index);
+
+		/**
+		* @brief Gets the array of data for a given particle
+		* This is the constant version of the method
+		* @return the array of data for a given particle
+		*/
 		inline const T* getParticleData(size_t index) const;
 
+		/**
+		* @brief Gets the element in the inner array at the given index
+		* @param index : the index from which to get the element
+		* @return the element stored at the index
+		*/ 
 		inline T& operator[](size_t index);
+
+		/**
+		* @brief Gets the element in the inner array at the given index
+		* This is the constant version of the method
+		* @param index : the index from which to get the element
+		* @return the element stored at the index
+		*/ 
 		inline const T& operator[](size_t index) const;
 
+		/**
+		* @brief Gets the total number of elements in the inner array
+		* This method returns <i>max number of particles * number of variables per particles</i>
+		* @return the total number of elements in the inner array
+		*/
 		inline size_t getTotalSize() const;
+
+		/**
+		* @brief Gets the number of elements per particle
+		* @return the number of elements per particle
+		*/
 		inline size_t getSizePerParticle() const;
 
 	private :
@@ -60,9 +112,9 @@ namespace SPK
 		virtual inline void swap(size_t index0,size_t index1);
 	};
 
-	typedef ArrayData<float>	FloatArrayData;
-	typedef ArrayData<Color>	ColorArrayData;
-	typedef ArrayData<Vector3D> Vector3DArrayData;
+	typedef ArrayData<float>	FloatArrayData;		/**< ArrayData holding floats */
+	typedef ArrayData<Color>	ColorArrayData;		/**< ArrayData holding colors */
+	typedef ArrayData<Vector3D> Vector3DArrayData;	/**< ArrayData holding vectors */
 
 	template<typename T>
 	inline ArrayData<T>::ArrayData(size_t nbParticles,size_t sizePerParticle) :

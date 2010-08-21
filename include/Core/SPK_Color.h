@@ -28,70 +28,174 @@
 
 namespace SPK
 {
-	/**
-	* @brief Structure defining a Color in ARGB format
-	*/
+	/** @brief A class defining a 32 bits color (4 components stored in rgba) */
 	class Color
 	{
 	public :
 
-		///////////////
-		// Parameter //
-		///////////////
+		////////////////
+		// Parameters //
+		////////////////
 		
 		// Stored in RGBA format
-		unsigned char r;
-		unsigned char g;
-		unsigned char b;
-		unsigned char a;
+		unsigned char r;	/**< Red component (from 0x00 to 0xFF) */
+		unsigned char g;	/**< Green component (from 0x00 to 0xFF) */
+		unsigned char b;	/**< Blue component (from 0x00 to 0xFF) */
+		unsigned char a;	/**< Alpha component (from 0x00 to 0xFF) */
 
 		//////////////////
 		// Constructors //
 		//////////////////
 
+		/** 
+		* @brief Constructor of Color
+		* @param rgba : a value representing the color in rgba format
+		*/
 		inline Color(unsigned long int rgba = 0xFFFFFFFF);
+
+		/**
+		* @brief Constructor of Color
+		* @param r : red component (from 0x00 to 0xFF)
+		* @param g : green component (from 0x00 to 0xFF)
+		* @param b : blue component (from 0x00 to 0xFF)
+		* @param a : alpha component (from 0x00 to 0xFF)
+		*/
 		inline Color(int r,int g,int b,int a);
 
 		///////////////
 		// Operators //
 		///////////////
 
+		/**
+		* @brief Adds a color
+		* @param c : the color to add
+		*/
 		inline Color& operator+=(const Color& c);
+
+		/**
+		* @brief Subtracts a color
+		* @param c : the color to subtract
+		*/
 		inline Color& operator-=(const Color& c);
+
+		/**
+		* @brief Cast operator from color to int
+		* @return the resulting integer in rgba format
+		*/
 		inline operator unsigned long int();
 
 		/////////////
 		// Setters //
 		/////////////
 
+		/**
+		* @brief Sets the red component
+		* @param r : the red component
+		*/
 		inline void setR(int r);
+
+		/**
+		* @brief Sets the green component
+		* @param g : the green component
+		*/
 		inline void setG(int g);
+
+		/**
+		* @brief Sets the blue component
+		* @param b : the blue component
+		*/
 		inline void setB(int b);
+
+		/**
+		* @brief Sets the alpha component
+		* @param a : the alpha component
+		*/
 		inline void setA(int a);
 
+		/**
+		* @brief Sets the color from rgba
+		* @param rgba : value of the rgba
+		*/
 		inline void setRGBA(unsigned long int rgba);
+
+		/**
+		* @brief Sets the color from argb
+		* @param argb : value of the argb
+		*/
 		inline void setARGB(unsigned long int argb);
+
+		/**
+		* @brief Sets the color from bgra
+		* @param bgra : value of the bgra
+		*/
 		inline void setBGRA(unsigned long int bgra);
 
+		/**
+		* @brief Sets the color
+		* @param r : red component (from 0x00 to 0xFF)
+		* @param g : green component (from 0x00 to 0xFF)
+		* @param b : blue component (from 0x00 to 0xFF)
+		* @param a : alpha component (from 0x00 to 0xFF)
+		*/
 		inline void set(int r,int g,int b,int a);
 		
 		/////////////
 		// Getters //
 		/////////////
 
+		/**
+		* @brief Gets the red component
+		* @return the red component
+		*/
 		inline int getR() const;
+
+		/**
+		* @brief Gets the green component
+		* @return the green component
+		*/
 		inline int getG() const;
+
+		/**
+		* @brief Gets the blue component
+		* @return the blue component
+		*/
 		inline int getB() const;
+
+		/**
+		* @brief Gets the alpha component
+		* @return the alpha component
+		*/
 		inline int getA() const;
 
+		/**
+		* @brief Gets the color in rgba format
+		* @return a value representing the color in rgba format
+		*/
 		inline unsigned long int getRGBA() const;
+
+		/**
+		* @brief Gets the color in argb format
+		* @return a value representing the color in argb format
+		*/
 		inline unsigned long int getARGB() const;
+
+		/**
+		* @brief Gets the color in bgra format
+		* @return a value representing the color in bgra format
+		*/
 		inline unsigned long int getBGRA() const;
 
 		///////////////
 		// Interface //
 		///////////////
 
+		/**
+		* @brief Linearly interpolates the color from 2 colors and a ratio
+		* Interpolates between c0 and c1 : <i>c = c0 * (1 - ratio) + c1 * ratio</i>
+		* @param c0 : the first color used for interpolation
+		* @param c1 : the second color used for interpolation
+		* @param ratio : the ratio used to interpolate between the 2 colors
+		*/
 		inline void interpolate(const Color& c0,const Color& c1,float ratio);
 	};
 
@@ -99,10 +203,48 @@ namespace SPK
 	// External operators //
 	////////////////////////
 
+	/**
+	* @brief Adds 2 colors
+	* returns <i>c0 + c1</i>
+	* @param c0 : the first color
+	* @param c1 : the second color
+	* @return the resulting color
+	*/
 	inline Color operator+(const Color& c0,const Color& c1);
+
+	/**
+	* @brief Subtracts 2 colors
+	* returns <i>c0 - c1</i>
+	* @param c0 : the first color
+	* @param c1 : the second color
+	* @return the resulting color
+	*/
 	inline Color operator-(const Color& c0,const Color& c1);
+
+	/**
+	* @brief Checks if 2 colors are equal
+	* All components of the colors must be equal for 2 colors to be equal
+	* @param c0 : the first color
+	* @param c1 : the second color
+	* return true if the 2 colors are equal, false if not
+	*/
 	inline bool operator==(const Color& c0,const Color& c1);
+
+	/**
+	* @brief Checks if 2 colors are not equal
+	* @param c0 : the first color
+	* @param c1 : the second color
+	* return true if the 2 colors are not equal, false if they are
+	*/
 	inline bool operator!=(const Color& c0,const Color& c1);
+
+	/**
+	* @brief Writes a color on an output stream
+	* The color is written that way : <i>0xRGBA</i>
+	* @param s : the output stream where to write
+	* @param c : the color to write to the output stream
+	* @return the output stream
+	*/
 	inline std::ostream& operator<<(std::ostream& s,const Color& c);
 
 	/////////////////
@@ -247,7 +389,11 @@ namespace SPK
 
 	inline std::ostream& operator<<(std::ostream& s,const Color& c)
 	{
-		return s << "0x" << std::hex << c.getRGBA() << std::dec;
+		std::ios_base::fmtflags oldFormat = s.flags();
+		s.setf(std::ios_base::hex |std::ios_base::showbase);
+		s.unsetf(std::ios_base::dec | std::ios_base::oct);
+		s << c.getRGBA();
+		s.flags(oldFormat);
 	}
 
 	// Specialization of the random generation of colors

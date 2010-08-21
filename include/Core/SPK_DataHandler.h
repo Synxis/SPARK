@@ -30,6 +30,20 @@ namespace SPK
 {
 	class Group;
 
+	/**
+	* @brief An interface that allows an object to handle and use some additional data attached to particles
+	* 
+	* When a class dealing with particles needs to maintain an additional set of data in extention to already provided parameters,
+	* it should inherited from DataHandler.<br>
+	* <br>
+	* Datasets are maintained by groups and passed to datahandlers for update and use. Each datahandler has its own dataset within a given group<br>
+	* While groups are responsible of the creation and destruction of datasets, datahandler are responsible for the creation and update of the data within
+	* the datasets.
+	* <br>
+	* This allows to theorically extends particles to infinity as the structure of a particle is derived from the datahandlers updating/needing it.<br>
+	* <br>
+	* Note that if a datahandler is created with its NEEDS_DATASET set to false, it will then behave as if it was not a datahandler.
+	*/
 	class DataHandler
 	{
 	friend class Group;
@@ -37,15 +51,50 @@ namespace SPK
 	public :
 
 		virtual inline ~DataHandler() {}
+
+		/**
+		* @brief Tells if the datahandler needs some additional data or not
+		* @return true if the datahandler needs additional data or not
+		*/
 		inline bool needsDataSet() const;
 
 	protected :
 
+		/**
+		* @brief Constructor of datahandler
+		* Note that if a datahandler is created with its NEEDS_DATASET set to false, it will then behave as if it was not a datahandler.
+		* @param NEEDS_DATASET : true if the datahandler needs additional data, false if not
+		*/
 		inline DataHandler(bool NEEDS_DATASET); // abstract class
 
-		inline void prepareData(const Group& group,DataSet* dataSet) const;
+		/**
+		* @brief Creates the data within the passed dataset
+		*
+		* This method is called by the engine before the datahandler needs some additional data.<br>
+		* After this method has been called, the dataset for the given couple datahandler/group is set as initialized.<br>
+		* <br>
+		* Note that by default, the method is implemented empty as it will only be used by datahandler that needs dataset.
+		*
+		* @param dataSet : the dataset reserved by the passed group for this datahandler
+		* @param group : the group that is passing its dataset
+		*/
 		virtual inline void createData(DataSet& dataSet,const Group& group) const {}
+
+		/**
+		* @brief Checks the integrity of data within the passed dataset
+		*
+		* This method is called by the engine each time before the datahandler will need to use the dataset.<br> 
+		* This method is responsible for checking the integrity of the data within the dataset.<br>
+		* If data is invalid when entering this method, they must be valid at exit.<br>
+		* <br>
+		* Note that by default, the method is implemented empty as it will only be used by datahandler that needs dataset.
+		*
+		* @param dataSet : the dataset reserved by the passed group for this datahandler
+		* @param group : the group that is passing its dataset
+		*/
 		virtual inline void checkData(DataSet& dataSet,const Group& group) const {}
+
+		inline void prepareData(const Group& group,DataSet* dataSet) const;
 
 	private :
 

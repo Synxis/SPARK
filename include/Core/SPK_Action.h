@@ -41,7 +41,6 @@ namespace SPK
 	{
 	public :
 
-		/** @brief Destructor of action */
 		virtual inline ~Action() {}
 
 		/**

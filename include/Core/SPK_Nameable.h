@@ -31,7 +31,7 @@ namespace SPK
 	* @class Nameable
 	* @brief An abstract class allowing an object to be named
 	*
-	* This class offers an interface to name and object and also to traverse the object
+	* This class offers an interface to name an object and also to traverse the object
 	* to find a nameable with a given name.
 	*/
 	class Nameable
