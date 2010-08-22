@@ -31,7 +31,8 @@
 namespace SPK
 {
 	/**
-	* @brief A class that holds an array of generic type per particle
+	* @brief A class that holds an array of generic type per particle.
+	*
 	* Each particle can hold n variable of the given type. the whole data is stored in a unique array of size : <br>
 	* <i>max number of particles * number of variables per particles</i>
 	*/
@@ -112,9 +113,9 @@ namespace SPK
 		virtual inline void swap(size_t index0,size_t index1);
 	};
 
-	typedef ArrayData<float>	FloatArrayData;		/**< ArrayData holding floats */
-	typedef ArrayData<Color>	ColorArrayData;		/**< ArrayData holding colors */
-	typedef ArrayData<Vector3D> Vector3DArrayData;	/**< ArrayData holding vectors */
+	typedef ArrayData<float>	FloatArrayData;		/**< @brief ArrayData holding floats */
+	typedef ArrayData<Color>	ColorArrayData;		/**< @brief ArrayData holding colors */
+	typedef ArrayData<Vector3D> Vector3DArrayData;	/**< @brief ArrayData holding vectors */
 
 	template<typename T>
 	inline ArrayData<T>::ArrayData(size_t nbParticles,size_t sizePerParticle) :

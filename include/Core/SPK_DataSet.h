@@ -36,7 +36,7 @@
 namespace SPK
 {
 	/**
-	* @brief An abstract class representing additional data for particles
+	* @brief An abstract class representing additional data for particles.
 	*
 	* This class is meant to be derived in order to represent additional data attached to group of particles
 	* that can be used by DataHandler objects (typically modifiers or interpolators).<br>
@@ -81,7 +81,8 @@ namespace SPK
 	};
 
 	/**
-	* @brief A class that is used to attach a set of Data to a DataHandler
+	* @brief A class that is used to attach a set of Data to a DataHandler.
+	*
 	* datasets are handled by groups and passed to internal datahandlers (typically modifiers and interpolators) when needed.<br> 
 	* datasets life cycles (creation and destruction) are handled by groups.
 	*/

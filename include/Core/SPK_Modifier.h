@@ -57,18 +57,14 @@ namespace SPK
 
 		/**
 		* @brief Sets whether to consider this modifier local to a system or not
-		*
 		* A local modifier is transformed when its system is transformed, a non local one will not.
-		*
 		* @param local : true to consider the modifier local, false not to
 		*/
 		inline void setLocalToSystem(bool local);
 
 		/**
 		* @brief Tells whether this modifier is considered as being local to a system or not
-		*
 		* A local modifier is transformed when its system is transformed, a non local one will not.
-		*
 		* @return true if it is local, false if not
 		*/
 		inline bool isLocalToSystem() const;

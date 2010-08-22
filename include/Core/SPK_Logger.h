@@ -27,12 +27,43 @@
 
 #include "Core/SPK_DEF.h"
 
+/**
+* @def SPK_LOG_DEBUG(entry)
+* @brief Logs a debug entry in the logger
+* @param entry : the debug entry to log
+*/
+
+/**
+* @def SPK_LOG_INFO(entry)
+* @brief Logs a info entry in the logger
+* @param entry : the info entry to log
+*/
+
+/**
+* @def SPK_LOG_WARNING(entry)
+* @brief Logs a warning entry in the logger
+* @param entry : the warning entry to log
+*/
+
+/**
+* @def SPK_LOG_ERROR(entry)
+* @brief Logs an error entry in the logger
+* @param entry : the error entry to log
+*/
+
+/**
+* @def SPK_ASSERT(condition,text)
+* @brief Makes an assertion on the condition and logs an error if it fails
+* @param condition : the condition of the assertion
+* @param text : the error entry to log if the assertion fails
+*/
+
 #ifdef SPK_NO_LOG
 
 #define SPK_LOG_DEBUG(entry) {}
 #define SPK_LOG_INFO(entry) {}
-#define SPK_LOG(entry) {}
 #define SPK_LOG_WARNING(entry) {}
+#define SPK_LOG_ERROR(entry) {}
 #define SPK_ASSERT(condition,text) {assert(condition)}
 
 #else
@@ -40,7 +71,7 @@
 #ifdef _DEBUG
 #define SPK_LOG_DEBUG(entry) {SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG) << entry << "\n"; SPK::Logger::getInstance().flush();}
 #else
-#define SPK_LOG_DEBUG(entry)
+#define SPK_LOG_DEBUG(entry) {}
 #endif
 #define SPK_LOG_INFO(entry) {SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_INFO) << entry << "\n"; SPK::Logger::getInstance().flush();}
 #define SPK_LOG_WARNING(entry) {SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_WARNING) << entry << "\n"; SPK::Logger::getInstance().flush();}

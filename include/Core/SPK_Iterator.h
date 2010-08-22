@@ -30,22 +30,47 @@
 
 namespace SPK
 {
-	/**
-	* @brief An object to iterate on a collection of particles
-	*/
+	/** @brief A generic class to iterate over a collection of particles */
 	template<typename T>
 	class Iterator
 	{
 	public :
 
+		/**
+		* @brief Constructor of iterator
+		* The iterator points at the beginning of the collection
+		* @param t : the collection over which to iterate
+		*/
 		Iterator(T& t);
 
+		/**
+		* @brief Gets the particle on which points by the iterator
+		* @return the particle on which points by the iterator
+		*/
 		inline Particle& operator*() const;
+
+		/**
+		* @brief Allows access to the interface of the particle on which points by the iterator
+		* @return the particle on which points by the iterator
+		*/
 		inline Particle* operator->() const;
 
+		/**
+		* @brief pre-increments the position of the iterator
+		* @return the incremented iterator
+		*/
 		inline Iterator& operator++();
+
+		/**
+		* @brief post-increments the position of the iterator
+		* @return the incremented iterator
+		*/
 		inline Iterator operator++(int);
 
+		/**
+		* @brief Checks whether the iterator has reached the end of the collection
+		* @return true if the iterator has reached the end of the collection, false if not
+		*/
 		inline bool end() const;
 
 	private :
@@ -53,19 +78,47 @@ namespace SPK
 		mutable Particle particle;
 	};
 
+	/** @brief A generic class to iterate over a constant collection of particles */
 	template<typename T>
 	class ConstIterator
 	{
 	public :
 
+		/**
+		* @brief Constructor of iterator
+		* The iterator points at the beginning of the collection
+		* @param t : the collection over which to iterate
+		*/
 		ConstIterator(const T& t);
 
+		/**
+		* @brief Gets the particle on which points by the iterator
+		* @return the particle on which points by the iterator
+		*/
 		inline const Particle& operator*() const;
+
+		/**
+		* @brief Allows access to the interface of the particle on which points by the iterator
+		* @return the particle on which points by the iterator
+		*/
 		inline const Particle* operator->() const;
 
+		/**
+		* @brief pre-increments the position of the iterator
+		* @return the incremented iterator
+		*/
 		inline ConstIterator& operator++();
+
+		/**
+		* @brief post-increments the position of the iterator
+		* @return the incremented iterator
+		*/
 		inline ConstIterator operator++(int);
 
+		/**
+		* @brief Checks whether the iterator has reached the end of the collection
+		* @return true if the iterator has reached the end of the collection, false if not
+		*/
 		inline bool end() const;
 
 	private :
@@ -73,8 +126,8 @@ namespace SPK
 		const Particle particle;
 	};
 
-	typedef Iterator<Group> GroupIterator;
-	typedef ConstIterator<Group> ConstGroupIterator;
+	typedef Iterator<Group> GroupIterator;				/**< @brief Iterator of a Group */
+	typedef ConstIterator<Group> ConstGroupIterator;	/**< @brief Constant Iterator of a Group */
 
 	template<typename T>
 	inline bool operator!=(const Iterator<T>& it0,const Iterator<T>& it1) { return it0->getIndex() != it1->getIndex(); }

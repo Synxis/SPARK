@@ -33,13 +33,13 @@ namespace SPK
 	/**
 	* @brief An abstract class that defines an emitter of particles
 	*
-	* An Emitter is an object that launches particles by giving them an initial velocity and position.<br>
+	* An emitter is an object that launches particles by giving them an initial velocity and position.<br>
 	* The position is derived from the zone of the emitter.<br>
 	* The velocity is derived from the emitter itself.<br>
 	* <br>
 	* An Emitter has a flow and a tank of particles.
 	* The flow defines the rate at which particles are launched and the tank defines the total number of Particles the Emitter can launch.<br>
-	* An emitter is also defined by a range of forces (force min and force max) which defines the force at which particles are emitted (initial velocity = force / mass).<br>
+	* An emitter is also defined by a range of forces (force min and force max) which defines the force at which particles are emitted <i>(initial velocity = force / mass)</i>.<br>
 	*/
 	class SPK_PREFIX Emitter :	public Registerable, 
 								public Transformable
@@ -170,8 +170,6 @@ namespace SPK
 		*/
 		inline bool isFullZone() const;
 
-		void emit(Particle& particle) const;
-
 		virtual Nameable* findByName(const std::string& name);
 
 	protected :
@@ -201,10 +199,22 @@ namespace SPK
 		bool full;
 
 		mutable float fraction;
+		
+		void emit(Particle& particle) const;
 
 		inline size_t updateTankFromTime(float deltaTime);
 		inline size_t updateTankFromNb(size_t nb);
 
+		/**
+		* @brief Gives the particle an initial velocity
+		*
+		* This method is called internally and must be overriden in inherited emitters.<br>
+		* The speed is derived from the force of the emitter and the mass of the particle.<br>
+		* The initial velocity of the particle has to be consistent with the given speed.
+		*
+		* @param particle : the particle whose velocity has to be set
+		* @param speed : the desired speed of the particle
+		*/
 		virtual void generateVelocity(Particle& particle,float speed) const = 0;
 	};
 

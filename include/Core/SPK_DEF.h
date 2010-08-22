@@ -48,32 +48,70 @@
 
 #include "Core/SPK_MemoryTracer.h"
 
+/**
+* @brief A macro returning a random value within [min,max[
+* This is a shortcut syntax to <i>SPK::SPKContext::getInstance().generateRandom(min,max)</i>
+* @param min : the minimum bound of the interval (inclusive)
+* @param max : the maximum bound of the interval (exclusive)
+* @return a random number within [min,max[
+*/
 #define SPK_RANDOM(min,max) SPK::SPKContext::getInstance().generateRandom(min,max)
+
+/**
+* @brief A macro returning the zone by default of SPARK
+* When an object needs a zone that must not be NULL, this zone can be used by default.<br>
+* The default zone is a shared point located at position (0.0f,0.0f,0.0f).<br>
+* <br>
+* This is a shortcut syntax to <i>SPK::SPKContext::getInstance().getDefaultZone()</i>
+* @return the default zone of SPARK
+*/
 #define SPK_DEFAULT_ZONE	SPK::SPKContext::getInstance().getDefaultZone()
 
+/**
+* @namespace SPK
+* @brief the namespace for core SPARK code
+*/
 namespace SPK
 {
 	class Zone;
 
+	/** @brief Constants defining parameters of a particle */
 	enum Param
 	{
-		PARAM_SCALE = 0,
-		PARAM_MASS = 1,
-		PARAM_ANGLE = 2,
-		PARAM_TEXTURE_INDEX = 3,
-		PARAM_ROTATION_SPEED = 4,
+		PARAM_SCALE = 0,				/**< @brief The scale of a particle */
+		PARAM_MASS = 1,					/**< @brief The mass of a particle */
+		PARAM_ANGLE = 2,				/**< @brief The rotation angle of a particle */
+		PARAM_TEXTURE_INDEX = 3,		/**< @brief The index of texture coordinates of a particle */
+		PARAM_ROTATION_SPEED = 4,		/**< @brief The rotation speed of a particle */
 	};
 
+	/** A singleton class that holds some static objects needed by SPARK */
 	class SPK_PREFIX SPKContext
 	{
 	public :
 
+		/**
+		* @brief Gets the singleton instance
+		* @return the instance of the context
+		*/
 		static inline SPKContext& getInstance();
 
+		/** @brief Releases all dynamic data held by the context */
 		void release();
 
+		/**
+		* @brief Gets the default zone
+		* The default zone is a shared point located at position (0.0f,0.0f,0.0f).
+		* @return the default zone
+		*/
 		Zone* getDefaultZone();
 
+		/**
+		* @brief Gets a random value within the interval [min,max[
+		* @param min : the minimum bound of the interval (inclusive)
+		* @param max : the maximum bound of the interval (exclusive)
+		* @return a random number within [min,max[
+		*/
 		template<typename T>
 		inline T generateRandom(const T& min,const T& max);
 
