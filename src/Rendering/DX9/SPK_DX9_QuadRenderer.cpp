@@ -157,14 +157,14 @@ namespace DX9
 			break;
 		}
 
-		bool DX9obalOrientation = precomputeOrientation3D(
+		bool GlobalOrientation = precomputeOrientation3D(
 			group,
 			Vector3D(-invModelView[8],-invModelView[9],-invModelView[10]),
 			Vector3D(invModelView[4],invModelView[5],invModelView[6]),
 			Vector3D(invModelView[12],invModelView[13],invModelView[14]));
 
 		// Fills the buffers
-		if (DX9obalOrientation)
+		if( GlobalOrientation )
 		{
 			computeGlobalOrientation3D(group);
 
