@@ -20,8 +20,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_DX9QUADRENDERER
-#define H_SPK_DX9QUADRENDERER
+#ifndef H_SPK_DX9_QUADRENDERER
+#define H_SPK_DX9_QUADRENDERER
 
 #include "Rendering/DX9/SPK_DX9_Renderer.h"
 #include "Extensions/Renderers/SPK_QuadRendererInterface.h"
@@ -34,7 +34,7 @@ namespace SPK
 namespace DX9
 {
 	/**
-* @class DX9QuadRenderer
+	* @class DX9QuadRenderer
 	* @brief A Renderer drawing particles as DirectX 9.0 quads
 	*
 	* the orientation of the quads depends on the orientation parameters set.
@@ -43,7 +43,7 @@ namespace DX9
 	* Below are the parameters of Particle that are used in this Renderer (others have no effects) :
 	* <ul>
 	* <li>SPK::PARAM_SCALE</li>
-	* <li>SPK::PARAM_ANDX9E</li>
+	* <li>SPK::PARAM_ANGLE</li>
 	* <li>SPK::PARAM_TEXTURE_INDEX (only if not in TEXTURE_NONE mode)</li>
 	* </ul>
 	*/

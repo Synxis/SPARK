@@ -20,8 +20,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_GL_BUFFER
-#define H_SPK_GL_BUFFER
+#ifndef H_SPK_DX9_BUFFER
+#define H_SPK_DX9_BUFFER
 
 #include "Rendering/DX9/SPK_DX9_DEF.h"
 #include "Core/SPK_RenderBuffer.h"
