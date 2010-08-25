@@ -93,6 +93,9 @@ namespace SPK
 
 	public :
 
+		inline DataSet();
+		inline ~DataSet();
+
 		/**
 		* @brief Inializes the data with the given number of slots of Data
 		* Any previously held data is destroyed.<br>
@@ -144,9 +147,6 @@ namespace SPK
 		Data** dataArray;
 		size_t nbData;
 		bool initialized;
-
-		inline DataSet();
-		inline ~DataSet();
 
 		inline void setInitialized();
 		inline void swap(size_t index0,size_t index1);
