@@ -70,11 +70,10 @@ namespace IRR
 
     void IRRSystem::OnAnimate(irr::u32 timeMs)
     {
+		ISceneNode::OnAnimate(timeMs);
+
 		if (lastUpdatedTime == 0)
-		{
 			lastUpdatedTime = timeMs;
-			return;
-		}
 
         if(AutoUpdate && (AlwaysUpdate || (IsVisible/* && !SceneManager->isCulled(this)*/))) // check culling (disabled atm)
 			update((timeMs - lastUpdatedTime) * 0.001f);
