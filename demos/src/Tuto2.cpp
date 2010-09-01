@@ -201,7 +201,7 @@ SPK::SPK_ID createParticleSystemBase(Image* texture)
 	sparkRenderer->setShared(true);
 
 	// Creates the base and gets the ID
-	return sparkSystem->getID();
+	return sparkSystem->getSPKID();
 }
 
 // creates a particle system from the base system

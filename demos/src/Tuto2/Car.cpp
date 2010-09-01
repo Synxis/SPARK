@@ -376,7 +376,7 @@ void Car::loadBaseParticleSystem(Image& smoke)
 	smokeRenderer->setShared(true);
 	
 	// Creates the base and gets the ID
-	baseParticleSystemID = system->getID();
+	baseParticleSystemID = system->getSPKID();
 }
 
 void Car::createParticleSystem()

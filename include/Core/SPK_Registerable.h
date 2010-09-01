@@ -155,6 +155,14 @@ namespace SPK
 		* Else an SPK_ID is returned. This ID uniquely identifies the Registerable.
 		*
 		* @return the ID of this Registerable or NO_ID if it is not registered
+		* @since 1.05.04
+		*/
+		inline SPK_ID getSPKID() const;
+
+		/**
+		* @brief Gets the ID of this Registerable
+		* @return the ID of this Registerable or NO_ID if it is not registered
+		* @deprecated 1.05.04 Use getSPKID instead
 		*/
 		inline SPK_ID getID() const;
 
@@ -392,9 +400,14 @@ namespace SPK
 		this->name = name;
 	}
 
-	inline SPK_ID Registerable::getID() const
+	inline SPK_ID Registerable::getSPKID() const
 	{
 		return ID;
+	}
+
+	inline SPK_ID Registerable::getID() const
+	{
+		return getSPKID();
 	}
 
 	inline unsigned int Registerable::getNbReferences() const

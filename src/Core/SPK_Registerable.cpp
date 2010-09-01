@@ -82,7 +82,7 @@ namespace SPK
 			(child->isDestroyable())&&
 			(child->getNbReferences() == 0))
 		{
-			SPKFactory::getInstance().unregisterObject(child->getID());
+			SPKFactory::getInstance().unregisterObject(child->getSPKID());
 			return true;
 		}
 

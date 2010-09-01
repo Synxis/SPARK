@@ -468,7 +468,7 @@ SPK_ID createParticleSystemBase(GLuint textureExplosion,GLuint textureFlash,GLui
 	system->addGroup(spark2Group);
 
 	// Gets a pointer to the base
-	return system->getID();
+	return system->getSPKID();
 }
 
 // Creates a particle system from the base system

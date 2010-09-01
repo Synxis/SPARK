@@ -155,7 +155,7 @@ namespace SPK
 		* @brief Creates a new Registerable object which is a copy of the object
 		*
 		* If the passed Registerable is NULL or not registered, NULL is returned.<br>
-		* Note that this function call internally <i>copy(registerable->getID())</i>.
+		* Note that this function call internally <i>copy(registerable->getSPKID())</i>.
 		*
 		* @param registerable : the registered Registerable to copy
 		* @return a registered copy of the Registerable or NULL if the passed object is not registered
@@ -194,7 +194,7 @@ namespace SPK
 		* @brief Destroys the Registerable and all its destroyable children
 		* 
 		* If the Registerable is NULL or is not registered, nothing is destroyed and false is returned.<br>
-		* Note that this function call internally <i>destroy(registerable->getID())</i>.<br>
+		* Note that this function call internally <i>destroy(registerable->getSPKID())</i>.<br>
 		* <br>
 		* see destroy(SPK_ID,bool) for more information.
 		*
@@ -216,7 +216,7 @@ namespace SPK
 		/**
 		* @brief Trace information on the Registerable 
 		*
-		* Note that this function call internally <i>trace(registerable->getID())</i>.
+		* Note that this function call internally <i>trace(registerable->getSPKID())</i>.
 		*
 		* @param registerable : the Registerable to trace
 		*/

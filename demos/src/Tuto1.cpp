@@ -273,7 +273,7 @@ SPK::SPK_ID createParticleSystemBase(GLuint textureIndex)
 	renderer->setShared(true);
 
 	// Creates the base and gets a pointer to the base
-	return system->getID();
+	return system->getSPKID();
 }
 
 // Creates a particle system from the base system
