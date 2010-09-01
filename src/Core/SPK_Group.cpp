@@ -35,7 +35,7 @@ namespace SPK
 	Group::Group(Model* m,size_t capacity) :
 		Registerable(),
 		Transformable(),
-		model(m != NULL ? m : &defaultModel),
+		model(m != NULL ? m : &getDefaultModel()),
 		renderer(NULL),
 		friction(0.0f),
 		gravity(Vector3D()),
@@ -186,7 +186,7 @@ namespace SPK
 
 	void Group::setModel(Model* newmodel)
 	{
-		if(!newmodel) newmodel = &defaultModel;
+		if(!newmodel) newmodel = &getDefaultModel();
 		if(model == newmodel) return;
 
 		// empty and change model
@@ -736,5 +736,11 @@ namespace SPK
 		for (std::vector<Modifier*>::const_iterator modifierIt = modifiers.begin(); modifierIt != modifiers.end(); ++modifierIt)
 			if ((*modifierIt)->isLocalToSystem())
 				(*modifierIt)->updateTransform(this);
+	}
+
+	Model& Group::getDefaultModel()
+	{
+		static Model defaultModel;
+		return defaultModel;
 	}
 }

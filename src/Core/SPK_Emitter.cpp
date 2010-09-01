@@ -29,7 +29,7 @@ namespace SPK
 	Emitter::Emitter() :
 		Registerable(),
 		Transformable(),
-		zone(&defaultZone),
+		zone(&getDefaultZone()),
 		full(true),
 		tank(-1),
 		flow(0.0f),
@@ -92,10 +92,16 @@ namespace SPK
 		incrementChildReference(zone);
 
 		if (zone == NULL)
-			zone = &defaultZone;
+			zone = &getDefaultZone();
 
 		this->zone = zone;
 		this->full = full;
+	}
+
+	Zone& Emitter::getDefaultZone()
+	{
+		static Point defaultZone;
+		return defaultZone;
 	}
 
 	unsigned int Emitter::updateNumber(float deltaTime)

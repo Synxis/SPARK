@@ -65,18 +65,6 @@ namespace SPK
 		virtual Vector3D computeNormal(const Vector3D& point) const;
 	};
 
-
-	/**
-	* @brief The default Zone
-	*
-	* This Zone is used when a Zone is needed for initialization.<br>
-	* It is a Point of coordinates (0.0f,0.0f,0.0f).
-	*
-	* @since 1.01.00
-	*/
-	extern SPK_PREFIX Point defaultZone;
-
-
 	inline Point* Point::create(const Vector3D& position)
 	{
 		Point* obj = new Point(position);

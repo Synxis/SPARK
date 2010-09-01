@@ -822,6 +822,7 @@ namespace SPK
 
 		// statics
 		static bool bufferManagement;
+		static Model& getDefaultModel();
 
 		// registerables
 		Model* model;

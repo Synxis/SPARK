@@ -467,16 +467,6 @@ namespace SPK
 		void initParamArrays(const Model& model);
 	};
 
-	/**
-	* @brief The default Model
-	*
-	* This Model is used when a Model is needed for initialization.<br>
-	* It is a Model with all its parameter disabled.
-	*
-	* @since 1.01.00
-	*/
-	extern SPK_PREFIX Model defaultModel;
-
 
 	inline Model* Model::create(int enableFlag,int mutableFlag,int randomFlag,int interpolatedFlag)
 	{

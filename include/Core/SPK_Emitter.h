@@ -260,6 +260,8 @@ namespace SPK
 
 		mutable float fraction;
 
+		static Zone& getDefaultZone();
+
 		unsigned int updateNumber(float deltaTime);
 
 		/////////////////////////

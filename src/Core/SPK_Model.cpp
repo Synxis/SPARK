@@ -25,8 +25,6 @@
 
 namespace SPK
 {
-	Model defaultModel;
-
 	const float Model::DEFAULT_VALUES[NB_PARAMS] =
 	{
 		1.0f,	// RED

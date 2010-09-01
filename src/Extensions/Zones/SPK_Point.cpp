@@ -24,8 +24,6 @@
 
 namespace SPK
 {
-	Point defaultZone;
-
 	Point::Point(const Vector3D& position) :
 		Zone(position)
 	{}
