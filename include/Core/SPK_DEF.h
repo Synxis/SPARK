@@ -59,9 +59,6 @@
 
 #ifdef SPK_DEBUG
 #define SPK_TRACE(text) std::cout << text << std::endl;
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#define new new(_CLIENT_BLOCK,__FILE__,__LINE__)
 #else
 #define SPK_TRACE(text)
 #endif
@@ -101,7 +98,7 @@
 */
 namespace SPK
 {
-	/** @brief the random seed for the pseudo random numbers generation */
+	/** @brief the random seed for the pseudo random numbers generation (1 by default) */
 	extern SPK_PREFIX unsigned int randomSeed;
 
 	/**

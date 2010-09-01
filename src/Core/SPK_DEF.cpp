@@ -19,11 +19,10 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #include "Core/SPK_DEF.h"
 
 
 namespace SPK
 {
-	unsigned int randomSeed = 0;
+	unsigned int randomSeed = 1;
 }
