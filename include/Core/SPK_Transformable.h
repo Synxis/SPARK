@@ -102,7 +102,6 @@ namespace SPK
 		* The orientation is left untouched.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param pos : the position of the local transform
 		*/
@@ -114,7 +113,6 @@ namespace SPK
 		* The position is left untouched.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param look : the look vector of the transformable
 		* @param up : the up vector of the transformable
@@ -127,7 +125,6 @@ namespace SPK
 		* The position is left untouched.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param look : the look vector of the transformable
 		* @param up : the up vector of the transformable
@@ -141,7 +138,6 @@ namespace SPK
 		* The position is left untouched.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param axis : the axis of rotation
 		* @param angle : the angle of rotation around the axis
@@ -155,7 +151,6 @@ namespace SPK
 		* The position is left untouched.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param angle : the angle of rotation around the x axis
 		*/
@@ -168,7 +163,6 @@ namespace SPK
 		* The position is left untouched.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param angle : the angle of rotation around the y axis
 		*/
@@ -181,7 +175,6 @@ namespace SPK
 		* The position is left untouched.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param angle : the angle of rotation around the z axis
 		*/
@@ -279,7 +272,6 @@ namespace SPK
 		* The vectors are normalized internally.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param target : the point the transformable is looking at
 		* @param up : the up vector of the transformable
@@ -293,7 +285,6 @@ namespace SPK
 		* The vectors are normalized internally.<br>
 		* <br>
 		* Note that this methods sets the local transform.
-		* To compute the world transform and propagate it, updateTransform(const Transformable*) must be called afterwards.
 		*
 		* @param target : the point the transformable is looking at
 		* @param up : the up vector of the transformable

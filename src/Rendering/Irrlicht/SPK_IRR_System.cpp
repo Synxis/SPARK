@@ -129,7 +129,6 @@ namespace IRR
 		if (worldTransformed)
 		{
 			this->setTransform(AbsoluteTransformation.pointer());
-			updateTransform();
 			AbsoluteTransformation.makeIdentity();
 		}
 	}

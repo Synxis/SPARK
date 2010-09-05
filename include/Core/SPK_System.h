@@ -124,7 +124,8 @@ namespace SPK
 		/**
 		* @brief Updates the particles in the system of the current time step
 		*
-		* Note that this method updates all groups in the system from first to last.
+		* Note that this method updates all groups in the system from first to last.<br>
+		* A call to updateTransform(const Transformable*) of the system is also performed prior to the groups update.
 		*
 		* @param deltaTime : the time step
 		* @return true if the System is still active (has active groups)
