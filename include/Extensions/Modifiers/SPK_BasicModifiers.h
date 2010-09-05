@@ -71,10 +71,10 @@ namespace SPK
 	};
 
 	inline Gravity::Gravity(const Vector3D& value) :
-		Modifier(MODIFIER_PRIORITY_FORCE,false,false),
-		value(value),
-		tValue(value)
-	{}
+		Modifier(MODIFIER_PRIORITY_FORCE,false,false)
+	{
+		setValue(value);	
+	}
 
 	inline Gravity* Gravity::create(const Vector3D& value)
 	{
@@ -83,8 +83,8 @@ namespace SPK
 
 	inline void Gravity::setValue(const Vector3D& value)
 	{
-		this->value = tValue = value;
-		notifyForTransformUpdate();
+		this->value = value;
+		transformDir(tValue,value);
 	}
 		
 	inline const Vector3D& Gravity::getValue() const

@@ -42,12 +42,12 @@ namespace SPK
 		setAngles(angleMin,angleMax);
 	}
 
-	void SphericEmitter::setDirection(const Vector3D& direction)
+	void SphericEmitter::setDirection(const Vector3D& dir)
 	{
-		tDirection = direction;
+		direction = dir;
+		direction.normalize();
+		transformDir(tDirection,direction);
 		computeMatrix();
-		this->direction = tDirection; // as tDirection was normalized in computeMatrix()
-		notifyForTransformUpdate();
 	}
 
 	void SphericEmitter::setAngles(float angleMin,float angleMax)
@@ -73,8 +73,7 @@ namespace SPK
 		if (!tDirection.normalize())
 			SPK_LOG_WARNING("SphericEmitter::computeMatrix() - The direction is a null vector");
 		if ((tDirection.x == 0.0f)&&(tDirection.y == 0.0f))
-		{
-			
+		{			
 			matrix[0] = tDirection.z;
 			matrix[1] = 0.0f;
 			matrix[2] = 0.0f;

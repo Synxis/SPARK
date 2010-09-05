@@ -95,9 +95,9 @@ namespace SPK
 		* The eye of the vortex is an infinite line defined by a position and a direction.<br>
 		* Note that the direction is normalized internally.
 		*
-		* @param direction : the direction of the eye of the vortex
+		* @param dir : the direction of the eye of the vortex
 		*/
-		inline void setDirection(const Vector3D& direction);
+		inline void setDirection(const Vector3D& dir);
 
 		/**
 		* @brief Gets the direction of the eye
@@ -236,8 +236,7 @@ namespace SPK
 	inline void Vortex::setPosition(const Vector3D& position)
 	{
 		this->position = position;
-		tPosition = this->position;
-		notifyForTransformUpdate();
+		transformPos(tPosition,position);
 	}
 
 	inline const Vector3D& Vortex::getPosition() const
@@ -250,12 +249,12 @@ namespace SPK
 		return tPosition;
 	}
 
-	inline void Vortex::setDirection(const Vector3D& direction)
+	inline void Vortex::setDirection(const Vector3D& dir)
 	{
-		this->direction = direction;
-		this->direction.normalize();
-		tDirection = this->direction;
-		notifyForTransformUpdate();
+		direction = dir;
+		direction.normalize();
+		transformDir(tDirection,direction);
+		tDirection.normalize();
 	}
 
 	inline const Vector3D& Vortex::getDirection() const

@@ -339,14 +339,7 @@ namespace SPK
 		* @brief Tells whether this Transformable needs update or not
 		* @return true if it needs update, false if not
 		*/
-		inline bool isTransformUpdateNotified() const;
-
-		/**
-		* @brief Notifies the Transformable for an update need
-		*
-		* This method has to be called when modifying a parameter that impose the transform's recomputation.
-		*/
-		inline void notifyForTransformUpdate();
+		inline bool isTransformUpdateNotified() const;	
 
 		/**
 		* @brief Gets the latest parent of this Transformable
@@ -396,6 +389,8 @@ namespace SPK
 			Vector3D& dest,
 			const Vector3D& v,
 			const float* m);
+
+		inline void notifyForTransformUpdate();
 	};
 
 

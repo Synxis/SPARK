@@ -72,9 +72,9 @@ namespace SPK
 		*
 		* Note that the normal is normalized internally
 		*
-		* @param normal : the normal of the plane on which lies the ring
+		* @param n : the normal of the plane on which lies the ring
 		*/
-		void setNormal(const Vector3D& normal);
+		void setNormal(const Vector3D& n);
 
 		/**
 		* @brief Gets the normal of this ring

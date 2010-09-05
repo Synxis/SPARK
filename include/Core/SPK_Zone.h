@@ -103,14 +103,15 @@ namespace SPK
 	inline Zone::Zone(const Vector3D& position) :
 		Registerable(),
 		Transformable(),
-		position(position),
-		tPosition(position)
-	{}
+		position(position)
+	{
+		transformPos(tPosition,position);	
+	}
 
 	inline void Zone::setPosition(const Vector3D& v)
 	{
-		position = tPosition = v;
-		notifyForTransformUpdate();
+		position = v;
+		transformPos(tPosition,position);
 	}
 
 	inline const Vector3D& Zone::getPosition() const
@@ -123,7 +124,6 @@ namespace SPK
 		return tPosition;
 	}
 
-	
 	inline bool Zone::check(const Particle &particle, ZoneTest zoneTest) const
 	{
 		return (this->*Zone::TEST_FN[zoneTest])(particle);

@@ -55,9 +55,9 @@ namespace SPK
 		* Note that it is not necessary to provide a normalized Vector3D.
 		* This Vector3D only indicates a direction, its norm does not matter.
 		*
-		* @param direction : the direction of this StraightEmitter
+		* @param dir : the direction of this StraightEmitter
 		*/
-		void setDirection(const Vector3D& direction);
+		void setDirection(const Vector3D& dir);
 
 		/**
 		* @brief Gets the direction of this StraightEmitter

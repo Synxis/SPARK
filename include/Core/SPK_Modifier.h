@@ -33,15 +33,21 @@ namespace SPK
 	class Group;
 	class DataSet;
 
+	/** @brief Constants defining the priority of a modifier */
 	enum ModifierPriority
 	{
-		MODIFIER_PRIORITY_POSITION = 10,
-		MODIFIER_PRIORITY_FORCE = 20,
-		MODIFIER_PRIORITY_COLLISION = 30,
-		MODIFIER_PRIORITY_FRICTION = 40,
-		MODIFIER_PRIORITY_CHECK = 50,
+		MODIFIER_PRIORITY_POSITION = 10,		//*< The modifier modifies the position of a particle */
+		MODIFIER_PRIORITY_FORCE = 20,			//*< The modifier modifies the velocity of a particle */
+		MODIFIER_PRIORITY_COLLISION = 30,		//*< The modifier checks the position/velocity of particles and can modify them */
+		MODIFIER_PRIORITY_FRICTION = 40,		//*< The modifier applies a threshold over velocity */
+		MODIFIER_PRIORITY_CHECK = 50,			//*< The modifier performs checks over parameters */
 	};
 
+	/**
+	* @brief An abstract class that allows to modify the behaviour of a group of particles over time
+	*
+	* 
+	*/
 	class Modifier :	public Registerable,
 						public Transformable, 
 						public DataHandler
@@ -69,6 +75,11 @@ namespace SPK
 		*/
 		inline bool isLocalToSystem() const;
 
+		/**
+		* @brief Gets the priority
+		* The priority defines the order in which modifiers are applied (the lower, the sooner)
+		* @return the priority
+		*/
 		inline unsigned int getPriority() const;
 
 	protected :

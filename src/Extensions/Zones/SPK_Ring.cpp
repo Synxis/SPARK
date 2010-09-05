@@ -33,12 +33,12 @@ namespace SPK
 		setRadius(minRadius,maxRadius);
 	}
 
-	void Ring::setNormal(const Vector3D& normal)
+	void Ring::setNormal(const Vector3D& n)
 	{
-		this->normal = normal;
-		this->normal.normalize();
-		tNormal = this->normal;
-		notifyForTransformUpdate();
+		normal = n;
+		normal.normalize();
+		transformDir(tNormal,normal);
+		tNormal.normalize();
 	}
 
 	void Ring::setRadius(float minRadius,float maxRadius)

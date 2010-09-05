@@ -37,13 +37,13 @@ namespace SPK
 		setDirection(direction);
 	}
 
-	void StraightEmitter::setDirection(const Vector3D& direction)
+	void StraightEmitter::setDirection(const Vector3D& dir)
 	{
-		this->direction = direction;
+		this->direction = dir;
 		if (!this->direction.normalize())
 			SPK_LOG_WARNING("StraightEmitter::setDirection(const Vector3D&) - The direction is a null vector");
-		tDirection = this->direction;
-		notifyForTransformUpdate();
+		transformDir(tDirection,direction);
+		tDirection.normalize();
 	}
 
 	void StraightEmitter::generateVelocity(Particle& particle,float speed) const
