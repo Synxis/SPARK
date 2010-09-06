@@ -119,6 +119,7 @@
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Destroyer.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_EmitterAttacher.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Obstacle.h" />
+		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_PointMass.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Rotator.h" />
 		<Unit filename="..\..\..\include\Extensions\Modifiers\SPK_Vortex.h" />
 		<Unit filename="..\..\..\include\Extensions\Renderers\SPK_LineRendererInterface.h" />
@@ -151,6 +152,7 @@
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Collider.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_EmitterAttacher.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Obstacle.cpp" />
+		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_PointMass.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Rotator.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Modifiers\SPK_Vortex.cpp" />
 		<Unit filename="..\..\..\src\Extensions\Renderers\SPK_Oriented3DRendererInterface.cpp" />

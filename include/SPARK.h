@@ -75,6 +75,7 @@
 #include "Extensions/Modifiers/SPK_Destroyer.h"
 #include "Extensions/Modifiers/SPK_Vortex.h"
 #include "Extensions/Modifiers/SPK_EmitterAttacher.h"
+#include "Extensions/Modifiers/SPK_PointMass.h"
 
 // Actions
 #include "Extensions/Actions/SPK_ActionSet.h"
