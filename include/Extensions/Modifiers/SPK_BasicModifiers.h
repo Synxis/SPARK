@@ -49,6 +49,7 @@ namespace SPK
 		Vector3D tValue;
 
 		inline Gravity(const Vector3D& value = Vector3D());
+		inline Gravity(const Gravity& gravity);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
@@ -66,6 +67,7 @@ namespace SPK
 	private :
 
 		inline Friction(float value = 0.0f);
+		inline Friction(const Friction& friction);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
@@ -74,6 +76,12 @@ namespace SPK
 		Modifier(MODIFIER_PRIORITY_FORCE,false,false)
 	{
 		setValue(value);	
+	}
+
+	inline Gravity::Gravity(const Gravity& gravity) :
+		Modifier(gravity)
+	{
+		setValue(gravity.value);
 	}
 
 	inline Gravity* Gravity::create(const Vector3D& value)
@@ -105,6 +113,11 @@ namespace SPK
 	inline Friction::Friction(float value) :
 		Modifier(MODIFIER_PRIORITY_FRICTION,false,false),
 		value(value)
+	{}
+
+	inline Friction::Friction(const Friction& friction) :
+		Modifier(friction),
+		value(friction.value)
 	{}
 
 	inline Friction* Friction::create(float value)

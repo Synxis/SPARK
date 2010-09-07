@@ -52,12 +52,17 @@ namespace SPK
 
 		/** @brief Constructor of Rotator */
 		inline Rotator();
+		inline Rotator(const Rotator& rotator);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
 	inline Rotator::Rotator() :
 		Modifier(MODIFIER_PRIORITY_POSITION,false,false)
+	{}
+
+	inline Rotator::Rotator(const Rotator& rotator) :
+		Modifier(rotator)
 	{}
 
 	inline Rotator* Rotator::create()

@@ -45,6 +45,7 @@ namespace SPK
 		T maxValue;
 
 		RandomInitializer<T>(const T& min,const T& max);
+		RandomInitializer<T>(const RandomInitializer<T>& interpolator);
 
 		virtual inline void interpolate(T* data,Group& group,DataSet* dataSet) const {}
 		virtual inline void init(T& data,Particle& particle,DataSet* dataSet) const;
@@ -58,6 +59,13 @@ namespace SPK
 		Interpolator(false),
 		minValue(minValue),
 		maxValue(maxValue)
+	{}
+
+	template<typename T>
+	RandomInitializer<T>::RandomInitializer(const RandomInitializer<T>& interpolator) :
+		Interpolator(interpolator),
+		minValue(interpolator.minValue),
+		maxValue(interpolator.maxValue)
 	{}
 
 	template<typename T>

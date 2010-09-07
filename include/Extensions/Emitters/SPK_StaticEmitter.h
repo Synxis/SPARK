@@ -55,12 +55,16 @@ namespace SPK
 			int tank = -1,
 			float flow = 1.0f);
 
+		inline StaticEmitter(const StaticEmitter& emitter);
+
 		virtual inline void generateVelocity(Particle& particle,float speed) const;
 	};
 
 	inline StaticEmitter::StaticEmitter(Zone* zone,bool full,int tank,float flow) :
 		Emitter(zone,full,tank,flow)
 	{}
+
+	inline StaticEmitter::StaticEmitter(const StaticEmitter& emitter) : Emitter(emitter) {}
 
 	inline StaticEmitter* StaticEmitter::create(Zone* zone,bool full,int tank,float flow)
 	{

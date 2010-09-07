@@ -162,6 +162,7 @@ namespace GL
 		/////////////////
 
 		GLLineTrailRenderer(size_t nbSamples = 8,float duration = 1.0f,float width = 1.0f);
+		GLLineTrailRenderer(const GLLineTrailRenderer& renderer);
 
 		virtual void init(const Particle& particle,DataSet* dataSet) const;
 		virtual void update(const Group& group,DataSet* dataSet) const;

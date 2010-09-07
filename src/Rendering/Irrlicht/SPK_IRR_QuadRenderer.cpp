@@ -37,6 +37,12 @@ namespace IRR
 		Oriented3DRendererInterface()
 	{}
 
+	IRRQuadRenderer::IRRQuadRenderer(const IRRQuadRenderer& renderer) :
+		IRRRenderer(renderer),
+		QuadRendererInterface(renderer),
+		Oriented3DRendererInterface(renderer)
+	{}
+
 	bool IRRQuadRenderer::setTexturingMode(TextureMode mode)
 	{
 		if (mode == TEXTURE_MODE_3D)

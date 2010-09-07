@@ -93,6 +93,8 @@ namespace SPK
 			float forceMin = 1.0f,
 			float forceMax = 1.0f);
 
+		StraightEmitter(const StraightEmitter& emitter);
+
 		virtual void generateVelocity(Particle& particle,float speed) const;
 	};
 

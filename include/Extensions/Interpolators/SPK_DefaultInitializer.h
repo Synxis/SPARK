@@ -43,6 +43,7 @@ namespace SPK
 		T defaultValue;
 
 		DefaultInitializer<T>(const T& value);
+		DefaultInitializer<T>(const DefaultInitializer<T>& interpolator);
 
 		virtual inline void interpolate(T* data,Group& group,DataSet* dataSet) const {}
 		virtual inline void init(T& data,Particle& particle,DataSet* dataSet) const;
@@ -55,6 +56,12 @@ namespace SPK
 	DefaultInitializer<T>::DefaultInitializer(const T& value) :
 		Interpolator(false),
 		defaultValue(value)
+	{}
+
+	template<typename T>
+	DefaultInitializer<T>::DefaultInitializer(const DefaultInitializer<T>& interpolator) :
+		Interpolator(interpolator),
+		defaultValue(interpolator.defaultValue)
 	{}
 
 	template<typename T>

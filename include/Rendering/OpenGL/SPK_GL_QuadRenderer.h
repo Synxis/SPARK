@@ -90,6 +90,7 @@ namespace GL
 		GLuint textureIndex;
 
 		GLQuadRenderer(float scaleX = 1.0f,float scaleY = 1.0f);
+		GLQuadRenderer(const GLQuadRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

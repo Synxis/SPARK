@@ -38,6 +38,11 @@ namespace IRR
 		material.Thickness = screenSize;
 	}
 
+	IRRPointRenderer::IRRPointRenderer(const IRRPointRenderer& renderer) :
+		IRRRenderer(renderer),
+		PointRendererInterface(renderer)
+	{}
+
 	bool IRRPointRenderer::setType(PointType type)
 	{
 		switch(type)

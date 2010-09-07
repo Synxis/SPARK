@@ -89,6 +89,7 @@ namespace DX9
 		LPDIRECT3DTEXTURE9 textureIndex;
 
 		DX9QuadRenderer(float scaleX = 1.0f,float scaleY = 1.0f);
+		DX9QuadRenderer(const DX9QuadRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

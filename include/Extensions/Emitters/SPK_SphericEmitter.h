@@ -152,6 +152,8 @@ namespace SPK
 			float forceMin = 1.0f,
 			float forceMax = 1.0f);
 
+		SphericEmitter(const SphericEmitter& emitter);
+
 		virtual void generateVelocity(Particle& particle,float speed) const;
 
 		void computeMatrix();

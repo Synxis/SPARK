@@ -129,11 +129,8 @@ namespace DX9
 
 		LPDIRECT3DTEXTURE9 textureIndex;
 
-		/** 
-		* @brief Constructor of DX9PointRenderer
-		* @param size : the size of the points
-		*/
 		inline DX9PointRenderer(float screenSize = 1.0f);
+		inline DX9PointRenderer(const DX9PointRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 
@@ -157,6 +154,12 @@ namespace DX9
 		DX9Renderer(false),
 		PointRendererInterface(POINT_TYPE_SQUARE, screenSize),
 		textureIndex(0)
+	{}
+
+	inline DX9PointRenderer::DX9PointRenderer(const DX9PointRenderer& renderer) :
+		DX9Renderer(renderer),
+		PointRendererInterface(renderer),
+		textureIndex(renderer.textureIndex)
 	{}
 
 	inline DX9PointRenderer* DX9PointRenderer::create(float screenSize)

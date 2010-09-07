@@ -105,6 +105,7 @@ namespace IRR
 		static const size_t NB_VERTICES_PER_PARTICLE = 1;
 
 		IRRPointRenderer(irr::IrrlichtDevice* d,float screenSize = 1.0f);
+		IRRPointRenderer(const IRRPointRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

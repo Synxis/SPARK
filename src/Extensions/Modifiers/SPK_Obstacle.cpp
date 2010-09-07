@@ -31,6 +31,12 @@ namespace SPK
 		friction(friction)
 	{}
 
+	Obstacle::Obstacle(const Obstacle& obstacle) :
+		ZonedModifier(obstacle),
+		bouncingRatio(obstacle.bouncingRatio),
+		friction(obstacle.friction)
+	{}
+
 	void Obstacle::modify(Group& group,DataSet* dataSet,float deltaTime) const
 	{
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)

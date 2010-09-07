@@ -45,6 +45,7 @@ namespace SPK
 		T deathValue;
 
 		SimpleInterpolator<T>(const T& birthValue,const T& deathValue);
+		SimpleInterpolator<T>(const SimpleInterpolator<T>& interpolator);
 
 		virtual void interpolate(T* data,Group& group,DataSet* dataSet) const;
 		virtual inline void init(T& data,Particle& particle,DataSet* dataSet) const;
@@ -58,6 +59,13 @@ namespace SPK
 		Interpolator(false),
 		birthValue(birthValue),
 		deathValue(deathValue)
+	{}
+
+	template<typename T>
+	SimpleInterpolator<T>::SimpleInterpolator(const SimpleInterpolator<T>& interpolator) :
+		Interpolator(interpolator),
+		birthValue(interpolator.birthValue),
+		deathValue(interpolator.deathValue)
 	{}
 
 	template<typename T>

@@ -283,6 +283,7 @@ namespace SPK
 		inline float computeXVelocity(const Particle& particle) const;
 
 		GraphInterpolator<T>();
+		GraphInterpolator<T>(const GraphInterpolator<T>& interpolator);
 
 		virtual void createData(DataSet& dataSet,const Group& group) const;
 
@@ -315,13 +316,24 @@ namespace SPK
 
 	template<typename T>
 	GraphInterpolator<T>::GraphInterpolator() :
-		Interpolator<T>(true),
+		Interpolator(true),
 		graph(),
 		type(INTERPOLATOR_LIFETIME),
 		param(PARAM_SCALE),
 		scaleXVariation(0.0f),
 		offsetXVariation(0.0f),
 		loopingEnabled(false)
+	{}
+
+	template<typename T>
+	GraphInterpolator<T>::GraphInterpolator(const GraphInterpolator<T>& interpolator) :
+		Interpolator(interpolator),
+		graph(interpolator.graph),
+		type(interpolator.type),
+		param(interpolator.param),
+		scaleXVariation(interpolator.scaleXVariation),
+		offsetXVariation(interpolator.scaleXVariation),
+		loopingEnabled(interpolator.loopingEnabled)
 	{}
 
 	template<typename T>

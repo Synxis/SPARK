@@ -442,6 +442,7 @@ namespace SPK
 
 		Group(System& system,size_t capacity);
 		Group(System& system,const Group& group);
+		Group(const Group& group); // never used
 		~Group();
 
 		bool updateParticles(float deltaTime);

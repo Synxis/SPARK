@@ -37,6 +37,14 @@ namespace GL
 		textureIndex(0)
 	{}
 
+	GLQuadRenderer::GLQuadRenderer(const GLQuadRenderer& renderer) :
+		GLRenderer(renderer),
+		QuadRendererInterface(renderer),
+		Oriented3DRendererInterface(renderer),
+		GLExtHandler(renderer),
+		textureIndex(renderer.textureIndex)
+	{}
+
 	bool GLQuadRenderer::setTexturingMode(TextureMode mode)
 	{
 		if ((mode == TEXTURE_MODE_3D && !loadGLExtTexture3D()))

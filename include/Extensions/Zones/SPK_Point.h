@@ -42,10 +42,15 @@ namespace SPK
 	private :
 
 		inline Point(const Vector3D& position = Vector3D());
+		inline Point(const Point& point);
 	};
 
 	inline Point::Point(const Vector3D& position) :
 		Zone(position)
+	{}
+
+	inline Point::Point(const Point& point) :
+		Zone(point)
 	{}
 
 	inline Point* Point::create(const Vector3D& position)

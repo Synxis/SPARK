@@ -37,6 +37,12 @@ namespace SPK
 		setDirection(direction);
 	}
 
+	StraightEmitter::StraightEmitter(const StraightEmitter& emitter) :
+		Emitter(emitter)
+	{
+		setDirection(direction);
+	}
+
 	void StraightEmitter::setDirection(const Vector3D& dir)
 	{
 		this->direction = dir;

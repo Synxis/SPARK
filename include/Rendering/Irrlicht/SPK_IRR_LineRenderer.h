@@ -62,13 +62,8 @@ namespace IRR
 		static const size_t NB_INDICES_PER_PARTICLE = 2;
 		static const size_t NB_VERTICES_PER_PARTICLE = 2;
 
-		/**
-		* @brief Constructor of IRRLineRenderer
-		* @param d : the Irrlicht device
-		* @param length : the length multiplier of this IRRLineRenderer
-		* @param width : the width of this IRRLineRenderer in pixels
-		*/
 		IRRLineRenderer(irr::IrrlichtDevice* d,float length = 1.0f,float width = 1.0f);
+		IRRLineRenderer(const IRRLineRenderer& renderer);
 	
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

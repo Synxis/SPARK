@@ -24,7 +24,7 @@
 
 namespace SPK
 {
-	inline Vortex::Vortex(const Vector3D& position,const Vector3D& direction,float rotationSpeed,float attractionSpeed) :
+	Vortex::Vortex(const Vector3D& position,const Vector3D& direction,float rotationSpeed,float attractionSpeed) :
 		Modifier(MODIFIER_PRIORITY_POSITION,false,false),
 		rotationSpeed(rotationSpeed),
 		attractionSpeed(attractionSpeed),
@@ -37,7 +37,20 @@ namespace SPK
 		setDirection(direction);
 	}
 
-	inline void Vortex::setEyeRadius(float eyeRadius)
+	Vortex::Vortex(const Vortex& vortex) :
+		Modifier(vortex),
+		rotationSpeed(vortex.rotationSpeed),
+		attractionSpeed(vortex.attractionSpeed),
+		angularSpeedEnabled(vortex.angularSpeedEnabled),
+		linearSpeedEnabled(vortex.linearSpeedEnabled),
+		killingParticleEnabled(vortex.killingParticleEnabled),
+		eyeRadius(vortex.eyeRadius)
+	{
+		setPosition(vortex.position);
+		setDirection(vortex.direction);
+	}
+
+	void Vortex::setEyeRadius(float eyeRadius)
 	{		
 		if (eyeRadius < 0.0f) 
 		{

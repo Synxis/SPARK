@@ -118,6 +118,7 @@ namespace IRR
 		static const size_t NB_VERTICES_PER_PARTICLE = 4;
 
 		IRRQuadRenderer(irr::IrrlichtDevice* d,float scaleX = 1.0f,float scaleY = 1.0f);
+		IRRQuadRenderer(const IRRQuadRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

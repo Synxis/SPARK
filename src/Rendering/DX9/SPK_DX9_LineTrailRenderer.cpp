@@ -42,6 +42,14 @@ namespace DX9
 		setDuration(duration);
 	}
 
+	DX9LineTrailRenderer::DX9LineTrailRenderer(const DX9LineTrailRenderer& renderer) :
+		DX9Renderer(renderer),
+		width(renderer.width),
+		degeneratedColor(renderer.degeneratedColor),
+		nbSamples(renderer.nbSamples),
+		duration(renderer.duration)
+	{}
+
 	void DX9LineTrailRenderer::setNbSamples(size_t nbSamples)
 	{
 		SPK_ASSERT(nbSamples >= 2,"DX9LineTrailRenderer::setNbSamples(size_t) - The number of samples cannot be less than 2");

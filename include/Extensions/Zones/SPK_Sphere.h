@@ -55,11 +55,18 @@ namespace SPK
 		float radius;
 
 		inline Sphere(const Vector3D& position = Vector3D(),float radius = 1.0f);
+		inline Sphere(const Sphere& sphere);
 	};
 
 	inline Sphere::Sphere(const Vector3D& position,float radius) :
-		Zone(position),
-		radius(radius)
+		Zone(position)
+	{
+		setRadius(radius);
+	}
+
+	inline Sphere::Sphere(const Sphere& sphere) :
+		Zone(sphere),
+		radius(sphere.radius)
 	{}
 
 	inline Sphere* Sphere::create(const Vector3D& position,float radius)

@@ -79,6 +79,7 @@ namespace SPK
 		float friction;
 
 		Obstacle(Zone* zone = NULL,float bouncingRatio = 1.0f,float friction = 1.0f,ZoneTest zoneTest = ZONE_TEST_INTERSECT);
+		Obstacle(const Obstacle& obstacle);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};

@@ -60,16 +60,8 @@ namespace GL
 
 	private :
 
-		//////////////////
-		// Constructors //
-		//////////////////
-
-		/**
-		* @brief Constructor of GLLineRenderer
-		* @param length : the length multiplier of this GLLineRenderer
-		* @param width : the width of the lines (in screen space)
-		*/
 		GLLineRenderer(float length = 1.0f,float width = 1.0f);
+		GLLineRenderer(const GLLineRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

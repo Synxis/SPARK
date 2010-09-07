@@ -35,6 +35,11 @@ namespace DX9
 		LineRendererInterface(length, 1.0f)
 	{}
 
+	DX9LineRenderer::DX9LineRenderer(const DX9LineRenderer& renderer) :
+		DX9Renderer(renderer),
+		LineRendererInterface(renderer)
+	{}
+
 	RenderBuffer* DX9LineRenderer::attachRenderBuffer(const Group& group) const
 	{
 		BufferInfo info;

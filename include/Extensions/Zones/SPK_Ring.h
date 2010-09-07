@@ -140,6 +140,8 @@ namespace SPK
 			const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f),
 			float minRadius = 0.0f,
 			float maxRadius = 1.0f);
+
+		Ring(const Ring& ring);
 	};
 
 	inline Ring* Ring::create(

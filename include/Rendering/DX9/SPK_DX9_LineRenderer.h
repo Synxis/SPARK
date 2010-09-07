@@ -61,15 +61,8 @@ namespace DX9
 
 	private :
 
-		//////////////////
-		// Constructors //
-		//////////////////
-
-		/**
-		* @brief Constructor of DX9LineRenderer
-		* @param length : the length multiplier of this DX9LineRenderer
-		*/
 		DX9LineRenderer(float length = 1.0f);
+		DX9LineRenderer(const DX9LineRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

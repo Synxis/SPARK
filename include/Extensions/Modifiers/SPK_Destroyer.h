@@ -45,6 +45,7 @@ namespace SPK
 	private :
 
 		inline Destroyer(Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		inline Destroyer(const Destroyer& destroyer);
 
 		virtual inline void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
@@ -56,6 +57,10 @@ namespace SPK
 
 	inline Destroyer::Destroyer(Zone* zone,ZoneTest zoneTest) :
 		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_FLAG_ALL,zoneTest,zone)
+	{}
+
+	inline Destroyer::Destroyer(const Destroyer& destroyer) :
+		ZonedModifier(destroyer)
 	{}
 
 	inline void Destroyer::modify(Group& group,DataSet* dataSet,float deltaTime) const

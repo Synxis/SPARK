@@ -95,11 +95,8 @@ namespace GL
 
 		GLuint textureIndex;
 
-		/** 
-		* @brief Constructor of GLPointRenderer
-		* @param size : the size of the points
-		*/
 		inline GLPointRenderer(float screenSize = 1.0f);
+		inline GLPointRenderer(const GLPointRenderer& renderer);
 
 		virtual void render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const;
 		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const;
@@ -110,6 +107,13 @@ namespace GL
 		PointRendererInterface(POINT_TYPE_SQUARE,screenSize),
 		GLExtHandler(),
 		textureIndex(0)
+	{}
+
+	inline GLPointRenderer::GLPointRenderer(const GLPointRenderer& renderer) :
+		GLRenderer(renderer),
+		PointRendererInterface(renderer),
+		GLExtHandler(renderer),
+		textureIndex(renderer.textureIndex)
 	{}
 
 	inline GLPointRenderer* GLPointRenderer::create(float screenSize)

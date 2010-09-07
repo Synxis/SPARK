@@ -126,13 +126,14 @@ namespace SPK
 		float offset;
 
 		PointMass(const Vector3D& pos = Vector3D(),float mass = 1.0f,float offset = 0.01f);
+		PointMass(const PointMass& pointMass);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
 	inline PointMass* PointMass::create(const Vector3D& pos,float mass,float offset)
 	{
-		return new PointMass(pos,mass,offset);
+		return SPK_NEW(PointMass,pos,mass,offset);
 	}
 
 	inline void PointMass::setPosition(const Vector3D& pos)

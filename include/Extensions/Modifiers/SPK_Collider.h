@@ -90,6 +90,7 @@ namespace SPK
 		float elasticity;
 
 		inline Collider(float elasticity = 1.0f);
+		inline Collider(const Collider& collider);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
@@ -99,6 +100,11 @@ namespace SPK
 	{
 		setElasticity(elasticity);
 	}
+
+	Collider::Collider(const Collider& collider) :
+		Modifier(collider),
+		elasticity(collider.elasticity)
+	{}
 
 	inline Collider* Collider::create(float elasticity)
 	{

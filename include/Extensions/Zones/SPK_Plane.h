@@ -102,12 +102,19 @@ namespace SPK
 		Vector3D tNormal;	// transformed normal
 
 		inline Plane(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));
+		inline Plane(const Plane& plane);
 	};
 
 	inline Plane::Plane(const Vector3D& position,const Vector3D& normal) :
 		Zone(position)
 	{
 		setNormal(normal);
+	}
+
+	inline Plane::Plane(const Plane& plane) :
+		Zone(plane)
+	{
+		setNormal(plane.normal);
 	}
 
 	inline Plane* Plane::create(const Vector3D& position,const Vector3D& normal)

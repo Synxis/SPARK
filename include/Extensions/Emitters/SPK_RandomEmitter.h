@@ -58,12 +58,16 @@ namespace SPK
 			float forceMin = 1.0f,
 			float forceMax = 1.0f);
 
+		inline RandomEmitter(const RandomEmitter& emitter);
+
 		virtual void generateVelocity(Particle& particle,float speed) const;
 	};
 
 	inline RandomEmitter::RandomEmitter(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax) :
 		Emitter(zone,full,tank,flow,forceMin,forceMax)
 	{}
+
+	inline RandomEmitter::RandomEmitter(const RandomEmitter& emitter) : Emitter(emitter) {}
 
 	inline RandomEmitter* RandomEmitter::create(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax)
 	{

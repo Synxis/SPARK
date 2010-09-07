@@ -56,6 +56,7 @@ namespace SPK
 		T maxDeathValue;
 
 		RandomInterpolator<T>(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
+		RandomInterpolator<T>(const RandomInterpolator<T>& interpolator);
 
 		virtual void createData(DataSet& dataSet,const Group& group) const;
 
@@ -79,6 +80,15 @@ namespace SPK
 		maxBirthValue(maxBirthValue),
 		minDeathValue(minDeathValue),
 		maxDeathValue(maxDeathValue)
+	{}
+
+	template<typename T>
+	RandomInterpolator<T>::RandomInterpolator(const RandomInterpolator<T>& interpolator) :
+		Interpolator(interpolator),
+		minBirthValue(interpolator.minBirthValue),
+		maxBirthValue(interpolator.maxBirthValue),
+		minDeathValue(interpolator.minDeathValue),
+		maxDeathValue(interpolator.maxDeathValue)
 	{}
 
 	template<typename T>

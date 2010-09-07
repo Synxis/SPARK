@@ -37,6 +37,13 @@ namespace DX9
 		textureIndex(0)
 	{}
 
+	DX9QuadRenderer::DX9QuadRenderer(const DX9QuadRenderer& renderer) :
+		DX9Renderer(renderer),
+		QuadRendererInterface(renderer),
+		Oriented3DRendererInterface(renderer),
+		textureIndex(renderer.textureIndex)
+	{}
+
 	bool DX9QuadRenderer::setTexturingMode(TextureMode mode)
 	{
 		texturingMode = mode;

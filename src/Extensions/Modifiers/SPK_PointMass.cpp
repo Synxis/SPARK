@@ -32,6 +32,14 @@ namespace SPK
 		setOffset(offset);
 	}
 
+	PointMass::PointMass(const PointMass& pointMass) :
+		Modifier(pointMass),
+		mass(pointMass.mass),
+		offset(pointMass.offset)
+	{
+		setPosition(pointMass.position);
+	}
+
 	void PointMass::setOffset(float offset)
 	{
 		if (offset <= 0.0f)

@@ -224,6 +224,7 @@ namespace SPK
 		bool killingParticleEnabled;
 
 		Vortex(const Vector3D& position = Vector3D(),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float rotationSpeed = 1.0f,float attractionSpeed = 0.0f);
+		Vortex(const Vortex& vortex);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};

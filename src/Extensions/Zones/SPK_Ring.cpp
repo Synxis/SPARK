@@ -33,6 +33,14 @@ namespace SPK
 		setRadius(minRadius,maxRadius);
 	}
 
+	Ring::Ring(const Ring& ring) :
+		Zone(ring),
+		minRadius(ring.minRadius),
+		maxRadius(ring.maxRadius)
+	{
+		setNormal(ring.normal);
+	}
+
 	void Ring::setNormal(const Vector3D& n)
 	{
 		normal = n;

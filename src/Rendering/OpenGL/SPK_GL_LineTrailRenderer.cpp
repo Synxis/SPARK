@@ -41,6 +41,14 @@ namespace GL
 		setDuration(duration);
 	}
 
+	GLLineTrailRenderer::GLLineTrailRenderer(const GLLineTrailRenderer& renderer) :
+		GLRenderer(renderer),
+		width(renderer.width),
+		degeneratedColor(renderer.degeneratedColor),
+		nbSamples(renderer.nbSamples),
+		duration(renderer.duration)
+	{}
+
 	void GLLineTrailRenderer::setNbSamples(size_t nbSamples)
 	{
 		SPK_ASSERT(nbSamples >= 2,"GLLineTrailRenderer::setNbSamples(size_t) - The number of samples cannot be less than 2");

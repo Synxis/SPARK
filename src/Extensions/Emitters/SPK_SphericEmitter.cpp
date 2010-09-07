@@ -42,6 +42,13 @@ namespace SPK
 		setAngles(angleMin,angleMax);
 	}
 
+	SphericEmitter::SphericEmitter(const SphericEmitter& emitter) :
+		Emitter(emitter)
+	{
+		setDirection(emitter.direction);
+		setAngles(emitter.angleMin,emitter.angleMax);
+	}
+
 	void SphericEmitter::setDirection(const Vector3D& dir)
 	{
 		direction = dir;

@@ -50,7 +50,7 @@ namespace SPK
 		localIdentity(transformable.localIdentity)
 	{
 		memcpy(local,transformable.local,sizeof(float) * TRANSFORM_LENGTH);
-		memcpy(world,transformable.world,sizeof(float) * TRANSFORM_LENGTH);
+		memcpy(world,transformable.local,sizeof(float) * TRANSFORM_LENGTH); // Sets to local as it is created with no parent
 	}
 
 	void Transformable::setTransformNC(const float* transform)

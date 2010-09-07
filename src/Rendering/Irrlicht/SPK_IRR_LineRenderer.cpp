@@ -37,6 +37,11 @@ namespace IRR
 		material.Thickness = width;
 	}
 
+	IRRLineRenderer::IRRLineRenderer(const IRRLineRenderer& renderer) :
+		IRRRenderer(renderer),
+		LineRendererInterface(renderer)
+	{}
+
 	RenderBuffer* IRRLineRenderer::attachRenderBuffer(const Group& group) const
 	{
 		// Creates the render buffer
