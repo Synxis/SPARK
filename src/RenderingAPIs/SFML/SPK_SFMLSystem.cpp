@@ -53,8 +53,13 @@ namespace SFML
 	void SFMLSystem::Render(sf::RenderTarget& target) const
 	{
 		SFMLRenderer::bindCurrentTarget(target);
-		SFMLRenderer::bindCurrentSystem(*this);
+
+		if (isWorldTransformed())
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+		}
+		
 		System::render();
-		SFMLRenderer::releaseCurrentSystem();
 	}
 }}

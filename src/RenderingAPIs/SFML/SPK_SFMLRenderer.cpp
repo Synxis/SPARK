@@ -30,7 +30,6 @@ namespace SFML
 	float SFMLRenderer::zFactor = 0.0f;
 
 	sf::RenderTarget* SFMLRenderer::currentTarget = NULL;
-	const SFMLSystem* SFMLRenderer::currentSystem = NULL;
 
 	SFMLRenderer::SFMLRenderer() :
 		Renderer(),
@@ -64,7 +63,6 @@ namespace SFML
 			return;
 
 		initBlending();
-		initTransformation();
 
 		if (isRenderingHintEnabled(ALPHA_TEST))
 		{
@@ -75,8 +73,6 @@ namespace SFML
 			glDisable(GL_ALPHA_TEST);
 
 		innerRender(group);
-
-		finishTransformation();
 	}
 
 	void SFMLRenderer::setZFactor(float zFactor)
@@ -97,16 +93,6 @@ namespace SFML
 	void SFMLRenderer::releaseCurrentTarget()
 	{
 		currentTarget = NULL;
-	}
-
-	void SFMLRenderer::bindCurrentSystem(const SFMLSystem& system)
-	{
-		currentSystem = &system;
-	}
-
-	void SFMLRenderer::releaseCurrentSystem()
-	{
-		currentSystem = NULL;
 	}
 
 	sf::RenderTarget* SFMLRenderer::getCurrentTarget()

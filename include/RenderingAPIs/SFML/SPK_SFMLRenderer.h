@@ -179,8 +179,9 @@ namespace SFML
 		*
 		* @param system : The SFMLSystem that is currently being rendered
 		* @since 1.03.01
+		* @deprecated 1.05.05 Does nothing
 		*/
-		static void bindCurrentSystem(const SFMLSystem& system);
+		static inline void bindCurrentSystem(const SFMLSystem& system) {}
 
 		/**
 		* @brief Releases the current SFMLSystem
@@ -188,8 +189,9 @@ namespace SFML
 		* This method sets internally the SFMLSystem being rendered to NULL
 		*
 		* @since 1.03.01
+		* @deprecated 1.05.05 Does nothing
 		*/
-		static void releaseCurrentSystem();
+		static inline void releaseCurrentSystem() {}
 
 	protected :
 
@@ -211,15 +213,12 @@ namespace SFML
 		static float zFactor;
 
 		static sf::RenderTarget* currentTarget;
-		static const SFMLSystem* currentSystem;
 		
 		sf::Blend::Mode blendMode;
 
 		bool groundCulling;
 
 		inline void initBlending() const;
-		inline void initTransformation() const;
-		inline void finishTransformation() const;
 
 		/**
 		* @brief Calls the rendering of a child of SFMLRenderer
@@ -276,18 +275,6 @@ namespace SFML
 				break;
 			}
 		}
-	}
-
-	inline void SFMLRenderer::initTransformation() const
-	{
-		if ((currentSystem != NULL)&&(currentSystem->isWorldTransformed()))
-			glPopMatrix();
-	}
-
-	inline void SFMLRenderer::finishTransformation() const
-	{
-		if ((currentSystem != NULL)&&(currentSystem->isWorldTransformed()))
-			glPushMatrix();
 	}
 }}
 
