@@ -77,7 +77,7 @@ namespace SPK
 		float tEnter = 0.0f;
 		float tExit = 1.0f;
 
-		int axis;
+		int axis = 0;
 
 		if (!slabIntersects(v0.x,v1.x,getTransformedPosition().x - dimension.x * 0.5f,getTransformedPosition().x + dimension.x * 0.5f,tEnter,tExit,axis,0))
 			return false;
