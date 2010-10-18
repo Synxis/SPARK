@@ -56,7 +56,7 @@ namespace SPK
 	}
 
 	inline Destroyer::Destroyer(Zone* zone,ZoneTest zoneTest) :
-		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_FLAG_ALL,zoneTest,zone)
+		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_ALL & ~ZONE_TEST_ALWAYS,zoneTest,zone)
 	{}
 
 	inline Destroyer::Destroyer(const Destroyer& destroyer) :
