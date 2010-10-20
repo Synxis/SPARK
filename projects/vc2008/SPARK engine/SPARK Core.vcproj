@@ -409,6 +409,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_RandomForce.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_Rotator.cpp"
 						>
 					</File>
@@ -660,6 +664,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_PointMass.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_RandomForce.h"
 						>
 					</File>
 					<File

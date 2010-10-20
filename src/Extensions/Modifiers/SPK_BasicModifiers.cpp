@@ -29,7 +29,7 @@ namespace SPK
 {
 	void Gravity::modify(Group& group,DataSet* dataSet,float deltaTime) const
 	{
-		const Vector3D discreteGravity = value * deltaTime;
+		const Vector3D discreteGravity = tValue * deltaTime;
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 			particleIt->velocity() += discreteGravity;
 	}
