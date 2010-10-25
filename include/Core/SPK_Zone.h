@@ -39,6 +39,7 @@ namespace SPK
 		ZONE_TEST_INTERSECT,	/**< Does the particle intersect the zone ? */
 		ZONE_TEST_ENTER,		/**< Does the particle enter the zone ? */
 		ZONE_TEST_LEAVE,		/**< Does the particle leave the zone ? */
+		ZONE_TEST_ALWAYS,		/**< The test is always passed */
 	};
 
 	class SPK_PREFIX Zone : public Registerable, 
@@ -90,7 +91,7 @@ namespace SPK
 		Vector3D tPosition;
 
 		typedef bool (Zone::*checkFn)(const Particle&) const;
-		static const size_t NB_TEST_TYPES = 5;
+		static const size_t NB_TEST_TYPES = 6;
 		static checkFn TEST_FN[NB_TEST_TYPES];
 
 		bool checkInside(const Particle& particle) const;
@@ -98,6 +99,7 @@ namespace SPK
 		bool checkIntersect(const Particle& particle) const;
 		bool checkEnter(const Particle& particle) const;
 		bool checkLeave(const Particle& particle) const;
+		bool checkAlways(const Particle& particle) const;
 	};
 
 	inline Zone::Zone(const Vector3D& position) :

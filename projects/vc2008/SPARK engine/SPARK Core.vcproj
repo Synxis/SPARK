@@ -401,6 +401,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_LinearForce.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\Modifiers\SPK_Obstacle.cpp"
 						>
 					</File>
@@ -656,6 +660,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_EmitterAttacher.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Modifiers\SPK_LinearForce.h"
 						>
 					</File>
 					<File

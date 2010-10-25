@@ -95,6 +95,32 @@ namespace SPK
 		inline Vector3D& operator-=(const Vector3D& v);
 
 		/**
+		* @brief Multiplies by a Vector3D
+		*
+		* This method performs these operations :<br><i>
+		* x *= v.x<br>
+		* y *= v.y<br>
+		* z *= v.z</i>
+		*
+		* @param v : the Vector3D to add
+		* @return the result Vector3D
+		*/
+		inline Vector3D& operator*=(const Vector3D& v);
+
+		/**
+		* @brief Divides by a Vector3D
+		*
+		* This method performs these operations :<br><i>
+		* x /= v.x<br>
+		* y /= v.y<br>
+		* z /= v.z</i>
+		*
+		* @param v : the Vector3D to substract
+		* @return the result Vector3D
+		*/
+		inline Vector3D& operator/=(const Vector3D& v);
+
+		/**
 		* @brief Adds a floating number
 		*
 		* This method performs these operations :<br><i>
@@ -255,11 +281,37 @@ namespace SPK
 		*/
 		inline void crossProduct(const Vector3D& v);
 
-		/** @brief */
+		/** 
+		* @brief Sets the max coordinates by comparing them 2 by 2 with another vector
+		* This method performs these operations :<br><i>
+		* x = max(x,v.x)<br>
+		* y = max(y,v.y)<br>
+		* z = max(z,v.z)<br></i>
+		* @param v : the other vector
+		*/
 		inline void setMax(const Vector3D& v);
 
-		/** @brief */
+		/** 
+		* @brief Sets the minimum coordinates by comparing them 2 by 2 with another vector 
+		* This method performs these operations :<br><i>
+		* x = min(x,v.x)<br>
+		* y = min(y,v.y)<br>
+		* z = min(z,v.z)<br></i>
+		* @param v : the other vector
+		*/
 		inline void setMin(const Vector3D& v);
+
+		/** 
+		* @brief Returns the maximum coordinate of this vector
+		* @return the maximum coordinate (either x,y or z)
+		*/
+		inline float getMax() const;
+
+		/** 
+		* @brief Returns the minimum coordinate of this vector
+		* @return the minimum coordinate (either x,y or z)
+		*/
+		inline float getMin() const;
 	};
 
 	////////////////////////
@@ -293,6 +345,34 @@ namespace SPK
 	* @return the result vector3D
 	*/
 	inline Vector3D operator-(const Vector3D& v0,const Vector3D& v1);
+
+	/**
+	* @brief Multiplies two Vector3D
+	*
+	* This function performs these operations :<br><i>
+	* result.x = v0.x * v1.x<br>
+	* result.y = v0.y * v1.y<br>
+	* result.z = v0.z * v1.z</i>
+	*
+	* @param v0 : the first vector3D
+	* @param v1 : the second vector3D
+	* @return the result vector3D
+	*/
+	inline Vector3D operator*(const Vector3D& v0,const Vector3D& v1);
+
+	/**
+	* @brief Divides a Vector3D by another
+	*
+	* This function performs these operations :<br><i>
+	* result.x = v0.x / v1.x<br>
+	* result.y = v0.y / v1.y<br>
+	* result.z = v0.z / v1.z</i>
+	*
+	* @param v0 : the first vector3D
+	* @param v1 : the second vector3D
+	* @return the result vector3D
+	*/
+	inline Vector3D operator/(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Adds a Vector3D and a float
@@ -505,6 +585,22 @@ namespace SPK
 		return *this;
 	}
 
+	inline Vector3D& Vector3D::operator*=(const Vector3D& v)
+	{
+		x *= v.x;
+		y *= v.y;
+		z *= v.z;
+		return *this;
+	}
+
+	inline Vector3D& Vector3D::operator/=(const Vector3D& v)
+	{
+		x /= v.x;
+		y /= v.y;
+		z /= v.z;
+		return *this;
+	}
+
 	inline Vector3D& Vector3D::operator+=(float f)
 	{
 		x += f;
@@ -633,6 +729,22 @@ namespace SPK
 			z = v.z;
 	}
 
+	inline float Vector3D::getMax() const
+	{
+		float maxCoord = x;
+		if (y > maxCoord) maxCoord = y;
+		if (z > maxCoord) maxCoord = z;
+		return maxCoord;
+	}
+
+	inline float Vector3D::getMin() const
+	{
+		float minCoord = x;
+		if (y < minCoord) minCoord = y;
+		if (z < minCoord) minCoord = z;
+		return minCoord;
+	}
+
 	inline Vector3D Vector3D::operator-() const
 	{
 		return Vector3D(-x,-y,-z);
@@ -646,6 +758,16 @@ namespace SPK
 	inline Vector3D operator-(const Vector3D& v0,const Vector3D& v1)
 	{
 		return Vector3D(v0.x - v1.x,v0.y - v1.y,v0.z - v1.z);
+	}
+
+	inline Vector3D operator*(const Vector3D& v0,const Vector3D& v1)
+	{
+		return Vector3D(v0.x * v1.x,v0.y * v1.y,v0.z * v1.z);
+	}
+
+	inline Vector3D operator/(const Vector3D& v0,const Vector3D& v1)
+	{
+		return Vector3D(v0.x / v1.x,v0.y / v1.y,v0.z / v1.z);
 	}
 
 	inline Vector3D operator+(const Vector3D& v,float f)

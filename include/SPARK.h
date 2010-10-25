@@ -77,6 +77,7 @@
 #include "Extensions/Modifiers/SPK_EmitterAttacher.h"
 #include "Extensions/Modifiers/SPK_PointMass.h"
 #include "Extensions/Modifiers/SPK_RandomForce.h"
+#include "Extensions/Modifiers/SPK_LinearForce.h"
 
 // Actions
 #include "Extensions/Actions/SPK_ActionSet.h"

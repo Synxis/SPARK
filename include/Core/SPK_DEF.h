@@ -85,6 +85,15 @@ namespace SPK
 		PARAM_ROTATION_SPEED = 4,		/**< @brief The rotation speed of a particle */
 	};
 
+	/** @brief Constants defining the way a factor is applied*/
+	enum Factor
+	{
+		FACTOR_CONSTANT = 0,	/**< @brief Defines a constant factor (C) */
+		FACTOR_LINEAR = 1,		/**< @brief Defines a linear factor (x) */
+		FACTOR_QUADRATIC = 2,	/**< @brief Defines a quadratic factor (x^2) */
+		FACTOR_CUBIC = 3,		/**< @brief Defines a cubic factor (x^3) */		
+	};
+
 	/** A singleton class that holds some static objects needed by SPARK */
 	class SPK_PREFIX SPKContext
 	{

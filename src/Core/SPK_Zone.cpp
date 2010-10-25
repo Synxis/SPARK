@@ -31,6 +31,7 @@ namespace SPK
 		&Zone::checkIntersect,
 		&Zone::checkEnter,
 		&Zone::checkLeave,
+		&Zone::checkAlways,
 	};
 
 	bool Zone::checkInside(const Particle& particle) const
@@ -60,5 +61,10 @@ namespace SPK
 		if (!contains(particle.position()))
 			return intersects(particle.oldPosition(),particle.position(),particle.getParam(PARAM_SCALE) * particle.getGroup().getPhysicalRadius());
 		return false;
+	}
+
+	bool Zone::checkAlways(const Particle& particle) const
+	{
+		return true;
 	}
 }

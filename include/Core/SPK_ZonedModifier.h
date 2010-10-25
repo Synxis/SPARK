@@ -35,7 +35,7 @@ namespace SPK
 		ZONE_TEST_FLAG_INTERSECT = 1 << ZONE_TEST_INTERSECT,	/**< Enables the zone test intersect */
 		ZONE_TEST_FLAG_ENTER = 1 << ZONE_TEST_ENTER,			/**< Enables the zone test enter */
 		ZONE_TEST_FLAG_LEAVE = 1 << ZONE_TEST_LEAVE,			/**< Enables the zone test leave */
-		ZONE_TEST_FLAG_ALWAYS = 1 << 32							/**< The zone is ignored and the test is always passed */						
+		ZONE_TEST_FLAG_ALWAYS = 1 << ZONE_TEST_ALWAYS			/**< The zone is ignored and the test is always passed */						
 	};
 
 	/** @brief An abstract modifier with a zone attached to it */
@@ -96,7 +96,7 @@ namespace SPK
 
 	protected :
 
-		static const float ZONE_TEST_ALL = 0xFFFFFFFF	/**< Enables all zone tests */
+		static const unsigned int ZONE_TEST_ALL = 0xFFFFFFFF;	/**< Enables all zone tests */
 
 		/**
 		* @brief Constructor of zonedModifier
@@ -152,7 +152,7 @@ namespace SPK
 
 	inline bool ZonedModifier::checkZone(const Particle& particle) const
 	{
-		return zoneTest == ZONE_TEST_ALWAYS || zone->check(particle,zoneTest);
+		return zone->check(particle,zoneTest);
 	}
 }
 

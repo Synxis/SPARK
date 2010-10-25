@@ -42,7 +42,10 @@ namespace IRR
 			alive(true),
 			lastUpdatedTime(0)
     {
-		enableAABBComputation(true); // as culling is enabled by default in Irrlicht		
+		enableAABBComputation(true); // as culling is enabled by default in Irrlicht
+
+		if (parent != NULL && !isInitialized())
+			SPK_LOG_WARNING("IRRSystem(ISceneNode*,ISceneManager*,bool,bool) - A uninitialized system may have a NULL parent");
 	}
 
 	IRRSystem::IRRSystem(
@@ -63,6 +66,10 @@ namespace IRR
 			newManager = system.SceneManager;
 
 		setParent(newParent);
+		
+		if (parent != NULL && !isInitialized())
+			SPK_LOG_WARNING("IRRSystem(const IRRSystem&,ISceneNode*,ISceneManager*) - A uninitialized system may have a NULL parent");
+		
 		cloneMembers(const_cast<IRRSystem*>(&system),newManager);
 	}
 
