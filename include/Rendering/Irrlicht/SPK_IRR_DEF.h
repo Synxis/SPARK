@@ -25,7 +25,6 @@
 #define H_SPK_IRR_DEF
 
 #include <irrlicht.h>
-#include "Core/SPK_Vector3D.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4275) // disables the warning about exporting DLL classes children of non DLL classes

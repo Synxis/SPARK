@@ -25,7 +25,7 @@
 #define H_SPK_IRR_RENDERER
 
 #include "Rendering/Irrlicht/SPK_IRR_DEF.h"
-#include "Core/SPK_Renderer.h"
+#include "Rendering/Irrlicht/SPK_IRR_Buffer.h"
 
 namespace SPK
 {

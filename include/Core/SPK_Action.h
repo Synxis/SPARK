@@ -22,9 +22,6 @@
 #ifndef H_SPK_ACTION
 #define H_SPK_ACTION
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Registerable.h"
-
 namespace SPK
 {
 	class Particle;
@@ -37,7 +34,7 @@ namespace SPK
 	* The equivalent method exists with particle's death (Group::setDeathAction(Action*).<br>
 	* Some modifiers can also trigger actions. In a more general way, any object can potentially triggers actions.
 	*/
-	class Action : public Registerable
+	class Action : public Referenceable
 	{
 	public :
 

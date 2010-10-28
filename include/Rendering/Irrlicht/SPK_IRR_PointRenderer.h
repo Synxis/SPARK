@@ -51,7 +51,7 @@ namespace IRR
 	class SPK_IRR_PREFIX IRRPointRenderer :	public IRRRenderer,
 											public PointRendererInterface
 	{
-	SPK_IMPLEMENT_REGISTERABLE(IRRPointRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(IRRPointRenderer)
 
 	public :
 
@@ -61,7 +61,7 @@ namespace IRR
 		* @param size : the size of the points
 		* @return A new registered IRRPointRenderer
 		*/
-		static inline IRRPointRenderer* create(irr::IrrlichtDevice* d,float screenSize = 1.0f);
+		static inline Ref<IRRPointRenderer> create(irr::IrrlichtDevice* d,float screenSize = 1.0f);
 
 		// Reimplemented from PointRendererInterface
 		virtual bool setType(PointType type);
@@ -113,7 +113,7 @@ namespace IRR
 		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const;
 	};
 
-	inline IRRPointRenderer* IRRPointRenderer::create(irr::IrrlichtDevice* d,float screenSize)
+	inline Ref<IRRPointRenderer> IRRPointRenderer::create(irr::IrrlichtDevice* d,float screenSize)
 	{
 		return SPK_NEW(IRRPointRenderer,d,screenSize);
 	}

@@ -22,8 +22,6 @@
 #ifndef H_SPK_RANDOMEMITTER
 #define H_SPK_RANDOMEMITTER
 
-#include "Core/SPK_Emitter.h"
-
 namespace SPK
 {
 	/**
@@ -32,7 +30,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX RandomEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_REGISTERABLE(RandomEmitter)
+	SPK_IMPLEMENT_REFERENCEABLE(RandomEmitter)
 
 	public :
 
@@ -40,8 +38,8 @@ namespace SPK
 		* @brief Creates a new RandomEmitter
 		* @return A new RandomEmitter
 		*/
-		static inline RandomEmitter* create(
-			Zone* zone = NULL,
+		static inline Ref<RandomEmitter> create(
+			const Ref<Zone>& = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
@@ -51,7 +49,7 @@ namespace SPK
 	private :
 
 		inline RandomEmitter(
-			Zone* zone = NULL,
+			const Ref<Zone>& = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
@@ -63,13 +61,13 @@ namespace SPK
 		virtual void generateVelocity(Particle& particle,float speed) const;
 	};
 
-	inline RandomEmitter::RandomEmitter(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax) :
+	inline RandomEmitter::RandomEmitter(const Ref<Zone>& zone,bool full,int tank,float flow,float forceMin,float forceMax) :
 		Emitter(zone,full,tank,flow,forceMin,forceMax)
 	{}
 
 	inline RandomEmitter::RandomEmitter(const RandomEmitter& emitter) : Emitter(emitter) {}
 
-	inline RandomEmitter* RandomEmitter::create(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax)
+	inline Ref<RandomEmitter> RandomEmitter::create(const Ref<Zone>& zone,bool full,int tank,float flow,float forceMin,float forceMax)
 	{
 		return SPK_NEW(RandomEmitter,zone,full,tank,flow,forceMin,forceMax);
 	}

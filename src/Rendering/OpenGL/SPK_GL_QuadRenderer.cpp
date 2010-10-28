@@ -19,9 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Rendering/OpenGL/SPK_GL_QuadRenderer.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {

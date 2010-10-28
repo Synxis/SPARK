@@ -50,7 +50,7 @@ namespace GL
 											public PointRendererInterface,
 											public GLExtHandler
 	{
-	SPK_IMPLEMENT_REGISTERABLE(GLPointRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(GLPointRenderer)
 
 	public :
 
@@ -59,7 +59,7 @@ namespace GL
 		* @param size : the size of the points
 		* @return A new registered GLPointRenderer
 		*/
-		static inline GLPointRenderer* create(float screenSize = 1.0f);
+		static inline Ref<GLPointRenderer> create(float screenSize = 1.0f);
 
 		virtual bool setType(PointType type);
 
@@ -116,7 +116,7 @@ namespace GL
 		textureIndex(renderer.textureIndex)
 	{}
 
-	inline GLPointRenderer* GLPointRenderer::create(float screenSize)
+	inline Ref<GLPointRenderer> GLPointRenderer::create(float screenSize)
 	{
 		return SPK_NEW(GLPointRenderer,screenSize);
 	}

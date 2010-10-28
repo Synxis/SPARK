@@ -19,13 +19,12 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Modifiers/SPK_Obstacle.h"
-#include "Core/SPK_Zone.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {
-	Obstacle::Obstacle(Zone* zone,float bouncingRatio,float friction,ZoneTest zoneTest) :
+	Obstacle::Obstacle(const Ref<Zone>& zone,float bouncingRatio,float friction,ZoneTest zoneTest) :
 		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_FLAG_INTERSECT | ZONE_TEST_FLAG_ENTER | ZONE_TEST_FLAG_LEAVE,zoneTest,zone),
 		bouncingRatio(bouncingRatio),
 		friction(friction)

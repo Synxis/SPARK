@@ -19,14 +19,11 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef H_SPK_VECTOR3D
 #define H_SPK_VECTOR3D
 
 #include <cmath> // for sqrt
 #include <iostream>  // for operator <<
-
-#include "Core/SPK_DEF.h"
 
 namespace SPK
 {

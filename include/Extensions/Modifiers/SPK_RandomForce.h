@@ -22,8 +22,6 @@
 #ifndef SPK_RANDOM_FORCE
 #define SPK_RANDOM_FORCE
 
-#include "Core/SPK_Modifier.h"
-
 namespace SPK
 {
 	/**
@@ -36,7 +34,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX RandomForce : public Modifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(RandomForce)
+	SPK_IMPLEMENT_REFERENCEABLE(RandomForce)
 
 	public :
 
@@ -48,7 +46,7 @@ namespace SPK
 		* @param maxPeriod : the maximum period
 		* @return a new randomForce modifier
 		*/
-		inline static RandomForce* create(
+		inline static Ref<RandomForce> create(
 			const Vector3D& minVector = Vector3D(),
 			const Vector3D& maxVector = Vector3D(),
 			float minPeriod = 1.0f,
@@ -157,7 +155,7 @@ namespace SPK
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-	inline RandomForce* RandomForce::create(const Vector3D& minVector,const Vector3D& maxVector,float minPeriod,float maxPeriod)
+	inline Ref<RandomForce> RandomForce::create(const Vector3D& minVector,const Vector3D& maxVector,float minPeriod,float maxPeriod)
 	{
 		return SPK_NEW(RandomForce,minVector,maxVector,minPeriod,maxPeriod);
 	}

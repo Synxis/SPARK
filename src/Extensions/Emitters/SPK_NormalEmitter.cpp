@@ -19,23 +19,22 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Emitters/SPK_NormalEmitter.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Zone.h"
 
 namespace SPK
 {
 	NormalEmitter::NormalEmitter(
-		Zone* zone,
+		const Ref<Zone>& zone,
 		bool full,
 		int tank,
 		float flow,
 		float forceMin,
 		float forceMax,
-		Zone* normalZone,
+		const Ref<Zone>& normalZone,
 		bool inverted) :
 		Emitter(zone,full,tank,flow,forceMin,forceMax),
-		normalZone(NULL),
+		normalZone(),
 		inverted(inverted)
 	{
 		setNormalZone(normalZone);
@@ -45,18 +44,13 @@ namespace SPK
 		Emitter(emitter),
 		inverted(emitter.inverted)
 	{
-		normalZone = dynamic_cast<Zone*>(copyChild(emitter.normalZone));
+		normalZone = copyChild(emitter.normalZone);
 	}
 
-	NormalEmitter::~NormalEmitter()
-	{
-		destroyChild(normalZone);
-	}
+	NormalEmitter::~NormalEmitter() {}
 
-	void NormalEmitter::setNormalZone(Zone* zone)
+	void NormalEmitter::setNormalZone(const Ref<Zone>& zone)
 	{
-		decrementChild(normalZone);
-		incrementChild(zone);
 		normalZone = zone;
 	}
 
@@ -81,7 +75,7 @@ namespace SPK
 	void NormalEmitter::generateVelocity(Particle& particle,float speed) const
 	{
 		if (inverted) speed = -speed;
-		const Zone* zone = (normalZone == NULL ? getZone() : normalZone);
+		const Ref<Zone>& zone = (normalZone == NULL ? getZone() : normalZone);
 		particle.velocity() = zone->computeNormal(particle.position()) * speed;
 	}
 }

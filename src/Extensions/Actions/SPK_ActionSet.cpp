@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Actions/SPK_ActionSet.h"
-#include "Core/SPK_Logger.h"
 
 namespace SPK
 {
@@ -28,41 +28,33 @@ namespace SPK
         Action(actionSet),
 		actions()
 	{
-		for (std::vector<Action*>::const_iterator it = actionSet.actions.begin(); it != actionSet.actions.end(); ++it)
-			actions.push_back(dynamic_cast<Action*>(copyChild(*it)));
+		for (std::vector<Ref<Action>>::const_iterator it = actionSet.actions.begin(); it != actionSet.actions.end(); ++it)
+			actions.push_back(copyChild(*it));
 	}
 
-	ActionSet::~ActionSet()
-	{
-		for (std::vector<Action*>::const_iterator it = actions.begin(); it != actions.end(); ++it)
-			destroyChild(*it);
-	}
+	ActionSet::~ActionSet(){}
 
-	void ActionSet::addAction(Action* action)
+	void ActionSet::addAction(const Ref<Action>& action)
 	{
 		if (action != NULL && action != this)
-		{
-			action->increment();
 			actions.push_back(action);
-		}
 		else
-			SPK_LOG_WARNING("ActionSet::addAction(Action*) - Cannot add this action to the action set (Either NULL or the action set itself)");
+			SPK_LOG_WARNING("ActionSet::addAction(const Ref<Action>&) - Cannot add this action to the action set (Either NULL or the action set itself)");
 	}
 
-	void ActionSet::removeAction(Action* action)
+	void ActionSet::removeAction(const Ref<Action>& action)
 	{
-		for (std::vector<Action*>::iterator it = actions.begin(); it != actions.end(); ++it)
+		for (std::vector<Ref<Action>>::iterator it = actions.begin(); it != actions.end(); ++it)
 			if (*it == action)
 			{
-				action->decrement();
 				actions.erase(it);
 				return;
 			}
 
-		SPK_LOG_WARNING("ActionSet::removeAction(Action*) - The action was not found in the action set and cannot be removed");
+		SPK_LOG_WARNING("ActionSet::removeAction(const Ref<Action>&) - The action was not found in the action set and cannot be removed");
 	}
 
-	Action* ActionSet::getAction(size_t index) const
+	const Ref<Action>& ActionSet::getAction(size_t index) const
 	{
 		SPK_ASSERT(index <= getNbActions(),"ActionSet::getAction(size_t) - Action index is out of bounds : " << index);
 		return actions[index];
@@ -70,7 +62,7 @@ namespace SPK
 
 	void ActionSet::apply(Particle& particle) const
 	{
-		for (std::vector<Action*>::const_iterator it = actions.begin(); it != actions.end(); ++it)
+		for (std::vector<Ref<Action>>::const_iterator it = actions.begin(); it != actions.end(); ++it)
 			(*it)->apply(particle);
 	}
 
@@ -79,7 +71,7 @@ namespace SPK
 		Nameable* object = Nameable::findByName(name);
 		if (object != NULL) return object;
 
-		for (std::vector<Action*>::const_iterator it = actions.begin(); it != actions.end(); ++it)
+		for (std::vector<Ref<Action>>::const_iterator it = actions.begin(); it != actions.end(); ++it)
 		{
 			object = (*it)->findByName(name);
 			if (object != NULL) return object;

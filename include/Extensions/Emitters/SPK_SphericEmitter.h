@@ -22,8 +22,6 @@
 #ifndef H_SPK_SPHERICEMITTER
 #define H_SPK_SPHERICEMITTER
 
-#include "Core/SPK_Emitter.h"
-
 namespace SPK
 {
 	/**
@@ -47,7 +45,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX SphericEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_REGISTERABLE(SphericEmitter)
+	SPK_IMPLEMENT_REFERENCEABLE(SphericEmitter)
 
 	public :
 
@@ -57,11 +55,11 @@ namespace SPK
 		* @param angleA : the first angle in radians of the SphericEmitter
 		* @param angleB : the second angle in radians of the SphericEmitter
 		*/
-		static inline SphericEmitter* create(
+		static inline Ref<SphericEmitter> create(
 			const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),
 			float angleA = 0.0f,
 			float angleB = 0.0f,
-			Zone* zone = NULL,
+			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
@@ -145,7 +143,7 @@ namespace SPK
 			const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),
 			float angleA = 0.0f,
 			float angleB = 0.0f,
-			Zone* zone = NULL,
+			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
@@ -159,11 +157,11 @@ namespace SPK
 		void computeMatrix();
 	};
 
-	inline SphericEmitter* SphericEmitter::create(
+	inline Ref<SphericEmitter> SphericEmitter::create(
 		const Vector3D& direction,
 		float angleMin,
 		float angleMax,
-		Zone* zone,
+		const Ref<Zone>& zone,
 		bool full,
 		int tank,
 		float flow,

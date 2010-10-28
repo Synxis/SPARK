@@ -25,8 +25,6 @@
 #include <iostream>
 #include <cassert>
 
-#include "Core/SPK_DEF.h"
-
 /**
 * @def SPK_LOG_DEBUG(entry)
 * @brief Logs a debug entry in the logger

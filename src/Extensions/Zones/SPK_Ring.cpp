@@ -21,8 +21,8 @@
 
 #include <algorithm> // for std::swap
 
+#include <SPARK_Core.h>
 #include "Extensions/Zones/SPK_Ring.h"
-#include "Core/SPK_Logger.h"
 
 namespace SPK
 {

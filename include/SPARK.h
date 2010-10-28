@@ -22,30 +22,7 @@
 #ifndef H_SPARK
 #define H_SPARK
 
-// Defines
-#include "Core/SPK_DEF.h"
-
-// Core
-#include "Core/SPK_Logger.h"
-#include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Color.h"
-#include "Core/SPK_RenderBuffer.h"
-#include "Core/SPK_DataSet.h"
-#include "Core/SPK_ArrayData.h"
-#include "Core/SPK_DataHandler.h"
-#include "Core/SPK_Registerable.h"
-#include "Core/SPK_Transformable.h"
-#include "Core/SPK_Zone.h"
-#include "Core/SPK_Interpolator.h"
-#include "Core/SPK_Emitter.h"
-#include "Core/SPK_Modifier.h"
-#include "Core/SPK_ZonedModifier.h"
-#include "Core/SPK_Renderer.h"
-#include "Core/SPK_Action.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Iterator.h"
-#include "Core/SPK_System.h"
+#include <SPARK_Core.h>
 
 // Interpolators
 #include "Extensions/Interpolators/SPK_DefaultInitializer.h"

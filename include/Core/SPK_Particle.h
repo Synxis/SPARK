@@ -24,9 +24,6 @@
 
 #include <cmath> // for sqrt
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Group.h"
-
 namespace SPK
 {
 	/**

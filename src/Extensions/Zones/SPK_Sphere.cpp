@@ -21,8 +21,8 @@
 
 #include <algorithm> // for min
 
+#include <SPARK_Core.h>
 #include "Extensions/Zones/SPK_Sphere.h"
-#include "Core/SPK_Logger.h"
 
 namespace SPK
 {

@@ -22,9 +22,6 @@
 #ifndef H_SPK_ZONEDMODIFIER
 #define H_SPK_ZONEDMODIFIER
 
-#include "Core/SPK_Modifier.h"
-#include "Core/SPK_Zone.h"
-
 namespace SPK
 {
 	/** Constants defining the zone tests to enabled for a given ZonedModifier */
@@ -55,7 +52,7 @@ namespace SPK
 		* @param zone : the zone
 		* @param zoneTest : the zone test
 		*/
-		inline void setZone(Zone* zone,ZoneTest zoneTest);
+		inline void setZone(const Ref<Zone>& zone,ZoneTest zoneTest);
 
 		/**
 		* @brief Sets the zone
@@ -64,13 +61,13 @@ namespace SPK
 		*
 		* @param zone : the zone
 		*/
-		void setZone(Zone* zone);
+		void setZone(const Ref<Zone>& zone);
 
 		/**
 		* @brief Gets the zone
 		* @return the zone
 		*/
-		inline Zone* getZone() const;
+		inline const Ref<Zone>& getZone() const;
 
 		/**
 		* @brief Sets the zone test
@@ -96,7 +93,7 @@ namespace SPK
 
 	protected :
 
-		static const unsigned int ZONE_TEST_ALL = 0xFFFFFFFF;	/**< Enables all zone tests */
+		static const unsigned int ZONE_TEST_FLAG_ALL = 0xFFFFFFFF;	/**< Enables all zone tests */
 
 		/**
 		* @brief Constructor of zonedModifier
@@ -113,7 +110,7 @@ namespace SPK
 			bool CALL_INIT,
 			int ZONE_TEST_FLAG,
 			ZoneTest zoneTest,
-			Zone* zone = NULL);
+			const Ref<Zone>& zone = SPK_NULL_REF);
 
 		ZonedModifier(const ZonedModifier& zonedModifier);
 
@@ -130,17 +127,17 @@ namespace SPK
 		static const size_t NB_ZONE_TESTS = 6;
 		const int ZONE_TEST_FLAG;
 
-		Zone* zone;
+		Ref<Zone> zone;
 		ZoneTest zoneTest;
 	};
 
-	inline void ZonedModifier::setZone(Zone* zone,ZoneTest zoneTest)
+	inline void ZonedModifier::setZone(const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
 		setZone(zone);
 		setZoneTest(zoneTest);
 	}
 
-	inline Zone* ZonedModifier::getZone() const
+	inline const Ref<Zone>& ZonedModifier::getZone() const
 	{
 		return zone;
 	}

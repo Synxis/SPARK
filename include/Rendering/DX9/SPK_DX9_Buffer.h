@@ -23,11 +23,11 @@
 #ifndef H_SPK_DX9_BUFFER
 #define H_SPK_DX9_BUFFER
 
-#include "Rendering/DX9/SPK_DX9_DEF.h"
-#include "Core/SPK_RenderBuffer.h"
-#include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Color.h"
-#include "Core/SPK_Logger.h"
+//#include "Rendering/DX9/SPK_DX9_DEF.h"
+//#include "Core/SPK_RenderBuffer.h"
+//#include "Core/SPK_Vector3D.h"
+//#include "Core/SPK_Color.h"
+//#include "Core/SPK_Logger.h"
 
 namespace SPK
 {

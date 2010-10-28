@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Emitters/SPK_SphericEmitter.h"
-#include "Core/SPK_Particle.h"
 
 namespace SPK
 {
@@ -30,7 +30,7 @@ namespace SPK
 		const Vector3D& direction,
 		float angleMin,
 		float angleMax,
-		Zone* zone,
+		const Ref<Zone>& zone,
 		bool full,
 		int tank,
 		float flow,

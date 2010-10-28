@@ -22,8 +22,6 @@
 #ifndef H_SPK_DATASET
 #define H_SPK_DATASET
 
-#include "Core/SPK_DEF.h"
-
 /**
 * @brief A convenience macro to get a Data of a given type from a Dataset
 * @param type : type of the data (used to cast the data)

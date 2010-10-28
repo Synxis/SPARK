@@ -27,26 +27,27 @@
 #include <list>
 #include <deque>
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Logger.h"
-#include "Core/SPK_Nameable.h"
-#include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Color.h"
-#include "Core/SPK_Interpolator.h"
-#include "Core/SPK_Modifier.h"
-#include "Core/SPK_DataSet.h"
-
 namespace SPK
 {
-	class Emitter;
-	class Renderer;
-	class Action;
-	class DataSet;
-	class RenderBuffer;
+	class Particle;
 	class System;
 
 	/**
 	* @brief Group of particles
+	*
+	* The group is the core class of SPARK.<br>
+	* It is responsible for holding particle data, emitting and updating particles.<br>
+	* <br>
+	* A group has some Registerables attached to it that will define the general behaviour of particles.
+	* The registerables are :
+	* <ul>
+	* <li>0..n Emitter : How many particles to emit in which directions and with which frequency ?</li>
+	* <li>0..n Interpolator : How particles parameters (size,color,mass,angle...) will evolve during their lifetime ?</li>
+ 	* <li>0..n Modifier : How will behave particles over time and what will interact with them ?</li>
+	* <li>0..1 Renderer : How particles will be represented graphically ?</li>
+	* <li>0..2 Action : What will happen at precise moments in the life of a particle (birth,death...) ?</li>
+	* </ul>
+	* Groups are contained within a System which commands their update and rendering.
 	*/
 	class SPK_PREFIX Group : public Nameable
 	{
@@ -60,11 +61,11 @@ namespace SPK
 		inline void setImmortal(bool immortal);
 		inline void setStill(bool still);
 
-		void setColorInterpolator(ColorInterpolator* interpolator);
-		ColorInterpolator* getColorInterpolator() const;
+		void setColorInterpolator(const Ref<ColorInterpolator>& interpolator);
+		const Ref<ColorInterpolator>& getColorInterpolator() const;
 
-		void setParamInterpolator(Param param,FloatInterpolator* interpolator);
-		FloatInterpolator* getParamInterpolator(Param param) const;
+		void setParamInterpolator(Param param,const Ref<FloatInterpolator>& interpolator);
+		const Ref<FloatInterpolator>& getParamInterpolator(Param param) const;
 
 		inline float getMinLifeTime() const;
 		inline float getMaxLifeTime() const;
@@ -82,18 +83,18 @@ namespace SPK
 		void reallocate(size_t capacity);
 		inline void empty();
 
-		void addEmitter(Emitter* emitter);
-		void removeEmitter(Emitter* emitter);
-		inline Emitter* getEmitter(size_t index) const;
+		void addEmitter(const Ref<Emitter>& emitter);
+		void removeEmitter(const Ref<Emitter>& emitter);
+		inline const Ref<Emitter>& getEmitter(size_t index) const;
 		inline size_t getNbEmitters() const;
 
-		void addModifier(Modifier* modifier);
-		void removeModifier(Modifier* modifier);
-		inline Modifier* getModifier(size_t index) const;
+		void addModifier(const Ref<Modifier>& modifier);
+		void removeModifier(const Ref<Modifier>& modifier);
+		inline const Ref<Modifier>& getModifier(size_t index) const;
 		inline size_t getNbModifiers() const;
 
-		void setRenderer(Renderer* renderer);
-		inline Renderer* getRenderer() const;
+		void setRenderer(const Ref<Renderer>& renderer);
+		inline const Ref<Renderer>& getRenderer() const;
 
 		inline void enableDistanceComputation(bool distanceComputation);
 		inline bool isDistanceComputationEnabled() const;
@@ -138,11 +139,9 @@ namespace SPK
 		* @brief Adds some Particles to this Group
 		*
 		* This method and all the methods of type addParticles will add a given number of Particles at the given position with the given velocity.<br>
-		* Note that even if a Zone and an Emitter is passed, the position and the velocity will be the same for all Particles.<br>
 		* <br>
 		* In case a Zone is passed, Zone::generatePosition(Particle,bool) is used to generate the position.<br>
 		* In case an Emitter is passed, Emitter::generateVelocity(Particle) with a mass of 1 is used to generate the velocity.
-		* The velocity will then be updated with the Particle's mass when the Particle will be generated.<br>
 		* In case a delta time is passed instead of a fixed number, the number will be computed thanks to the flow of the Emitter passed.<br>
 		* <br>
 		* Particles will be added to the Group at the next call to update(unsigned int) or flushAddedParticles().<br>
@@ -170,7 +169,7 @@ namespace SPK
 		* @param emitter : the Emitter that will be used to generate the velocity
 		* @param full : true to generate a position within the whole Zonz, false only at its borders
 		*/
-		void addParticles(unsigned int nb,Zone* zone,Emitter* emitter,bool full = true);
+		void addParticles(unsigned int nb,const Ref<Zone>& zone,const Ref<Emitter>& emitter,bool full = true);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -182,7 +181,7 @@ namespace SPK
 		* @param velocity : the velocity of the Particles
 		* @param full : true to generate a position within the whole Zonz, false only at its borders
 		*/
-		void addParticles(unsigned int nb,Zone* zone,const Vector3D& velocity,bool full = true);
+		void addParticles(unsigned int nb,const Ref<Zone>& zone,const Vector3D& velocity,bool full = true);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -193,7 +192,7 @@ namespace SPK
 		* @param position : the position where the Particles will be added
 		* @param emitter : the Emitter that will be used to generate the velocity
 		*/
-		void addParticles(unsigned int nb,const Vector3D& position,Emitter* emitter);
+		void addParticles(unsigned int nb,const Vector3D& position,const Ref<Emitter>& emitter);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -203,7 +202,7 @@ namespace SPK
 		* @param nb : the number of Particles to add
 		* @param emitter : the Emitter that will be used to generate the velocity and whose Zone will be used to generate the position
 		*/
-		void addParticles(unsigned int nb,Emitter* emitter);
+		void addParticles(unsigned int nb,const Ref<Emitter>& emitter);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -215,7 +214,7 @@ namespace SPK
 		* @param deltaTime : the step time that will be used to determine how many particles to generate
 		* @param full : true to generate a position within the whole Zonz, false only at its borders
 		*/
-		void addParticles(Zone* zone,Emitter* emitter,float deltaTime,bool full = true);
+		void addParticles(const Ref<Zone>& zone,const Ref<Emitter>& emitter,float deltaTime,bool full = true);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -226,7 +225,7 @@ namespace SPK
 		* @param emitter : the Emitter that will be used to generate the velocity
 		* @param deltaTime : the step time that will be used to determine how many particles to generate
 		*/
-		void addParticles(const Vector3D& position,Emitter* emitter,float deltaTime);
+		void addParticles(const Vector3D& position,const Ref<Emitter>& emitter,float deltaTime);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -236,7 +235,7 @@ namespace SPK
 		* @param emitter : the Emitter that will be used to generate the velocity and whose Zone will be used to generate the position
 		* @param deltaTime : the step time that will be used to determine how many particles to generate
 		*/
-		void addParticles(Emitter* emitter,float deltaTime);
+		void addParticles(const Ref<Emitter>& emitter,float deltaTime);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -256,7 +255,7 @@ namespace SPK
 		* @param offset : the starting distance of the beginning of the line
 		* @return the new offset at the end of the line
 		*/
-		float addParticles(const Vector3D& start,const Vector3D& end,Emitter* emitter,float step,float offset = 0.0f);
+		float addParticles(const Vector3D& start,const Vector3D& end,const Ref<Emitter>& emitter,float step,float offset = 0.0f);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -276,20 +275,69 @@ namespace SPK
 
 		inline System& getSystem() const;
 
-		void setBirthAction(Action* action);
-		inline Action* getBirthAction() const;
+		/////////////
+		// Actions //
+		/////////////
 
-		void setDeathAction(Action* action);
-		inline Action* getDeathAction() const;
+		/**
+		* 
+		*
+		*/
+		void setBirthAction(const Ref<Action>& action);
+		inline const Ref<Action>& getBirthAction() const;
 
+		void setDeathAction(const Ref<Action>& action);
+		inline const Ref<Action>& getDeathAction() const;
+
+		//////////////////////
+		// Advanced methods //
+		//////////////////////
+
+		/**
+		* @brief Destroys the render buffer of the group
+		* A new render buffer will be created by the renderer of the group whenever it is needed.
+		*/
 		void destroyRenderBuffer();
+
+		/**
+		* @brief Destroys all additionnal data held by the group
+		* This includes the render buffer and all the data sets
+		*/
 		void destroyAllAdditionnalData();
 
-		DataSet* getModifierDataSet(Modifier* modifier);
+		/**
+		* @brief Gets the data set used by the given modifier
+		* @return the data set or NULL if the modifier does not use data set or is not part of the group
+		*/
+		DataSet* getModifierDataSet(const Ref<Modifier>& modifier);
+
+		/**
+		* @brief Gets the data set used by the interpolator of the given parameter
+		* @return the data set or NULL if the interpolator does not use data set or does not exist
+		*/
 		inline DataSet* getParamInterpolatorDataSet(Param param);
+
+		/**
+		* @brief Gets the data set used by the color interpolator
+		* @return the data set or NULL if the color interpolator does not use data set or does not exist
+		*/
 		inline DataSet* getColorInterpolatorDataSet();
+
+		/**
+		* @brief Gets the data set used by the renderer
+		* @return the data set or NULL if the renderer does not use data set or does not exist
+		*/
 		inline DataSet* getRendererDataSet();
+
+		/**
+		* @brief Gets the render buffer
+		* @return the render buffer or NULL if the group does not use a render buffer
+		*/
 		inline RenderBuffer* getRenderBuffer();
+
+		///////////////////////
+		// Virtual interface //
+		///////////////////////
 
 		virtual Nameable* findByName(const std::string& name);
 
@@ -338,12 +386,12 @@ namespace SPK
 			}
 		};
 
-		struct EmitterPair
+		struct WeakEmitterPair
 		{
-			Emitter* obj;
+			WeakRef<Emitter> obj;
 			size_t nbBorn;
 
-			EmitterPair(Emitter* obj,size_t nbBorn) :
+			WeakEmitterPair(const WeakRef<Emitter>& obj,size_t nbBorn) :
 				obj(obj),
 				nbBorn(nbBorn)
 			{}
@@ -352,36 +400,53 @@ namespace SPK
 		template<class T>
 		struct DataHandlerDef
 		{
-			T* obj;
+			T obj;
 			DataSet* dataSet;
 
 			DataHandlerDef() :
-				obj(NULL),
+				obj(),
 				dataSet(NULL)
 			{}
 
-			DataHandlerDef(T* obj,DataSet* dataSet) :
+			DataHandlerDef(const T& obj,DataSet* dataSet) :
 				obj(obj),
 				dataSet(dataSet)
 			{}
+
+			// This is to allow Ref to WeakRef DataHandler
+			template<class U>
+			DataHandlerDef(const DataHandlerDef<U>& def) :
+				obj(def.obj),
+				dataSet(def.dataSet)
+			{}
+
+			template<class U>
+			DataHandlerDef& operator=(const DataHandlerDef<U>& def) :	
+			{
+				obj = def.obj;
+				dataSet = def.dataSet;
+				return *this;
+			}
 		};
 
 		struct RendererDef
 		{
-			Renderer* obj;
+			Ref<Renderer> obj;
 			DataSet* dataSet;
 			RenderBuffer* renderBuffer;
 
 			RendererDef() :
-				obj(NULL),
+				obj(),
 				dataSet(NULL),
 				renderBuffer(NULL)
 			{}
 		};
 
-		typedef DataHandlerDef<Modifier> ModifierDef;
-		typedef DataHandlerDef<ColorInterpolator> ColorInterpolatorDef;
-		typedef DataHandlerDef<FloatInterpolator> FloatInterpolatorDef;
+		typedef DataHandlerDef<Ref<Modifier>> ModifierDef;
+		typedef DataHandlerDef<WeakRef<Modifier>> WeakModifierDef;
+
+		typedef DataHandlerDef<Ref<ColorInterpolator>> ColorInterpolatorDef;
+		typedef DataHandlerDef<Ref<FloatInterpolator>> FloatInterpolatorDef;
 
 		// Functor used to sort modifiers by priority
 		struct CompareModifierPriority
@@ -397,8 +462,8 @@ namespace SPK
 			unsigned int nb;
 			Vector3D position;
 			Vector3D velocity;
-			Zone* zone;
-			Emitter* emitter;
+			Ref<Zone> zone;
+			Ref<Emitter> emitter;
 			bool full;
 		};
 
@@ -411,18 +476,18 @@ namespace SPK
 		ColorInterpolatorDef colorInterpolator;
 		FloatInterpolatorDef paramInterpolators[NB_PARAMETERS];
 
-		std::vector<Emitter*> emitters;
-		mutable std::vector<EmitterPair> activeEmitters;
+		std::vector<Ref<Emitter>> emitters;
+		mutable std::vector<WeakEmitterPair> activeEmitters;
 
 		std::vector<ModifierDef> modifiers;
-		std::vector<ModifierDef> sortedModifiers;
-		mutable std::vector<ModifierDef> activeModifiers;
-		mutable std::vector<ModifierDef> initModifiers;
+		std::vector<WeakModifierDef> sortedModifiers;
+		mutable std::vector<WeakModifierDef> activeModifiers;
+		mutable std::vector<WeakModifierDef> initModifiers;
 
 		RendererDef renderer;
 
-		Action* birthAction;
-		Action* deathAction;
+		Ref<Action> birthAction;
+		Ref<Action> deathAction;
 
 		std::list<DataSet> dataSets;
 
@@ -456,7 +521,7 @@ namespace SPK
 		template<typename T>
 		void reallocateArray(T*& t,size_t newSize,size_t copySize);
 
-		DataSet* attachDataSet(DataHandler* dataHandler);
+		DataSet* attachDataSet(const WeakRef<DataHandler>& dataHandler);
 		void detachDataSet(DataSet* dataHandler);
 
 		void sortParticles(int start,int end);
@@ -465,7 +530,14 @@ namespace SPK
 		void sortParticles();
 		void computeAABB();
 
-		void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,Zone* zone,Emitter* emitter,bool full = false);
+		void addParticles(
+			unsigned int nb,
+			const Vector3D& position,
+			const Vector3D& velocity,
+			const Ref<Zone>& zone,
+			const Ref<Emitter>& emitter,
+			bool full = false);
+
 		void emptyBufferedParticles();
 
 		// creation data
@@ -537,7 +609,7 @@ namespace SPK
 		particleData.nbParticles = 0;
 	}
 
-	inline Emitter* Group::getEmitter(size_t index) const
+	inline const Ref<Emitter>& Group::getEmitter(size_t index) const
 	{
 		SPK_ASSERT(index < getNbEmitters(),"Group::getEmitter(size_t) - Index of emitter is out of bounds : " << index);
 		return emitters[index];
@@ -548,7 +620,7 @@ namespace SPK
 		return emitters.size();
 	}
 
-	inline Modifier* Group::getModifier(size_t index) const
+	inline const Ref<Modifier>& Group::getModifier(size_t index) const
 	{
 		SPK_ASSERT(index < getNbModifiers(),"Group::geModifier(size_t) - Index of modifier is out of bounds : " << index);
 		return modifiers[index].obj;
@@ -559,7 +631,7 @@ namespace SPK
 		return modifiers.size();
 	}
 
-	inline Renderer* Group::getRenderer() const
+	inline const Ref<Renderer>& Group::getRenderer() const
 	{
 		return renderer.obj;
 	}
@@ -632,7 +704,7 @@ namespace SPK
 
 	inline void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity)
 	{
-		addParticles(nb,position,velocity,NULL,NULL);
+		addParticles(nb,position,velocity,SPK_NULL_REF,SPK_NULL_REF);
 	}
 
 	inline System& Group::getSystem() const
@@ -640,12 +712,12 @@ namespace SPK
 		return system;
 	}
 
-	inline Action* Group::getBirthAction() const
+	inline const Ref<Action>& Group::getBirthAction() const
 	{
 		return birthAction;
 	}
 
-	inline Action* Group::getDeathAction() const
+	inline const Ref<Action>& Group::getDeathAction() const
 	{
 		return deathAction;
 	}

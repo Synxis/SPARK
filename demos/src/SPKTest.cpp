@@ -193,14 +193,14 @@ int main(int argc, char *argv[])
 
 	SPK::System* system = new SPK::System(true);
 	
-	SPK::GL::GLQuadRenderer* renderer = SPK::GL::GLQuadRenderer::create();
+	SPK::Ref<SPK::GL::GLQuadRenderer> renderer = SPK::GL::GLQuadRenderer::create();
 	renderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	renderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 	renderer->setTexture(textureParticle);
 	renderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
 	renderer->setAtlasDimensions(2,2);
 
-	SPK::SphericEmitter* emitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,-1.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(),true,-1,100.0f,0.2,0.5);
+	SPK::Ref<SPK::SphericEmitter> emitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,-1.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(),true,-1,100.0f,0.2f,0.5f);
 
 	SPK::Group* phantomGroup = system->createGroup(40);
 	phantomGroup->setLifeTime(5.0f,5.0f);
@@ -281,7 +281,9 @@ int main(int argc, char *argv[])
 			frameFPS.pop_front();
 	};
 
+	SPK_DUMP_MEMORY
 	delete system;
+	SPK_DUMP_MEMORY
 
 	SDL_Quit();
 	

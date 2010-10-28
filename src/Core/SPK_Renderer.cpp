@@ -19,8 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include "Core/SPK_Renderer.h"
-#include "Core/SPK_Logger.h"
+#include <SPARK_Core.h>
 
 namespace SPK
 {

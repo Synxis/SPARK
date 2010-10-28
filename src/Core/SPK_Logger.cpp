@@ -22,7 +22,7 @@
 #include <fstream>
 #include <ctime>
 
-#include "Core/SPK_Logger.h"
+#include <SPARK_Core.h>
 
 namespace SPK
 {

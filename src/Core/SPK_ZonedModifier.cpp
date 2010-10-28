@@ -19,8 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include "Core/SPK_ZonedModifier.h"
-#include "Core/SPK_Logger.h"
+#include <SPARK_Core.h>
 
 namespace SPK
 {
@@ -30,11 +29,11 @@ namespace SPK
 		bool CALL_INIT,
 		int ZONE_TEST_FLAG,
 		ZoneTest zoneTest,
-		Zone* zone) :
+		const Ref<Zone>& zone) :
 		Modifier(PRIORITY,NEEDS_DATASET,CALL_INIT),
 		ZONE_TEST_FLAG(ZONE_TEST_FLAG),
 		zoneTest(zoneTest),
-		zone(NULL)
+		zone()
 	{
 		setZone(zone,zoneTest);
 	}
@@ -44,22 +43,14 @@ namespace SPK
 		ZONE_TEST_FLAG(zonedModifier.ZONE_TEST_FLAG),
 		zoneTest(zonedModifier.zoneTest)
 	{
-		zone = dynamic_cast<Zone*>(copyChild(zonedModifier.zone));
+		zone = copyChild(zonedModifier.zone);
 	}
 
-	ZonedModifier::~ZonedModifier()
-	{
-		destroyChild(zone);
-	}
+	ZonedModifier::~ZonedModifier(){}
 
-	void ZonedModifier::setZone(Zone* zone)
+	void ZonedModifier::setZone(const Ref<Zone>& zone)
 	{
-		if (zone == NULL)
-			zone = SPK_DEFAULT_ZONE;
-
-		decrementChild(this->zone);
-		this->zone = zone;
-		incrementChild(zone);
+		this->zone = zone == NULL ? SPK_DEFAULT_ZONE : zone;
 	}
 
 	void ZonedModifier::setZoneTest(ZoneTest zoneTest)

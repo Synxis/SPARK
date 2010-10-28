@@ -19,24 +19,18 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Modifiers/SPK_EmitterAttacher.h"
-#include "Core/SPK_Emitter.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_System.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Zone.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {
-	EmitterAttacher::EmitterAttacher(size_t groupIndex,Emitter* emitter,bool orientate,bool rotate) :
+	EmitterAttacher::EmitterAttacher(size_t groupIndex,const Ref<Emitter>& emitter,bool orientate,bool rotate) :
 		Modifier(MODIFIER_PRIORITY_CHECK,true,true),
+		baseEmitter(emitter),
 		groupIndex(groupIndex),
 		orientationEnabled(orientate),
 		rotationEnabled(rotate)
-	{
-		setEmitter(emitter);
-	}
+	{}
 
 	EmitterAttacher::EmitterAttacher(const EmitterAttacher& emitterAttacher) :
 		Modifier(emitterAttacher),
@@ -44,35 +38,25 @@ namespace SPK
 		orientationEnabled(emitterAttacher.orientationEnabled),
 		rotationEnabled(emitterAttacher.rotationEnabled)
 	{
-		baseEmitter = dynamic_cast<Emitter*>(copyChild(emitterAttacher.baseEmitter));
+		baseEmitter = copyChild(emitterAttacher.baseEmitter);
 	}
 
-	EmitterAttacher::~EmitterAttacher()
-	{
-		destroyChild(baseEmitter);
-	}
+	EmitterAttacher::~EmitterAttacher(){}
 
 	EmitterAttacher::EmitterData::EmitterData(size_t nbParticles,Group* emittingGroup) :
-		data(SPK_NEW_ARRAY(Emitter*,nbParticles)),
+		data(SPK_NEW_ARRAY(Ref<Emitter>,nbParticles)),
 		dataSize(nbParticles),
 		group(emittingGroup)
-	{
-		for (size_t i = 0; i < dataSize; ++i)
-			data[i] = NULL;
-	}
+	{}
 
 	EmitterAttacher::EmitterData::~EmitterData()
 	{
-		for (size_t i = 0; i < dataSize; ++i)
-			destroyEmitter(i);
 		SPK_DELETE_ARRAY(data);
 	}
 
-	void EmitterAttacher::setEmitter(Emitter* emitter)
+	void EmitterAttacher::setEmitter(const Ref<Emitter>& emitter)
 	{
-		decrementChild(baseEmitter);
 		baseEmitter = emitter;
-		incrementChild(baseEmitter);
 	}
 
 	void EmitterAttacher::createData(DataSet& dataSet,const Group& group) const
@@ -83,14 +67,14 @@ namespace SPK
 
 	void EmitterAttacher::checkData(DataSet& dataSet,const Group& group) const
 	{
-		// If the group has changed, flush the potentially used emitters
 		EmitterData& data = SPK_GET_DATA(EmitterData,&dataSet,EMITTER_INDEX);
 		Group* currentDataGroup = data.getGroup();
 		Group* emittingGroup = group.getSystem().getGroup(groupIndex);
 		if (currentDataGroup != emittingGroup)
 		{
-			data.flushUsedEmitters();
 			data.setGroup(emittingGroup);
+			for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
+				data.setEmitter(particleIt->getIndex(),baseEmitter);
 		}
 	}
 
@@ -113,7 +97,7 @@ namespace SPK
 	void EmitterAttacher::init(Particle& particle,DataSet* dataSet) const
 	{
 		// Only destroy the old emitter here as we need to ensure the emitters validity
-		SPK_GET_DATA(EmitterData,dataSet,EMITTER_INDEX).destroyEmitter(particle.getIndex());
+		SPK_GET_DATA(EmitterData,dataSet,EMITTER_INDEX).setEmitter(particle.getIndex(),baseEmitter);
 	}
 
 	void EmitterAttacher::modify(Group& group,DataSet* dataSet,float deltaTime) const
@@ -122,7 +106,7 @@ namespace SPK
 			return;
 
 		EmitterData& data = SPK_GET_DATA(EmitterData,dataSet,EMITTER_INDEX);
-		Emitter** emitterIt = data.getEmitters();
+		Ref<Emitter>* emitterIt = data.getEmitters();
 		Group* emittingGroup = data.getGroup();
 
 		bool rotationEnabled = this->rotationEnabled && group.isEnabled(PARAM_ANGLE);
@@ -130,11 +114,7 @@ namespace SPK
 		for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
 			const Particle& particle = *particleIt;
-
-			if (*emitterIt == NULL)
-				data.createEmitter(particle.getIndex(),baseEmitter);
-
-			Emitter* emitter = *emitterIt;
+			const Ref<Emitter>& emitter = *emitterIt;
 
 			emitter->setTransformPosition(particle.position());
 			if (orientationEnabled)
@@ -172,33 +152,9 @@ namespace SPK
 		}
 	}
 
-	void EmitterAttacher::EmitterData::destroyEmitter(size_t index)
+	void EmitterAttacher::EmitterData::setEmitter(size_t index,const Ref<Emitter>& emitter)
 	{
-		if (data[index] != NULL)
-		{
-			if (data[index]->getNbReferences() > 1)
-				group->flushBufferedParticles();
-
-			data[index]->decrement();
-			SPK_DELETE(data[index]);
-			data[index] = NULL;
-		}
-	}
-
-	void EmitterAttacher::EmitterData::createEmitter(size_t index,const Emitter* emitter)
-	{
-		destroyEmitter(index);
-		data[index] = dynamic_cast<Emitter*>(Registerable::copyRegisterable(emitter));
+		data[index] = Referenceable::copyRegisterable(emitter);
 		data[index]->resetTransform();
-	}
-
-	void EmitterAttacher::EmitterData::flushUsedEmitters()
-	{
-		for (size_t i = 0; i < dataSize; ++i)
-			if (data[i]->getNbReferences() > 1) // Ensures group is valid
-			{
-				group->flushBufferedParticles();
-				break;
-			}
 	}
 }

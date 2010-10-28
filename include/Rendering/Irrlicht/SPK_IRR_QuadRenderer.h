@@ -27,8 +27,6 @@
 #include "Rendering/Irrlicht/SPK_IRR_Renderer.h"
 #include "Extensions/Renderers/SPK_QuadRendererInterface.h"
 #include "Extensions/Renderers/SPK_Oriented3DRendererInterface.h"
-#include "Rendering/Irrlicht/SPK_IRR_Buffer.h"
-#include "Core/SPK_Particle.h"
 
 namespace SPK
 {
@@ -50,7 +48,7 @@ namespace IRR
 											public QuadRendererInterface,
 											public Oriented3DRendererInterface
 	{
-	SPK_IMPLEMENT_REGISTERABLE(IRRQuadRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(IRRQuadRenderer)
 
 	public :
 
@@ -61,7 +59,7 @@ namespace IRR
 		* @param scaleY the scale of the height of the quad
 		* @return A new registered IRRQuadRenderer
 		*/
-		static inline IRRQuadRenderer* create(irr::IrrlichtDevice* d,float scaleX = 1.0f,float scaleY = 1.0f);
+		static inline Ref<IRRQuadRenderer> create(irr::IrrlichtDevice* d,float scaleX = 1.0f,float scaleY = 1.0f);
 
 		//////////////
 		// Textures //
@@ -137,7 +135,7 @@ namespace IRR
 	};
 
 
-	inline IRRQuadRenderer* IRRQuadRenderer::create(irr::IrrlichtDevice* d,float scaleX,float scaleY)
+	inline Ref<IRRQuadRenderer> IRRQuadRenderer::create(irr::IrrlichtDevice* d,float scaleX,float scaleY)
 	{
 		return SPK_NEW(IRRQuadRenderer,d,scaleX,scaleY);
 	}

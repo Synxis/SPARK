@@ -22,20 +22,16 @@
 #ifndef H_SPK_RANDOMINTERPOLATOR
 #define H_SPK_RANDOMINTERPOLATOR
 
-#include "Core/SPK_Interpolator.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_ArrayData.h"
-
 namespace SPK
 {
 	template<typename T>
 	class RandomInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_REGISTERABLE(RandomInterpolator<T>);
+	SPK_IMPLEMENT_REFERENCEABLE(RandomInterpolator<T>);
 
 	public :
 
-		static inline RandomInterpolator<T>* create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
+		static inline Ref<RandomInterpolator<T>> create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 
 		void setDefaultValues(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 		
@@ -68,7 +64,7 @@ namespace SPK
 	typedef RandomInterpolator<float> FloatRandomInterpolator;
 
 	template<typename T>
-	inline RandomInterpolator<T>* RandomInterpolator<T>::create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue)
+	inline Ref<RandomInterpolator<T>> RandomInterpolator<T>::create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue)
 	{
 		return SPK_NEW(RandomInterpolator<T>,minBirthValue,maxBirthValue,minDeathValue,maxDeathValue);
 	}

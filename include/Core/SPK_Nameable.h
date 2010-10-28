@@ -22,7 +22,6 @@
 #ifndef H_SPK_NAMEABLE
 #define H_SPK_NAMEABLE
 
-#include "Core/SPK_DEF.h"
 #include <string>
 
 namespace SPK

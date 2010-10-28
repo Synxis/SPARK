@@ -22,8 +22,6 @@
 #ifndef H_SPK_RING
 #define H_SPK_RING
 
-#include "Core/SPK_Zone.h"
-
 namespace SPK
 {
 	/**
@@ -41,7 +39,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Ring : public Zone
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Ring)
+	SPK_IMPLEMENT_REFERENCEABLE(Ring)
 
 	public :
 
@@ -57,7 +55,7 @@ namespace SPK
 		* @param maxRadius : the maximum radius of the ring
 		* @return a new ring
 		*/
-		static inline Ring* create(
+		static inline Ref<Ring> create(
 			const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),
 			const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f),
 			float minRadius = 0.0f,
@@ -144,7 +142,7 @@ namespace SPK
 		Ring(const Ring& ring);
 	};
 
-	inline Ring* Ring::create(
+	inline Ref<Ring> Ring::create(
 		const Vector3D& position,
 		const Vector3D& normal,
 		float minRadius,

@@ -22,13 +22,10 @@
 #ifndef H_SPK_EMITTER
 #define H_SPK_EMITTER
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Registerable.h"
-#include "Core/SPK_Transformable.h"
-
 namespace SPK
 {
 	class Particle;
+	class Group;
 
 	/**
 	* @brief An abstract class that defines an emitter of particles
@@ -41,7 +38,7 @@ namespace SPK
 	* The flow defines the rate at which particles are launched and the tank defines the total number of Particles the Emitter can launch.<br>
 	* An emitter is also defined by a range of forces (force min and force max) which defines the force at which particles are emitted <i>(initial velocity = force / mass)</i>.<br>
 	*/
-	class SPK_PREFIX Emitter :	public Registerable, 
+	class SPK_PREFIX Emitter :	public Referenceable, 
 								public Transformable
 	{
 	friend class Group;
@@ -156,13 +153,13 @@ namespace SPK
 		* @param zone : the zone of this emitter
 		* @param full : true to generate particles in the whole Zone, false to generate particles only at the zone's borders.
 		*/
-		void setZone(Zone* zone,bool full = true);
+		void setZone(const Ref<Zone>& zone,bool full = true);
 
 		/**
 		* @brief Gets the zone of this emitter
 		* @return the zone of this emitter
 		*/
-		inline Zone* getZone() const;
+		inline const Ref<Zone>& getZone() const;
 
 		/**
 		* @brief Tells whether this emitter emits in the whole Zone or only at its borders
@@ -174,7 +171,7 @@ namespace SPK
 
 	protected :
 
-		Emitter(Zone* zone = NULL,
+		Emitter(const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
@@ -195,7 +192,7 @@ namespace SPK
 		float forceMin;
 		float forceMax;
 
-		Zone* zone;
+		Ref<Zone> zone;
 		bool full;
 
 		mutable float fraction;
@@ -248,7 +245,7 @@ namespace SPK
 		return forceMax;
 	}
 
-	inline Zone* Emitter::getZone() const
+	inline const Ref<Zone>& Emitter::getZone() const
 	{
 		return zone;
 	}

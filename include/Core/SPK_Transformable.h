@@ -24,9 +24,6 @@
 
 #include <cstring> // for memcpy
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Vector3D.h"
-
 namespace SPK
 {
 	/**
@@ -48,6 +45,8 @@ namespace SPK
 	* The transforms used are continuous-in-memory homogeneous matrices with vectors being stored with their coordinates contiguous :<br>
 	* <i>[side.x side.y side.z side.w up.x up.y up.z up.w look.x look.y look.z look.w pos.x pos.y pos.z pos.w]</i><br>
 	* (look being -look in right-handed coordinate systems)<br>
+	* <br>
+	* Note that transforms are not designed to be scale. By using some scales in the transform, the behaviour may be unexpected.
 	*/
 	class SPK_PREFIX Transformable
 	{

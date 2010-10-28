@@ -22,12 +22,6 @@
 #ifndef H_SPK_ITERATOR
 #define H_SPK_ITERATOR
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Logger.h"
-#include "Core/SPK_System.h"
-
 namespace SPK
 {
 	/** @brief A generic class to iterate over a collection of particles */

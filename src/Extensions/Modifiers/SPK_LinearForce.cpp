@@ -19,13 +19,12 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Modifiers/SPK_LinearForce.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {
-	LinearForce::LinearForce(const Vector3D& value,Zone* zone,ZoneTest zoneTest) :
+	LinearForce::LinearForce(const Vector3D& value,const Ref<Zone>& zone,ZoneTest zoneTest) :
 		ZonedModifier(MODIFIER_PRIORITY_FORCE,false,false,ZONE_TEST_FLAG_ALWAYS | ZONE_TEST_FLAG_INSIDE | ZONE_TEST_FLAG_OUTSIDE,zoneTest,zone),
 		relative(false),
 		squaredSpeed(false),
@@ -47,33 +46,33 @@ namespace SPK
 		setValue(linearForce.value);
 	}
 
-	LinearForce* LinearForce::createAsWind(const Vector3D& value,Factor surfaceFactor,Zone* zone,ZoneTest zoneTest)
+	Ref<LinearForce> LinearForce::createAsWind(const Vector3D& value,Factor surfaceFactor,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
-		LinearForce* force = create();
+		Ref<LinearForce>& force = create();
 		force->setZone(zone,zoneTest);
 		force->useAsWind(value,surfaceFactor);
 		return force;
 	}
 
-	LinearForce* LinearForce::createAsFriction(float value,Factor surfaceFactor,Zone* zone,ZoneTest zoneTest)
+	Ref<LinearForce> LinearForce::createAsFriction(float value,Factor surfaceFactor,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
-		LinearForce* force = create();
+		Ref<LinearForce>& force = create();
 		force->setZone(zone,zoneTest);
 		force->useAsFriction(value,surfaceFactor);
 		return force;
 	}
 
-	LinearForce* LinearForce::createAsGravity(const Vector3D& value,Zone* zone,ZoneTest zoneTest)
+	Ref<LinearForce> LinearForce::createAsGravity(const Vector3D& value,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
-		LinearForce* force = create();
+		Ref<LinearForce>& force = create();
 		force->setZone(zone,zoneTest);
 		force->useAsGravity(value);	
 		return force;
 	}
 
-	LinearForce* LinearForce::createAsSimpleForce(const Vector3D& value,Zone* zone,ZoneTest zoneTest)
+	Ref<LinearForce> LinearForce::createAsSimpleForce(const Vector3D& value,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
-		LinearForce* force = create();
+		Ref<LinearForce>& force = create();
 		force->setZone(zone,zoneTest);
 		force->useAsSimpleForce(value);	
 		return force;

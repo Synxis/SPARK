@@ -24,6 +24,7 @@
 
 #include "Rendering/OpenGL/SPK_GL_Renderer.h"
 #include "Extensions/Renderers/SPK_LineRendererInterface.h"
+#include "Rendering/OpenGL/SPK_GL_Buffer.h"
 
 namespace SPK
 {
@@ -46,7 +47,7 @@ namespace GL
 	*/
 	class SPK_GL_PREFIX GLLineRenderer : public GLRenderer, public LineRendererInterface
 	{
-	SPK_IMPLEMENT_REGISTERABLE(GLLineRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(GLLineRenderer)
 
 	public :
 
@@ -56,7 +57,7 @@ namespace GL
 		* @param width : the width of the lines (in screen space)
 		* @return A new GLLineRenderer
 		*/
-		static inline GLLineRenderer* create(float length = 1.0f,float width = 1.0f);
+		static inline Ref<GLLineRenderer> create(float length = 1.0f,float width = 1.0f);
 
 	private :
 
@@ -69,7 +70,7 @@ namespace GL
 		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const;
 	};
 
-	inline GLLineRenderer* GLLineRenderer::create(float length,float width)
+	inline Ref<GLLineRenderer> GLLineRenderer::create(float length,float width)
 	{
 		return SPK_NEW(GLLineRenderer,length,width);
 	}

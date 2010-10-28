@@ -22,10 +22,6 @@
 #ifndef H_SPK_DATAHANDLER
 #define H_SPK_DATAHANDLER
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Logger.h"
-#include "Core/SPK_DataSet.h"
-
 namespace SPK
 {
 	class Group;

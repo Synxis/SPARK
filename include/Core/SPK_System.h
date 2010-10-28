@@ -24,16 +24,8 @@
 
 #include <vector>
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Logger.h"
-#include "Core/SPK_Nameable.h"
-#include "Core/SPK_Transformable.h"
-#include "Core/SPK_Vector3D.h"
-
 namespace SPK
 {
-	class Group;
-
 	/**
 	* @enum StepMode
 	* @brief Enumeration defining how to handle the step time of particle systems

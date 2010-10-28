@@ -22,20 +22,14 @@
 #ifndef H_SPK_INTERPOLATOR
 #define H_SPK_INTERPOLATOR
 
-#include "SPK_DEF.h"
-#include "SPK_Color.h"
-#include "SPK_Registerable.h"
-#include "SPK_DataHandler.h"
-
 namespace SPK
 {
 	class Group;
 	class Particle;
-	class DataSet;
 
 	/** @brief An abstract generic class that allows to interpolate data */
 	template<typename T>
-	class Interpolator :	public Registerable,
+	class Interpolator :	public Referenceable,
 							public DataHandler
 	{
 	friend class Group;
@@ -92,7 +86,7 @@ namespace SPK
 
 	template<typename T>
 	inline Interpolator<T>::Interpolator(bool NEEDS_DATASET) :
-		Registerable(),
+		Referenceable(),
 		DataHandler(NEEDS_DATASET)
 	{}
 

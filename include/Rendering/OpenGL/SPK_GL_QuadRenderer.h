@@ -27,7 +27,6 @@
 #include "Extensions/Renderers/SPK_QuadRendererInterface.h"
 #include "Extensions/Renderers/SPK_Oriented3DRendererInterface.h"
 #include "Rendering/OpenGL/SPK_GL_Buffer.h"
-#include "Core/SPK_Particle.h"
 
 namespace SPK
 {
@@ -52,7 +51,7 @@ namespace GL
 											public Oriented3DRendererInterface,
 											public GLExtHandler
 	{
-	SPK_IMPLEMENT_REGISTERABLE(GLQuadRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(GLQuadRenderer)
 
 	public :
 
@@ -62,7 +61,7 @@ namespace GL
 		* @param scaleY the scale of the height of the quad
 		* @return A new registered GLQuadRenderer
 		*/
-		static inline GLQuadRenderer* create(float scaleX = 1.0f,float scaleY = 1.0f);
+		static inline Ref<GLQuadRenderer> create(float scaleX = 1.0f,float scaleY = 1.0f);
 
 		/////////////
 		// Setters //
@@ -113,7 +112,7 @@ namespace GL
 		void render2DAtlasRot(const Particle& particle,GLBuffer& renderBuffer) const;	// Rendering for particles with texture 2D atlas and rotation
 	};
 
-	inline GLQuadRenderer* GLQuadRenderer::create(float scaleX,float scaleY)
+	inline Ref<GLQuadRenderer> GLQuadRenderer::create(float scaleX,float scaleY)
 	{
 		return SPK_NEW(GLQuadRenderer,scaleX,scaleY);
 	}

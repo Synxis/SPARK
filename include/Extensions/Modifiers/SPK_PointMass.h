@@ -22,8 +22,6 @@
 #ifndef H_SPK_POINTMASS
 #define H_SPK_POINTMASS
 
-#include "Core/SPK_Modifier.h"
-
 namespace SPK
 {
 	/**
@@ -36,7 +34,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX PointMass : public Modifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(PointMass)
+	SPK_IMPLEMENT_REFERENCEABLE(PointMass)
 
 	public :
 
@@ -46,7 +44,7 @@ namespace SPK
 		* @param mass : the mass
 		* @param offset : the offset
 		*/
-		static inline PointMass* create(const Vector3D& pos = Vector3D(),float mass = 1.0f,float offset = 0.01f);
+		static inline Ref<PointMass> create(const Vector3D& pos = Vector3D(),float mass = 1.0f,float offset = 0.01f);
 		
 		//////////////
 		// Position //
@@ -131,7 +129,7 @@ namespace SPK
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-	inline PointMass* PointMass::create(const Vector3D& pos,float mass,float offset)
+	inline Ref<PointMass> PointMass::create(const Vector3D& pos,float mass,float offset)
 	{
 		return SPK_NEW(PointMass,pos,mass,offset);
 	}

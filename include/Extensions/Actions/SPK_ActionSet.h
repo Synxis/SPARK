@@ -24,23 +24,21 @@
 
 #include <vector>
 
-#include "Core/SPK_Action.h"
-
 namespace SPK
 {
 	class SPK_PREFIX ActionSet : public Action
 	{
-	SPK_IMPLEMENT_REGISTERABLE(ActionSet)
+	SPK_IMPLEMENT_REFERENCEABLE(ActionSet)
 
 	public :
 
-		static inline ActionSet* create();
+		static inline Ref<ActionSet> create();
 		
 		virtual ~ActionSet();
 
-		void addAction(Action* action);
-		void removeAction(Action* action);
-		Action* getAction(size_t index) const;
+		void addAction(const Ref<Action>& action);
+		void removeAction(const Ref<Action>& action);
+		const Ref<Action>& getAction(size_t index) const;
 		inline size_t getNbActions() const;
 
 		virtual void apply(Particle& particle) const;
@@ -52,10 +50,10 @@ namespace SPK
 		inline ActionSet() {}
 		ActionSet(const ActionSet& actionSet);
 
-		std::vector<Action*> actions;
+		std::vector<Ref<Action>> actions;
 	};
 
-	inline ActionSet* ActionSet::create()
+	inline Ref<ActionSet> ActionSet::create()
 	{
 		return SPK_NEW(ActionSet);
 	}

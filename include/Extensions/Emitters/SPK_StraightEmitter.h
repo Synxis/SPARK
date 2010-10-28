@@ -22,8 +22,6 @@
 #ifndef H_SPK_STRAIGHEMITTER
 #define H_SPK_STRAIGHEMITTER
 
-#include "Core/SPK_Emitter.h"
-
 namespace SPK
 {
 	/**
@@ -32,7 +30,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX StraightEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_REGISTERABLE(StraightEmitter)
+	SPK_IMPLEMENT_REFERENCEABLE(StraightEmitter)
 
 	public :
 
@@ -40,9 +38,9 @@ namespace SPK
 		* @brief Creates and registers a new StraightEmitter
 		* @param direction : the direction of the StraighEmitter
 		*/
-		static inline StraightEmitter* create(
+		static inline Ref<StraightEmitter> create(
 			const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),
-			Zone* zone = NULL,
+			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
@@ -86,7 +84,7 @@ namespace SPK
 		*/
 		StraightEmitter(
 			const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),
-			Zone* zone = NULL,
+			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
@@ -98,9 +96,9 @@ namespace SPK
 		virtual void generateVelocity(Particle& particle,float speed) const;
 	};
 
-	inline StraightEmitter* StraightEmitter::create(
+	inline Ref<StraightEmitter> StraightEmitter::create(
 			const Vector3D& direction,
-			Zone* zone,
+			const Ref<Zone>& zone,
 			bool full,
 			int tank,
 			float flow,

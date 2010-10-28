@@ -22,16 +22,10 @@
 #ifndef H_SPK_MODIFIER
 #define H_SPK_MODIFIER
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Registerable.h"
-#include "Core/SPK_Transformable.h"
-#include "Core/SPK_DataHandler.h"
-
 namespace SPK
 {
 	class Particle;
 	class Group;
-	class DataSet;
 
 	/** @brief Constants defining the priority of a modifier */
 	enum ModifierPriority
@@ -48,7 +42,7 @@ namespace SPK
 	*
 	* 
 	*/
-	class Modifier :	public Registerable,
+	class Modifier :	public Referenceable,
 						public Transformable, 
 						public DataHandler
 	{

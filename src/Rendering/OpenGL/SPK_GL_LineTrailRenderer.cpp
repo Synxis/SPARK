@@ -21,12 +21,8 @@
 
 #include <cstring> // for memmove and memcpy
 
+#include <SPARK_Core.h>
 #include "Rendering/OpenGL/SPK_GL_LineTrailRenderer.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_ArrayData.h"
-#include "Core/SPK_Iterator.h"
-#include "Core/SPK_Logger.h"
 
 namespace SPK
 {

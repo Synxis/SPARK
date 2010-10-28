@@ -22,18 +22,15 @@
 #ifndef H_SPK_BASICMODIFIERS
 #define H_SPK_BASICMODIFIERS
 
-#include "Core/SPK_Modifier.h"
-#include "Core/SPK_Vector3D.h"
-
 namespace SPK
 {
 	class SPK_PREFIX Gravity : public Modifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Gravity)
+	SPK_IMPLEMENT_REFERENCEABLE(Gravity)
 
 	public :
 
-		static inline Gravity* create(const Vector3D& value = Vector3D());
+		static inline Ref<Gravity> create(const Vector3D& value = Vector3D());
 
 		inline void setValue(const Vector3D& value);
 		inline const Vector3D& getValue() const;
@@ -56,11 +53,11 @@ namespace SPK
 
 	class SPK_PREFIX Friction : public Modifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Friction);
+	SPK_IMPLEMENT_REFERENCEABLE(Friction);
 
 	public :
 
-		static inline Friction* create(float value = 0.0f);
+		static inline Ref<Friction> create(float value = 0.0f);
 
 		float value;
 
@@ -84,7 +81,7 @@ namespace SPK
 		setValue(gravity.value);
 	}
 
-	inline Gravity* Gravity::create(const Vector3D& value)
+	inline Ref<Gravity> Gravity::create(const Vector3D& value)
 	{
 		return SPK_NEW(Gravity,value);
 	}
@@ -120,7 +117,7 @@ namespace SPK
 		value(friction.value)
 	{}
 
-	inline Friction* Friction::create(float value)
+	inline Ref<Friction> Friction::create(float value)
 	{
 		return SPK_NEW(Friction,value);
 	}

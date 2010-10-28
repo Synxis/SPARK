@@ -22,8 +22,6 @@
 #ifndef H_SPK_COLLIDER
 #define H_SPK_COLLIDER
 
-#include "Core/SPK_Modifier.h"
-
 namespace SPK
 {
 	/**
@@ -51,7 +49,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Collider : public Modifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Collider)
+	SPK_IMPLEMENT_REFERENCEABLE(Collider)
 
 	public :
 
@@ -63,7 +61,7 @@ namespace SPK
 		* @brief Creates and registers a new collider
 		* @param elasticity : the elasticity of the collisions
 		*/
-		static inline Collider* create(float elasticity = 1.0f);
+		static inline Ref<Collider> create(float elasticity = 1.0f);
 
 		/////////////////
 		// Elascticity //
@@ -106,7 +104,7 @@ namespace SPK
 		elasticity(collider.elasticity)
 	{}
 
-	inline Collider* Collider::create(float elasticity)
+	inline Ref<Collider> Collider::create(float elasticity)
 	{
 		return SPK_NEW(Collider,elasticity);
 	}

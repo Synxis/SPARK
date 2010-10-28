@@ -22,8 +22,6 @@
 #ifndef H_SPK_PLANE
 #define H_SPK_PLANE
 
-#include "Core/SPK_Zone.h"
-
 namespace SPK
 {
 	/**
@@ -42,7 +40,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Plane : public Zone
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Plane)
+	SPK_IMPLEMENT_REFERENCEABLE(Plane)
 
 	public :
 
@@ -56,7 +54,7 @@ namespace SPK
 		* @param normal : the normal of the Plane
 		* @return a new plane
 		*/
-		static inline Plane* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));	
+		static inline Ref<Plane> create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));	
 
 		////////////
 		// Normal //
@@ -117,7 +115,7 @@ namespace SPK
 		setNormal(plane.normal);
 	}
 
-	inline Plane* Plane::create(const Vector3D& position,const Vector3D& normal)
+	inline Ref<Plane> Plane::create(const Vector3D& position,const Vector3D& normal)
 	{
 		return SPK_NEW(Plane,position,normal);
 	}

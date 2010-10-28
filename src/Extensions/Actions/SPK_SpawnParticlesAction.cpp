@@ -19,20 +19,19 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Actions/SPK_SpawnParticlesAction.h"
-#include "Core/SPK_Logger.h"
-#include "Core/SPK_Emitter.h"
-#include "Core/SPK_Zone.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_System.h"
 
 namespace SPK
 {
-	SpawnParticlesAction::SpawnParticlesAction(unsigned int minNb,unsigned int maxNb,size_t groupIndex,Emitter* emitter) :
+	SpawnParticlesAction::SpawnParticlesAction(
+		unsigned int minNb,
+		unsigned int maxNb,
+		size_t groupIndex,
+		const Ref<Emitter>& emitter) :
 		minNb(minNb),
 		maxNb(maxNb),
-		baseEmitter(NULL),
+		baseEmitter(),
 		groupIndex(groupIndex)
 	{
 		setEmitter(emitter);
@@ -45,14 +44,10 @@ namespace SPK
 		groupIndex(action.groupIndex),
 		emitterPool()
 	{
-		baseEmitter = dynamic_cast<Emitter*>(copyChild(action.baseEmitter));
+		baseEmitter = copyChild(action.baseEmitter);
 	}
 
-	SpawnParticlesAction::~SpawnParticlesAction()
-	{
-		destroyChild(baseEmitter);
-		resetPool();
-	}
+	SpawnParticlesAction::~SpawnParticlesAction(){}
 
 	void SpawnParticlesAction::setNb(unsigned int min,unsigned int max)
 	{
@@ -69,12 +64,10 @@ namespace SPK
 		}
 	}
 
-	void SpawnParticlesAction::setEmitter(Emitter* emitter)
+	void SpawnParticlesAction::setEmitter(const Ref<Emitter>& emitter)
 	{
 		resetPool();
-		decrementChild(baseEmitter);
 		baseEmitter = emitter;
-		incrementChild(baseEmitter);
 	}
 
 	void SpawnParticlesAction::apply(Particle& particle) const
@@ -82,17 +75,14 @@ namespace SPK
 		if (!checkEmitterValidity())
 			return;
 
-		EmitterPair& emitterPair = getNextAvailableEmitter();
-
-		Emitter* emitter = emitterPair.obj;
+		const Ref<Emitter>& emitter = getNextAvailableEmitter();
 		emitter->setTank(baseEmitter->getTank());
 
-		Zone* zone = emitter->getZone();
+		const Ref<Zone>& zone = emitter->getZone();
 		zone->setTransformPosition(particle.position());
 		zone->updateTransform();
 
 		Group* group = particle.getGroup().getSystem().getGroup(groupIndex);
-		emitterPair.group = group;
 		group->addParticles(SPK_RANDOM(minNb,maxNb + 1),emitter);
 	}
 
@@ -112,39 +102,24 @@ namespace SPK
 		return true;
 	}
 
-	SpawnParticlesAction::EmitterPair& SpawnParticlesAction::getNextAvailableEmitter() const
+	const Ref<Emitter>& SpawnParticlesAction::getNextAvailableEmitter() const
 	{
 		for (size_t i = 0; i < emitterPool.size(); ++i)
 		{
-			EmitterPair& emitterPair = emitterPool.front();
+			emitterPool.push_back(emitterPool.front());
 			emitterPool.pop_front();
-			emitterPool.push_back(emitterPair);
-			if (emitterPool.back().obj->getNbReferences() == 1) // the emitter is available
+			if (emitterPool.back()->getNbReferences() == 1) // the emitter is available
 				return emitterPool.back();
 		}
 
 		// No emitter is available is the pool, a new one must be created
-		EmitterPair emitterPair(dynamic_cast<Emitter*>(Registerable::copyRegisterable(baseEmitter)));
-		emitterPair.obj->resetTransform();
-		emitterPool.push_back(emitterPair);
+		emitterPool.push_back(copyRegisterable(baseEmitter));
+		emitterPool.back()->resetTransform();
 		return emitterPool.back();
-	}
-
-	void SpawnParticlesAction::flushCurrentGroups() const
-	{
-		for (std::deque<EmitterPair>::const_iterator it = emitterPool.begin(); it != emitterPool.end(); ++it)
-			if (it->obj->getNbReferences() > 1)
-				it->group->flushBufferedParticles();
 	}
 
 	void SpawnParticlesAction::resetPool()
 	{
-		flushCurrentGroups();
-		for (std::deque<EmitterPair>::const_iterator it = emitterPool.begin(); it != emitterPool.end(); ++it)
-		{
-			it->obj->decrement();
-			SPK_DELETE(it->obj);
-		}
 		emitterPool.clear();
 	}
 

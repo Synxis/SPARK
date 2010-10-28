@@ -22,8 +22,6 @@
 #ifndef H_SPK_LINEARFORCE
 #define H_SPK_LINEARFORCE
 
-#include "Core/SPK_ZonedModifier.h"
-
 namespace SPK
 {
 	/**
@@ -42,7 +40,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX LinearForce : public ZonedModifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(LinearForce)
+	SPK_IMPLEMENT_REFERENCEABLE(LinearForce)
 
 	public :
 
@@ -56,7 +54,10 @@ namespace SPK
 		* @param zone : the zone where the force applies
 		* @param zoneTest : the zone test that triggers the force application
 		*/
-		static inline LinearForce* create(const Vector3D& value = Vector3D(),Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		static inline Ref<LinearForce> create(
+			const Vector3D& value = Vector3D(),
+			const Ref<Zone>& zone = SPK_NULL_REF,
+			ZoneTest zoneTest = ZONE_TEST_INSIDE);
 
 		/**
 		* @brief Creates a new linear force as a wind
@@ -66,7 +67,11 @@ namespace SPK
 		* @param zone : the zone where the wind applies
 		* @param zoneTest : the zone test that triggers the wind application
 		*/
-		static inline LinearForce* createAsWind(const Vector3D& value,Factor surfaceFactor,Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		static Ref<LinearForce> createAsWind(
+			const Vector3D& value,
+			Factor surfaceFactor,
+			const Ref<Zone>& zone = SPK_NULL_REF,
+			ZoneTest zoneTest = ZONE_TEST_INSIDE);
 		
 		/**
 		* @brief Creates a new linear force as a friction
@@ -76,7 +81,11 @@ namespace SPK
 		* @param zone : the zone where the friction applies
 		* @param zoneTest : the zone test that triggers the friction application
 		*/
-		static inline LinearForce* createAsFriction(float value,Factor surfaceFactor,Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		static Ref<LinearForce> createAsFriction(
+			float value,
+			Factor surfaceFactor,
+			const Ref<Zone>& zone = SPK_NULL_REF,
+			ZoneTest zoneTest = ZONE_TEST_INSIDE);
 		
 		/**
 		* @brief Creates a new linear force as a gravity
@@ -85,7 +94,10 @@ namespace SPK
 		* @param zone : the zone where the gravity applies
 		* @param zoneTest : the zone test that triggers the gravity application
 		*/
-		static inline LinearForce* createAsGravity(const Vector3D& value,Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		static Ref<LinearForce> createAsGravity(
+			const Vector3D& value,
+			const Ref<Zone>& zone = SPK_NULL_REF,
+			ZoneTest zoneTest = ZONE_TEST_INSIDE);
 
 		/**
 		* @brief Creates a new linear force as a simple force
@@ -94,7 +106,10 @@ namespace SPK
 		* @param zone : the zone where the force applies
 		* @param zoneTest : the zone test that triggers the force application
 		*/
-		static inline LinearForce* createAsSimpleForce(const Vector3D& value,Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		static Ref<LinearForce> createAsSimpleForce(
+			const Vector3D& value,
+			const Ref<Zone>& zone = SPK_NULL_REF,
+			ZoneTest zoneTest = ZONE_TEST_INSIDE);
 
 		///////////
 		// Value //
@@ -282,7 +297,11 @@ namespace SPK
 		Factor factor;
 		float coef;
 
-		LinearForce(const Vector3D& value = Vector3D(),Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		LinearForce(
+			const Vector3D& value = Vector3D(),
+			const Ref<Zone>& zone = SPK_NULL_REF,
+			ZoneTest zoneTest = ZONE_TEST_INSIDE);
+
 		LinearForce(const LinearForce& linearForce);
 	
 		float getDiscreteFactor(const Particle& particle) const;
@@ -290,7 +309,7 @@ namespace SPK
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-	inline LinearForce* LinearForce::create(const Vector3D& value,Zone* zone,ZoneTest zoneTest)
+	inline Ref<LinearForce> LinearForce::create(const Vector3D& value,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
 		return SPK_NEW(LinearForce,value,zone,zoneTest);
 	}

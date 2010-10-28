@@ -42,7 +42,7 @@ namespace IRR
 	class SPK_IRR_PREFIX IRRLineRenderer :	public IRRRenderer,
 											public LineRendererInterface
 	{
-	SPK_IMPLEMENT_REGISTERABLE(IRRLineRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(IRRLineRenderer)
 
 	public :
 
@@ -53,7 +53,7 @@ namespace IRR
 		* @param width : the width of this IRRLineRenderer in pixels
 		* @return A new registered IRRLineRenderer
 		*/
-		static inline IRRLineRenderer* create(irr::IrrlichtDevice* d,float length = 1.0f,float width = 1.0f);
+		static inline Ref<IRRLineRenderer> create(irr::IrrlichtDevice* d,float length = 1.0f,float width = 1.0f);
 
 		virtual inline void setWidth(float width);
 
@@ -72,7 +72,7 @@ namespace IRR
 	};
 
 
-	inline IRRLineRenderer* IRRLineRenderer::create(irr::IrrlichtDevice* d,float length,float width)
+	inline Ref<IRRLineRenderer> IRRLineRenderer::create(irr::IrrlichtDevice* d,float length,float width)
 	{
 		return SPK_NEW(IRRLineRenderer,d,length,width);
 	}

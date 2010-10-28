@@ -19,9 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Modifiers/SPK_RandomForce.h"
-#include "Core/SPK_ArrayData.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {

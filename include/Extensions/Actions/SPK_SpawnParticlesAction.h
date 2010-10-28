@@ -24,12 +24,8 @@
 
 #include <deque>
 
-#include "Core/SPK_Action.h"
-
 namespace SPK
 {
-	class Emitter;
-
 	/**
 	* @brief An action that allows particles to spawn punctually at another particle's position
 	*
@@ -43,7 +39,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX SpawnParticlesAction : public Action
 	{
-	SPK_IMPLEMENT_REGISTERABLE(SpawnParticlesAction)
+	SPK_IMPLEMENT_REFERENCEABLE(SpawnParticlesAction)
 
 	public :
 
@@ -58,11 +54,11 @@ namespace SPK
 		* @param groupIndex : the index of the group in the system in which to spawn particles
 		* @param emitter : the emitter used to spawn particles
 		*/
-		static inline SpawnParticlesAction* create(
+		static inline Ref<SpawnParticlesAction> create(
 			unsigned int minNb = 1,
 			unsigned int maxNb = 1,
 			size_t groupIndex = 0,
-			Emitter* emitter = NULL);
+			const Ref<Emitter>& emitter = SPK_NULL_REF);
 
 		/** @brief Destructor of spawnParticles action */
 		virtual ~SpawnParticlesAction();
@@ -108,14 +104,14 @@ namespace SPK
 		* Note that the zone of the emitter must not be shared as its zone is copied as well, else the base emitter is considered as invalid.
 		* @param emitter : the base emitter used to create emitters
 		*/
-		void setEmitter(Emitter* emitter);
+		void setEmitter(const Ref<Emitter>& emitter);
 
 		/**
 		* @brief Gets the base emitter
 		* If the base emitter is modified, a call to resetPool() will allow the changes to take effects
 		* @return the base emitter
 		*/
-		inline Emitter* getEmitter() const;
+		inline const Ref<Emitter>& getEmitter() const;
 
 		/////////////////
 		// Group index //
@@ -150,33 +146,22 @@ namespace SPK
 		unsigned int minNb;
 		unsigned int maxNb;
 
-		Emitter* baseEmitter;
+		Ref<Emitter> baseEmitter;
 
 		size_t groupIndex;
 
-		struct EmitterPair
-		{
-			Emitter* obj;
-			Group* group;
-
-			inline EmitterPair(Emitter* obj) :
-				obj(obj),
-				group(NULL)
-			{}		
-		};
-
-		mutable std::deque<EmitterPair> emitterPool;
+		mutable std::deque<Ref<Emitter>> emitterPool;
 		
-		SpawnParticlesAction(unsigned int minNb = 1,
+		SpawnParticlesAction(
+			unsigned int minNb = 1,
 			unsigned int maxNb = 1,
 			size_t groupIndex = 0,
-			Emitter* emitter = NULL);
+			const Ref<Emitter>& emitter = SPK_NULL_REF);
 
 		SpawnParticlesAction(const SpawnParticlesAction& action);
 
 		bool checkEmitterValidity() const;
-		EmitterPair& getNextAvailableEmitter() const;
-		void flushCurrentGroups() const;
+		const Ref<Emitter>& getNextAvailableEmitter() const;
 	};
 
 	inline void SpawnParticlesAction::setNb(unsigned int nb)
@@ -194,12 +179,16 @@ namespace SPK
 		return maxNb;
 	}
 
-	inline SpawnParticlesAction* SpawnParticlesAction::create(unsigned int minNb,unsigned int maxNb,size_t groupIndex,Emitter* emitter)
+	inline Ref<SpawnParticlesAction> SpawnParticlesAction::create(
+		unsigned int minNb,
+		unsigned int maxNb,
+		size_t groupIndex,
+		const Ref<Emitter>& emitter)
 	{
 		return SPK_NEW(SpawnParticlesAction,minNb,maxNb,groupIndex,emitter);
 	}
 
-	inline Emitter* SpawnParticlesAction::getEmitter() const
+	inline const Ref<Emitter>& SpawnParticlesAction::getEmitter() const
 	{
 		return baseEmitter;
 	}

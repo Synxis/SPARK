@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Modifiers/SPK_Vortex.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {

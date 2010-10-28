@@ -21,9 +21,8 @@
 
 #include <algorithm> // for min
 
+#include <SPARK_Core.h>
 #include "Extensions/Modifiers/SPK_BasicModifiers.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {

@@ -23,9 +23,9 @@
 #ifndef H_SPK_DX9_LINETRAILRENDERER
 #define H_SPK_DX9_LINETRAILRENDERER
 
-#include "Rendering/DX9/SPK_DX9_Renderer.h"
-#include "Core/SPK_Color.h"
-#include "Rendering/DX9/SPK_DX9_Buffer.h"
+//#include "Rendering/DX9/SPK_DX9_Renderer.h"
+//#include "Core/SPK_Color.h"
+//#include "Rendering/DX9/SPK_DX9_Buffer.h"
 
 namespace SPK
 {
@@ -57,7 +57,7 @@ namespace DX9
 	*/
 	class SPK_DX9_PREFIX DX9LineTrailRenderer : public DX9Renderer
 	{
-	SPK_IMPLEMENT_REGISTERABLE(DX9LineTrailRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(DX9LineTrailRenderer)
 
 	public :
 

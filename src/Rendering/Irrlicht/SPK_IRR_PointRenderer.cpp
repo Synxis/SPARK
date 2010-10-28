@@ -21,11 +21,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Rendering/Irrlicht/SPK_IRR_PointRenderer.h"
-#include "Rendering/Irrlicht/SPK_IRR_Buffer.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {

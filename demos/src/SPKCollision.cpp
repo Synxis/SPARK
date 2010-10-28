@@ -198,12 +198,12 @@ int main(int argc, char *argv[])
 
 
 	// Renderers
-	SPK::GL::GLPointRenderer* basicRenderer = SPK::GL::GLPointRenderer::create();
-	SPK::GL::GLRenderer* particleRenderer = NULL;
+	SPK::Ref<SPK::GL::GLPointRenderer> basicRenderer = SPK::GL::GLPointRenderer::create();
+	SPK::Ref<SPK::GL::GLRenderer> particleRenderer = SPK_NULL_REF;
 	// We use pointSprites only if it is available and if the GL extension point parameter is available
 	if (SPK::GL::GLPointRenderer::loadGLExtPointSprite() && SPK::GL::GLPointRenderer::loadGLExtPointParameter())
 	{
-		SPK::GL::GLPointRenderer* pointRenderer = SPK::GL::GLPointRenderer::create();
+		SPK::Ref<SPK::GL::GLPointRenderer> pointRenderer = SPK::GL::GLPointRenderer::create();
 		pointRenderer->setType(SPK::POINT_TYPE_SPRITE);
 		pointRenderer->enableWorldSize(true);
 		pointRenderer->setTexture(textureParticle);
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
 	}
 	else // we use quads
 	{
-		SPK::GL::GLQuadRenderer* quadRenderer = SPK::GL::GLQuadRenderer::create();
+		SPK::Ref<SPK::GL::GLQuadRenderer> quadRenderer = SPK::GL::GLQuadRenderer::create();
 		quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
 		quadRenderer->setTexture(textureParticle);
 		particleRenderer = quadRenderer;
@@ -223,15 +223,15 @@ int main(int argc, char *argv[])
 	particleRenderer->setAlphaTestThreshold(0.8f);
 
 	// Zone
-	SPK::Sphere* sphere = SPK::Sphere::create();
+	SPK::Ref<SPK::Sphere> sphere = SPK::Sphere::create();
 
 	// Gravity
-	SPK::Gravity* gravity = SPK::Gravity::create();
+	SPK::Ref<SPK::Gravity> gravity = SPK::Gravity::create();
 
 	// System
 	SPK::System* particleSystem = new SPK::System(true);
 
-	SPK::Collider* collider = SPK::Collider::create(0.9f);
+	SPK::Ref<SPK::Collider> collider = SPK::Collider::create(0.9f);
 	
 	// Group
 	SPK::Group* particleGroup = particleSystem->createGroup(NB_PARTICLES);
@@ -297,7 +297,7 @@ int main(int argc, char *argv[])
 					break;
 
 				case 2 :
-					particleGroup->setRenderer(NULL);
+					particleGroup->setRenderer(SPK_NULL_REF);
 					break;
 				}
 			}
@@ -355,7 +355,9 @@ int main(int argc, char *argv[])
 			frameFPS.pop_front();
 	}
 
+	SPK_DUMP_MEMORY
 	delete particleSystem;
+	SPK_DUMP_MEMORY
 
 	SDL_Quit();
 

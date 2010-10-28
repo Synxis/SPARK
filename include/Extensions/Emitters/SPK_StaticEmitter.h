@@ -22,9 +22,6 @@
 #ifndef H_SPK_STATICEMITTER
 #define H_SPK_STATICEMITTER
 
-#include "Core/SPK_Emitter.h"
-#include "Core/SPK_Vector3D.h"
-
 namespace SPK
 {
 	/**
@@ -33,7 +30,7 @@ namespace SPK
 	*/
 	class StaticEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_REGISTERABLE(StaticEmitter)
+	SPK_IMPLEMENT_REFERENCEABLE(StaticEmitter)
 
 	public :
 
@@ -41,8 +38,8 @@ namespace SPK
 		* @brief Creates a new StaticEmitter
 		* @return A new StaticEmitter
 		*/
-		static inline StaticEmitter* create(
-			Zone* zone = NULL,
+		static inline Ref<StaticEmitter> create(
+			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f);
@@ -50,7 +47,7 @@ namespace SPK
 	private :
 
 		inline StaticEmitter(
-			Zone* zone = NULL,
+			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f);
@@ -60,13 +57,13 @@ namespace SPK
 		virtual inline void generateVelocity(Particle& particle,float speed) const;
 	};
 
-	inline StaticEmitter::StaticEmitter(Zone* zone,bool full,int tank,float flow) :
+	inline StaticEmitter::StaticEmitter(const Ref<Zone>& zone,bool full,int tank,float flow) :
 		Emitter(zone,full,tank,flow)
 	{}
 
 	inline StaticEmitter::StaticEmitter(const StaticEmitter& emitter) : Emitter(emitter) {}
 
-	inline StaticEmitter* StaticEmitter::create(Zone* zone,bool full,int tank,float flow)
+	inline Ref<StaticEmitter> StaticEmitter::create(const Ref<Zone>& zone,bool full,int tank,float flow)
 	{
 		return SPK_NEW(StaticEmitter,zone,full,tank,flow);
 	}

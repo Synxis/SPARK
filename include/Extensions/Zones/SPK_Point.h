@@ -22,17 +22,15 @@
 #ifndef H_SPK_POINT
 #define H_SPK_POINT
 
-#include "Core/SPK_Zone.h"
-
 namespace SPK
 {
 	class Point : public Zone
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Point);
+	SPK_IMPLEMENT_REFERENCEABLE(Point);
 
 	public :
 
-		static inline Point* create(const Vector3D& position = Vector3D());
+		static inline Ref<Point> create(const Vector3D& position = Vector3D());
 
 		virtual inline void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
 		virtual inline bool contains(const Vector3D& v,float radius = 0.0f) const;
@@ -53,7 +51,7 @@ namespace SPK
 		Zone(point)
 	{}
 
-	inline Point* Point::create(const Vector3D& position)
+	inline Ref<Point> Point::create(const Vector3D& position)
 	{
 		return SPK_NEW(Point,position);
 	}

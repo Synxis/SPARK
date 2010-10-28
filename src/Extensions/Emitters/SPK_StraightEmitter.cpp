@@ -19,14 +19,14 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Extensions/Emitters/SPK_StraightEmitter.h"
-#include "Core/SPK_Particle.h"
 
 namespace SPK
 {
 	StraightEmitter::StraightEmitter(
 			const Vector3D& direction,
-			Zone* zone,
+			const Ref<Zone>& zone,
 			bool full,
 			int tank,
 			float flow,

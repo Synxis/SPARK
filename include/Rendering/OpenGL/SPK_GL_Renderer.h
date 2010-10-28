@@ -23,7 +23,6 @@
 #define H_SPK_GL_RENDERER
 
 #include "Rendering/OpenGL/SPK_GL_DEF.h"
-#include "Core/SPK_Renderer.h"
 
 namespace SPK
 {

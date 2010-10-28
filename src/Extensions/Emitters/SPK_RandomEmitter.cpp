@@ -21,8 +21,8 @@
 
 #include <cmath> // for sqrt
 
+#include <SPARK_Core.h>
 #include "Extensions/Emitters/SPK_RandomEmitter.h"
-#include "Core/SPK_Particle.h"
 
 namespace SPK
 {

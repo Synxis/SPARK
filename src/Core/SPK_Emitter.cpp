@@ -19,29 +19,25 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include "Core/SPK_Emitter.h"
-#include "Core/SPK_Zone.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Particle.h"
+#include <SPARK_Core.h>
 
 namespace SPK
 {
-	Emitter::Emitter(Zone* zone,bool full,int tank,float flow,float forceMin,float forceMax) :
-		Registerable(),
+	Emitter::Emitter(const Ref<Zone>& zone,bool full,int tank,float flow,float forceMin,float forceMax) :
+		Referenceable(),
 		Transformable(),
 		active(true),
 		zone(zone == NULL ? SPK_DEFAULT_ZONE : zone),
 		flow(1.0f),
 		fraction(0.0f)
 	{
-		incrementChild(this->zone);
 		setTank(tank);
 		setFlow(flow);
 		setForce(forceMin,forceMax);
 	}
 
 	Emitter::Emitter(const Emitter& emitter) :
-		Registerable(emitter),
+		Referenceable(emitter),
 		Transformable(emitter),
 		active(emitter.active),
 		flow(emitter.flow),
@@ -50,13 +46,10 @@ namespace SPK
 		forceMax(emitter.forceMax),
 		fraction(0.0f)
 	{
-		zone = dynamic_cast<Zone*>(copyChild(emitter.zone));
+		zone = copyChild(emitter.zone);
 	}
 
-	Emitter::~Emitter()
-	{
-		destroyChild(zone);
-	}
+	Emitter::~Emitter() {}
 
 	void Emitter::setTank(int tank)
 	{
@@ -85,11 +78,9 @@ namespace SPK
 		}
 	}
 
-	void Emitter::setZone(Zone* zone,bool full)
+	void Emitter::setZone(const Ref<Zone>& zone,bool full)
 	{
-		decrementChild(this->zone);
 		this->zone = (zone == NULL ? SPK_DEFAULT_ZONE : zone);
-		incrementChild(this->zone);
 		this->full = full;
 	}
 

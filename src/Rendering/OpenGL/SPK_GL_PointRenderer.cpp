@@ -19,12 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Rendering/OpenGL/SPK_GL_PointRenderer.h"
-#include "Core/SPK_Logger.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {

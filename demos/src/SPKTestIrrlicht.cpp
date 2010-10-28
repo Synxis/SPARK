@@ -99,17 +99,17 @@ int main(int argc, char *argv[])
 	system->enableAABBComputation(true);
 	system->drop(); // We let the scene manager taking care of the system life time
 
-	SPK::IRR::IRRQuadRenderer* quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
+	SPK::Ref<SPK::IRR::IRRQuadRenderer> quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
 	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 	quadRenderer->setTexture(driver->getTexture("res\\flare.bmp"));
 	quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
 
-	SPK::RandomEmitter* emitter = SPK::RandomEmitter::create(SPK::Point::create());
+	SPK::Ref<SPK::RandomEmitter> emitter = SPK::RandomEmitter::create(SPK::Point::create());
 	emitter->setForce(0.4f,0.6f);
 	emitter->setFlow(200);
 
-	SPK::ColorGraphInterpolator* graphInterpolator = SPK::ColorGraphInterpolator::create();
+	SPK::Ref<SPK::ColorGraphInterpolator> graphInterpolator = SPK::ColorGraphInterpolator::create();
 	graphInterpolator->addEntry(0.0f,0xFF000088);
 	graphInterpolator->addEntry(0.5f,0x00FF0088);
 	graphInterpolator->addEntry(1.0f,0x0000FF88);
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 	group->setLifeTime(1.0f,2.0f);
 	group->setColorInterpolator(graphInterpolator);
 	group->setParamInterpolator(SPK::PARAM_SCALE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
-	//group->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
+	group->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
 	group->addEmitter(emitter);
 	group->addModifier(SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f)));
 	group->addModifier(SPK::Friction::create(0.2f));
@@ -138,6 +138,9 @@ int main(int argc, char *argv[])
 		driver->endScene();
 	}
 
+	SPK_DUMP_MEMORY
 	device->drop();
+	SPK_DUMP_MEMORY
+
 	return 0;
 }

@@ -47,6 +47,7 @@
 #endif
 
 #include "Core/SPK_MemoryTracer.h"
+#include "Core/SPK_Reference.h"
 
 /**
 * @brief A macro returning a random value within [min,max[
@@ -113,7 +114,7 @@ namespace SPK
 		* The default zone is a shared point located at position (0.0f,0.0f,0.0f).
 		* @return the default zone
 		*/
-		Zone* getDefaultZone();
+		const Ref<Zone>& getDefaultZone();
 
 		/**
 		* @brief Gets a random value within the interval [min,max[
@@ -128,7 +129,7 @@ namespace SPK
 
 		static SPKContext instance;
 
-		Zone* defaultZone;
+		Ref<Zone> defaultZone;
 		unsigned int randomSeed;
 
 		SPKContext();
@@ -160,4 +161,8 @@ namespace SPK
     }
 }
 
+#endif
+
+#ifndef H_SPK_ZONE
+//#include "Core/SPK_Zone.h"
 #endif

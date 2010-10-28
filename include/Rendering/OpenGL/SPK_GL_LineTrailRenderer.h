@@ -23,7 +23,6 @@
 #define H_SPK_GL_LINETRAILRENDERER
 
 #include "Rendering/OpenGL/SPK_GL_Renderer.h"
-#include "Core/SPK_Color.h"
 
 namespace SPK
 {
@@ -55,7 +54,7 @@ namespace GL
 	*/
 	class SPK_GL_PREFIX GLLineTrailRenderer : public GLRenderer
 	{
-	SPK_IMPLEMENT_REGISTERABLE(GLLineTrailRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(GLLineTrailRenderer)
 
 	public :
 
@@ -67,7 +66,7 @@ namespace GL
 		* @brief Creates a new GLLineTrailRenderer
 		* @return A new GLLineTrailRenderer
 		*/
-		static inline GLLineTrailRenderer* create(size_t nbSamples = 8,float duration = 1.0f,float width = 1.0f);
+		static inline Ref<GLLineTrailRenderer> create(size_t nbSamples = 8,float duration = 1.0f,float width = 1.0f);
 
 		///////////////
 		// nbSamples //
@@ -171,7 +170,7 @@ namespace GL
 		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const;
 	};
 
-	inline GLLineTrailRenderer* GLLineTrailRenderer::create(size_t nbSamples,float duration,float width)
+	inline Ref<GLLineTrailRenderer> GLLineTrailRenderer::create(size_t nbSamples,float duration,float width)
 	{
 		return SPK_NEW(GLLineTrailRenderer,nbSamples,duration,width);
 	}

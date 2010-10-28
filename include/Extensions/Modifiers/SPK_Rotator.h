@@ -22,8 +22,6 @@
 #ifndef H_SPK_ROTATOR
 #define H_SPK_ROTATOR
 
-#include "Core/SPK_Modifier.h"
-
 namespace SPK
 {
 	/**
@@ -38,7 +36,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Rotator : public Modifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Rotator)
+	SPK_IMPLEMENT_REFERENCEABLE(Rotator)
 
 	public :
 
@@ -46,7 +44,7 @@ namespace SPK
 		* @brief Creates and registers a new Rotator
 		* @return A new registered Rotator
 		*/
-		static inline Rotator* create();
+		static inline Ref<Rotator> create();
 
 	private :
 
@@ -65,7 +63,7 @@ namespace SPK
 		Modifier(rotator)
 	{}
 
-	inline Rotator* Rotator::create()
+	inline Ref<Rotator> Rotator::create()
 	{
 		return SPK_NEW(Rotator);
 	}

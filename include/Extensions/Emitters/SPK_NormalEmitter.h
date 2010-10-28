@@ -22,8 +22,6 @@
 #ifndef H_SPK_NORMALEMITTER
 #define H_SPK_NORMALEMITTER
 
-#include "Core/SPK_Emitter.h"
-
 namespace SPK
 {
 	/**
@@ -36,19 +34,19 @@ namespace SPK
 	*/
 	class SPK_PREFIX NormalEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_REGISTERABLE(NormalEmitter)
+	SPK_IMPLEMENT_REFERENCEABLE(NormalEmitter)
 
 	public :
 
 		/** @brief Creates a new normalEmitter */
-		static inline NormalEmitter* create(
-			Zone* zone = NULL,
+		static inline Ref<NormalEmitter> create(
+			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
 			float forceMin = 1.0f,
 			float forceMax = 1.0f,
-			Zone* normalZone = NULL,
+			const Ref<Zone>& normalZone = Ref<Zone>(),
 			bool inverted = false);
 
 		virtual ~NormalEmitter();
@@ -62,15 +60,15 @@ namespace SPK
 		*
 		* Note that if the normal zone is NULL, the emitter's zone is used.
 		*
-		* @param zone : the zone used to compute normals (NULL to used the emitter's zone)
+		* @param zone : the zone used to compute normals (SPK_NULL_REF to used the emitter's zone)
 		*/
-		void setNormalZone(Zone* zone);
+		void setNormalZone(const Ref<Zone>& zone);
 
 		/**
 		* @brief Gets the normal zone of this normalEmitter
 		* @return the normal zone of this normalEmitter
 		*/
-		inline Zone* getNormalZone() const;
+		inline const Ref<Zone>& getNormalZone() const;
 
 		/**
 		* @brief Sets whether normals are inverted or not
@@ -97,16 +95,16 @@ namespace SPK
 	private :
 	
 		bool inverted;
-		Zone* normalZone;
+		Ref<Zone> normalZone;
 
 		NormalEmitter(
-			Zone* zone = NULL,
+			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f,
 			float forceMin = 1.0f,
 			float forceMax = 1.0f,
-			Zone* normalZone = NULL,
+			const Ref<Zone>& normalZone = SPK_NULL_REF,
 			bool inverted = false);
 
 		NormalEmitter(const NormalEmitter& emitter);
@@ -114,14 +112,14 @@ namespace SPK
 		virtual void generateVelocity(Particle& particle,float speed) const;
 	};
 
-	inline NormalEmitter* NormalEmitter::create(
-		Zone* zone,
+	inline Ref<NormalEmitter> NormalEmitter::create(
+		const Ref<Zone>& zone,
 		bool full,
 		int tank,
 		float flow,
 		float forceMin,
 		float forceMax,
-		Zone* normalZone,
+		const Ref<Zone>& normalZone,
 		bool inverted)
 	{
 		return SPK_NEW(NormalEmitter,
@@ -135,7 +133,7 @@ namespace SPK
 			inverted);
 	}
 
-	inline Zone* NormalEmitter::getNormalZone() const
+	inline const Ref<Zone>& NormalEmitter::getNormalZone() const
 	{
 		return normalZone;
 	}

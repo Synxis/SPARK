@@ -19,8 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include "Core/SPK_Zone.h"
-#include "Core/SPK_Particle.h"
+#include <SPARK_Core.h>
 
 namespace SPK
 {

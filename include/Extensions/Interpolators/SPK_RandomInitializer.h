@@ -22,18 +22,16 @@
 #ifndef H_SPK_RANDOMINITIALIZER
 #define H_SPK_RANDOMINITIALIZER
 
-#include "Core/SPK_Interpolator.h"
-
 namespace SPK
 {	
 	template<typename T>
 	class RandomInitializer : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_REGISTERABLE(RandomInitializer<T>);
+	SPK_IMPLEMENT_REFERENCEABLE(RandomInitializer<T>);
 
 	public :
 
-		static inline RandomInitializer<T>* create(const T& minValue,const T& maxValue);
+		static inline Ref<RandomInitializer<T>> create(const T& minValue,const T& maxValue);
 
 		inline void setValues(const T& minValue,const T& maxValue);
 		inline const T& getMinValue() const;
@@ -69,7 +67,7 @@ namespace SPK
 	{}
 
 	template<typename T>
-	inline RandomInitializer<T>* RandomInitializer<T>::create(const T& min,const T& max)
+	inline Ref<RandomInitializer<T>> RandomInitializer<T>::create(const T& min,const T& max)
 	{
 		return SPK_NEW(RandomInitializer<T>,min,max);
 	}

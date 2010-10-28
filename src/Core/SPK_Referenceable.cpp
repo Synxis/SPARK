@@ -23,30 +23,25 @@
 
 namespace SPK
 {
-	void DataSet::init(size_t nbData)
-	{
-		destroyAllData();
+	std::map<WeakRef<Referenceable>,WeakRef<Referenceable>> Referenceable::copyBuffer;
 
-		if (this->nbData != nbData)
+	Referenceable::Referenceable() :
+		Nameable(),
+		nbReferences(0),
+		shared(false)
+	{}
+
+	Referenceable::Referenceable(const Referenceable& referenceable) :
+		Nameable(referenceable),
+		nbReferences(0),
+		shared(referenceable.shared)
+	{}
+
+	Referenceable::~Referenceable()
+	{
+		if (nbReferences != 0)
 		{
-			SPK_DELETE_ARRAY(dataArray);
-			dataArray = SPK_NEW_ARRAY(Data*,nbData);
-			for (size_t i = 0; i < nbData; ++i)
-				dataArray[i] = NULL;
-			this->nbData = nbData;
+			SPK_LOG_ERROR("Referenceable::~Referenceable() - The number of references of the object is not 0 during destruction");
 		}
-	}
-
-	void DataSet::setData(size_t index,Data* data)
-	{
-		SPK_DELETE(dataArray[index]);
-		dataArray[index] = data;
-	}
-
-	void DataSet::destroyAllData()
-	{
-		for (size_t i = 0; i < nbData; ++i)
-			setData(i,NULL);
-		initialized = false;
 	}
 }

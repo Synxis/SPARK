@@ -20,7 +20,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include "Rendering/DX9/SPK_DX9_Renderer.h"
+//#include "Rendering/DX9/SPK_DX9_Renderer.h"
 
 namespace SPK
 {

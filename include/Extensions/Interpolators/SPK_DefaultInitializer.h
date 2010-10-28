@@ -22,18 +22,16 @@
 #ifndef H_SPK_DEFAULTINITIALIZER
 #define H_SPK_DEFAULTINITIALIZER
 
-#include "Core/SPK_Interpolator.h"
-
 namespace SPK
 {
 	template<typename T>
 	class DefaultInitializer : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_REGISTERABLE(DefaultInitializer<T>);
+	SPK_IMPLEMENT_REFERENCEABLE(DefaultInitializer<T>);
 
 	public :
 
-		static inline DefaultInitializer<T>* create(const T& value);
+		static inline Ref<DefaultInitializer<T>> create(const T& value);
 
 		inline void setDefaultValue(const T& value);
 		inline const T& getDefaultValue() const;
@@ -65,7 +63,7 @@ namespace SPK
 	{}
 
 	template<typename T>
-	inline DefaultInitializer<T>* DefaultInitializer<T>::create(const T& value)
+	inline Ref<DefaultInitializer<T>> DefaultInitializer<T>::create(const T& value)
 	{
 		return SPK_NEW(DefaultInitializer<T>,value);
 	}

@@ -24,10 +24,6 @@
 
 #include <algorithm> // for std:swap
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_DataSet.h"
-#include "Core/SPK_Color.h"
-
 namespace SPK
 {
 	/**

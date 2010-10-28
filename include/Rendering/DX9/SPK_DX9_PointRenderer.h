@@ -23,9 +23,9 @@
 #ifndef H_SPK_DX9_POINTRENDERER
 #define H_SPK_DX9_POINTRENDERER
 
-#include "Rendering/DX9/SPK_DX9_Renderer.h"
-#include "Extensions/Renderers/SPK_PointRendererInterface.h"
-#include "Rendering/DX9/SPK_DX9_Buffer.h"
+//#include "Rendering/DX9/SPK_DX9_Renderer.h"
+//#include "Extensions/Renderers/SPK_PointRendererInterface.h"
+//#include "Rendering/DX9/SPK_DX9_Buffer.h"
 
 namespace SPK
 {
@@ -44,7 +44,7 @@ namespace DX9
 	class SPK_DX9_PREFIX DX9PointRenderer :	public DX9Renderer,
 											public PointRendererInterface
 	{
-	SPK_IMPLEMENT_REGISTERABLE(DX9PointRenderer)
+	SPK_IMPLEMENT_REFERENCEABLE(DX9PointRenderer)
 
 	public :
 

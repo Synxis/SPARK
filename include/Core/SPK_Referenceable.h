@@ -19,16 +19,13 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_REGISTERABLE
-#define H_SPK_REGISTERABLE
+#ifndef H_SPK_REFERENCEABLE
+#define H_SPK_REFERENCEABLE
 
 #include <map>
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Nameable.h"
-
-// A macro implementing the clone method for Registerable children
-#define SPK_IMPLEMENT_REGISTERABLE(ClassName) \
+// A macro implementing the clone method for Referenceable children
+#define SPK_IMPLEMENT_REFERENCEABLE(ClassName) \
 \
 private : \
 virtual ClassName* clone() const \
@@ -41,81 +38,96 @@ virtual std::string getClassName() const {return #ClassName;}
 
 namespace SPK
 {
-	class SPK_PREFIX Registerable : public Nameable
+	class System;
+	class Group;
+
+	class SPK_PREFIX Referenceable : public Nameable
 	{
 	friend class System;
 	friend class Group;
 	friend class SPKContext;
+	template<typename T> friend class Ref;
 
 	public :
 
-		virtual ~Registerable();
-
-		inline void increment();
-		void decrement();
+		//inline void increment();
+		//void decrement();
 
 		inline unsigned int getNbReferences() const;
 		inline bool isShared() const;
-		inline bool isDestroyable() const;
+		//inline bool isDestroyable() const;
 		
 		inline void setShared(bool shared);
-		inline void setDestroyable(bool destroyable);
+		//inline void setDestroyable(bool destroyable);
 
-		bool destroy(bool decrement = true);
+		//bool destroy(bool decrement = true);
 
-		static Registerable* copyRegisterable(const Registerable* registerable,bool increment = true);
+		template<typename T>
+		static Ref<T> copyRegisterable(const Ref<T>& ref);
 
 		virtual std::string getClassName() const = 0;
 
 	protected :
 
-		Registerable();
-		Registerable(const Registerable& registerable);
+		Referenceable();
+		Referenceable(const Referenceable& referenceable);
 
-		static void incrementChild(Registerable* registerable);
-		static void decrementChild(Registerable* registerable);
-		static bool destroyChild(Registerable* registerable);
-		static Registerable* copyChild(Registerable* registerable,bool increment = true);
+		virtual ~Referenceable();
+
+		template<typename T>
+		static Ref<T> copyChild(const Ref<T>& ref);
 
 	private :
 
-		static std::map<const Registerable*,Registerable*> copyBuffer;
+		static std::map<WeakRef<Referenceable>,WeakRef<Referenceable>> copyBuffer;
 
 		unsigned int nbReferences;
 		bool shared;
-		bool destroyable;
 
-		virtual Registerable* clone() const = 0;
+		virtual Referenceable* clone() const = 0;
 	};
 
-	inline void Registerable::increment()
-	{
-		++nbReferences;
-	}
-
-	inline unsigned int Registerable::getNbReferences() const
+	inline unsigned int Referenceable::getNbReferences() const
 	{
 		return nbReferences;
 	}
 
-	inline bool Registerable::isShared() const
+	inline bool Referenceable::isShared() const
 	{
 		return shared;
 	}
 
-	inline bool Registerable::isDestroyable() const
-	{
-		return destroyable;
-	}
-
-	inline void Registerable::setShared(bool shared)
+	inline void Referenceable::setShared(bool shared)
 	{
 		this->shared = shared;
 	}
 
-	inline void Registerable::setDestroyable(bool destroyable)
+	template<typename T>
+	Ref<T> Referenceable::copyRegisterable(const Ref<T>& ref)
 	{
-		this->destroyable = destroyable;
+		if (ref == NULL)
+			return ref;
+
+		copyBuffer.clear();
+		return Ref<T>(dynamic_cast<T*>(ref->clone()));
+	}
+
+	template<typename T>
+	Ref<T> Referenceable::copyChild(const Ref<T>& ref)
+	{
+		if (ref == NULL)
+			return Ref<T>();
+
+		if (ref->isShared())
+			return ref;
+
+		std::map<WeakRef<Referenceable>,WeakRef<Referenceable>>::const_iterator it = copyBuffer.find(ref);
+		if (it != copyBuffer.end())
+			return it->second.cast<T>();
+
+		Referenceable* clone = ref->clone();
+		copyBuffer.insert(std::pair<WeakRef<Referenceable>,WeakRef<Referenceable>>(WeakRef<Referenceable>(ref),WeakRef<Referenceable>(clone)));
+		return Ref<T>(dynamic_cast<T*>(clone));
 	}
 }
 

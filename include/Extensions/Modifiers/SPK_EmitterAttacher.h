@@ -22,23 +22,26 @@
 #ifndef H_SPK_EMITTERATTACHER
 #define H_SPK_EMITTERATTACHER
 
-#include "Core/SPK_Modifier.h"
-
 namespace SPK
 {
 	class Emitter;
 
 	class EmitterAttacher : public Modifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(EmitterAttacher)
+	SPK_IMPLEMENT_REFERENCEABLE(EmitterAttacher)
 
 	public :
 
-		static inline EmitterAttacher* create(size_t groupIndex = 0,Emitter* emitter = NULL,bool orientate = false,bool rotate = false);
+		static inline Ref<EmitterAttacher> create(
+			size_t groupIndex = 0,
+			const Ref<Emitter>& emitter = SPK_NULL_REF,
+			bool orientate = false,
+			bool rotate = false);
+
 		~EmitterAttacher();
 
-		void setEmitter(Emitter* emitter);
-		inline Emitter* getEmitter() const;
+		void setEmitter(const Ref<Emitter>& emitter);
+		inline const Ref<Emitter>& getEmitter() const;
 
 		inline void setGroupIndex(size_t index);
 		inline size_t getGroupIndex() const;
@@ -64,18 +67,15 @@ namespace SPK
 
 			inline EmitterData(size_t nbParticles,Group* emittingGroup);
 			
-			inline Emitter** getEmitters() const;
+			inline Ref<Emitter>* getEmitters() const;
 			inline void setGroup(Group* group);
 			inline Group* getGroup() const;
 
-			void destroyEmitter(size_t index);
-			void createEmitter(size_t index,const Emitter* emitter);
-
-			void flushUsedEmitters();
+			void setEmitter(size_t index,const Ref<Emitter>& emitter);
 
 		private :
 
-			Emitter** data;
+			Ref<Emitter>* data;
 			size_t dataSize;
 
 			Group* group;
@@ -85,14 +85,19 @@ namespace SPK
 			virtual inline void swap(size_t index0,size_t index1);
 		};
 
-		Emitter* baseEmitter;
+		Ref<Emitter> baseEmitter;
 
 		bool orientationEnabled;
 		bool rotationEnabled;
 
 		size_t groupIndex;
 
-		EmitterAttacher(size_t groupIndex = 0,Emitter* emitter = NULL,bool orientate = false,bool rotate = false);
+		EmitterAttacher(
+			size_t groupIndex = 0,
+			const Ref<Emitter>& emitter = SPK_NULL_REF,
+			bool orientate = false,
+			bool rotate = false);
+
 		EmitterAttacher(const EmitterAttacher& emitterAttacher);
 
 		bool checkEmitterValidity() const;
@@ -101,12 +106,16 @@ namespace SPK
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-	inline EmitterAttacher* EmitterAttacher::create(size_t groupIndex,Emitter* emitter,bool orientate,bool rotate)
+	inline Ref<EmitterAttacher> EmitterAttacher::create(
+		size_t groupIndex,
+		const Ref<Emitter>& emitter,
+		bool orientate,
+		bool rotate)
 	{
 		return SPK_NEW(EmitterAttacher,groupIndex,emitter,orientate,rotate);
 	}
 
-	inline Emitter* EmitterAttacher::getEmitter() const
+	inline const Ref<Emitter>& EmitterAttacher::getEmitter() const
 	{
 		return baseEmitter;
 	}
@@ -137,7 +146,7 @@ namespace SPK
 		return rotationEnabled;
 	}
 
-	inline Emitter** EmitterAttacher::EmitterData::getEmitters() const
+	inline Ref<Emitter>* EmitterAttacher::EmitterData::getEmitters() const
 	{
 		return data;
 	}

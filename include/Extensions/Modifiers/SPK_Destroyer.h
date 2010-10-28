@@ -22,15 +22,12 @@
 #ifndef H_SPK_DESTROYER
 #define H_SPK_DESTROYER
 
-#include "Core/SPK_ZonedModifier.h"
-#include "Core/SPK_Iterator.h"
-
 namespace SPK
 {
 	/** @brief A Modifier that destroy particles */
 	class Destroyer : public ZonedModifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Destroyer)
+	SPK_IMPLEMENT_REFERENCEABLE(Destroyer)
 
 	public :
 
@@ -40,23 +37,23 @@ namespace SPK
 		* @param zoneTest : the zone test
 		* @return A new destroyer
 		*/
-		static inline Destroyer* create(Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		static inline Ref<Destroyer> create(const Ref<Zone>& zone = SPK_NULL_REF,ZoneTest zoneTest = ZONE_TEST_INSIDE);
 
 	private :
 
-		inline Destroyer(Zone* zone = NULL,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		inline Destroyer(const Ref<Zone>& zone = SPK_NULL_REF,ZoneTest zoneTest = ZONE_TEST_INSIDE);
 		inline Destroyer(const Destroyer& destroyer);
 
 		virtual inline void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-	inline Destroyer* Destroyer::create(Zone* zone,ZoneTest zoneTest)
+	inline Ref<Destroyer> Destroyer::create(const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
 		return SPK_NEW(Destroyer,zone,zoneTest);
 	}
 
-	inline Destroyer::Destroyer(Zone* zone,ZoneTest zoneTest) :
-		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_ALL & ~ZONE_TEST_ALWAYS,zoneTest,zone)
+	inline Destroyer::Destroyer(const Ref<Zone>& zone,ZoneTest zoneTest) :
+		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_FLAG_ALL & ~ZONE_TEST_FLAG_ALWAYS,zoneTest,zone)
 	{}
 
 	inline Destroyer::Destroyer(const Destroyer& destroyer) :

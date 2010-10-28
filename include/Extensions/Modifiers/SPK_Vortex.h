@@ -22,8 +22,6 @@
 #ifndef H_SPK_VORTEX
 #define H_SPK_VORTEX
 
-#include "Core/SPK_Modifier.h"
-
 namespace SPK
 {
 	/**
@@ -50,7 +48,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Vortex : public Modifier
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Vortex)
+	SPK_IMPLEMENT_REFERENCEABLE(Vortex)
 
 	public :
 
@@ -62,7 +60,7 @@ namespace SPK
 		* @param attractionSpeed : the speed of attraction
 		* @return a new vortex
 		*/
-		static inline Vortex* create(const Vector3D& position = Vector3D(),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float rotationSpeed = 1.0f,float attractionSpeed = 0.0f);
+		static inline Ref<Vortex> create(const Vector3D& position = Vector3D(),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float rotationSpeed = 1.0f,float attractionSpeed = 0.0f);
 
 		////////////////////
 		// Eue definition //
@@ -229,7 +227,7 @@ namespace SPK
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-	inline Vortex* Vortex::create(const Vector3D& position,const Vector3D& direction,float rotationSpeed,float attractionSpeed)
+	inline Ref<Vortex> Vortex::create(const Vector3D& position,const Vector3D& direction,float rotationSpeed,float attractionSpeed)
 	{
 		return SPK_NEW(Vortex,position,direction,rotationSpeed,attractionSpeed);
 	}

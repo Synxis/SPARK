@@ -22,11 +22,6 @@
 #ifndef H_SPK_ORIENTED3DRENDERERINTERFACE
 #define H_SPK_ORIENTED3DRENDERERINTERFACE
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Particle.h"
-
 // Packs the orientations parameters into one int for orientation presets
 #define PACK_ORIENTATION(lock,look,up) ((lock << 0x10)|(look << 0x8)|(up))
 

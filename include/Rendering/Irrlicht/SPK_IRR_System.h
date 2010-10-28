@@ -25,7 +25,6 @@
 #define H_SPK_IRR_SYSTEM
 
 #include "Rendering/Irrlicht/SPK_IRR_DEF.h"
-#include "Core/SPK_System.h"
 
 namespace SPK
 {

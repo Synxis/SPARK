@@ -22,9 +22,7 @@
 #include <algorithm>
 #include <limits> // for max float value
 
-#include "Core/SPK_System.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Registerable.h"
+#include <SPARK_Core.h>
 
 namespace SPK
 {
@@ -47,7 +45,7 @@ namespace SPK
 		AABBMax(system.AABBMax),
 		initialized(system.initialized)
 	{
-		Registerable::copyBuffer.clear();
+		Referenceable::copyBuffer.clear();
 
 		for (std::vector<Group*>::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
 			groups.push_back(SPK_NEW(Group,*this,**it));

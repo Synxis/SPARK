@@ -21,8 +21,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Rendering/Irrlicht/SPK_IRR_System.h"
-#include "Core/SPK_Group.h"
 
 namespace SPK
 {
@@ -67,7 +67,7 @@ namespace IRR
 
 		setParent(newParent);
 		
-		if (parent != NULL && !isInitialized())
+		if (Transformable::getParent() != NULL && !isInitialized())
 			SPK_LOG_WARNING("IRRSystem(const IRRSystem&,ISceneNode*,ISceneManager*) - A uninitialized system may have a NULL parent");
 		
 		cloneMembers(const_cast<IRRSystem*>(&system),newManager);

@@ -22,18 +22,16 @@
 #ifndef H_SPK_SIMPLEINTERPOLATOR
 #define H_SPK_SIMPLEINTERPOLATOR
 
-#include "Core/SPK_Interpolator.h"
-
 namespace SPK
 {	
 	template<typename T>
 	class SimpleInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_REGISTERABLE(SimpleInterpolator<T>);
+	SPK_IMPLEMENT_REFERENCEABLE(SimpleInterpolator<T>);
 
 	public :
 
-		static inline SimpleInterpolator<T>* create(const T& birthValue,const T& deathValue);
+		static inline Ref<SimpleInterpolator<T>> create(const T& birthValue,const T& deathValue);
 
 		inline void setValues(const T& min,const T& max);
 		inline const T& getBirthValue() const;
@@ -69,7 +67,7 @@ namespace SPK
 	{}
 
 	template<typename T>
-	inline SimpleInterpolator<T>* SimpleInterpolator<T>::create(const T& birthValue,const T& deathValue)
+	inline Ref<SimpleInterpolator<T>> SimpleInterpolator<T>::create(const T& birthValue,const T& deathValue)
 	{
 		return SPK_NEW(SimpleInterpolator<T>,birthValue,deathValue);
 	}

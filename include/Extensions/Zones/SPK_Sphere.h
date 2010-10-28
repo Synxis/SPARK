@@ -22,17 +22,15 @@
 #ifndef H_SPK_SPHERE
 #define H_SPK_SPHERE
 
-#include "Core/SPK_Zone.h"
-
 namespace SPK
 {
 	class SPK_PREFIX Sphere : public Zone
 	{
-	SPK_IMPLEMENT_REGISTERABLE(Sphere);
+	SPK_IMPLEMENT_REFERENCEABLE(Sphere);
 
 	public :
 
-		static inline Sphere* create(const Vector3D& position = Vector3D(),float radius = 1.0f);
+		static inline Ref<Sphere> create(const Vector3D& position = Vector3D(),float radius = 1.0f);
 
 		////////////
 		// Radius //
@@ -69,7 +67,7 @@ namespace SPK
 		radius(sphere.radius)
 	{}
 
-	inline Sphere* Sphere::create(const Vector3D& position,float radius)
+	inline Ref<Sphere> Sphere::create(const Vector3D& position,float radius)
 	{
 		return SPK_NEW(Sphere,position,radius);
 	}

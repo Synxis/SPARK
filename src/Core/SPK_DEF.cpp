@@ -22,8 +22,10 @@
 #include <ctime>
 #include <limits>
 
-#include "Core/SPK_Logger.h"
-#include "Extensions/Zones/SPK_Point.h"
+//#include "Core/SPK_Logger.h"
+//#include "Extensions/Zones/SPK_Point.h"
+#include <SPARK_Core.h>
+#include "Extensions/Zones/SPK_Point.h" // for default zone
 
 namespace SPK
 {
@@ -35,7 +37,7 @@ namespace SPK
 
 	// This allows SPARK initialization at application start up
 	SPKContext::SPKContext() :
-		defaultZone(NULL)
+		defaultZone()
 	{
 		// Inits the random seed
 		randomSeed = static_cast<unsigned int>(std::time(NULL));
@@ -53,21 +55,19 @@ namespace SPK
 	void SPKContext::release()
 	{
 		// Default zone is destroyed
-		SPK_DELETE(defaultZone);
-		defaultZone = NULL;
+		defaultZone.reset();
 
 		// Singletons are destroyed
 		Logger::destroyInstance();
 	}
 
-	Zone* SPKContext::getDefaultZone()
+	const Ref<Zone>& SPKContext::getDefaultZone()
 	{
 		if (defaultZone == NULL)
 		{
 			// Creates the zone by default
 			defaultZone = Point::create();
 			defaultZone->setShared(true);
-			defaultZone->setDestroyable(false);
 		}
 		return defaultZone;
 	}

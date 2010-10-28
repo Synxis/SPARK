@@ -22,15 +22,7 @@
 #include <algorithm> // for std::swap and std::sort
 #include <limits> // for max float value
 
-#include "Core/SPK_Group.h"
-#include "Core/SPK_System.h"
-#include "Core/SPK_Emitter.h"
-#include "Core/SPK_Renderer.h"
-#include "Core/SPK_Action.h"
-#include "Core/SPK_Zone.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_DataSet.h"
-#include "Core/SPK_RenderBuffer.h"
+#include <SPARK_Core.h>
 
 namespace SPK
 {
@@ -58,8 +50,8 @@ namespace SPK
 		graphicalRadius(0.0f),
 		physicalRadius(0.0f),
 		nbBufferedParticles(0),
-		birthAction(NULL),
-		deathAction(NULL)
+		birthAction(),
+		deathAction()
 	{
 		reallocate(capacity);
 	}
@@ -82,19 +74,19 @@ namespace SPK
 	{
 		reallocate(group.getCapacity());
 
-		renderer.obj = dynamic_cast<Renderer*>(Registerable::copyChild(group.renderer.obj));
+		renderer.obj = Referenceable::copyChild(group.renderer.obj);
 		renderer.dataSet = attachDataSet(renderer.obj);
 
-		setColorInterpolator(dynamic_cast<ColorInterpolator*>(Registerable::copyChild(group.colorInterpolator.obj,false)));
+		setColorInterpolator(Referenceable::copyChild(group.colorInterpolator.obj));
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
-			setParamInterpolator(static_cast<Param>(i),dynamic_cast<FloatInterpolator*>(Registerable::copyChild(group.paramInterpolators[i].obj,false)));
+			setParamInterpolator(static_cast<Param>(i),Referenceable::copyChild(group.paramInterpolators[i].obj));
 
-		for (std::vector<Emitter*>::const_iterator it = group.emitters.begin(); it != group.emitters.end(); ++it)
-			emitters.push_back(dynamic_cast<Emitter*>(Registerable::copyChild(*it)));
+		for (std::vector<Ref<Emitter>>::const_iterator it = group.emitters.begin(); it != group.emitters.end(); ++it)
+			emitters.push_back(Referenceable::copyChild(*it));
 
 		for (std::vector<ModifierDef>::const_iterator it = group.modifiers.begin(); it != group.modifiers.end(); ++it)
 		{
-			Modifier* modifier = dynamic_cast<Modifier*>(Registerable::copyChild(it->obj));
+			Ref<Modifier>& modifier = Referenceable::copyChild(it->obj);
 			ModifierDef modifierDef(modifier,attachDataSet(modifier));
 			modifiers.push_back(modifierDef);
 			if (system.isInitialized())
@@ -102,8 +94,8 @@ namespace SPK
 		}
 		std::sort(sortedModifiers.begin(),sortedModifiers.end(),CompareModifierPriority());
 
-		birthAction = dynamic_cast<Action*>(Registerable::copyChild(group.birthAction));
-		deathAction = dynamic_cast<Action*>(Registerable::copyChild(group.deathAction));
+		birthAction = Referenceable::copyChild(group.birthAction);
+		deathAction = Referenceable::copyChild(group.deathAction);
 	}
 
 	Group::~Group()
@@ -121,21 +113,6 @@ namespace SPK
 
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
 			SPK_DELETE_ARRAY(particleData.parameters[i]);
-
-		Registerable::destroyChild(colorInterpolator.obj);
-		Registerable::destroyChild(renderer.obj);
-
-		for (size_t i = 0; i < NB_PARAMETERS; ++i)
-			Registerable::destroyChild(paramInterpolators[i].obj);
-
-		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
-			Registerable::destroyChild(*it);
-
-		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
-			Registerable::destroyChild(it->obj);
-
-		Registerable::destroyChild(birthAction);
-		Registerable::destroyChild(deathAction);
 
 		emptyBufferedParticles();
 	}
@@ -180,13 +157,13 @@ namespace SPK
 		bool hasAliveEmitters = false;
 		activeEmitters.clear();
 
-		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+		for (std::vector<Ref<Emitter>>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 			if ((*it)->isActive())
 			{
 				int nb = (*it)->updateTankFromTime(deltaTime);
 				if (nb > 0)
 				{
-					activeEmitters.push_back(EmitterPair(*it,nb));
+					activeEmitters.push_back(WeakEmitterPair(*it,nb));
 					nbAutoBorn += nb;
 				}
 
@@ -223,7 +200,7 @@ namespace SPK
 		}
 
 		// Modifies the particles with specific active modifiers behavior
-		for (std::vector<ModifierDef>::const_iterator it = activeModifiers.begin(); it != activeModifiers.end(); ++it)
+		for (std::vector<WeakModifierDef>::const_iterator it = activeModifiers.begin(); it != activeModifiers.end(); ++it)
 			it->obj->modify(*this,it->dataSet,deltaTime);
 
 		// Updates the renderer data
@@ -310,20 +287,17 @@ namespace SPK
 		particleData.maxParticles = capacity;
 	}
 
-	void Group::setColorInterpolator(ColorInterpolator* interpolator)
+	void Group::setColorInterpolator(const Ref<ColorInterpolator>& interpolator)
 	{
 		if (colorInterpolator.obj != interpolator)
 		{
 			detachDataSet(colorInterpolator.dataSet);
-			Registerable::decrementChild(colorInterpolator.obj);
-
 			colorInterpolator.obj = interpolator;
-			Registerable::incrementChild(interpolator);
 			colorInterpolator.dataSet = attachDataSet(interpolator);
 		}
 	}
 
-	void Group::setParamInterpolator(Param param,FloatInterpolator* interpolator)
+	void Group::setParamInterpolator(Param param,const Ref<FloatInterpolator>& interpolator)
 	{
 		if (paramInterpolators[param].obj == NULL && interpolator != NULL)
 		{
@@ -347,82 +321,73 @@ namespace SPK
 		}
 
 		detachDataSet(paramInterpolators[param].dataSet);
-		Registerable::decrementChild(paramInterpolators[param].obj);
 
 		paramInterpolators[param].obj = interpolator;
-		Registerable::incrementChild(interpolator);
 		paramInterpolators[param].dataSet = attachDataSet(interpolator);
+
 		recomputeEnabledParamIndices();
 	}
 
-	void Group::addEmitter(Emitter* emitter)
+	void Group::addEmitter(const Ref<Emitter>& emitter)
 	{
 		if (emitter == NULL)
 		{
-			SPK_LOG_WARNING("Group::addEmitter(Emitter*) - A NULL emitter cannot must not be added to a group");
+			SPK_LOG_WARNING("Group::addEmitter(const Ref<Emitter>&) - A NULL emitter cannot be added to a group");
 			return;
 		}
 
-		std::vector<Emitter*>::const_iterator it = std::find(emitters.begin(),emitters.end(),emitter);
+		std::vector<Ref<Emitter>>::const_iterator it = std::find(emitters.begin(),emitters.end(),emitter);
 		if (it != emitters.end())
 		{
-			SPK_LOG_WARNING("Group::addEmitter(Emitter*) - The emitter is already in the group and cannot be added");
+			SPK_LOG_WARNING("Group::addEmitter(const Ref<Emitter>&) - The emitter is already in the group and cannot be added");
 			return;
 		}
 
-		Registerable::incrementChild(emitter);
 		emitters.push_back(emitter);
 	}
 
-	void Group::removeEmitter(Emitter* emitter)
+	void Group::removeEmitter(const Ref<Emitter>& emitter)
 	{
-		std::vector<Emitter*>::iterator it = emitters.begin();
+		std::vector<Ref<Emitter>>::iterator it = emitters.begin();
 		if (it != emitters.end())
-		{
-			Registerable::decrementChild(*it);
 			emitters.erase(it);
-		}
 		else
-		{
 			SPK_LOG_WARNING("Group::removeEmitter(Emitter*) - The emitter was not found in the group and cannot be removed");
-		}
 	}
 
-	void Group::addModifier(Modifier* modifier)
+	void Group::addModifier(const Ref<Modifier>& modifier)
 	{
 		if (modifier == NULL)
 		{
-			SPK_LOG_WARNING("Group::addModifier(Modifier*) - A NULL modifier cannot be added to a group");
+			SPK_LOG_WARNING("Group::addModifier(const Ref<Modifier>&) - A NULL modifier cannot be added to a group");
 			return;
 		}
 
 		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
 			if (it->obj == modifier)
 			{
-				SPK_LOG_WARNING("Group::addModifier(Modifier*) - The modifier is already in the group and cannot be added");
+				SPK_LOG_WARNING("Group::addModifier(const Ref<Modifier>&) - The modifier is already in the group and cannot be added");
 				return;
 			}
 
-		Registerable::incrementChild(modifier);
 		ModifierDef modifierDef(modifier,attachDataSet(modifier));
 		modifiers.push_back(modifierDef);
 		if (system.isInitialized())
 		{
 			sortedModifiers.push_back(modifierDef);
 			std::sort(sortedModifiers.begin(),sortedModifiers.end(),CompareModifierPriority());
-			SPK_ASSERT(modifiers.size() == sortedModifiers.size(),"Group::addModifier(Modifier*) - Internal Error - Inconsistent storage of modifiers");
+			SPK_ASSERT(modifiers.size() == sortedModifiers.size(),"Group::addModifier(const Ref<Modifier>&) - Internal Error - Inconsistent storage of modifiers");
 		}
 	}
 
-	void Group::removeModifier(Modifier* modifier)
+	void Group::removeModifier(const Ref<Modifier>& modifier)
 	{
 		for (std::vector<ModifierDef>::iterator it = modifiers.begin(); it != modifiers.end(); ++it)
 			if (it->obj == modifier)
 			{
 				detachDataSet(it->dataSet);
-				Registerable::decrementChild(it->obj);
 				if (system.isInitialized())
-					for (std::vector<ModifierDef>::iterator it2 = sortedModifiers.begin(); it2 != sortedModifiers.end(); ++it2)
+					for (std::vector<WeakModifierDef>::iterator it2 = sortedModifiers.begin(); it2 != sortedModifiers.end(); ++it2)
 						if (it2->obj == modifier)
 						{
 							sortedModifiers.erase(it2);
@@ -437,17 +402,14 @@ namespace SPK
 		SPK_LOG_WARNING("The modifier was not found in the group and cannot be removed");
 	}
 
-	void Group::setRenderer(Renderer* renderer)
+	void Group::setRenderer(const Ref<Renderer>& renderer)
 	{
 		if (this->renderer.obj != renderer)
 		{
 			destroyRenderBuffer();
-
 			detachDataSet(this->renderer.dataSet);
-			Registerable::decrementChild(this->renderer.obj);
 
 			this->renderer.obj = renderer;
-			Registerable::incrementChild(renderer);
 			this->renderer.dataSet = attachDataSet(renderer);
 		}
 	}
@@ -506,16 +468,12 @@ namespace SPK
 			--nbManualBorn;
 			--nbBufferedParticles;
 			if (creationBuffer.front().nb <= 0)
-			{
-				Registerable::decrementChild(creationData.emitter);
-				Registerable::decrementChild(creationData.zone);
 				creationBuffer.pop_front();
-			}
 		}
 
 		particleData.oldPositions[index] = particleData.positions[index];
 
-		for (std::vector<ModifierDef>::iterator it = initModifiers.begin(); it != initModifiers.end(); ++it)
+		for (std::vector<WeakModifierDef>::iterator it = initModifiers.begin(); it != initModifiers.end(); ++it)
 			it->obj->init(particle,it->dataSet);
 
 		if (renderer.obj != NULL && renderer.obj->isActive())
@@ -547,7 +505,7 @@ namespace SPK
 			it->swap(index0,index1);
 	}
 
-	DataSet* Group::attachDataSet(DataHandler* dataHandler)
+	DataSet* Group::attachDataSet(const WeakRef<DataHandler>& dataHandler)
 	{
 		if (!system.isInitialized())
 			return NULL;
@@ -637,7 +595,7 @@ namespace SPK
 
 	void Group::propagateUpdateTransform()
 	{
-		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+		for (std::vector<Ref<Emitter>>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 			if (!(*it)->isShared())
 				(*it)->updateTransform(&system);
 
@@ -646,51 +604,51 @@ namespace SPK
 				it->obj->updateTransform(&system);
 	}
 
-	void Group::addParticles(unsigned int nb,Zone* zone,Emitter* emitter,bool full)
+	void Group::addParticles(unsigned int nb,const Ref<Zone>& zone,const Ref<Emitter>& emitter,bool full)
 	{
 		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,Zone*,Emitter*,bool) - emitter must not be NULL");
 		SPK_ASSERT(zone != NULL,"Group::addParticles(unsigned int,Zone*,Emitter*,bool) - zone must not be NULL");
 		addParticles(emitter->updateTankFromNb(nb),Vector3D(),Vector3D(),zone,emitter,full);
 	}
 
-	void Group::addParticles(unsigned int nb,Zone* zone,const Vector3D& velocity,bool full)
+	void Group::addParticles(unsigned int nb,const Ref<Zone>& zone,const Vector3D& velocity,bool full)
 	{
 		SPK_ASSERT(zone != NULL,"Group::addParticles(unsigned int,Zone*,const Vector3D&,bool) - zone must not be NULL");
-		addParticles(nb,Vector3D(),velocity,zone,NULL,full);
+		addParticles(nb,Vector3D(),velocity,zone,SPK_NULL_REF,full);
 	}
 
-	void Group::addParticles(unsigned int nb,const Vector3D& position,Emitter* emitter)
+	void Group::addParticles(unsigned int nb,const Vector3D& position,const Ref<Emitter>& emitter)
 	{
 		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,const Vector3D&,Emitter*) - emitter must not be NULL");
-		addParticles(emitter->updateTankFromNb(nb),position,Vector3D(),NULL,emitter);
+		addParticles(emitter->updateTankFromNb(nb),position,Vector3D(),SPK_NULL_REF,emitter);
 	}
 
-	void Group::addParticles(unsigned int nb,Emitter* emitter)
+	void Group::addParticles(unsigned int nb,const Ref<Emitter>& emitter)
 	{
 		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,Emitter*) - emitter must not be NULL");
 		addParticles(emitter->updateTankFromNb(nb),Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
 	}
 
-	void Group::addParticles(Zone* zone,Emitter* emitter,float deltaTime,bool full)
+	void Group::addParticles(const Ref<Zone>& zone,const Ref<Emitter>& emitter,float deltaTime,bool full)
 	{
 		SPK_ASSERT(emitter != NULL,"Group::addParticles(Zone*,Emitter*,float,bool) - emitter must not be NULL");
 		SPK_ASSERT(zone != NULL,"Group::addParticles(Zone*,Emitter*,float,bool) - zone must not be NULL");
 		addParticles(emitter->updateTankFromTime(deltaTime),Vector3D(),Vector3D(),zone,emitter,full);
 	}
 
-	void Group::addParticles(const Vector3D& position,Emitter* emitter,float deltaTime)
+	void Group::addParticles(const Vector3D& position,const Ref<Emitter>& emitter,float deltaTime)
 	{
 		SPK_ASSERT(emitter != NULL,"Group::addParticles(const Vector3D&,Emitter*,float) - emitter must not be NULL");
-		addParticles(emitter->updateTankFromTime(deltaTime),position,Vector3D(),NULL,emitter);
+		addParticles(emitter->updateTankFromTime(deltaTime),position,Vector3D(),SPK_NULL_REF,emitter);
 	}
 
-	void Group::addParticles(Emitter* emitter,float deltaTime)
+	void Group::addParticles(const Ref<Emitter>& emitter,float deltaTime)
 	{
 		SPK_ASSERT(emitter != NULL,"Group::addParticles(Emitter*,float) - emitter must not be NULL");
 		addParticles(emitter->updateTankFromTime(deltaTime),Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
 	}
 
-	float Group::addParticles(const Vector3D& start,const Vector3D& end,Emitter* emitter,float step,float offset)
+	float Group::addParticles(const Vector3D& start,const Vector3D& end,const Ref<Emitter>& emitter,float step,float offset)
 	{
 		SPK_ASSERT(emitter != NULL,"Group::addParticles(const Vector3D&,const Vector3D&,Emitter*,float,float) - emitter must not be NULL");
 
@@ -730,15 +688,12 @@ namespace SPK
 		return offset - totalDist;
 	}
 
-	void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,Zone* zone,Emitter* emitter,bool full)
+	void Group::addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity,const Ref<Zone>& zone,const Ref<Emitter>& emitter,bool full)
 	{
 		if (nb == 0)
 			return;
 
 		SPK_ASSERT(system.isInitialized(),"Group::addParticles(unsigned int,const Vector3D&,const Vector3D&,Zone*,Emitter*,bool) - Particles cannot be added to an uninitialized group");
-
-		Registerable::incrementChild(emitter);
-		Registerable::incrementChild(zone);
 
 		CreationData data = {nb,position,velocity,zone,emitter,full};
 		creationBuffer.push_back(data);
@@ -765,16 +720,8 @@ namespace SPK
 
 	void Group::emptyBufferedParticles()
 	{
-		if (nbBufferedParticles > 0)
-		{
-			for (std::deque<CreationData>::const_iterator it = creationBuffer.begin(); it != creationBuffer.end(); ++it)
-			{
-				Registerable::decrementChild(it->emitter);
-				Registerable::decrementChild(it->zone);
-			}
-			creationBuffer.clear();
-			nbBufferedParticles = 0;
-		}
+		creationBuffer.clear();
+		nbBufferedParticles = 0;
 	}
 
 	inline void Group::prepareAdditionnalData()
@@ -785,7 +732,7 @@ namespace SPK
 		activeModifiers.clear();
 		initModifiers.clear();
 
-		for (std::vector<ModifierDef>::const_iterator it = sortedModifiers.begin(); it != sortedModifiers.end(); ++it)
+		for (std::vector<WeakModifierDef>::const_iterator it = sortedModifiers.begin(); it != sortedModifiers.end(); ++it)
 		{
 			it->obj->prepareData(*this,it->dataSet);	// if it has a data set, it is prepared
 			if (it->obj->CALL_INIT)
@@ -831,21 +778,17 @@ namespace SPK
 		}
 	}
 
-	void Group::setBirthAction(Action* action)
+	void Group::setBirthAction(const Ref<Action>& action)
 	{
-		Registerable::decrementChild(birthAction);
 		birthAction = action;
-		Registerable::incrementChild(birthAction);
 	}
 
-	void Group::setDeathAction(Action* action)
+	void Group::setDeathAction(const Ref<Action>& action)
 	{
-		Registerable::decrementChild(deathAction);
 		deathAction = action;
-		Registerable::incrementChild(deathAction);
 	}
 
-	DataSet* Group::getModifierDataSet(Modifier* modifier)
+	DataSet* Group::getModifierDataSet(const Ref<Modifier>& modifier)
 	{
 		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
 			if (it->obj == modifier)
@@ -899,7 +842,7 @@ namespace SPK
 				if (object != NULL) return object;
 			}
 
-		for (std::vector<Emitter*>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+		for (std::vector<Ref<Emitter>>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 		{
 			object = (*it)->findByName(name);
 			if (object != NULL) return object;

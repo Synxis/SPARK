@@ -25,11 +25,6 @@
 #include <cmath> // for std::abs
 #include <set>
 
-#include "Core/SPK_Interpolator.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_ArrayData.h"
-
 namespace SPK
 {
 	/**
@@ -130,11 +125,11 @@ namespace SPK
 	template<typename T>
 	class GraphInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_REGISTERABLE(GraphInterpolator<T>);
+	SPK_IMPLEMENT_REFERENCEABLE(GraphInterpolator<T>);
 
 	public :
 
-		static inline GraphInterpolator<T>* create();
+		static inline Ref<GraphInterpolator<T>> create();
 
 		/////////////////////////////
 		// Interpolator parameters //
@@ -309,7 +304,7 @@ namespace SPK
 	};
 
 	template<typename T>
-	inline GraphInterpolator<T>* GraphInterpolator<T>::create()
+	inline Ref<GraphInterpolator<T>> GraphInterpolator<T>::create()
 	{
 		return SPK_NEW(GraphInterpolator<T>);
 	}

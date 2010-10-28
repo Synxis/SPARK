@@ -22,9 +22,6 @@
 #ifndef H_SPK_QUADRENDERERINTERFACE
 #define H_SPK_QUADRENDERERINTERFACE
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Particle.h"
-
 namespace SPK
 {
 	/**

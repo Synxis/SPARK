@@ -22,16 +22,11 @@
 #ifndef H_SPK_RENDERER
 #define H_SPK_RENDERER
 
-#include "SPK_DEF.h"
-#include "SPK_Registerable.h"
-#include "SPK_DataHandler.h"
-
 namespace SPK
 {
 	class Particle;
 	class Group;
 	class Vector3D;
-	class RenderBuffer;
 
 	enum BlendMode
 	{
@@ -54,7 +49,7 @@ namespace SPK
 		SHADER_HINT_GEOMETRY,	/**< Use geometry shader for computation when possible (else fallback to vertex shader if possible) */
 	};
 
-	class SPK_PREFIX Renderer :	public Registerable,
+	class SPK_PREFIX Renderer :	public Referenceable,
 								public DataHandler
 	{
 	friend class Group;
@@ -137,7 +132,7 @@ namespace SPK
 	};
 
 	inline Renderer::Renderer(bool NEEDS_DATASET) :
-		Registerable(),
+		Referenceable(),
 		DataHandler(NEEDS_DATASET),
 		active(true),
 		renderingOptionsMask(RENDERING_OPTION_DEPTH_WRITE),

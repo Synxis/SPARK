@@ -20,11 +20,11 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include "Rendering/DX9/SPK_DX9_LineRenderer.h"
-#include "Rendering/DX9/SPK_DX9_Buffer.h"
-#include "Core/SPK_Particle.h"
-#include "Core/SPK_Group.h"
-#include "Core/SPK_Iterator.h"
+//#include "Rendering/DX9/SPK_DX9_LineRenderer.h"
+//#include "Rendering/DX9/SPK_DX9_Buffer.h"
+//#include "Core/SPK_Particle.h"
+//#include "Core/SPK_Group.h"
+//#include "Core/SPK_Iterator.h"
 
 namespace SPK
 {

@@ -139,16 +139,16 @@ int main(int argc, char *argv[])
 	SPK::System::useRealStep();
 
 	// Renderers
-	SPK::GL::GLPointRenderer* basicRenderer = SPK::GL::GLPointRenderer::create();
+	SPK::Ref<SPK::GL::GLPointRenderer> basicRenderer = SPK::GL::GLPointRenderer::create();
 
-	SPK::GL::GLPointRenderer* particleRenderer = SPK::GL::GLPointRenderer::create(1.0f);
+	SPK::Ref<SPK::GL::GLPointRenderer> particleRenderer = SPK::GL::GLPointRenderer::create(1.0f);
 	particleRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 
 	// Zone
-	SPK::Sphere* sphere = SPK::Sphere::create(SPK::Vector3D(),1.0f);
+	SPK::Ref<SPK::Sphere> sphere = SPK::Sphere::create(SPK::Vector3D(),1.0f);
 
 	// Gravity
-	SPK::Gravity* gravity = SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f));
+	SPK::Ref<SPK::Gravity> gravity = SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f));
 
 	// System
 	SPK::System* particleSystem = new SPK::System(true); 
@@ -219,7 +219,7 @@ int main(int argc, char *argv[])
 					break;
 
 				case 2 :
-					particleGroup->setRenderer(NULL);
+					particleGroup->setRenderer(SPK_NULL_REF);
 					break;
 				}
 			}
@@ -307,7 +307,9 @@ int main(int argc, char *argv[])
 			frameFPS.pop_front();
 	}
 
+	SPK_DUMP_MEMORY
 	delete particleSystem;
+	SPK_DUMP_MEMORY
 
 	SDL_Quit();
 	

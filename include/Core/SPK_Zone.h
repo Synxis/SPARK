@@ -22,11 +22,6 @@
 #ifndef H_SPK_ZONE
 #define H_SPK_ZONE
 
-#include "Core/SPK_DEF.h"
-#include "Core/SPK_Vector3D.h"
-#include "Core/SPK_Registerable.h"
-#include "Core/SPK_Transformable.h"
-
 namespace SPK
 {
 	class Particle;
@@ -42,7 +37,7 @@ namespace SPK
 		ZONE_TEST_ALWAYS,		/**< The test is always passed */
 	};
 
-	class SPK_PREFIX Zone : public Registerable, 
+	class SPK_PREFIX Zone : public Referenceable, 
 							public Transformable
 	{
 	public :
@@ -103,7 +98,7 @@ namespace SPK
 	};
 
 	inline Zone::Zone(const Vector3D& position) :
-		Registerable(),
+		Referenceable(),
 		Transformable(),
 		position(position)
 	{

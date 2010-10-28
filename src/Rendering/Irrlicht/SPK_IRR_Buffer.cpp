@@ -21,8 +21,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <SPARK_Core.h>
 #include "Rendering/Irrlicht/SPK_IRR_Buffer.h"
-#include "Core/SPK_Logger.h"
 
 namespace SPK
 {

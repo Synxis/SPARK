@@ -338,7 +338,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\Core\SPK_Registerable.cpp"
+					RelativePath="..\..\..\src\Core\SPK_Referenceable.cpp"
 					>
 				</File>
 				<File
@@ -476,6 +476,10 @@
 				RelativePath="..\..\..\include\SPARK.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\include\SPARK_Core.h"
+				>
+			</File>
 			<Filter
 				Name="Core"
 				>
@@ -540,7 +544,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\Core\SPK_Registerable.h"
+					RelativePath="..\..\..\include\Core\SPK_Reference.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\Core\SPK_Referenceable.h"
 					>
 				</File>
 				<File

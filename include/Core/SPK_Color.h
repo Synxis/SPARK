@@ -24,8 +24,6 @@
 
 #include <iostream> // for operator <<
 
-#include "Core/SPK_DEF.h"
-
 namespace SPK
 {
 	/** @brief A class defining a 32 bits color (4 components stored in rgba) */
