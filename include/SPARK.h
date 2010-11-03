@@ -22,6 +22,7 @@
 #ifndef H_SPARK
 #define H_SPARK
 
+// Core
 #include <SPARK_Core.h>
 
 // Interpolators

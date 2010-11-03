@@ -326,6 +326,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\Core\SPK_Descriptor.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\Core\SPK_Emitter.cpp"
 					>
 				</File>
@@ -505,6 +509,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\Core\SPK_DEF.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\Core\SPK_Descriptor.h"
 					>
 				</File>
 				<File

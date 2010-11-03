@@ -22,53 +22,172 @@
 #ifndef H_SPK_DESCRIPTOR
 #define H_SPK_DESCRIPTOR
 
+#include <vector>
+#include <string>
+
 namespace SPK
 {
+	class Descriptor;
+
+	enum AttributeType
+	{
+		ATTRIBUTE_TYPE_CHAR,
+		ATTRIBUTE_TYPE_BOOL,
+		ATTRIBUTE_TYPE_INT32,
+		ATTRIBUTE_TYPE_UINT32,
+		ATTRIBUTE_TYPE_FLOAT,
+		ATTRIBUTE_TYPE_VECTOR,
+		ATTRIBUTE_TYPE_COLOR,
+		ATTRIBUTE_TYPE_STRING,
+		ATTRIBUTE_TYPE_REF,
+		ATTRIBUTE_TYPE_CHARS,
+		ATTRIBUTE_TYPE_BOOLS,
+		ATTRIBUTE_TYPE_INT32S,
+		ATTRIBUTE_TYPE_UINT32S,
+		ATTRIBUTE_TYPE_FLOATS,
+		ATTRIBUTE_TYPE_VECTORS,
+		ATTRIBUTE_TYPE_COLORS,
+		ATTRIBUTE_TYPE_REFS,
+		ATTRIBUTE_TYPE_STRINGS,
+	};
+
 	class Attribute
 	{
+	friend class Descriptor;
+
 	public : 
 
 		Attribute(std::string& name,AttributeType type);
+
+		inline std::string& getName() const;
+		inline AttributeType getType() const;
+		inline bool isValueSet() const;
+
+		template<typename T>
+		void setValue(T value);
+
+		template<typename T>
+		void setValues(T* values,size_t nb);
+
+		template<typename T>
+		T getValue() const;
+
+		template<typename T>
+		T* getValues(size_t& nb) const;
 		
 	private :
 
 		std::string& name;
-	}
+		AttributeType type;
+		size_t offset;
+
+		Descriptor* descriptor;
+		bool valueSet;
+	};
 
 	class Descriptor
 	{
+	friend class Attribute;
+
 	public :
 
-		Descriptor(Attribute* attributes,size_t nb)
-		
-		setAttributeFloat(const std::string& name,float value);
-		setAttributeInt(const std::string& name,int value);
-		setAttributeColor(const std::string& name,Color value);
-		setAttributeVector3D(const std::string& name,const Vector3D& value);
-		setAttributeChar(const std::string& name,char attribute);
-		setAttributePtr(const std::string& name,const Serializable* value);
+		Descriptor(std::vector<Attribute> attributes);
 
-		float getAttributeFloat(const std::string& name);
-		int getAttributeInt(const std::string& name);
-		Color getAttributeColor(const std::string& name);
-		Vector3D getAttributeVector3D(const std::string& name);
-		Char getAttributeChar(const std::string& name);
-		Serializable* getAttributePtr(const std::string& name);
+		inline Attribute* getAttribute(const std::string& name);
+		inline Attribute& getAttribute(size_t index);
+
+		const Attribute* getAttribute(const std::string& name) const;
+		const Attribute& getAttribute(size_t index) const;
+
+		inline size_t getAttributeNb() const;
+		inline size_t getSignature() const;
 
 	private :
 
-		char* buffer;
-		size_t bufferSize;
-		size_t offset;
+		std::vector<Attribute> attributes;		
+		std::vector<char> buffer; // An internal buffer is used to limit memory allocation of attribute values
 
-		char[4] signature;
+		unsigned long int signature;
 
-		void Attribute(const std::string& name,void* value,size_t size)
-		void* getAttribute(const str::string& name,char* offset,);
-
-		std::Set<Attribute> attributesPerName;
-		std::Set<Attribute> attributesPerID;
+		void computeSignature();
+		void markAttributes();
 	};
+
+	inline std::string& Attribute::getName() const
+	{
+		return name;
+	}
+
+	inline AttributeType Attribute::getType() const
+	{
+		return type;
+	}
+
+	inline bool Attribute::isValueSet() const
+	{
+		return valueSet;
+	}
+
+	inline const Attribute* Descriptor::getAttribute(const std::string& name) const
+	{
+		return const_cast<Descriptor*>(this)->getAttribute(name);
+	}
+
+	inline const Attribute& Descriptor::getAttribute(size_t index) const
+	{
+		return const_cast<Descriptor*>(this)->getAttribute(index);
+	}
+
+	inline size_t Descriptor::getAttributeNb() const
+	{
+		return attributes.size();
+	}
+
+	inline size_t Descriptor::getSignature() const
+	{
+		return signature;
+	}
+
+	template<typename T>
+	void Attribute::setValue(T value)
+	{
+		offset = descriptor->buffer.size();
+		char* valueC = reinterpret_cast<char*>(value)
+		for (size_t i = 0; i < sizeof(T))
+			descriptor->buffer.push_back(valueC[i]);
+		valueSet = true;
+	}
+
+	template<typename T>
+	void Attribute::setValues(T* values,size_t nb)
+	{
+		offset = descriptor->buffer.size();
+		char* nbC = reinterpret_cast<char*>(nb)
+		char* valuesC = reinterpret_cast<char*>(values)
+		for (size_t i = 0; i < sizeof(size_t))
+			descriptor->buffer.push_back(nbC[i]);
+		for (size_t i = 0; i < sizeof(T) * nb)
+			descriptor->buffer.push_back(valuesC[i]);
+		valueSet = true;	
+	}
+
+	template<typename T>
+	T Attribute::getValue() const
+	{
+		SPK_ASSERT(valueSet,"Attribute::getValue() - The value is not set and therefore cannot be read");
+		return reinterpret_cast<T>(descriptor->buffer[offset]);
+	}
+
+	template<typename T>
+	T* Attribute::getValues(size_t& nb) const
+	{
+		SPK_ASSERT(valueSet,"Attribute::getValues(size_t& nb) - The value is not set and therefore cannot be read");
+		nb = reinterpret_cast<size_t>(descriptor->buffer[offset]);
+		T* tmpBuffer = new T[nb];
+		for (size_t i = 0; i < nb; ++i)
+			tmpBuffer[i] = reinterpret_cast<T>(descriptor->buffer[offset + i * sizeof(T)]);
+		return tmpBuffer;
+	}
 }
 
 #endif

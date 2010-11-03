@@ -34,6 +34,7 @@
 #include "Core/SPK_DataSet.h"
 #include "Core/SPK_ArrayData.h"
 #include "Core/SPK_DataHandler.h"
+#include "Core/SPK_Descriptor.h"
 #include "Core/SPK_Nameable.h"
 #include "Core/SPK_Referenceable.h"
 #include "Core/SPK_Transformable.h"
