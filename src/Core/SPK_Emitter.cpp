@@ -28,7 +28,7 @@ namespace SPK
 		active(true),
 		zone(zone == NULL ? SPK_DEFAULT_ZONE : zone),
 		flow(1.0f),
-		fraction(0.0f)
+		fraction(SPK_RANDOM(0.0f,1.0f))
 	{
 		setTank(tank);
 		setFlow(flow);
@@ -39,25 +39,36 @@ namespace SPK
 		Referenceable(emitter),
 		active(emitter.active),
 		flow(emitter.flow),
-		tank(emitter.tank),
+		minTank(emitter.minTank),
+		maxTank(emitter.maxTank),
 		forceMin(emitter.forceMin),
 		forceMax(emitter.forceMax),
-		fraction(0.0f)
+		fraction(SPK_RANDOM(0.0f,1.0f))
 	{
 		zone = copyChild(emitter.zone);
+		resetTank();
 	}
 
 	Emitter::~Emitter() {}
 
-	void Emitter::setTank(int tank)
+	void Emitter::setTank(int minTank,int maxTank)
 	{
-		SPK_ASSERT(flow >= 0.0f || tank >= 0,"Emitter::setTank(int) : the flow and tank of an emitter cannot be both negative");
-		this->tank = tank;
+		SPK_ASSERT(minTank >= 0 == maxTank >= 0,"Emitter::setTank(int,int) : min and max tank values must be of the same sign");
+		if (minTank < 0 || maxTank < 0) minTank = maxTank = -1;
+		if (minTank > maxTank)
+		{
+			SPK_LOG_WARNING("Emitter::setTank(int,int) : min tank is greater than max tank. Values are swapped");
+			std::swap(minTank,maxTank);
+		}
+		this->minTank = minTank;
+		this->maxTank = maxTank;
+		resetTank();
+		SPK_ASSERT(flow >= 0.0f || currentTank >= 0,"Emitter::setTank(int,int) : the flow and tank of an emitter cannot be both negative");
 	}
 
 	void Emitter::setFlow(float flow)
 	{
-		SPK_ASSERT(flow >= 0.0f || tank >= 0,"Emitter::setFlow(float) : the flow and tank of an emitter cannot be both negative");
+		SPK_ASSERT(flow >= 0.0f || currentTank >= 0,"Emitter::setFlow(float) : the flow and tank of an emitter cannot be both negative");
 		this->flow = flow;
 	}
 

@@ -167,7 +167,7 @@ namespace SPK
 					nbAutoBorn += nb;
 				}
 
-				hasAliveEmitters |= ((*it)->getTank() != 0); // An emitter with some particles in its tank is still potentially alive
+				hasAliveEmitters |= ((*it)->getCurrentTank() != 0); // An emitter with some particles in its tank is still potentially alive
 			}
 
 		size_t emitterIndex = 0;

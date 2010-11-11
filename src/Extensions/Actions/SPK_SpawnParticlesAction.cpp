@@ -76,7 +76,7 @@ namespace SPK
 			return;
 
 		const Ref<Emitter>& emitter = getNextAvailableEmitter();
-		emitter->setTank(baseEmitter->getTank());
+		emitter->setTank(baseEmitter->getMinTank(),baseEmitter->getMaxTank());
 
 		const Ref<Zone>& zone = emitter->getZone();
 		zone->getTransform().setPosition(particle.position());

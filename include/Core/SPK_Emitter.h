@@ -45,7 +45,7 @@ namespace SPK
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Referenceable)
 	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("tank",ATTRIBUTE_TYPE_INT32)
+	SPK_ATTRIBUTE("tank",ATTRIBUTE_TYPE_INT32S)
 	SPK_ATTRIBUTE("flow",ATTRIBUTE_TYPE_FLOAT)
 	SPK_ATTRIBUTE("force",ATTRIBUTE_TYPE_VECTOR)
 	SPK_ATTRIBUTE("zone",ATTRIBUTE_TYPE_REF)
@@ -80,7 +80,7 @@ namespace SPK
 		//////////
 
 		/**
-		* @brief Sets the number of particles in this emitter's tank
+		* @brief Sets the initial number of particles in this emitter's tank
 		*
 		* Each time the emitter is updated, the number of particles emitted is deduced from the emitter tank.
 		* When the tank reaches 0, the emitter will not emit any longer until it is refilled.<br>
@@ -88,16 +88,47 @@ namespace SPK
 		* A number of -1 (or any negative number) means the emitter has an infinite tank which will never be empty.<br>
 		/ <br>
 		* Note that having both negative tank and flow is illegal.
+		* The current tank can be reset to its initial value with a call to resetTank()
 		*
-		* @param tank : the number of particles in this emitters's tank
+		* @param tank : the initial number of particles in this emitters's tank
 		*/
-		void setTank(int tank);
+		inline void setTank(int tank);
 
 		/**
-		* @brief Gets the number of particles in this emitter's tank
-		* @return the number of particles in this emitters's tank
+		* @brief Sets the min and max number of particles in this emitter's tank
+		* 
+		* min and max value must be of the same sign (negative numbers meaning the tank is infinite).<br>
+		* The current tank is drawn between min and max.<br>
+		* The current tank can be redrawn with a call to resetTank().
+		*
+		* @param minTank : the minimum initial number of particles in this emitters's tank
+		* @param maxTank : the maximum initial number of particles in this emitters's tank
 		*/
-		inline int getTank() const;
+		void setTank(int minTank,int maxTank);
+
+		/**
+		* @brief Gets the current number of particles in this emitter's tank
+		* @return the current number of particles in this emitters's tank
+		*/
+		inline int getCurrentTank() const;
+
+		/**
+		* @brief Gets the minimum initial number of particles in this emitter's tank
+		* @return the minimum initial number of particles in this emitters's tank
+		*/
+		inline int getMinTank() const;
+
+		/**
+		* @brief Gets the maximum initial number of particles in this emitter's tank
+		* @return the maximum initial number of particles in this emitters's tank
+		*/
+		inline int getMaxTank() const;
+
+		/**
+		* @brief Resets the current tank
+		* The current tank is reevaluated between the min and max tank
+		*/
+		inline void resetTank();
 
 		//////////
 		// Flow //
@@ -195,7 +226,9 @@ namespace SPK
 
 		bool active;
 
-		int tank;
+		int minTank;
+		int maxTank;
+		int currentTank;
 		float flow;
 
 		float forceMin;
@@ -234,9 +267,29 @@ namespace SPK
 		return active;
 	}
 
-	inline int Emitter::getTank() const
+	inline void Emitter::setTank(int tank)
 	{
-		return tank;
+		setTank(tank,tank);
+	}
+
+	inline int Emitter::getCurrentTank() const
+	{
+		return currentTank;
+	}
+
+	inline int Emitter::getMinTank() const
+	{
+		return minTank;
+	}
+
+	inline int Emitter::getMaxTank() const
+	{
+		return maxTank;
+	}
+
+	inline void Emitter::resetTank()
+	{
+		currentTank = SPK_RANDOM(minTank,maxTank);
 	}
 
 	inline float Emitter::getFlow() const
@@ -272,18 +325,18 @@ namespace SPK
 		size_t nbBorn;
 		if (flow < 0.0f)
 		{
-			nbBorn = tank > 0 ? tank : 0;
-			tank = 0;
+			nbBorn = currentTank > 0 ? currentTank : 0;
+			currentTank = 0;
 		}
-		else if (tank != 0)
+		else if (currentTank != 0)
 		{
 			fraction += flow * deltaTime;
 			nbBorn = static_cast<size_t>(fraction);
-			if (tank >= 0)
+			if (currentTank >= 0)
 			{
-				if (nbBorn > static_cast<size_t>(tank))
-					nbBorn = tank;
-				tank -= nbBorn;
+				if (nbBorn > static_cast<size_t>(currentTank))
+					nbBorn = currentTank;
+				currentTank -= nbBorn;
 			}
 			fraction -= nbBorn;
 		}
@@ -294,12 +347,12 @@ namespace SPK
 
 	inline size_t  Emitter::updateTankFromNb(size_t nb)
 	{
-		if (tank < 0)
+		if (currentTank < 0)
 			return nb;
 
-		if (nb > static_cast<size_t>(tank))
-			nb = tank;
-		tank -= nb;
+		if (nb > static_cast<size_t>(currentTank))
+			nb = currentTank;
+		currentTank -= nb;
 		return nb;
 	}
 }
