@@ -47,6 +47,12 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(SphericEmitter)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Emitter)
+	SPK_ATTRIBUTE("direction",ATTRIBUTE_TYPE_VECTOR)
+	SPK_ATTRIBUTE("angles",ATTRIBUTE_TYPE_FLOATS)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		/**
@@ -113,6 +119,9 @@ namespace SPK
 	protected :
 
 		virtual void innerUpdateTransform();
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

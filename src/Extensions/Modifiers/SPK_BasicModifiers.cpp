@@ -49,4 +49,34 @@ namespace SPK
 				particleIt->velocity() *= ratio;
 		}
 	}
+
+	void Gravity::innerImport(const Descriptor& descriptor)
+	{
+		Modifier::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("value"))
+			setValue(attrib->getValue<Vector3D>());
+	}
+
+	void Gravity::innerExport(Descriptor& descriptor) const
+	{
+		Modifier::innerExport(descriptor);
+		descriptor.getAttribute("value")->setValue(getValue());
+	}
+
+	void Friction::innerImport(const Descriptor& descriptor)
+	{
+		Modifier::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("value"))
+			value = attrib->getValue<float>();
+	}
+
+	void Friction::innerExport(Descriptor& descriptor) const
+	{
+		Modifier::innerExport(descriptor);
+		descriptor.getAttribute("value")->setValue(value);
+	}
 }

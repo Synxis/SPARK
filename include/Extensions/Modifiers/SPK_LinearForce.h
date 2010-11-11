@@ -42,6 +42,16 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(LinearForce)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(ZonedModifier)
+	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_VECTOR)
+	SPK_ATTRIBUTE("relative value",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("squared speed",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("parameter",ATTRIBUTE_TYPE_UINT32)
+	SPK_ATTRIBUTE("factor type",ATTRIBUTE_TYPE_UINT32)
+	SPK_ATTRIBUTE("coefficient",ATTRIBUTE_TYPE_FLOAT)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		//////////////////
@@ -284,6 +294,9 @@ namespace SPK
 	protected :
 
 		virtual inline void innerUpdateTransform();
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

@@ -23,7 +23,7 @@
 
 namespace SPK
 {
-	const float Transformable::IDENTITY[] = 
+	const float Transform::IDENTITY[] = 
 	{
 		1.0f,	0.0f,	0.0f,	0.0f,
 		0.0f,	1.0f,	0.0f,	0.0f,
@@ -31,48 +31,48 @@ namespace SPK
 		0.0f,	0.0f,	0.0f,	1.0f,
 	};
 
-	Transformable::Transformable() :
+	Transform::Transform() :
 		currentUpdate(0),
 		lastUpdate(0),
 		lastParentUpdate(0),
-		parent(NULL),
+		parent(SPK_NULL_REF),
 		localIdentity(true)
 	{
 		memcpy(local,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
 		memcpy(world,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
 	}
 
-	Transformable::Transformable(const Transformable& transformable) :
+	Transform::Transform(const Transform& transform) :
 		currentUpdate(0),
 		lastUpdate(0),
 		lastParentUpdate(0),
-		parent(NULL),
-		localIdentity(transformable.localIdentity)
+		parent(SPK_NULL_REF),
+		localIdentity(transform.localIdentity)
 	{
-		memcpy(local,transformable.local,sizeof(float) * TRANSFORM_LENGTH);
-		memcpy(world,transformable.local,sizeof(float) * TRANSFORM_LENGTH); // Sets to local as it is created with no parent
+		memcpy(local,transform.local,sizeof(float) * TRANSFORM_LENGTH);
+		memcpy(world,transform.local,sizeof(float) * TRANSFORM_LENGTH); // Sets to local as it is created with no parent
 	}
 
-	void Transformable::setTransformNC(const float* transform)
+	void Transform::setNC(const float* transform)
 	{
 		for (size_t i = 0; i < TRANSFORM_LENGTH; ++i)
 			local[i] = transform[(i >> 2) + ((i & 3) << 2)];	// conversion
 		
 		localIdentity = false;
-		notifyForTransformUpdate();
+		notifyForUpdate();
 	}
 
-	void Transformable::setTransformPosition(const Vector3D& pos)
+	void Transform::setPosition(const Vector3D& pos)
 	{
 		local[12] = pos.x;
 		local[13] = pos.y;
 		local[14] = pos.z;
 
 		localIdentity = false;
-		notifyForTransformUpdate();
+		notifyForUpdate();
 	}
 
-	void Transformable::setTransformOrientationRH(Vector3D look,Vector3D up)
+	void Transform::setOrientationRH(Vector3D look,Vector3D up)
 	{
 		look.normalize();
 		up.normalize();
@@ -93,10 +93,10 @@ namespace SPK
 		local[10] = -look.z;
 
 		localIdentity = false;
-		notifyForTransformUpdate();
+		notifyForUpdate();
 	}
 
-	void Transformable::setTransformOrientationLH(Vector3D look,Vector3D up)
+	void Transform::setOrientationLH(Vector3D look,Vector3D up)
 	{
 		look.normalize();
 
@@ -116,10 +116,10 @@ namespace SPK
 		local[10] = look.z;
 
 		localIdentity = false;
-		notifyForTransformUpdate();
+		notifyForUpdate();
 	}
 
-	void Transformable::setTransformOrientation(Vector3D axis,float angle)
+	void Transform::setOrientation(Vector3D axis,float angle)
 	{
 		axis.normalize();
 		float c = std::cos(angle);
@@ -138,10 +138,10 @@ namespace SPK
 		local[10] = axis2.z + (1.0f - axis2.z) * c;
 
 		localIdentity = false;
-		notifyForTransformUpdate();
+		notifyForUpdate();
 	}
 
-	void Transformable::setTransformOrientationX(float angle)
+	void Transform::setOrientationX(float angle)
 	{
 		float cosA = std::cos(angle);
 		float sinA = std::sin(angle);
@@ -157,10 +157,10 @@ namespace SPK
 		local[10] = cosA;
 
 		localIdentity = false;
-		notifyForTransformUpdate();
+		notifyForUpdate();
 	}
 
-	void Transformable::setTransformOrientationY(float angle)
+	void Transform::setOrientationY(float angle)
 	{
 		float cosA = std::cos(angle);
 		float sinA = std::sin(angle);
@@ -176,10 +176,10 @@ namespace SPK
 		local[10] = cosA;
 
 		localIdentity = false;
-		notifyForTransformUpdate();
+		notifyForUpdate();
 	}
 
-	void Transformable::setTransformOrientationZ(float angle)
+	void Transform::setOrientationZ(float angle)
 	{
 		float cosA = std::cos(angle);
 		float sinA = std::sin(angle);
@@ -195,42 +195,43 @@ namespace SPK
 		local[10] = 1.0f;
 
 		localIdentity = false;
-		notifyForTransformUpdate();
+		notifyForUpdate();
 	}
 
-	void Transformable::updateTransform(const Transformable* parent)
+	void Transform::update(const WeakRef<const SPKObject>& parent,SPKObject& owner)
 	{
-		if (isTransformUpdateNotified() ||									// the local transform or instance param have been updated
-			parent != this->parent ||										// the parent has changed
-			(parent != NULL && lastParentUpdate != parent->currentUpdate))	// the parent transform has been modified
+		if (isUpdateNotified() ||														// the local transform or instance param have been updated
+			parent != this->parent ||													// the parent has changed
+			(parent != NULL && lastParentUpdate != parent->transform.currentUpdate))	// the parent transform has been modified
 		{
 			if (parent == NULL)
 				memcpy(world,local,sizeof(float) * TRANSFORM_LENGTH);
 			else if (isLocalIdentity())
 			{
-				memcpy(world,parent->world,sizeof(float) * TRANSFORM_LENGTH);
-				lastParentUpdate = parent->lastUpdate;
+				memcpy(world,parent->transform.world,sizeof(float) * TRANSFORM_LENGTH);
+				lastParentUpdate = parent->transform.lastUpdate;
 			}
 			else
 			{
-				multiply(world,parent->world,local);
-				lastParentUpdate = parent->lastUpdate;
+				multiply(world,parent->transform.world,local);
+				lastParentUpdate = parent->transform.lastUpdate;
 			}
 
 			this->parent = parent;
 			lastUpdate = ++currentUpdate;
-			innerUpdateTransform();
+
+			owner.innerUpdateTransform();
 		}
 
-		propagateUpdateTransform();
+		owner.propagateUpdateTransform();
 	}
 
-	void Transformable::transformPos(Vector3D& tPos,const Vector3D& pos)
+	void Transform::transformPos(Vector3D& tPos,const Vector3D& pos)
 	{
 		multiply(tPos,pos,world);
 	}
 
-	void Transformable::transformDir(Vector3D& tDir,const Vector3D& dir)
+	void Transform::transformDir(Vector3D& tDir,const Vector3D& dir)
 	{
 		rotate(tDir,dir,world); // To transform a direction, the translation is ignored
 	}

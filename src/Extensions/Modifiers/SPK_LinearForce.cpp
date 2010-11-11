@@ -200,4 +200,45 @@ namespace SPK
 				}
 		}
 	}
+
+	void LinearForce::innerImport(const Descriptor& descriptor)
+	{
+		ZonedModifier::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("value"))
+			setValue(attrib->getValue<Vector3D>());
+		
+		if (attrib = descriptor.getAttributeWithValue("relative value"))
+		{
+			bool tmpSquaredSpeed = false;
+			bool tmpRelative = attrib->getValue<bool>();
+			if (attrib = descriptor.getAttributeWithValue("squared speed"))
+				tmpSquaredSpeed = attrib->getValue<bool>();
+			setRelative(tmpRelative,tmpSquaredSpeed);
+		}
+			
+		if (attrib = descriptor.getAttributeWithValue("parameter"))
+		{
+			Factor tmpFactor = FACTOR_LINEAR;
+			Param tmpParam = attrib->getValue<Param>();
+			if (attrib = descriptor.getAttributeWithValue("factor type"))
+				tmpFactor = attrib->getValue<Factor>();
+			setParam(tmpParam,tmpFactor);
+		}
+
+		if (attrib = descriptor.getAttributeWithValue("coefficient"))
+			setCoef(attrib->getValue<float>());
+	}
+
+	void LinearForce::innerExport(Descriptor& descriptor) const
+	{
+		ZonedModifier::innerExport(descriptor);
+		descriptor.getAttribute("value")->setValue(getValue());
+		descriptor.getAttribute("relative value")->setValue(isRelative());
+		descriptor.getAttribute("squared speed")->setValue(isSquaredSpeedUsed());
+		descriptor.getAttribute("parameter")->setValue(getParam());
+		descriptor.getAttribute("factor type")->setValue(getFactor());
+		descriptor.getAttribute("coefficient")->setValue(getCoef());
+	}
 }

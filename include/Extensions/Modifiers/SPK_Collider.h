@@ -51,6 +51,11 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(Collider)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Modifier)
+	SPK_ATTRIBUTE("elasticity",ATTRIBUTE_TYPE_FLOAT)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		/////////////////
@@ -82,6 +87,11 @@ namespace SPK
 		* @return the elasticity of the collisions
 		*/
 		inline float getElasticity() const;
+
+	protected :
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

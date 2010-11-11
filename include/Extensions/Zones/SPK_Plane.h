@@ -42,6 +42,11 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(Plane)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Zone)
+	SPK_ATTRIBUTE("normal",ATTRIBUTE_TYPE_VECTOR)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		//////////////////
@@ -93,6 +98,9 @@ namespace SPK
 	protected :
 
 		virtual void innerUpdateTransform();
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

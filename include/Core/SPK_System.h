@@ -40,9 +40,13 @@ namespace SPK
 	/**
 	* @brief A class defining a complete system of particles
 	*/
-	class SPK_PREFIX System : public Transformable,
-							  public Nameable
+	class SPK_PREFIX System : public SPKObject
 	{
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(SPKObject)
+	SPK_ATTRIBUTE("groups",ATTRIBUTE_TYPE_REFS)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		//////////////////
@@ -117,7 +121,7 @@ namespace SPK
 		* @brief Updates the particles in the system of the current time step
 		*
 		* Note that this method updates all groups in the system from first to last.<br>
-		* A call to updateTransform(const Transformable*) of the system is also performed prior to the groups update.
+		* A call to updateTransform(const WeakRef<const SPKObject>&) of the system is also performed prior to the groups update.
 		*
 		* @param deltaTime : the time step
 		* @return true if the System is still active (has active groups)
@@ -255,7 +259,7 @@ namespace SPK
 		void initialize();
 		inline bool isInitialized() const;
 
-		virtual Nameable* findByName(const std::string& name);
+		virtual WeakRef<SPKObject> findByName(const std::string& name);
 
 	protected :
 
@@ -289,7 +293,7 @@ namespace SPK
 	};
 
 	inline System::System(bool initialize) :
-		Nameable(),
+		SPKObject(),
 		groups(),
 		deltaStep(0.0f),
 		AABBComputationEnabled(false),

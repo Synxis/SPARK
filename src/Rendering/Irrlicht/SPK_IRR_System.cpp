@@ -67,7 +67,7 @@ namespace IRR
 
 		setParent(newParent);
 		
-		if (Transformable::getParent() != NULL && !isInitialized())
+		if (getParent() != NULL && !isInitialized())
 			SPK_LOG_WARNING("IRRSystem(const IRRSystem&,ISceneNode*,ISceneManager*) - A uninitialized system may have a NULL parent");
 		
 		cloneMembers(const_cast<IRRSystem*>(&system),newManager);
@@ -135,7 +135,7 @@ namespace IRR
 
 		if (worldTransformed)
 		{
-			this->setTransform(AbsoluteTransformation.pointer());
+			getTransform().set(AbsoluteTransformation.pointer());
 			AbsoluteTransformation.makeIdentity();
 		}
 	}

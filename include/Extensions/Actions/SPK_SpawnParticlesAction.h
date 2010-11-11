@@ -41,6 +41,13 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(SpawnParticlesAction)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Action)
+	SPK_ATTRIBUTE("spawning numbers",ATTRIBUTE_TYPE_FLOATS)
+	SPK_ATTRIBUTE("base emitter",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("group index",ATTRIBUTE_TYPE_UINT32)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		//////////////////////////////
@@ -139,7 +146,12 @@ namespace SPK
 		void resetPool();
 
 		virtual void apply(Particle& particle) const;
-		virtual Nameable* findByName(const std::string& name);
+		virtual WeakRef<SPKObject> findByName(const std::string& name);
+
+	protected :
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

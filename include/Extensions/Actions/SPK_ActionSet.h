@@ -29,6 +29,12 @@ namespace SPK
 	class SPK_PREFIX ActionSet : public Action
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(ActionSet)
+	SPK_IMPLEMENT_SERIALIZABLE(ActionSet)
+
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Action)
+	SPK_ATTRIBUTE("actions",ATTRIBUTE_TYPE_REFS)
+	SPK_END_DESCRIPTION
 
 	public :
 
@@ -43,7 +49,12 @@ namespace SPK
 
 		virtual void apply(Particle& particle) const;
 
-		virtual Nameable* findByName(const std::string& name);
+		virtual WeakRef<SPKObject> findByName(const std::string& name);
+
+	protected :
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

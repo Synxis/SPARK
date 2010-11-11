@@ -28,6 +28,11 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(Gravity)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Modifier)
+	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_VECTOR)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		static inline Ref<Gravity> create(const Vector3D& value = Vector3D());
@@ -39,6 +44,9 @@ namespace SPK
 	protected :
 
 		virtual inline void innerUpdateTransform();
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 
@@ -55,11 +63,21 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(Friction);
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Modifier)
+	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_FLOAT)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		static inline Ref<Friction> create(float value = 0.0f);
 
 		float value;
+
+	protected :
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

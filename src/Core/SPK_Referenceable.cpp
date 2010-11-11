@@ -26,13 +26,13 @@ namespace SPK
 	std::map<WeakRef<Referenceable>,WeakRef<Referenceable>> Referenceable::copyBuffer;
 
 	Referenceable::Referenceable() :
-		Nameable(),
+		SPKObject(),
 		nbReferences(0),
 		shared(false)
 	{}
 
 	Referenceable::Referenceable(const Referenceable& referenceable) :
-		Nameable(referenceable),
+		SPKObject(referenceable),
 		nbReferences(0),
 		shared(referenceable.shared)
 	{}
@@ -43,5 +43,20 @@ namespace SPK
 		{
 			SPK_LOG_ERROR("Referenceable::~Referenceable() - The number of references of the object is not 0 during destruction");
 		}
+	}
+
+	void Referenceable::innerImport(const Descriptor& descriptor)
+	{
+		SPKObject::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("shared"))
+			setShared(attrib->getValue<bool>());
+	}
+	
+	void Referenceable::innerExport(Descriptor& descriptor) const
+	{
+		SPKObject::innerExport(descriptor);
+		descriptor.getAttribute("shared")->setValue(isShared());			
 	}
 }

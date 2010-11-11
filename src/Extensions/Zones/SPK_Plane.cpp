@@ -60,4 +60,19 @@ namespace SPK
 		transformDir(tNormal,normal);
 		tNormal.normalize();
 	}
+
+	void Plane::innerImport(const Descriptor& descriptor)
+	{
+		Zone::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("normal"))
+			setNormal(attrib->getValue<Vector3D>());
+	}
+
+	void Plane::innerExport(Descriptor& descriptor) const
+	{
+		Zone::innerExport(descriptor);
+		descriptor.getAttribute("normal")->setValue(getNormal());
+	}
 }

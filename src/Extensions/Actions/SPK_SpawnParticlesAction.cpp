@@ -79,7 +79,7 @@ namespace SPK
 		emitter->setTank(baseEmitter->getTank());
 
 		const Ref<Zone>& zone = emitter->getZone();
-		zone->setTransformPosition(particle.position());
+		zone->getTransform().setPosition(particle.position());
 		zone->updateTransform();
 
 		Group* group = particle.getGroup().getSystem().getGroup(groupIndex);
@@ -114,7 +114,7 @@ namespace SPK
 
 		// No emitter is available is the pool, a new one must be created
 		emitterPool.push_back(copyRegisterable(baseEmitter));
-		emitterPool.back()->resetTransform();
+		emitterPool.back()->getTransform().reset();
 		return emitterPool.back();
 	}
 
@@ -123,14 +123,44 @@ namespace SPK
 		emitterPool.clear();
 	}
 
-	Nameable* SpawnParticlesAction::findByName(const std::string& name)
+	WeakRef<SPKObject> SpawnParticlesAction::findByName(const std::string& name)
 	{
-		Nameable* object = Nameable::findByName(name);
+		WeakRef<SPKObject> object = Action::findByName(name);
 		if (object != NULL) return object;
 
 		if (baseEmitter != NULL)
 			object = baseEmitter->findByName(name);
 
 		return object;
+	}
+
+	void SpawnParticlesAction::innerImport(const Descriptor& descriptor)
+	{
+		Action::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;	
+		if (attrib = descriptor.getAttributeWithValue("spawning numbers"))
+		{
+			std::vector<unsigned int> nbs = attrib->getValues<unsigned int>();
+			switch (nbs.size())
+			{
+			case 1 : setNb(nbs[0]); break;
+			case 2 : setNb(nbs[0],nbs[1]); break;
+			}
+		}
+		if (attrib = descriptor.getAttributeWithValue("base emitter"))
+			setEmitter(attrib->getValue<Emitter*>());
+		if (attrib = descriptor.getAttributeWithValue("group index"))
+			setGroupIndex(attrib->getValue<size_t>());
+	}
+
+	void SpawnParticlesAction::innerExport(Descriptor& descriptor) const
+	{
+		Action::innerExport(descriptor);
+
+		unsigned int nbs[2] = {minNb,maxNb};
+		descriptor.getAttribute("spawning numbers")->setValues(nbs,2);
+		descriptor.getAttribute("base emitter")->setValue(getEmitter().get());
+		descriptor.getAttribute("group index")->setValue(getGroupIndex());
 	}
 }

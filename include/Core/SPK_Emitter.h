@@ -38,10 +38,19 @@ namespace SPK
 	* The flow defines the rate at which particles are launched and the tank defines the total number of Particles the Emitter can launch.<br>
 	* An emitter is also defined by a range of forces (force min and force max) which defines the force at which particles are emitted <i>(initial velocity = force / mass)</i>.<br>
 	*/
-	class SPK_PREFIX Emitter :	public Referenceable, 
-								public Transformable
+	class SPK_PREFIX Emitter :	public Referenceable
 	{
 	friend class Group;
+
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("tank",ATTRIBUTE_TYPE_INT32)
+	SPK_ATTRIBUTE("flow",ATTRIBUTE_TYPE_FLOAT)
+	SPK_ATTRIBUTE("force",ATTRIBUTE_TYPE_VECTOR)
+	SPK_ATTRIBUTE("zone",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("full",ATTRIBUTE_TYPE_BOOL)
+	SPK_END_DESCRIPTION
 
 	public :
 
@@ -167,7 +176,7 @@ namespace SPK
 		*/
 		inline bool isFullZone() const;
 
-		virtual Nameable* findByName(const std::string& name);
+		virtual WeakRef<SPKObject> findByName(const std::string& name);
 
 	protected :
 

@@ -34,6 +34,10 @@ namespace SPK
 	{
 	friend class Group;
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		virtual inline ~Interpolator() {}

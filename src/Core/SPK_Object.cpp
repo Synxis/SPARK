@@ -20,63 +20,43 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #include <SPARK_Core.h>
-#include "Extensions/Emitters/SPK_StraightEmitter.h"
 
 namespace SPK
 {
-	StraightEmitter::StraightEmitter(
-			const Vector3D& direction,
-			const Ref<Zone>& zone,
-			bool full,
-			int tank,
-			float flow,
-			float forceMin,
-			float forceMax) :
-		Emitter(zone,full,tank,flow,forceMin,forceMax)
+	void SPKObject::updateTransform(const WeakRef<const SPKObject>& parent)
 	{
-		setDirection(direction);
+		SPK_ASSERT(parent != this,"SPKObject::updateTransform(const SPKObject*) - A SPKObject cannot be its own parent");
+		transform.update(parent,*this);
 	}
 
-	StraightEmitter::StraightEmitter(const StraightEmitter& emitter) :
-		Emitter(emitter)
+	Descriptor SPKObject::exportAttributes() const
 	{
-		setDirection(direction);
+		Descriptor descriptor = createDescriptor();
+		//descriptor.setName(name); //TODO
+		innerExport(descriptor);
+		return descriptor;
 	}
 
-	void StraightEmitter::setDirection(const Vector3D& dir)
+	Descriptor SPKObject::createDescriptor() const
 	{
-		this->direction = dir;
-		if (!this->direction.normalize())
-			SPK_LOG_WARNING("StraightEmitter::setDirection(const Vector3D&) - The direction is a null vector");
-		transformDir(tDirection,direction);
-		tDirection.normalize();
+		std::vector<Attribute> attributes;
+		fillAttributeList(attributes);
+		return Descriptor(attributes);
 	}
 
-	void StraightEmitter::generateVelocity(Particle& particle,float speed) const
+	void SPKObject::innerImport(const Descriptor& descriptor)
 	{
-		particle.velocity() = tDirection;
-		particle.velocity() *= speed;
-	}
-
-	void StraightEmitter::innerUpdateTransform()
-	{
-		Emitter::innerUpdateTransform();
-		transformDir(tDirection,direction);
-		tDirection.normalize();
-	}
-
-	void StraightEmitter::innerImport(const Descriptor& descriptor)
-	{
-		Emitter::innerImport(descriptor);
-
 		const Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("direction"))
-			setDirection(attrib->getValue<Vector3D>());
+		if (attrib = descriptor.getAttributeWithValue("transform"))
+		{
+			std::vector<float> t = attrib->getValues<float>();
+			if (t.size() == 16)
+				transform.set(&t[0]);
+		}
 	}
-
-	void StraightEmitter::innerExport(Descriptor& descriptor) const
+	
+	void SPKObject::innerExport(Descriptor& descriptor) const
 	{
-		Emitter::innerExport(descriptor);
-		descriptor.getAttribute("direction")->setValue(getDirection());
+		descriptor.getAttribute("transform")->setValues<float>(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
 	}
 }

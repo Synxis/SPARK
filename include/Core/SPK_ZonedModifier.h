@@ -38,6 +38,13 @@ namespace SPK
 	/** @brief An abstract modifier with a zone attached to it */
 	class SPK_PREFIX ZonedModifier : public Modifier
 	{
+
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Modifier)
+	SPK_ATTRIBUTE("zone",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("zone test",ATTRIBUTE_TYPE_UINT32)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		/** Destructor of zonedModifier */
@@ -89,7 +96,7 @@ namespace SPK
 		// Virtual interface //
 		///////////////////////
 
-		virtual Nameable* findByName(const std::string& name);
+		virtual WeakRef<SPKObject> findByName(const std::string& name);
 
 	protected :
 

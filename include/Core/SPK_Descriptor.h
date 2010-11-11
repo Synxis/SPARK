@@ -6,7 +6,7 @@
 // warranty.  In no event will the authors be held liable for any damages		//
 // arising from the use of this software.										//
 //																				//
-// Permission is granted to anyone to use this software for any purpose,		//
+// Permission is granted to  anyone to use this software for any purpose,		//
 // including commercial applications, and to alter it and redistribute it		//
 // freely, subject to the following restrictions:								//
 //																				//
@@ -28,6 +28,7 @@
 namespace SPK
 {
 	class Descriptor;
+	class SPKObject;
 
 	enum AttributeType
 	{
@@ -51,58 +52,64 @@ namespace SPK
 		ATTRIBUTE_TYPE_STRINGS,
 	};
 
-	class Attribute
+	class SPK_PREFIX Attribute
 	{
 	friend class Descriptor;
 
 	public : 
 
-		Attribute(std::string& name,AttributeType type);
+		Attribute(const std::string& name,AttributeType type);
 
-		inline std::string& getName() const;
+		inline const std::string& getName() const;
 		inline AttributeType getType() const;
-		inline bool isValueSet() const;
+		inline bool hasValue() const;
+		inline bool isValueOptional() const;
 
 		template<typename T>
-		void setValue(T value);
+		void setValue(const T& value,bool optional = false);
 
 		template<typename T>
-		void setValues(T* values,size_t nb);
+		void setValues(const T* values,size_t nb,bool optional = false);
 
 		template<typename T>
 		T getValue() const;
 
 		template<typename T>
-		T* getValues(size_t& nb) const;
+		const std::vector<T> getValues() const;
 		
 	private :
 
-		std::string& name;
+		std::string name;
 		AttributeType type;
 		size_t offset;
 
 		Descriptor* descriptor;
+		
 		bool valueSet;
+		bool optional;
 	};
 
-	class Descriptor
+	class SPK_PREFIX Descriptor
 	{
 	friend class Attribute;
+	friend class SPKObject;
 
 	public :
 
-		Descriptor(std::vector<Attribute> attributes);
+		Attribute* getAttribute(const std::string& name);
+		Attribute* getAttributeWithValue(const std::string& name);
+		Attribute& getAttribute(size_t index);
 
-		inline Attribute* getAttribute(const std::string& name);
-		inline Attribute& getAttribute(size_t index);
+		inline const Attribute* getAttribute(const std::string& name) const;
+		inline const Attribute* getAttributeWithValue(const std::string& name) const;
+		inline const Attribute& getAttribute(size_t index) const;
 
-		const Attribute* getAttribute(const std::string& name) const;
-		const Attribute& getAttribute(size_t index) const;
-
-		inline size_t getAttributeNb() const;
+		inline size_t getNbAttributes() const;
 		inline size_t getSignature() const;
 
 	private :
+
+		Descriptor(const std::vector<Attribute> attributes); // Constructor only accessible by SPKObject
 
 		std::vector<Attribute> attributes;		
 		std::vector<char> buffer; // An internal buffer is used to limit memory allocation of attribute values
@@ -113,7 +120,7 @@ namespace SPK
 		void markAttributes();
 	};
 
-	inline std::string& Attribute::getName() const
+	inline const std::string& Attribute::getName() const
 	{
 		return name;
 	}
@@ -123,12 +130,22 @@ namespace SPK
 		return type;
 	}
 
-	inline bool Attribute::isValueSet() const
+	inline bool Attribute::hasValue() const
 	{
 		return valueSet;
 	}
 
+	inline bool Attribute::isValueOptional() const
+	{
+		return optional;
+	}
+
 	inline const Attribute* Descriptor::getAttribute(const std::string& name) const
+	{
+		return const_cast<Descriptor*>(this)->getAttribute(name);
+	}
+
+	inline const Attribute* Descriptor::getAttributeWithValue(const std::string& name) const
 	{
 		return const_cast<Descriptor*>(this)->getAttribute(name);
 	}
@@ -138,7 +155,7 @@ namespace SPK
 		return const_cast<Descriptor*>(this)->getAttribute(index);
 	}
 
-	inline size_t Descriptor::getAttributeNb() const
+	inline size_t Descriptor::getNbAttributes() const
 	{
 		return attributes.size();
 	}
@@ -149,43 +166,45 @@ namespace SPK
 	}
 
 	template<typename T>
-	void Attribute::setValue(T value)
+	void Attribute::setValue(const T& value,bool optional)
 	{
 		offset = descriptor->buffer.size();
-		char* valueC = reinterpret_cast<char*>(value)
-		for (size_t i = 0; i < sizeof(T))
+		const char* valueC = reinterpret_cast<const char*>(&value);
+		for (size_t i = 0; i < sizeof(T); ++i)
 			descriptor->buffer.push_back(valueC[i]);
 		valueSet = true;
+		this->optional = optional;
 	}
 
 	template<typename T>
-	void Attribute::setValues(T* values,size_t nb)
+	void Attribute::setValues(const T* values,size_t nb,bool optional)
 	{
 		offset = descriptor->buffer.size();
-		char* nbC = reinterpret_cast<char*>(nb)
-		char* valuesC = reinterpret_cast<char*>(values)
-		for (size_t i = 0; i < sizeof(size_t))
+		const char* nbC = reinterpret_cast<char*>(nb);
+		const char* valuesC = reinterpret_cast<const char*>(values);
+		for (size_t i = 0; i < sizeof(size_t); ++i)
 			descriptor->buffer.push_back(nbC[i]);
-		for (size_t i = 0; i < sizeof(T) * nb)
+		for (size_t i = 0; i < sizeof(T) * nb; ++i)
 			descriptor->buffer.push_back(valuesC[i]);
-		valueSet = true;	
+		valueSet = true;
+		this->optional = optional;
 	}
 
 	template<typename T>
 	T Attribute::getValue() const
 	{
 		SPK_ASSERT(valueSet,"Attribute::getValue() - The value is not set and therefore cannot be read");
-		return reinterpret_cast<T>(descriptor->buffer[offset]);
+		return *reinterpret_cast<T*>(&descriptor->buffer[offset]);
 	}
 
 	template<typename T>
-	T* Attribute::getValues(size_t& nb) const
+	const std::vector<T> Attribute::getValues() const
 	{
 		SPK_ASSERT(valueSet,"Attribute::getValues(size_t& nb) - The value is not set and therefore cannot be read");
-		nb = reinterpret_cast<size_t>(descriptor->buffer[offset]);
-		T* tmpBuffer = new T[nb];
+		size_t nb = *reinterpret_cast<size_t*>(&descriptor->buffer[offset]);
+		std::vector<T> tmpBuffer;
 		for (size_t i = 0; i < nb; ++i)
-			tmpBuffer[i] = reinterpret_cast<T>(descriptor->buffer[offset + i * sizeof(T)]);
+			tmpBuffer.push_back(*reinterpret_cast<T*>(&descriptor->buffer[offset + i * sizeof(T)]));
 		return tmpBuffer;
 	}
 }

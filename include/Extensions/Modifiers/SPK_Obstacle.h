@@ -28,6 +28,12 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(Obstacle)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(ZonedModifier)
+	SPK_ATTRIBUTE("bouncing ratio",ATTRIBUTE_TYPE_FLOAT)
+	SPK_ATTRIBUTE("friction",ATTRIBUTE_TYPE_FLOAT)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		static inline Ref<Obstacle> create(

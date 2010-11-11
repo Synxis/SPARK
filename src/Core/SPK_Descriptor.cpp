@@ -23,7 +23,7 @@
 
 namespace SPK
 {
-	Attribute::Attribute(std::string& name,AttributeType type) :
+	Attribute::Attribute(const std::string& name,AttributeType type) :
 		name(name),
 		type(type),
 		offset(0),
@@ -44,6 +44,15 @@ namespace SPK
 				return &*it;
 
 		return NULL;
+	}
+
+	Attribute* Descriptor::getAttributeWithValue(const std::string& name)
+	{
+		Attribute* attrib = getAttribute(name);
+		if (attrib != NULL && !attrib->hasValue())
+			attrib = NULL;
+
+		return attrib;
 	}
 
 	Attribute& Descriptor::getAttribute(size_t index)

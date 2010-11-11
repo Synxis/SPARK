@@ -54,6 +54,13 @@ namespace SPK
 	{
 	friend class Group;
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("rendering options",ATTRIBUTE_TYPE_INT32)
+	SPK_ATTRIBUTE("alpha threshold",ATTRIBUTE_TYPE_FLOAT)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		////////////////

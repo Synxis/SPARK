@@ -37,8 +37,7 @@ namespace SPK
 	Vector3D System::cameraPosition;
 
 	System::System(const System& system) :
-		Transformable(system),
-		Nameable(system),
+		SPKObject(system),
 		deltaStep(0.0f),
 		AABBComputationEnabled(system.AABBComputationEnabled),
 		AABBMin(system.AABBMin),
@@ -159,7 +158,7 @@ namespace SPK
 		}
 		else
 		{
-			const Vector3D pos = getWorldTransformPos();
+			const Vector3D pos = getTransform().getWorldPos();
 			AABBMin = AABBMax = pos;
 		}
 
@@ -188,9 +187,9 @@ namespace SPK
 			(*it)->initData();
 	}
 
-	Nameable* System::findByName(const std::string& name)
+	WeakRef<SPKObject> System::findByName(const std::string& name)
 	{
-		Nameable* object = Nameable::findByName(name);
+		WeakRef<SPKObject> object = SPKObject::findByName(name);
 		if (object != NULL) return object;
 
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
@@ -199,12 +198,12 @@ namespace SPK
 			if (object != NULL) return object;
 		}
 
-		return NULL;
+		return SPK_NULL_REF;
 	}
 
 	bool System::innerUpdate(float deltaTime)
 	{
-		updateTransform(NULL);
+		updateTransform();
 
 		bool alive = false;
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)

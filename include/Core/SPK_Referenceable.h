@@ -31,41 +31,36 @@ private : \
 virtual ClassName* clone() const \
 { \
 	return SPK_NEW(ClassName,*this); \
-} \
-\
-public : \
-virtual std::string getClassName() const {return #ClassName;}
+}
 
 namespace SPK
 {
 	class System;
 	class Group;
 
-	class SPK_PREFIX Referenceable : public Nameable
+	class SPK_PREFIX Referenceable : public SPKObject
 	{
 	friend class System;
 	friend class Group;
 	friend class SPKContext;
 	template<typename T> friend class Ref;
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(SPKObject)
+	SPK_ATTRIBUTE("shared",ATTRIBUTE_TYPE_BOOL)
+	SPK_END_DESCRIPTION
+
 	public :
 
-		//inline void increment();
-		//void decrement();
-
 		inline unsigned int getNbReferences() const;
-		inline bool isShared() const;
-		//inline bool isDestroyable() const;
-		
-		inline void setShared(bool shared);
-		//inline void setDestroyable(bool destroyable);
 
-		//bool destroy(bool decrement = true);
+		inline bool isShared() const;
+		inline void setShared(bool shared);
 
 		template<typename T>
 		static Ref<T> copyRegisterable(const Ref<T>& ref);
 
-		virtual std::string getClassName() const = 0;
+		//virtual std::string getClassName() const = 0;
 
 	protected :
 
@@ -76,6 +71,9 @@ namespace SPK
 
 		template<typename T>
 		static Ref<T> copyChild(const Ref<T>& ref);
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

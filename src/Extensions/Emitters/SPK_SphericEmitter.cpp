@@ -138,4 +138,28 @@ namespace SPK
 		transformDir(tDirection,direction);
 		computeMatrix();
 	}
+
+	void SphericEmitter::innerImport(const Descriptor& descriptor)
+	{
+		Emitter::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("direction"))
+			setDirection(attrib->getValue<Vector3D>());
+		if (attrib = descriptor.getAttributeWithValue("angles"))
+		{
+			std::vector<float> angles = attrib->getValues<float>();
+			if (angles.size() == 2)
+				setAngles(angles[0],angles[1]);
+		}
+	}
+
+	void SphericEmitter::innerExport(Descriptor& descriptor) const
+	{
+		Emitter::innerExport(descriptor);
+
+		descriptor.getAttribute("direction")->setValue(getDirection());
+		float angles[2] = {angleMin,angleMax};
+		descriptor.getAttribute("angles")->setValues(angles,2);
+	}
 }

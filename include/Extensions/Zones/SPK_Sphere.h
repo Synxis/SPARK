@@ -26,7 +26,12 @@ namespace SPK
 {
 	class SPK_PREFIX Sphere : public Zone
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(Sphere);
+	SPK_IMPLEMENT_REFERENCEABLE(Sphere)
+
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Zone)
+	SPK_ATTRIBUTE("radius",ATTRIBUTE_TYPE_FLOAT)
+	SPK_END_DESCRIPTION
 
 	public :
 
@@ -47,6 +52,11 @@ namespace SPK
 		virtual bool contains(const Vector3D& v,float radius = 0.0f) const;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f) const;
 		virtual Vector3D computeNormal(const Vector3D& v) const;
+
+	protected :
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

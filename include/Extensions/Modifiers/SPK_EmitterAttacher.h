@@ -30,6 +30,14 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(EmitterAttacher)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Modifier)
+	SPK_ATTRIBUTE("base emitter",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("orientation enabled",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("rotation enabled",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("group index",ATTRIBUTE_TYPE_UINT32)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		static inline Ref<EmitterAttacher> create(
@@ -54,6 +62,9 @@ namespace SPK
 
 		virtual void createData(DataSet& dataSet,const Group& group) const;
 		virtual void checkData(DataSet& dataSet,const Group& group) const;
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 

@@ -43,10 +43,15 @@ namespace SPK
 	* 
 	*/
 	class Modifier :	public Referenceable,
-						public Transformable, 
 						public DataHandler
 	{
 	friend class Group;
+
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("local",ATTRIBUTE_TYPE_BOOL)
+	SPK_END_DESCRIPTION
 
 	public :
 

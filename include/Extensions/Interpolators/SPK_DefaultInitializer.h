@@ -28,6 +28,7 @@ namespace SPK
 	class DefaultInitializer : public Interpolator<T>
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(DefaultInitializer<T>);
+	SPK_DEFINE_DESCRIPTION_TEMPLATE
 
 	public :
 
@@ -35,6 +36,11 @@ namespace SPK
 
 		inline void setDefaultValue(const T& value);
 		inline const T& getDefaultValue() const;
+
+	protected :
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 
@@ -49,6 +55,16 @@ namespace SPK
 
 	typedef DefaultInitializer<Color> ColorDefaultInitializer;
 	typedef DefaultInitializer<float> FloatDefaultInitializer;
+
+	SPK_START_DESCRIPTION_TEMPLATE(ColorDefaultInitializer)
+	SPK_PARENT_ATTRIBUTES(ColorInterpolator)
+	SPK_ATTRIBUTE("default value",ATTRIBUTE_TYPE_COLOR)
+	SPK_END_DESCRIPTION
+
+	SPK_START_DESCRIPTION_TEMPLATE(FloatDefaultInitializer)
+	SPK_PARENT_ATTRIBUTES(FloatInterpolator)
+	SPK_ATTRIBUTE("default value",ATTRIBUTE_TYPE_FLOAT)
+	SPK_END_DESCRIPTION
 
 	template<typename T>
 	DefaultInitializer<T>::DefaultInitializer(const T& value) :
@@ -85,6 +101,23 @@ namespace SPK
 	{
 		data = defaultValue;
 	}
+
+	template<typename T>
+	void DefaultInitializer<T>::innerImport(const Descriptor& descriptor)
+	{
+		Interpolator<T>::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("default value"))
+			setDefaultValue(attrib->getValue<T>());
+	}
+
+	template<typename T>
+	void DefaultInitializer<T>::innerExport(Descriptor& descriptor) const
+	{
+		Interpolator<T>::innerExport(descriptor);
+		descriptor.getAttribute("default value")->setValue(getDefaultValue());
+	}	
 }
 
 #endif

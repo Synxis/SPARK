@@ -133,6 +133,7 @@ namespace SPK
 		/////////////////////////////
 
 		inline WeakRef() : ptr(NULL) {}
+		inline WeakRef(NullReferenceValue) : ptr(NULL) {}
 		inline WeakRef(const WeakRef& ref) : ptr(ref.get()) {}
 		template<typename U> inline WeakRef(U* ptr) : ptr(ptr) {}
 		template<typename U> inline WeakRef(const WeakRef<U>& ref) : ptr(ref.get()) {}
@@ -185,11 +186,15 @@ namespace SPK
 	template<typename T,typename U> bool operator==(const Ref<T>& ref,U* ptr) { return ref.get() == ptr; }
 	template<typename T,typename U> bool operator==(T* ptr,const Ref<U>& ref) { return ref.get() == ptr; }
 	template<typename T,typename U> bool operator==(const WeakRef<T>& ref0,const WeakRef<U>& ref1) { return ref0.get() == ref1.get(); }
+	template<typename T,typename U> bool operator==(const WeakRef<T>& ref,U* ptr) { return ref.get() == ptr; }
+	template<typename T,typename U> bool operator==(T* ptr,const WeakRef<U>& ref) { return ref.get() == ptr; }
 
 	template<typename T,typename U> bool operator!=(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() != ref1.get(); }
 	template<typename T,typename U> bool operator!=(const Ref<T>& ref,U* ptr) { return ref.get() != ptr; }
 	template<typename T,typename U> bool operator!=(T* ptr,const Ref<U>& ref) { return ref.get() != ptr; }
 	template<typename T,typename U> bool operator!=(const WeakRef<T>& ref0,const WeakRef<U>& ref1) { return ref0.get() != ref1.get(); }
+	template<typename T,typename U> bool operator!=(const WeakRef<T>& ref,U* ptr) { return ref.get() != ptr; }
+	template<typename T,typename U> bool operator!=(T* ptr,const WeakRef<U>& ref) { return ref.get() != ptr; }
 }
 
 #endif

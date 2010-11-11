@@ -36,6 +36,12 @@ namespace SPK
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(NormalEmitter)
 
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Emitter)
+	SPK_ATTRIBUTE("normal zone",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("inverted normals",ATTRIBUTE_TYPE_BOOL)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		/** @brief Creates a new normalEmitter */
@@ -86,11 +92,14 @@ namespace SPK
 		// Herited //
 		/////////////
 
-		virtual Nameable* findByName(const std::string& name);
+		virtual WeakRef<SPKObject> findByName(const std::string& name);
 
 	protected :
 
 		virtual void propagateUpdateTransform();
+
+		virtual void innerImport(const Descriptor& descriptor);
+		virtual void innerExport(Descriptor& descriptor) const;
 
 	private :
 	

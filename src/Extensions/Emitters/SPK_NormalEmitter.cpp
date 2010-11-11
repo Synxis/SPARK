@@ -54,15 +54,15 @@ namespace SPK
 		normalZone = zone;
 	}
 
-	Nameable* NormalEmitter::findByName(const std::string& name)
+	WeakRef<SPKObject> NormalEmitter::findByName(const std::string& name)
 	{
-		Nameable* object = Emitter::findByName(name);
+		WeakRef<SPKObject> object = Emitter::findByName(name);
 		if (object != NULL) return object;
 
 		if (normalZone != NULL)
 			object = normalZone->findByName(name);
 
-		return object;
+		return SPK_NULL_REF;
 	}
 
 	void NormalEmitter::propagateUpdateTransform()
@@ -77,5 +77,24 @@ namespace SPK
 		if (inverted) speed = -speed;
 		const Ref<Zone>& zone = (normalZone == NULL ? getZone() : normalZone);
 		particle.velocity() = zone->computeNormal(particle.position()) * speed;
+	}
+
+	void NormalEmitter::innerImport(const Descriptor& descriptor)
+	{
+		Emitter::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("normal zone"))
+			setNormalZone(attrib->getValue<Zone*>());
+		if (attrib = descriptor.getAttributeWithValue("inverted normals"))
+			setInverted(attrib->getValue<bool>());
+	}
+
+	void NormalEmitter::innerExport(Descriptor& descriptor) const
+	{
+		Emitter::innerExport(descriptor);
+
+		descriptor.getAttribute("normal zone")->setValue(getNormalZone().get());
+		descriptor.getAttribute("inverted normals")->setValue(isInverted(),!isInverted());
 	}
 }

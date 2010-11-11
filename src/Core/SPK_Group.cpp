@@ -36,7 +36,7 @@ namespace SPK
 	};
 
 	Group::Group(System& system,size_t capacity) :
-		Nameable(),
+		SPKObject(),
 		system(system),
 		nbEnabledParameters(0),
 		minLifeTime(1.0f),
@@ -57,7 +57,7 @@ namespace SPK
 	}
 
 	Group::Group(System& system,const Group& group) :
-		Nameable(group),
+		SPKObject(group),
 		system(system),
 		nbEnabledParameters(0),
 		minLifeTime(group.minLifeTime),
@@ -818,9 +818,9 @@ namespace SPK
 		physicalRadius = radius;
 	}
 
-	Nameable* Group::findByName(const std::string& name)
+	WeakRef<SPKObject> Group::findByName(const std::string& name)
 	{
-		Nameable* object = Nameable::findByName(name);
+		WeakRef<SPKObject> object = SPKObject::findByName(name);
 		if (object != NULL) return object;
 
 		if (renderer.obj != NULL)
@@ -866,6 +866,6 @@ namespace SPK
 			if (object != NULL) return object;
 		}
 
-		return NULL;
+		return SPK_NULL_REF;
 	}
 }

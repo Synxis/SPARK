@@ -138,4 +138,31 @@ namespace SPK
 		transformDir(tNormal,normal);
 		tNormal.normalize();
 	}
+
+	void Ring::innerImport(const Descriptor& descriptor)
+	{
+		Zone::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("normal"))
+			setNormal(attrib->getValue<Vector3D>());
+		if (attrib = descriptor.getAttributeWithValue("radius"))
+		{
+			std::vector<float> tmpRadius = attrib->getValues<float>();
+			switch (tmpRadius.size())
+			{
+			case 1 : setRadius(tmpRadius[0],tmpRadius[0]); break;
+			case 2 : setRadius(tmpRadius[0],tmpRadius[1]); break;
+			}
+		}
+	}
+
+	void Ring::innerExport(Descriptor& descriptor) const
+	{
+		Zone::innerExport(descriptor);
+
+		descriptor.getAttribute("normal")->setValue(getNormal());
+		float tmpRadius[2] = {minRadius,maxRadius};
+		descriptor.getAttribute("radius")->setValues(tmpRadius,2);
+	}
 }

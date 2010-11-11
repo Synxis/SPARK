@@ -49,11 +49,27 @@ namespace SPK
 	* </ul>
 	* Groups are contained within a System which commands their update and rendering.
 	*/
-	class SPK_PREFIX Group : public Nameable
+	class SPK_PREFIX Group : public SPKObject
 	{
 	friend class Particle;
 	friend class System;
 	friend class DataSet;
+
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(SPKObject)
+	SPK_ATTRIBUTE("interpolators",ATTRIBUTE_TYPE_REFS)
+	SPK_ATTRIBUTE("emitters",ATTRIBUTE_TYPE_REFS)
+	SPK_ATTRIBUTE("modifiers",ATTRIBUTE_TYPE_REFS)
+	SPK_ATTRIBUTE("birth action",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("death action",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("renderer",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("life time",ATTRIBUTE_TYPE_FLOATS)
+	SPK_ATTRIBUTE("immortal",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("still",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("distance computation enabled",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("sorting enabled",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("radius",ATTRIBUTE_TYPE_FLOATS)
+	SPK_END_DESCRIPTION
 
 	public :
 
@@ -339,7 +355,7 @@ namespace SPK
 		// Virtual interface //
 		///////////////////////
 
-		virtual Nameable* findByName(const std::string& name);
+		virtual WeakRef<SPKObject> findByName(const std::string& name);
 
 	private :
 

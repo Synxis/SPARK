@@ -25,7 +25,6 @@ namespace SPK
 {
 	Emitter::Emitter(const Ref<Zone>& zone,bool full,int tank,float flow,float forceMin,float forceMax) :
 		Referenceable(),
-		Transformable(),
 		active(true),
 		zone(zone == NULL ? SPK_DEFAULT_ZONE : zone),
 		flow(1.0f),
@@ -38,7 +37,6 @@ namespace SPK
 
 	Emitter::Emitter(const Emitter& emitter) :
 		Referenceable(emitter),
-		Transformable(emitter),
 		active(emitter.active),
 		flow(emitter.flow),
 		tank(emitter.tank),
@@ -96,9 +94,9 @@ namespace SPK
 		generateVelocity(particle,SPK_RANDOM(forceMin,forceMax) / particle.getParam(PARAM_MASS));
 	}
 
-	Nameable* Emitter::findByName(const std::string& name)
+	WeakRef<SPKObject> Emitter::findByName(const std::string& name)
 	{
-		Nameable* object = Nameable::findByName(name);
+		WeakRef<SPKObject> object = SPKObject::findByName(name);
 		if (object != NULL) return object;
 
 		return zone->findByName(name);

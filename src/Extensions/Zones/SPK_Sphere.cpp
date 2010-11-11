@@ -90,5 +90,20 @@ namespace SPK
 		if (contains(v))
 			normal.revert();
 		return normal;
-	}	
+	}
+
+	void Sphere::innerImport(const Descriptor& descriptor)
+	{
+		Zone::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("radius"))
+			setRadius(attrib->getValue<float>());
+	}
+
+	void Sphere::innerExport(Descriptor& descriptor) const
+	{
+		Zone::innerExport(descriptor);
+		descriptor.getAttribute("radius")->setValue(getRadius());
+	}
 }

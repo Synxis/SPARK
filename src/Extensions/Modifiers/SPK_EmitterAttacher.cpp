@@ -116,7 +116,7 @@ namespace SPK
 			const Particle& particle = *particleIt;
 			const Ref<Emitter>& emitter = *emitterIt;
 
-			emitter->setTransformPosition(particle.position());
+			emitter->getTransform().setPosition(particle.position());
 			if (orientationEnabled)
 			{
 				Vector3D look(-particle.velocity());
@@ -142,7 +142,7 @@ namespace SPK
 					up.z = look.y * look.z * a + look.x * s;
 				}
 				
-				emitter->setTransformOrientationRH(look,up); // TODO What about LH ?
+				emitter->getTransform().setOrientationRH(look,up); // TODO What about LH ?
 			}
 
 			emitter->updateTransform();
@@ -155,6 +155,36 @@ namespace SPK
 	void EmitterAttacher::EmitterData::setEmitter(size_t index,const Ref<Emitter>& emitter)
 	{
 		data[index] = Referenceable::copyRegisterable(emitter);
-		data[index]->resetTransform();
+		data[index]->getTransform().reset();
+	}
+
+	void EmitterAttacher::innerImport(const Descriptor& descriptor)
+	{
+		Modifier::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("base emitter"))
+			setEmitter(attrib->getValue<Emitter*>());	
+		
+		if (attrib = descriptor.getAttributeWithValue("orientation enabled"))
+		{
+			bool tmpRotationEnabled = false;
+			bool tmpOrientationEnabled = attrib->getValue<bool>();
+			if (attrib = descriptor.getAttributeWithValue("rotation enabled"))
+				tmpRotationEnabled = attrib->getValue<bool>();
+			enableEmitterOrientation(tmpOrientationEnabled,tmpRotationEnabled);
+		}
+
+		if (attrib = descriptor.getAttributeWithValue("group index"))
+			setGroupIndex(attrib->getValue<size_t>());
+	}
+
+	void EmitterAttacher::innerExport(Descriptor& descriptor) const
+	{
+		Modifier::innerExport(descriptor);
+		descriptor.getAttribute("value")->setValue(getEmitter().get());
+		descriptor.getAttribute("orientation enabled")->setValue(isEmitterOrientationEnabled());
+		descriptor.getAttribute("rotation enabled")->setValue(isEmitterRotationEnabled());
+		descriptor.getAttribute("group index")->setValue(getGroupIndex());
 	}
 }

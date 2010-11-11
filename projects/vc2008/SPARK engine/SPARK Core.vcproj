@@ -342,6 +342,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\Core\SPK_Object.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\Core\SPK_Referenceable.cpp"
 					>
 				</File>
@@ -354,7 +358,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\Core\SPK_Transformable.cpp"
+					RelativePath="..\..\..\src\Core\SPK_Transform.cpp"
 					>
 				</File>
 				<File
@@ -544,7 +548,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\Core\SPK_Nameable.h"
+					RelativePath="..\..\..\include\Core\SPK_Object.h"
 					>
 				</File>
 				<File
@@ -572,7 +576,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\Core\SPK_Transformable.h"
+					RelativePath="..\..\..\include\Core\SPK_Transform.h"
 					>
 				</File>
 				<File

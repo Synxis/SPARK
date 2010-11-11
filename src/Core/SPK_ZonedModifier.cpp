@@ -75,14 +75,14 @@ namespace SPK
 		}
 	}
 
-	Nameable* ZonedModifier::findByName(const std::string& name)
+	WeakRef<SPKObject> ZonedModifier::findByName(const std::string& name)
 	{
-		Nameable* object = Nameable::findByName(name);
+		WeakRef<SPKObject> object = SPKObject::findByName(name);
 		if (object != NULL) return object;
 
 		object = zone->findByName(name);
 
-		return object;
+		return SPK_NULL_REF;
 	}
 
 	void ZonedModifier::propagateUpdateTransform()

@@ -22,6 +22,9 @@
 #ifndef H_SPK_ACTION
 #define H_SPK_ACTION
 
+#include "Core/SPK_Descriptor.h"
+#include "Core/SPK_Referenceable.h"
+
 namespace SPK
 {
 	class Particle;
@@ -36,6 +39,11 @@ namespace SPK
 	*/
 	class Action : public Referenceable
 	{
+	SPK_START_DESCRIPTION
+	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
+	SPK_END_DESCRIPTION
+
 	public :
 
 		virtual inline ~Action() {}
@@ -63,6 +71,9 @@ namespace SPK
 
 		inline Action();
 
+		inline virtual void innerImport(const Descriptor& descriptor);
+		inline virtual void innerExport(Descriptor& descriptor) const;
+
 	private :
 
 		bool active;
@@ -80,6 +91,24 @@ namespace SPK
 	inline bool Action::isActive() const
 	{
 		return active;
+	}
+
+	inline void Action::innerImport(const Descriptor& descriptor)
+	{
+		Referenceable::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if ((attrib = descriptor.getAttribute("active")) && attrib->hasValue())
+			setActive(attrib->getValue<bool>());
+	}
+
+	inline void Action::innerExport(Descriptor& descriptor) const
+	{
+		Referenceable::innerExport(descriptor);
+
+		Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttribute("active"))
+			attrib->setValue(isActive(),isActive());
 	}
 }
 
