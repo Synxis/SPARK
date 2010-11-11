@@ -41,7 +41,7 @@ static std::string getClassName() {return #ClassName;} \
 static ClassName* createSerializable() {return SPK_NEW(ClassName);}
 
 // For templates
-#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected virtual void fillAttributeList(std::vector<Attribute>& attributes);
+#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : virtual void fillAttributeList(std::vector<Attribute>& attributes);
 #define SPK_START_DESCRIPTION_TEMPLATE(ClassName) \
 template<> void ClassName::fillAttributeList(std::vector<Attribute>& attributes) \
 {
