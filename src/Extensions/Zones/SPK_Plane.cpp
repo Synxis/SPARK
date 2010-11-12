@@ -67,12 +67,12 @@ namespace SPK
 
 		const Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("normal"))
-			setNormal(attrib->getValue<Vector3D>());
+			setNormal(attrib->getValueVector());
 	}
 
 	void Plane::innerExport(Descriptor& descriptor) const
 	{
 		Zone::innerExport(descriptor);
-		descriptor.getAttribute("normal")->setValue(getNormal());
+		descriptor.getAttribute("normal")->setValueVector(getNormal());
 	}
 }

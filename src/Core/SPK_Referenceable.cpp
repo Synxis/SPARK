@@ -51,12 +51,12 @@ namespace SPK
 
 		const Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("shared"))
-			setShared(attrib->getValue<bool>());
+			setShared(attrib->getValueBool());
 	}
 	
 	void Referenceable::innerExport(Descriptor& descriptor) const
 	{
 		SPKObject::innerExport(descriptor);
-		descriptor.getAttribute("shared")->setValue(isShared());			
+		descriptor.getAttribute("shared")->setValueBool(isShared());			
 	}
 }

@@ -164,27 +164,27 @@ namespace SPK
 
 		const Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("base emitter"))
-			setEmitter(attrib->getValue<Emitter*>());	
+			setEmitter(attrib->getValueRef().cast<Emitter>());	
 		
 		if (attrib = descriptor.getAttributeWithValue("orientation enabled"))
 		{
 			bool tmpRotationEnabled = false;
-			bool tmpOrientationEnabled = attrib->getValue<bool>();
+			bool tmpOrientationEnabled = attrib->getValueBool();
 			if (attrib = descriptor.getAttributeWithValue("rotation enabled"))
-				tmpRotationEnabled = attrib->getValue<bool>();
+				tmpRotationEnabled = attrib->getValueBool();
 			enableEmitterOrientation(tmpOrientationEnabled,tmpRotationEnabled);
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("group index"))
-			setGroupIndex(attrib->getValue<size_t>());
+			setGroupIndex(attrib->getValueUint32());
 	}
 
 	void EmitterAttacher::innerExport(Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValue(getEmitter().get());
-		descriptor.getAttribute("orientation enabled")->setValue(isEmitterOrientationEnabled());
-		descriptor.getAttribute("rotation enabled")->setValue(isEmitterRotationEnabled());
-		descriptor.getAttribute("group index")->setValue(getGroupIndex());
+		descriptor.getAttribute("value")->setValueRef(getEmitter());
+		descriptor.getAttribute("orientation enabled")->setValueBool(isEmitterOrientationEnabled());
+		descriptor.getAttribute("rotation enabled")->setValueBool(isEmitterRotationEnabled());
+		descriptor.getAttribute("group index")->setValueUint32(getGroupIndex());
 	}
 }

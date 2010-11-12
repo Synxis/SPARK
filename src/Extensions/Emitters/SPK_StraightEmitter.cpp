@@ -71,12 +71,12 @@ namespace SPK
 
 		const Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("direction"))
-			setDirection(attrib->getValue<Vector3D>());
+			setDirection(attrib->getValueVector());
 	}
 
 	void StraightEmitter::innerExport(Descriptor& descriptor) const
 	{
 		Emitter::innerExport(descriptor);
-		descriptor.getAttribute("direction")->setValue(getDirection());
+		descriptor.getAttribute("direction")->setValueVector(getDirection());
 	}
 }

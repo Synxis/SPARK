@@ -99,7 +99,7 @@ namespace SPK
 
 		const Attribute* attrib = NULL;
 		if ((attrib = descriptor.getAttribute("active")) && attrib->hasValue())
-			setActive(attrib->getValue<bool>());
+			setActive(attrib->getValueBool());
 	}
 
 	inline void Action::innerExport(Descriptor& descriptor) const
@@ -108,7 +108,7 @@ namespace SPK
 
 		Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttribute("active"))
-			attrib->setValue(isActive(),isActive());
+			attrib->setValueBool(isActive(),isActive());
 	}
 }
 

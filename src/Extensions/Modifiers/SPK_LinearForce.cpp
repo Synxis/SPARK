@@ -207,38 +207,38 @@ namespace SPK
 
 		const Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("value"))
-			setValue(attrib->getValue<Vector3D>());
+			setValue(attrib->getValueVector());
 		
 		if (attrib = descriptor.getAttributeWithValue("relative value"))
 		{
 			bool tmpSquaredSpeed = false;
-			bool tmpRelative = attrib->getValue<bool>();
+			bool tmpRelative = attrib->getValueBool();
 			if (attrib = descriptor.getAttributeWithValue("squared speed"))
-				tmpSquaredSpeed = attrib->getValue<bool>();
+				tmpSquaredSpeed = attrib->getValueBool();
 			setRelative(tmpRelative,tmpSquaredSpeed);
 		}
 			
 		if (attrib = descriptor.getAttributeWithValue("parameter"))
 		{
 			Factor tmpFactor = FACTOR_LINEAR;
-			Param tmpParam = attrib->getValue<Param>();
+			Param tmpParam = static_cast<Param>(attrib->getValueUint32());
 			if (attrib = descriptor.getAttributeWithValue("factor type"))
-				tmpFactor = attrib->getValue<Factor>();
+				tmpFactor = static_cast<Factor>(attrib->getValueUint32());
 			setParam(tmpParam,tmpFactor);
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("coefficient"))
-			setCoef(attrib->getValue<float>());
+			setCoef(attrib->getValueFloat());
 	}
 
 	void LinearForce::innerExport(Descriptor& descriptor) const
 	{
 		ZonedModifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValue(getValue());
-		descriptor.getAttribute("relative value")->setValue(isRelative());
-		descriptor.getAttribute("squared speed")->setValue(isSquaredSpeedUsed());
-		descriptor.getAttribute("parameter")->setValue(getParam());
-		descriptor.getAttribute("factor type")->setValue(getFactor());
-		descriptor.getAttribute("coefficient")->setValue(getCoef());
+		descriptor.getAttribute("value")->setValueVector(getValue());
+		descriptor.getAttribute("relative value")->setValueBool(isRelative());
+		descriptor.getAttribute("squared speed")->setValueBool(isSquaredSpeedUsed());
+		descriptor.getAttribute("parameter")->setValueUint32(getParam());
+		descriptor.getAttribute("factor type")->setValueUint32(getFactor());
+		descriptor.getAttribute("coefficient")->setValueFloat(getCoef());
 	}
 }

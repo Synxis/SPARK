@@ -49,7 +49,7 @@ namespace SPK
 		const Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("transform"))
 		{
-			std::vector<float> t = attrib->getValues<float>();
+			std::vector<float> t = attrib->getValuesFloat();
 			if (t.size() == 16)
 				transform.set(&t[0]);
 		}
@@ -57,6 +57,6 @@ namespace SPK
 	
 	void SPKObject::innerExport(Descriptor& descriptor) const
 	{
-		descriptor.getAttribute("transform")->setValues<float>(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
+		descriptor.getAttribute("transform")->setValuesFloat(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
 	}
 }

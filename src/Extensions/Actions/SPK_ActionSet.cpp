@@ -87,15 +87,15 @@ namespace SPK
 		const Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("actions"))
 		{
-			std::vector<Action*> tmpActions = attrib->getValues<Action*>();
+			std::vector<WeakRef<SPKObject>> tmpActions = attrib->getValuesRef();
 			for (size_t i = 0; i < tmpActions.size(); ++i)
-				addAction(tmpActions[i]);
+				addAction(tmpActions[i].cast<Action>());
 		}
 	}
 
 	void ActionSet::innerExport(Descriptor& descriptor) const
 	{
 		Action::innerExport(descriptor);
-		descriptor.getAttribute("actions")->setValues(reinterpret_cast<Action* const *>(&actions[0]),getNbActions());
+		descriptor.getAttribute("actions")->setValuesRef(reinterpret_cast<const WeakRef<SPKObject>*>(&actions[0]),getNbActions());
 	}
 }
