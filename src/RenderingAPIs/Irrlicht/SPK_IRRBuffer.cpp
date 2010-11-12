@@ -101,7 +101,7 @@ namespace IRR
 				 return new IRRBuffer(device,nbParticles,particleVertexSize,particleIndexSize,irr::video::EIT_32BIT);
 
 			case EII_16BITS :
-				if(nbParticles > static_cast<size_t>(65535 / particleVertexSize))
+				if(nbParticles * particleVertexSize > 65536)
 				{
 					device->getLogger()->log(L"Unable to create particle buffer using 16bits indices : too many particles\n",irr::ELL_WARNING);
 					return NULL;
@@ -110,7 +110,7 @@ namespace IRR
 					return new IRRBuffer(device,nbParticles,particleVertexSize,particleIndexSize,irr::video::EIT_16BIT);
 
 			case EII_AUTO :
-				if (nbParticles > static_cast<size_t>(65535 / particleVertexSize))
+				if (nbParticles * particleVertexSize > 65536)
 					return new IRRBuffer(device,nbParticles,particleVertexSize,particleIndexSize,irr::video::EIT_32BIT);
 				else
 					return new IRRBuffer(device,nbParticles,particleVertexSize,particleIndexSize,irr::video::EIT_16BIT);

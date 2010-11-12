@@ -119,22 +119,13 @@ namespace DX9
 		// initialisation de l'index buffer
 		for(size_t i = 0; i < group.getParticles().getNbReserved(); i++)
 		{
-//#define _DX9QUADRENDERER_CLOCKWISE_
-#ifdef _DX9QUADRENDERER_CLOCKWISE_
 			*(indexIterator++) = 0 + offsetIndex;
 			*(indexIterator++) = 1 + offsetIndex;
 			*(indexIterator++) = 2 + offsetIndex;
 			*(indexIterator++) = 0 + offsetIndex;
 			*(indexIterator++) = 2 + offsetIndex;
 			*(indexIterator++) = 3 + offsetIndex;
-#else
-			*(indexIterator++) = 0 + offsetIndex;
-			*(indexIterator++) = 2 + offsetIndex;
-			*(indexIterator++) = 1 + offsetIndex;
-			*(indexIterator++) = 0 + offsetIndex;
-			*(indexIterator++) = 3 + offsetIndex;
-			*(indexIterator++) = 2 + offsetIndex;
-#endif
+
 			offsetIndex += 4;
 		}
 		offsetIndex = 0;
@@ -159,7 +150,7 @@ namespace DX9
 				fbuffer = dynamic_cast<FloatBuffer*>(group.createBuffer(TEXTURE_BUFFER_NAME,FloatBufferCreator(8),TEXTURE_2D,false));
 				if (!group.getModel()->isEnabled(PARAM_TEXTURE_INDEX))
 				{
-					float t[8] = {1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,1.0f,1.0f};
+					float t[8] = {0.0f,0.0f,1.0f,0.0f,1.0f,1.0f,0.0f,1.0f};
 					for (size_t i = 0; i < group.getParticles().getNbReserved() << 3; ++i)
 						fbuffer->getData()[i] = t[i & 7];
 				}
@@ -167,7 +158,7 @@ namespace DX9
 
 			case TEXTURE_3D :
 				fbuffer = dynamic_cast<FloatBuffer*>(group.createBuffer(TEXTURE_BUFFER_NAME,FloatBufferCreator(12),TEXTURE_3D,false));
-				float t[12] =  {1.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,1.0f,1.0f,0.0f};
+				float t[12] =  {0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f};
 				for (size_t i = 0; i < group.getParticles().getNbReserved() * 12; ++i)
 					fbuffer->getData()[i] = t[i % 12];
 				break;
@@ -193,19 +184,16 @@ namespace DX9
 		if( !prepareBuffers(group) )
 			return;
 
-		D3DXMATRIX view;
+		D3DXMATRIX view,world,modelView;
 		DX9Info::getDevice()->GetTransform(D3DTS_VIEW, &view);
-		D3DXMatrixInverse((D3DXMATRIX*)&invModelView, NULL, &view);
+		DX9Info::getDevice()->GetTransform(D3DTS_WORLD, &world);
+		modelView = world * view;
+		D3DXMatrixInverse((D3DXMATRIX*)&invModelView, NULL, &modelView);
 
 		initBlending();
 
 		DX9Info::getDevice()->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_FLAT);
-
-#ifdef _DX9QUADRENDERER_CLOCKWISE_
-		DX9Info::getDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
-#else
-		DX9Info::getDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-#endif
+		DX9Info::getDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 		switch(texturingMode)
 		{
@@ -262,7 +250,7 @@ namespace DX9
 
 		bool globalOrientation = precomputeOrientation3D(
 			group,
-			Vector3D(-invModelView[8],-invModelView[9],-invModelView[10]),
+			Vector3D(invModelView[8],invModelView[9],invModelView[10]),
 			Vector3D(invModelView[4],invModelView[5],invModelView[6]),
 			Vector3D(invModelView[12],invModelView[13],invModelView[14])
 		);

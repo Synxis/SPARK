@@ -188,22 +188,22 @@ namespace DX9
 		float y = particle.position().y;
 		float z = particle.position().z;
 
-		// top right vertex
+		// top left vertex
 		(vertexIterator)->x = x + quadSide().x + quadUp().x;
 		(vertexIterator)->y = y + quadSide().y + quadUp().y;
 		(vertexIterator++)->z = z + quadSide().z + quadUp().z;
 
-		// top left vertex
+		// top right vertex
 		(vertexIterator)->x = x - quadSide().x + quadUp().x;
 		(vertexIterator)->y = y - quadSide().y + quadUp().y;
 		(vertexIterator++)->z = z - quadSide().z + quadUp().z;
 
-		// bottom left
+		// bottom right vertex
 		(vertexIterator)->x = x - quadSide().x - quadUp().x;
 		(vertexIterator)->y = y - quadSide().y - quadUp().y;
 		(vertexIterator++)->z = z - quadSide().z - quadUp().z;
 
-		// bottom right
+		// bottom left vertex
 		(vertexIterator)->x = x + quadSide().x - quadUp().x;
 		(vertexIterator)->y = y + quadSide().y - quadUp().y;
 		(vertexIterator++)->z = z + quadSide().z - quadUp().z;
@@ -220,16 +220,16 @@ namespace DX9
 	{
 		computeAtlasCoordinates(particle);
 
+		*(textureIterator++) = textureAtlasU0();
+		*(textureIterator++) = textureAtlasV0();
+
 		*(textureIterator++) = textureAtlasU1();
 		*(textureIterator++) = textureAtlasV0();
 
-		*(textureIterator++) = textureAtlasU0();
-		*(textureIterator++) = textureAtlasV0();
-
-		*(textureIterator++) = textureAtlasU0();
+		*(textureIterator++) = textureAtlasU1();
 		*(textureIterator++) = textureAtlasV1();
 
-		*(textureIterator++) = textureAtlasU1();
+		*(textureIterator++) = textureAtlasU0();
 		*(textureIterator++) = textureAtlasV1();	
 	}
 
