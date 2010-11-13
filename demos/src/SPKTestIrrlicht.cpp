@@ -95,9 +95,8 @@ int main(int argc, char *argv[])
 	SPK::System::setClampStep(true,0.1f);			// clamp the step to 100 ms
 	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 	
-	SPK::IRR::IRRSystem* system = new SPK::IRR::IRRSystem(smgr->getRootSceneNode(),smgr);
-	system->enableAABBComputation(true);
-	system->drop(); // We let the scene manager taking care of the system life time
+	irr::scene::CSPKParticleSystemNode* system = new irr::scene::CSPKParticleSystemNode(smgr->getRootSceneNode(),smgr);
+	system->drop(); // We let the scene manager take care of the system life time
 
 	SPK::Ref<SPK::IRR::IRRQuadRenderer> quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
 	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
@@ -114,7 +113,7 @@ int main(int argc, char *argv[])
 	graphInterpolator->addEntry(0.5f,0x00FF0088);
 	graphInterpolator->addEntry(1.0f,0x0000FF88);
 
-	SPK::Group* group = system->createGroup(400);
+	SPK::Group* group = system->createSPKGroup(400);
 	group->setRadius(0.15f);
 	group->setLifeTime(1.0f,2.0f);
 	group->setColorInterpolator(graphInterpolator);

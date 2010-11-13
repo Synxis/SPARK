@@ -24,6 +24,21 @@
 
 #include <vector>
 
+// This define helps implement a wrapper for SPK::System by redirecting the methods
+#define SPK_IMPLEMENT_SYSTEM_WRAPPER \
+\
+private : \
+SPK::System SPKSystem; \
+public : \
+inline SPK::Group* createSPKGroup(size_t capacity) { return SPKSystem.createGroup(capacity); } \
+inline SPK::Group* createSPKGroup(const SPK::Group& group) { return SPKSystem.createGroup(group); } \
+inline void destroySPKGroup(SPK::Group* group) { SPKSystem.destroyGroup(group); } \
+inline SPK::Group* getSPKGroup(size_t index) const { return SPKSystem.getGroup(index); } \
+inline size_t getNbSPKGroups() const { return SPKSystem.getNbGroups(); } \
+inline size_t getNbParticles() const { return SPKSystem.getNbParticles(); } \
+inline void initializeSPK() { SPKSystem.initialize(); } \
+inline bool isInitializedSPK() const { return SPKSystem.isInitialized(); }
+
 namespace SPK
 {
 	/**

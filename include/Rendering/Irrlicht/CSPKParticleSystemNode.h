@@ -26,9 +26,9 @@
 
 #include "Rendering/Irrlicht/SPK_IRR_DEF.h"
 
-namespace SPK
+namespace irr
 {
-namespace IRR
+namespace scene
 {
 	/**
 	* @brief A particle system adapted to Irrlicht
@@ -44,8 +44,10 @@ namespace IRR
 	* Note also that an CSPKParticleSystemNode takes care of the camera position automatically when distance computation is enabled
 	* on one of its Group. Therefore there is no need to call System::setCameraPosition(Vector3D).
 	*/
-	class SPK_IRR_PREFIX IRRSystem : public irr::scene::ISceneNode, public System
+	class SPK_IRR_PREFIX CSPKParticleSystemNode : public ISceneNode
 	{
+	SPK_IMPLEMENT_SYSTEM_WRAPPER
+
 	public :
 
 		//////////////////
@@ -59,33 +61,23 @@ namespace IRR
 		* @param worldTransformed : true to emit particles in world, false to emit them localy
 		* @param id : the ID of the node
 		*/
-		IRRSystem(irr::scene::ISceneNode* parent,irr::scene::ISceneManager* mgr,bool worldTransformed = true,bool initialize = true,irr::s32 id=-1);
+		CSPKParticleSystemNode(ISceneNode* parent,ISceneManager* mgr,bool worldTransformed = true,bool initialize = true,s32 id=-1);
 
 		/**
 		* @brief Copy constructor of CSPKParticleSystemNode
 		*/
-		IRRSystem(const IRRSystem& system,irr::scene::ISceneNode* newParent = NULL,irr::scene::ISceneManager* newManager = NULL);
+		CSPKParticleSystemNode(const CSPKParticleSystemNode& system,ISceneNode* newParent = NULL,ISceneManager* newManager = NULL);
 
-		virtual IRRSystem* clone(irr::scene::ISceneNode* newParent = NULL,irr::scene::ISceneManager* newManager = NULL);
+		virtual CSPKParticleSystemNode* clone(ISceneNode* newParent = NULL,ISceneManager* newManager = NULL);
 
 		/**
-		* @brief Enables or disables auto update
-		* @param autoUpdate : True to enable auto-update, false to disable it
-        * @param onlyWhenVisible : True to perform auto-update only if node is visible. This parameter is ignored if auto-update is set to false.
+		* @brief Enables or disables update when the system is not visible
+        * @param onlyWhenVisible : True to perform update only if node is visible
 		*/
-		inline void enableAutoUpdate(bool autoUpdate, bool onlyWhenVisible = true);
+		inline void setUpdateOnlyWhenVisible(bool onlyWhenVisible);
 
 		/**
-		* @brief Returns true if auto-update is enabled
-		*
-		* If true, the scene node will update particles automatically, else the user must call updateParticles(float) manually.
-		*
-		* @return true if auto-update is enabled, false if disabled
-		*/
-		inline bool isAutoUpdateEnabled() const;
-
-		/**
-		* @brief Returns true if auto-update is performed only when visible
+		* @brief Returns true if update is performed only when visible
 		* @return True if particles are updated only if the scene node is visible (use setVisible() to change visibility).
 		*/
         inline bool isUpdatedOnlyWhenVisible() const;
@@ -124,17 +116,13 @@ namespace IRR
 		*
 		* @return the bounding box containing all particles
 		*/
-		virtual const irr::core::aabbox3d<irr::f32>& getBoundingBox() const;
+		virtual const core::aabbox3d<f32>& getBoundingBox() const;
 
 		/** 
 		* @brief Renders the particles in the system 
-		* 
 		* (Reimplementation of the irr::scene::SceneNode render method.)
 		*/
-		virtual inline void render();
-
-		virtual bool updateParticles(float deltaTime);
-		virtual void renderParticles() const;
+		virtual void render();
 
 		/** @brief This method is called just before the rendering process of the whole scene */
 		virtual void OnRegisterSceneNode();
@@ -146,64 +134,45 @@ namespace IRR
 		*
 		* @param timeMs : Current time in milliseconds
 		**/
-        virtual void OnAnimate(irr::u32 timeMs);
+        virtual void OnAnimate(u32 timeMs);
 
 		/** @brief Updates the absolute transformation of this Irrlicht Node */
 		virtual void updateAbsolutePosition();
 	
 	private :
 
-		bool autoUpdate;
 		bool onlyWhenVisible;
 
 		const bool worldTransformed;
 
 		bool alive;
 
-        mutable irr::core::aabbox3d<irr::f32> BBox;
-		mutable irr::u32 lastUpdatedTime;
+        mutable core::aabbox3d<f32> BBox;
+		mutable u32 lastUpdatedTime;
 
 		// This sets the right camera position if distance computation is enabled for a group of the system
 		void updateCameraPosition() const;
 	};
 
-	inline void IRRSystem::enableAutoUpdate(bool autoUpdate, bool onlyWhenVisible)
+	inline void CSPKParticleSystemNode::setUpdateOnlyWhenVisible(bool onlyWhenVisible)
 	{
-		this->autoUpdate = autoUpdate;
 		this->onlyWhenVisible = onlyWhenVisible;
 	}
 
-	inline bool IRRSystem::isAutoUpdateEnabled() const
-	{
-		return autoUpdate;
-	}
-
-    inline bool IRRSystem::isUpdatedOnlyWhenVisible() const
+    inline bool CSPKParticleSystemNode::isUpdatedOnlyWhenVisible() const
 	{
 		return onlyWhenVisible;
 	}
 
-	inline bool IRRSystem::isWorldTransformed() const
+	inline bool CSPKParticleSystemNode::isWorldTransformed() const
 	{
 		return worldTransformed;
 	}
 
-	inline bool IRRSystem::isAlive() const
+	inline bool CSPKParticleSystemNode::isAlive() const
 	{
 		return alive;
 	}
-
-	inline void IRRSystem::render()
-	{
-		renderParticles();
-	}
-}}
-
-namespace irr
-{
-namespace scene
-{
-	typedef SPK::IRR::IRRSystem CSPKParticleSystemNode;
 }}
 
 #endif

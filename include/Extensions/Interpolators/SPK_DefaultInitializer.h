@@ -102,21 +102,38 @@ namespace SPK
 		data = defaultValue;
 	}
 
-	template<typename T>
-	void DefaultInitializer<T>::innerImport(const Descriptor& descriptor)
+	template<>
+	void DefaultInitializer<float>::innerImport(const Descriptor& descriptor)
 	{
-		Interpolator<T>::innerImport(descriptor);
+		Interpolator<float>::innerImport(descriptor);
 
 		const Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("default value"))
-			setDefaultValue(attrib->getValue<T>());
+			setDefaultValue(attrib->getValueFloat());
 	}
 
-	template<typename T>
-	void DefaultInitializer<T>::innerExport(Descriptor& descriptor) const
+	template<>
+	void DefaultInitializer<float>::innerExport(Descriptor& descriptor) const
 	{
-		Interpolator<T>::innerExport(descriptor);
-		descriptor.getAttribute("default value")->setValue(getDefaultValue());
+		Interpolator<float>::innerExport(descriptor);
+		descriptor.getAttribute("default value")->setValueFloat(getDefaultValue());
+	}
+
+	template<>
+	void DefaultInitializer<Color>::innerImport(const Descriptor& descriptor)
+	{
+		Interpolator<Color>::innerImport(descriptor);
+
+		const Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("default value"))
+			setDefaultValue(attrib->getValueColor());
+	}
+
+	template<>
+	void DefaultInitializer<Color>::innerExport(Descriptor& descriptor) const
+	{
+		Interpolator<Color>::innerExport(descriptor);
+		descriptor.getAttribute("default value")->setValueColor(getDefaultValue());
 	}	
 }
 

@@ -38,6 +38,6 @@
 #include "Rendering/Irrlicht/SPK_IRR_QuadRenderer.h"
 
 // System
-#include "Rendering/Irrlicht/SPK_IRR_System.h"
+#include "Rendering/Irrlicht/CSPKParticleSystemNode.h"
 
 #endif

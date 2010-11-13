@@ -118,7 +118,7 @@ namespace SPK
 		bool valueSet;
 		bool optional;
 
-		// Generic setValue(s)/getValue(s) (encapsulated to ensure type safety
+		// Generic setValue(s)/getValue(s) (encapsulated to ensure type safety)
 		template<typename T> void setValue(AttributeType valueType,const T& value,bool optional = false);
 		template<typename T> void setValues(AttributeType valueType,const T* values,size_t nb,bool optional = false);
 		template<typename T> T getValue(AttributeType valueType) const;

@@ -22,40 +22,38 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #include <SPARK_Core.h>
-#include "Rendering/Irrlicht/SPK_IRR_System.h"
+#include "Rendering/Irrlicht/CSPKParticleSystemNode.h"
 
-namespace SPK
+namespace irr
 {
-namespace IRR
+namespace scene
 {
-	IRRSystem::IRRSystem(
-		irr::scene::ISceneNode* parent,
-		irr::scene::ISceneManager* mgr,
+	CSPKParticleSystemNode::CSPKParticleSystemNode(
+		ISceneNode* parent,
+		ISceneManager* mgr,
 		bool initialize,
 		bool worldTransformed,
-		irr::s32 id) :
+		s32 id) :
 			irr::scene::ISceneNode(parent,mgr,id),
-			System(initialize),
+			SPKSystem(initialize),
 			worldTransformed(worldTransformed),
-			autoUpdate(true),
 			onlyWhenVisible(false),
 			alive(true),
 			lastUpdatedTime(0)
     {
-		enableAABBComputation(true); // as culling is enabled by default in Irrlicht
+		SPKSystem.enableAABBComputation(true); // as culling is enabled by default in Irrlicht
 
-		if (parent != NULL && !isInitialized())
-			SPK_LOG_WARNING("IRRSystem(ISceneNode*,ISceneManager*,bool,bool) - A uninitialized system may have a NULL parent");
+		if (parent != NULL && !SPKSystem.isInitialized())
+			SPK_LOG_WARNING("CSPKParticleSystemNode(ISceneNode*,ISceneManager*,bool,bool,s32) - A uninitialized system may have a NULL parent");
 	}
 
-	IRRSystem::IRRSystem(
-		const IRRSystem& system,
-		irr::scene::ISceneNode* newParent,
-		irr::scene::ISceneManager* newManager) :
-			irr::scene::ISceneNode(NULL,NULL),
-			System(system),
+	CSPKParticleSystemNode::CSPKParticleSystemNode(
+		const CSPKParticleSystemNode& system,
+		ISceneNode* newParent,
+		ISceneManager* newManager) :
+			ISceneNode(NULL,NULL),
+			SPKSystem(system.SPKSystem),
 			worldTransformed(system.worldTransformed),
-			autoUpdate(system.autoUpdate),
 			onlyWhenVisible(system.onlyWhenVisible),
 			alive(system.alive),
 			lastUpdatedTime(0)
@@ -67,93 +65,91 @@ namespace IRR
 
 		setParent(newParent);
 		
-		if (getParent() != NULL && !isInitialized())
-			SPK_LOG_WARNING("IRRSystem(const IRRSystem&,ISceneNode*,ISceneManager*) - A uninitialized system may have a NULL parent");
+		if (getParent() != NULL && !SPKSystem.isInitialized())
+			SPK_LOG_WARNING("CSPKParticleSystemNode(const CSPKParticleSystemNode&,ISceneNode*,ISceneManager*) - A uninitialized system may have a NULL parent");
 		
-		cloneMembers(const_cast<IRRSystem*>(&system),newManager);
+		cloneMembers(const_cast<CSPKParticleSystemNode*>(&system),newManager);
 	}
 
-	IRRSystem* IRRSystem::clone(irr::scene::ISceneNode* newParent,irr::scene::ISceneManager* newManager)
+	CSPKParticleSystemNode* CSPKParticleSystemNode::clone(ISceneNode* newParent,ISceneManager* newManager)
 	{
-		IRRSystem* nb = new IRRSystem(*this,newParent,newManager);
+		CSPKParticleSystemNode* nb = new CSPKParticleSystemNode(*this,newParent,newManager);
 		if (Parent != NULL)
 			nb->drop();
 		return nb;
 	}
 
-	const irr::core::aabbox3d<irr::f32>& IRRSystem::getBoundingBox() const
+	const core::aabbox3d<f32>& CSPKParticleSystemNode::getBoundingBox() const
     {
-		BBox.MaxEdge = spk2irr(getAABBMax());
-		BBox.MinEdge = spk2irr(getAABBMin());
+		BBox.MaxEdge = SPK::IRR::spk2irr(SPKSystem.getAABBMax());
+		BBox.MinEdge = SPK::IRR::spk2irr(SPKSystem.getAABBMin());
         return BBox;
     }
 
-	void IRRSystem::renderParticles() const
+	void CSPKParticleSystemNode::render()
 	{
-        SceneManager->getVideoDriver()->setTransform(irr::video::ETS_WORLD,AbsoluteTransformation);
-        System::renderParticles();
+        SceneManager->getVideoDriver()->setTransform(video::ETS_WORLD,AbsoluteTransformation);
+        SPKSystem.renderParticles();
 	}
 
-	bool IRRSystem::updateParticles(float deltaTime)
+	void CSPKParticleSystemNode::OnRegisterSceneNode()
 	{
-		updateCameraPosition();
-
-		if (!isAABBComputationEnabled() && AutomaticCullingState != irr::scene::EAC_OFF)
-		{
-			SPK_LOG_INFO("IRRSystem::updateParticles(float) - The culling is activated for the system but not the bounding box computation - BB computation is enabled");
-			enableAABBComputation(true);
-		}
-
-		alive = System::updateParticles(deltaTime);
-		return alive;
-	}
-
-	void IRRSystem::OnRegisterSceneNode()
-	{
-		if (IsVisible)
+		if (IsVisible && alive)
 			SceneManager->registerNodeForRendering(this,irr::scene::ESNRP_TRANSPARENT_EFFECT); // Draws in transparent effect pass (may be optimized)
 
        ISceneNode::OnRegisterSceneNode();
 	}
 
-	void IRRSystem::OnAnimate(irr::u32 timeMs)
+	void CSPKParticleSystemNode::OnAnimate(u32 timeMs)
 	{
 		ISceneNode::OnAnimate(timeMs);
 
 		if (lastUpdatedTime == 0)
 			lastUpdatedTime = timeMs;
 
-        if (autoUpdate && (!onlyWhenVisible || IsVisible))
-			updateParticles((timeMs - lastUpdatedTime) * 0.001f);
+        if (!onlyWhenVisible || IsVisible)
+		{
+			updateCameraPosition();
+
+			if (!SPKSystem.isAABBComputationEnabled() && AutomaticCullingState != EAC_OFF)
+			{
+				SPK_LOG_INFO("CSPKParticleSystemNode::OnAnimate(u32) - The culling is activated for the system but not the bounding box computation - BB computation is enabled");
+				SPKSystem.enableAABBComputation(true);
+			}
+
+			alive = SPKSystem.updateParticles((timeMs - lastUpdatedTime) * 0.001f);
+		}
 
         lastUpdatedTime = timeMs;
 	}
 
-	void IRRSystem::updateAbsolutePosition()
+	void CSPKParticleSystemNode::updateAbsolutePosition()
 	{
 		ISceneNode::updateAbsolutePosition();
 
 		if (worldTransformed)
 		{
-			getTransform().set(AbsoluteTransformation.pointer());
+			SPKSystem.getTransform().set(AbsoluteTransformation.pointer());
 			AbsoluteTransformation.makeIdentity();
 		}
 	}
 
-	void IRRSystem::updateCameraPosition() const
+	void CSPKParticleSystemNode::updateCameraPosition() const
 	{
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			if ((*it)->isDistanceComputationEnabled())
+		for (size_t i = 0; i < SPKSystem.getNbGroups(); ++i)
+		{
+			if (SPKSystem.getGroup(i)->isDistanceComputationEnabled())
 			{
-				irr::core::vector3df pos = SceneManager->getActiveCamera()->getAbsolutePosition();
+				core::vector3df pos = SceneManager->getActiveCamera()->getAbsolutePosition();
 				if (!worldTransformed)
 				{
-					irr::core::matrix4 invTransform;
+					core::matrix4 invTransform;
 					AbsoluteTransformation.getInversePrimitive(invTransform);
 					invTransform.transformVect(pos);
 				}
-				setCameraPosition(irr2spk(pos));
+				SPK::System::setCameraPosition(SPK::IRR::irr2spk(pos));
 				break;
 			}
+		}
 	}
 }}
