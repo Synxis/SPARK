@@ -56,12 +56,12 @@ namespace SPK
 			SPK_DELETE(*it);
 	}
 
-	Group* System::createGroup(size_t capacity)
+	WeakRef<Group> System::createGroup(size_t capacity)
 	{
 		if (capacity == 0)
 		{
 			SPK_LOG_WARNING("System::addGroup(size_t) - The capacity of a Group cannot be 0, NULL is returned");
-			return NULL;
+			return SPK_NULL_REF;
 		}
 
 		Group* newGroup = SPK_NEW(Group,*this,capacity);
@@ -69,16 +69,16 @@ namespace SPK
 		return newGroup;
 	}
 
-	Group* System::createGroup(const Group& group)
+	WeakRef<Group> System::createGroup(const Group& group)
 	{
 		Group* newGroup = SPK_NEW(Group,*this,group);
 		groups.push_back(newGroup);
 		return newGroup;
 	}
 
-	void System::destroyGroup(Group* group)
+	void System::destroyGroup(const WeakRef<Group>& group)
 	{
-		std::vector<Group*>::iterator it = std::find(groups.begin(),groups.end(),group);
+		std::vector<Group*>::iterator it = std::find(groups.begin(),groups.end(),group.get());
 		if (it != groups.end())
 		{
 			SPK_DELETE(*it);
@@ -86,7 +86,7 @@ namespace SPK
 		}
 		else
 		{
-			SPK_LOG_WARNING("System::removeGroup(Group*) - The group " << group << " was not found in the system and cannot be removed");
+			SPK_LOG_WARNING("System::removeGroup(Group*) - The group " << group.get() << " was not found in the system and cannot be removed");
 		}
 	}
 

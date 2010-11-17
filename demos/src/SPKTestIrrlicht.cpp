@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 	graphInterpolator->addEntry(0.5f,0x00FF0088);
 	graphInterpolator->addEntry(1.0f,0x0000FF88);
 
-	SPK::Group* group = system->createSPKGroup(400);
+	SPK::WeakRef<SPK::Group> group = system->createSPKGroup(400);
 	group->setRadius(0.15f);
 	group->setLifeTime(1.0f,2.0f);
 	group->setColorInterpolator(graphInterpolator);

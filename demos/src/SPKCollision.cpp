@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::Collider> collider = SPK::Collider::create(0.9f);
 	
 	// Group
-	SPK::Group* particleGroup = particleSystem->createGroup(NB_PARTICLES);
+	SPK::WeakRef<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES);
 	particleGroup->setImmortal(true);
 	particleGroup->setRadius(RADIUS);
 	particleGroup->setRenderer(particleRenderer);

@@ -82,7 +82,7 @@ namespace SPK
 		zone->getTransform().setPosition(particle.position());
 		zone->updateTransform();
 
-		Group* group = particle.getGroup().getSystem().getGroup(groupIndex);
+		WeakRef<Group> group = particle.getGroup().getSystem().getGroup(groupIndex);
 		group->addParticles(SPK_RANDOM(minNb,maxNb + 1),emitter);
 	}
 

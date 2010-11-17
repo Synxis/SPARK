@@ -43,7 +43,7 @@ namespace SPK
 
 	EmitterAttacher::~EmitterAttacher(){}
 
-	EmitterAttacher::EmitterData::EmitterData(size_t nbParticles,Group* emittingGroup) :
+	EmitterAttacher::EmitterData::EmitterData(size_t nbParticles,const WeakRef<Group>& emittingGroup) :
 		data(SPK_NEW_ARRAY(Ref<Emitter>,nbParticles)),
 		dataSize(nbParticles),
 		group(emittingGroup)
@@ -68,8 +68,8 @@ namespace SPK
 	void EmitterAttacher::checkData(DataSet& dataSet,const Group& group) const
 	{
 		EmitterData& data = SPK_GET_DATA(EmitterData,&dataSet,EMITTER_INDEX);
-		Group* currentDataGroup = data.getGroup();
-		Group* emittingGroup = group.getSystem().getGroup(groupIndex);
+		WeakRef<Group> currentDataGroup = data.getGroup();
+		WeakRef<Group> emittingGroup = group.getSystem().getGroup(groupIndex);
 		if (currentDataGroup != emittingGroup)
 		{
 			data.setGroup(emittingGroup);
@@ -107,7 +107,7 @@ namespace SPK
 
 		EmitterData& data = SPK_GET_DATA(EmitterData,dataSet,EMITTER_INDEX);
 		Ref<Emitter>* emitterIt = data.getEmitters();
-		Group* emittingGroup = data.getGroup();
+		WeakRef<Group> emittingGroup = data.getGroup();
 
 		bool rotationEnabled = this->rotationEnabled && group.isEnabled(PARAM_ANGLE);
 

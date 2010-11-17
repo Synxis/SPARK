@@ -68,6 +68,8 @@ namespace scene
 		*/
 		CSPKParticleSystemNode(const CSPKParticleSystemNode& system,ISceneNode* newParent = NULL,ISceneManager* newManager = NULL);
 
+		inline ~CSPKParticleSystemNode();
+
 		virtual CSPKParticleSystemNode* clone(ISceneNode* newParent = NULL,ISceneManager* newManager = NULL);
 
 		/**
@@ -153,6 +155,11 @@ namespace scene
 		// This sets the right camera position if distance computation is enabled for a group of the system
 		void updateCameraPosition() const;
 	};
+
+	inline CSPKParticleSystemNode::~CSPKParticleSystemNode()
+	{
+		SPK_DELETE(SPKSystem);
+	}
 
 	inline void CSPKParticleSystemNode::setUpdateOnlyWhenVisible(bool onlyWhenVisible)
 	{

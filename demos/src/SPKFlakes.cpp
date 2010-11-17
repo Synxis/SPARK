@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 	SPK::System* particleSystem = new SPK::System(true); 
 
 	// Group
-	SPK::Group* particleGroup = particleSystem->createGroup(NB_PARTICLES[NB_PARTICLES_SIZE - 1]);
+	SPK::WeakRef<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES[NB_PARTICLES_SIZE - 1]);
 	particleGroup->setRadius(0.0f);
 	particleGroup->setRenderer(particleRenderer);
 	particleGroup->setColorInterpolator(SPK::ColorDefaultInitializer::create(0xFFCC4C66));

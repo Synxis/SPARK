@@ -28,16 +28,16 @@
 #define SPK_IMPLEMENT_SYSTEM_WRAPPER \
 \
 private : \
-SPK::System SPKSystem; \
+SPK::System* SPKSystem; \
 public : \
-inline SPK::Group* createSPKGroup(size_t capacity) { return SPKSystem.createGroup(capacity); } \
-inline SPK::Group* createSPKGroup(const SPK::Group& group) { return SPKSystem.createGroup(group); } \
-inline void destroySPKGroup(SPK::Group* group) { SPKSystem.destroyGroup(group); } \
-inline SPK::Group* getSPKGroup(size_t index) const { return SPKSystem.getGroup(index); } \
-inline size_t getNbSPKGroups() const { return SPKSystem.getNbGroups(); } \
-inline size_t getNbParticles() const { return SPKSystem.getNbParticles(); } \
-inline void initializeSPK() { SPKSystem.initialize(); } \
-inline bool isInitializedSPK() const { return SPKSystem.isInitialized(); }
+inline SPK::WeakRef<SPK::Group> createSPKGroup(size_t capacity) { return SPKSystem->createGroup(capacity); } \
+inline SPK::WeakRef<SPK::Group> createSPKGroup(const SPK::Group& group) { return SPKSystem->createGroup(group); } \
+inline void destroySPKGroup(SPK::WeakRef<SPK::Group> group) { SPKSystem->destroyGroup(group); } \
+inline SPK::WeakRef<SPK::Group> getSPKGroup(size_t index) const { return SPKSystem->getGroup(index); } \
+inline size_t getNbSPKGroups() const { return SPKSystem->getNbGroups(); } \
+inline size_t getNbParticles() const { return SPKSystem->getNbParticles(); } \
+inline void initializeSPK() { SPKSystem->initialize(); } \
+inline bool isInitializedSPK() const { return SPKSystem->isInitialized(); }
 
 namespace SPK
 {
@@ -92,13 +92,13 @@ namespace SPK
 		* @brief Adds a group to the system
 		* @param group : a pointer on the group to add to the system
 		*/
-		Group* createGroup(size_t capacity);
+		WeakRef<Group> createGroup(size_t capacity);
 
 		/**
 		* @brief Adds a group to the system which is a copy of an existing group
 		*
 		*/
-		Group* createGroup(const Group& group);
+		WeakRef<Group> createGroup(const Group& group);
 
 		/**
 		* @brief Removes a group from the system
@@ -107,14 +107,14 @@ namespace SPK
 		*
 		* @param group : a pointer on the group to remove from the system
 		*/
-		void destroyGroup(Group* group);
+		void destroyGroup(const WeakRef<Group>& group);
 
 		/**
 		* @brief Gets the group at index
 		* @param index : the index of the group to get
 		* @return the group at index
 		*/
-		inline Group* getGroup(size_t index) const;
+		inline WeakRef<Group> getGroup(size_t index) const;
 
 		/**
 		* @brief Gets the number of groups in the system
@@ -317,7 +317,7 @@ namespace SPK
 		initialized(initialize)
 	{}
 
-	inline Group* System::getGroup(size_t index) const
+	inline WeakRef<Group> System::getGroup(size_t index) const
 	{
 		SPK_ASSERT(index < getNbGroups(),"System::getGroup(size_t) - Index of group is out of bounds : " << index);
 		return groups[index];

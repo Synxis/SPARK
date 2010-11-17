@@ -35,15 +35,15 @@ namespace scene
 		bool worldTransformed,
 		s32 id) :
 			irr::scene::ISceneNode(parent,mgr,id),
-			SPKSystem(initialize),
+			SPKSystem(SPK_NEW(SPK::System,initialize)),
 			worldTransformed(worldTransformed),
 			onlyWhenVisible(false),
 			alive(true),
 			lastUpdatedTime(0)
     {
-		SPKSystem.enableAABBComputation(true); // as culling is enabled by default in Irrlicht
+		SPKSystem->enableAABBComputation(true); // as culling is enabled by default in Irrlicht
 
-		if (parent != NULL && !SPKSystem.isInitialized())
+		if (parent != NULL && !SPKSystem->isInitialized())
 			SPK_LOG_WARNING("CSPKParticleSystemNode(ISceneNode*,ISceneManager*,bool,bool,s32) - A uninitialized system may have a NULL parent");
 	}
 
@@ -52,7 +52,7 @@ namespace scene
 		ISceneNode* newParent,
 		ISceneManager* newManager) :
 			ISceneNode(NULL,NULL),
-			SPKSystem(system.SPKSystem),
+			SPKSystem(SPK_NEW(SPK::System,*system.SPKSystem)),
 			worldTransformed(system.worldTransformed),
 			onlyWhenVisible(system.onlyWhenVisible),
 			alive(system.alive),
@@ -65,7 +65,7 @@ namespace scene
 
 		setParent(newParent);
 		
-		if (getParent() != NULL && !SPKSystem.isInitialized())
+		if (getParent() != NULL && !SPKSystem->isInitialized())
 			SPK_LOG_WARNING("CSPKParticleSystemNode(const CSPKParticleSystemNode&,ISceneNode*,ISceneManager*) - A uninitialized system may have a NULL parent");
 		
 		cloneMembers(const_cast<CSPKParticleSystemNode*>(&system),newManager);
@@ -81,15 +81,15 @@ namespace scene
 
 	const core::aabbox3d<f32>& CSPKParticleSystemNode::getBoundingBox() const
     {
-		BBox.MaxEdge = SPK::IRR::spk2irr(SPKSystem.getAABBMax());
-		BBox.MinEdge = SPK::IRR::spk2irr(SPKSystem.getAABBMin());
+		BBox.MaxEdge = SPK::IRR::spk2irr(SPKSystem->getAABBMax());
+		BBox.MinEdge = SPK::IRR::spk2irr(SPKSystem->getAABBMin());
         return BBox;
     }
 
 	void CSPKParticleSystemNode::render()
 	{
         SceneManager->getVideoDriver()->setTransform(video::ETS_WORLD,AbsoluteTransformation);
-        SPKSystem.renderParticles();
+        SPKSystem->renderParticles();
 	}
 
 	void CSPKParticleSystemNode::OnRegisterSceneNode()
@@ -111,13 +111,13 @@ namespace scene
 		{
 			updateCameraPosition();
 
-			if (!SPKSystem.isAABBComputationEnabled() && AutomaticCullingState != EAC_OFF)
+			if (!SPKSystem->isAABBComputationEnabled() && AutomaticCullingState != EAC_OFF)
 			{
 				SPK_LOG_INFO("CSPKParticleSystemNode::OnAnimate(u32) - The culling is activated for the system but not the bounding box computation - BB computation is enabled");
-				SPKSystem.enableAABBComputation(true);
+				SPKSystem->enableAABBComputation(true);
 			}
 
-			alive = SPKSystem.updateParticles((timeMs - lastUpdatedTime) * 0.001f);
+			alive = SPKSystem->updateParticles((timeMs - lastUpdatedTime) * 0.001f);
 		}
 
         lastUpdatedTime = timeMs;
@@ -129,16 +129,16 @@ namespace scene
 
 		if (worldTransformed)
 		{
-			SPKSystem.getTransform().set(AbsoluteTransformation.pointer());
+			SPKSystem->getTransform().set(AbsoluteTransformation.pointer());
 			AbsoluteTransformation.makeIdentity();
 		}
 	}
 
 	void CSPKParticleSystemNode::updateCameraPosition() const
 	{
-		for (size_t i = 0; i < SPKSystem.getNbGroups(); ++i)
+		for (size_t i = 0; i < SPKSystem->getNbGroups(); ++i)
 		{
-			if (SPKSystem.getGroup(i)->isDistanceComputationEnabled())
+			if (SPKSystem->getGroup(i)->isDistanceComputationEnabled())
 			{
 				core::vector3df pos = SceneManager->getActiveCamera()->getAbsolutePosition();
 				if (!worldTransformed)

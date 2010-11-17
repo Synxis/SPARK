@@ -76,11 +76,11 @@ namespace SPK
 		{
 		public :
 
-			inline EmitterData(size_t nbParticles,Group* emittingGroup);
+			inline EmitterData(size_t nbParticles,const WeakRef<Group>& emittingGroup);
 			
 			inline Ref<Emitter>* getEmitters() const;
-			inline void setGroup(Group* group);
-			inline Group* getGroup() const;
+			inline void setGroup(const WeakRef<Group>& group);
+			inline WeakRef<Group> getGroup() const;
 
 			void setEmitter(size_t index,const Ref<Emitter>& emitter);
 
@@ -89,7 +89,7 @@ namespace SPK
 			Ref<Emitter>* data;
 			size_t dataSize;
 
-			Group* group;
+			WeakRef<Group> group;
 
 			~EmitterData();
 
@@ -162,12 +162,12 @@ namespace SPK
 		return data;
 	}
 
-	inline void EmitterAttacher::EmitterData::setGroup(Group* group)
+	inline void EmitterAttacher::EmitterData::setGroup(const WeakRef<Group>& group)
 	{
 		this->group = group;
 	}
 
-	inline Group* EmitterAttacher::EmitterData::getGroup() const
+	inline WeakRef<Group> EmitterAttacher::EmitterData::getGroup() const
 	{
 		return group;
 	}

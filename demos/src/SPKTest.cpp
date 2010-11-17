@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
 
 	SPK::Ref<SPK::SphericEmitter> emitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,-1.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(),true,-1,100.0f,0.2f,0.5f);
 
-	SPK::Group* phantomGroup = system->createGroup(40);
+	SPK::WeakRef<SPK::Group> phantomGroup = system->createGroup(40);
 	phantomGroup->setLifeTime(5.0f,5.0f);
 	phantomGroup->setRadius(0.06f);
 	phantomGroup->addEmitter(SPK::SphericEmitter::create(SPK::Vector3D(0.0f,1.0f,0.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),true,-1,2.0f,1.2f,2.0f));
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 	phantomGroup->addModifier(SPK::Obstacle::create(SPK::Plane::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),0.8f));
 	phantomGroup->addModifier(SPK::EmitterAttacher::create(1,emitter,true));
 
-	SPK::Group* trailGroup = system->createGroup(1000);
+	SPK::WeakRef<SPK::Group> trailGroup = system->createGroup(1000);
 	trailGroup->setLifeTime(0.5f,1.0f);
 	trailGroup->setRadius(0.06f);
 	trailGroup->setRenderer(renderer);
