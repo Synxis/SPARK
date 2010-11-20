@@ -146,7 +146,7 @@ namespace SPK
 		WeakRef& operator=(T* ptr)
 		{
 			this->ptr = ptr;
-			return *this
+			return *this;
 		}
 
 		WeakRef& operator=(const WeakRef& ref)
@@ -158,13 +158,13 @@ namespace SPK
 		template<typename U> WeakRef& operator=(const WeakRef<U>& ref)
 		{
 			ptr = ref.get();
-			return *this
+			return *this;
 		}
 
 		template<typename U> WeakRef& operator=(const Ref<U>& ref)
 		{
 			ptr = ref.get();
-			return *this
+			return *this;
 		}
 
 		inline T& operator*() const { return *ptr; }
