@@ -158,6 +158,9 @@ namespace SPK
 			maxMemorySize(0)
 		{}
 
+		SPKMemoryTracer(const SPKMemoryTracer&); // Not used
+		SPKMemoryTracer& operator=(const SPKMemoryTracer&); // Not used
+
 		static SPKMemoryTracer instance;
 
 		unsigned long int nextIndex;

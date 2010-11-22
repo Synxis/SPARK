@@ -38,6 +38,8 @@
 #include "Core/SPK_Transform.h"
 #include "Core/SPK_Object.h"
 #include "Core/SPK_Referenceable.h"
+#include "Core/SPK_IOConverters.h"
+#include "Core/SPK_IOManager.h"
 #include "Core/SPK_Zone.h"
 #include "Core/SPK_Interpolator.h"
 #include "Core/SPK_Emitter.h"

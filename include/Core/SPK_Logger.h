@@ -277,6 +277,9 @@ namespace SPK
 		Logger();
 		~Logger(){}
 
+		Logger(const Logger&); // Not used
+		Logger& operator=(const Logger&); // Not used
+
 		void writePrefix(LogPriority priority);
 	};
 

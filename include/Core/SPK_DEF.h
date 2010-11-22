@@ -134,6 +134,9 @@ namespace SPK
 
 		SPKContext();
 		~SPKContext();
+
+		SPKContext(const SPKContext&); // Not used
+		SPKContext& operator=(const SPKContext&); // Not used
 	};
 
 	inline SPKContext& SPKContext::getInstance()
@@ -159,10 +162,8 @@ namespace SPK
 		// find a random number in the interval
         return static_cast<T>(min + ((randomSeed - 1) / 2147483646.0) * (max - min));
     }
+
+	extern SPK_PREFIX void registerCoreForLoading();
 }
 
-#endif
-
-#ifndef H_SPK_ZONE
-//#include "Core/SPK_Zone.h"
 #endif

@@ -22,8 +22,6 @@
 #include <ctime>
 #include <limits>
 
-//#include "Core/SPK_Logger.h"
-//#include "Extensions/Zones/SPK_Point.h"
 #include <SPARK_Core.h>
 #include "Extensions/Zones/SPK_Point.h" // for default zone
 
@@ -44,6 +42,9 @@ namespace SPK
 		// little tweak to ensure the randomSeed is uniformly distributed along all the range
 		for (size_t i = 0; i < 2; ++i)
 			randomSeed = generateRandom(static_cast<unsigned int>(1),std::numeric_limits<unsigned int>::max());
+	
+		// Registers all core objects for loading
+		registerCoreForLoading();	
 	}
 
 	// This allows SPARK finalization at application exit
@@ -70,5 +71,56 @@ namespace SPK
 			defaultZone->setShared(true);
 		}
 		return defaultZone;
+	}
+
+	void registerCoreForLoading()
+	{
+		//Loader::Table& table = Loader::table();
+
+		// Core
+		/*table.registerSerializable<System>();	
+		table.registerSerializable<Group>();
+		
+		// Interpolators
+		table.registerSerializable<FloatDefaultInitializer>();	
+		table.registerSerializable<ColorDefaultInitializer>();
+		table.registerSerializable<FloatRandomInitializer>();
+		table.registerSerializable<ColorRandomInitializer>();
+		table.registerSerializable<FloatSimpleInterpolator>();
+		table.registerSerializable<ColorSimpleInterpolator>();
+		table.registerSerializable<FloatRandomInterpolator>();
+		table.registerSerializable<ColorRandomInterpolator>();
+		table.registerSerializable<FloatGraphInterpolator>();
+		table.registerSerializable<ColorGraphInterpolator>();
+
+		// Zones
+		table.registerSerializable<Point>();
+		table.registerSerializable<Sphere>();
+		table.registerSerializable<Plane>();
+		table.registerSerializable<Ring>();
+
+		// Emitters
+		table.registerSerializable<StaticEmitter>();
+		table.registerSerializable<RandomEmitter>();
+		table.registerSerializable<StraightEmitter>();
+		table.registerSerializable<SphericEmitter>();
+		table.registerSerializable<NormalEmitter>();
+
+		// Modifiers
+		table.registerSerializable<Gravity>();
+		table.registerSerializable<Friction>();
+		table.registerSerializable<Obstacle>();
+		table.registerSerializable<Rotator>();
+		table.registerSerializable<Collider>();
+		table.registerSerializable<Destroyer>();
+		table.registerSerializable<Vortex>();
+		table.registerSerializable<EmitterAttacher>();
+		table.registerSerializable<PointMass>();
+		table.registerSerializable<RandomForce>();
+		table.registerSerializable<LinearForce>();
+
+		// Actions
+		table.registerSerializable<ActionSet>();
+		table.registerSerializable<SpawnParticlesAction>();*/
 	}
 }

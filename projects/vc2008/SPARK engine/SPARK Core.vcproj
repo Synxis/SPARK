@@ -338,6 +338,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\Core\SPK_IOConverters.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\Core\SPK_IOManager.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\Core\SPK_Logger.cpp"
 					>
 				</File>
@@ -529,6 +537,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\Core\SPK_Interpolator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\Core\SPK_IOConverters.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\Core\SPK_IOManager.h"
 					>
 				</File>
 				<File
