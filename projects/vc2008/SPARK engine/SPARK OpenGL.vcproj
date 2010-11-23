@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
+				LinkLibraryDependencies="false"
 				OutputFile="$(OutDir)\SPARK_GL_debug_s.lib"
 			/>
 			<Tool
@@ -130,7 +130,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
+				LinkLibraryDependencies="false"
 				OutputFile="$(OutDir)\SPARK_GL_s.lib"
 			/>
 			<Tool
