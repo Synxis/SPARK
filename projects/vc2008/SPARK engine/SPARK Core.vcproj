@@ -326,10 +326,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\Core\SPK_Descriptor.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\Core\SPK_Emitter.cpp"
 					>
 				</File>
@@ -338,11 +334,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\Core\SPK_IOConverters.cpp"
+					RelativePath="..\..\..\src\Core\SPK_IO_Converters.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\Core\SPK_IOManager.cpp"
+					RelativePath="..\..\..\src\Core\SPK_IO_Descriptor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\Core\SPK_IO_Manager.cpp"
 					>
 				</File>
 				<File
@@ -524,10 +524,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\Core\SPK_Descriptor.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\include\Core\SPK_Emitter.h"
 					>
 				</File>
@@ -540,11 +536,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\Core\SPK_IOConverters.h"
+					RelativePath="..\..\..\include\Core\SPK_IO_Converters.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\Core\SPK_IOManager.h"
+					RelativePath="..\..\..\include\Core\SPK_IO_Descriptor.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\Core\SPK_IO_Manager.h"
 					>
 				</File>
 				<File

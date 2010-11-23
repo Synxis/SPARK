@@ -63,8 +63,8 @@ namespace SPK
 		virtual void createData(DataSet& dataSet,const Group& group) const;
 		virtual void checkData(DataSet& dataSet,const Group& group) const;
 
-		virtual void innerImport(const Descriptor& descriptor);
-		virtual void innerExport(Descriptor& descriptor) const;
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

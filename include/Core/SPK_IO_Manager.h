@@ -29,6 +29,8 @@
 
 namespace SPK
 {
+namespace IO
+{
 	class SPK_PREFIX IOManager
 	{
 	public : 
@@ -145,5 +147,5 @@ namespace SPK
 		std::map<std::string,T*>::const_iterator it = table.find(name);
 		return it->second;
 	}
-}
+}}
 #endif 

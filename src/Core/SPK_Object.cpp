@@ -29,24 +29,24 @@ namespace SPK
 		transform.update(parent,*this);
 	}
 
-	Descriptor SPKObject::exportAttributes() const
+	IO::Descriptor SPKObject::exportAttributes() const
 	{
-		Descriptor descriptor = createDescriptor();
+		IO::Descriptor descriptor = createDescriptor();
 		//descriptor.setName(name); //TODO
 		innerExport(descriptor);
 		return descriptor;
 	}
 
-	Descriptor SPKObject::createDescriptor() const
+	IO::Descriptor SPKObject::createDescriptor() const
 	{
-		std::vector<Attribute> attributes;
+		std::vector<IO::Attribute> attributes;
 		fillAttributeList(attributes);
-		return Descriptor(attributes);
+		return IO::Descriptor(attributes);
 	}
 
-	void SPKObject::innerImport(const Descriptor& descriptor)
+	void SPKObject::innerImport(const IO::Descriptor& descriptor)
 	{
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("transform"))
 		{
 			std::vector<float> t = attrib->getValuesFloat();
@@ -55,7 +55,7 @@ namespace SPK
 		}
 	}
 	
-	void SPKObject::innerExport(Descriptor& descriptor) const
+	void SPKObject::innerExport(IO::Descriptor& descriptor) const
 	{
 		descriptor.getAttribute("transform")->setValuesFloat(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
 	}

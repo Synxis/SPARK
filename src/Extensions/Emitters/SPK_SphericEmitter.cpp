@@ -139,11 +139,11 @@ namespace SPK
 		computeMatrix();
 	}
 
-	void SphericEmitter::innerImport(const Descriptor& descriptor)
+	void SphericEmitter::innerImport(const IO::Descriptor& descriptor)
 	{
 		Emitter::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("direction"))
 			setDirection(attrib->getValueVector());
 		if (attrib = descriptor.getAttributeWithValue("angles"))
@@ -154,7 +154,7 @@ namespace SPK
 		}
 	}
 
-	void SphericEmitter::innerExport(Descriptor& descriptor) const
+	void SphericEmitter::innerExport(IO::Descriptor& descriptor) const
 	{
 		Emitter::innerExport(descriptor);
 

@@ -50,31 +50,31 @@ namespace SPK
 		}
 	}
 
-	void Gravity::innerImport(const Descriptor& descriptor)
+	void Gravity::innerImport(const IO::Descriptor& descriptor)
 	{
 		Modifier::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("value"))
 			setValue(attrib->getValueVector());
 	}
 
-	void Gravity::innerExport(Descriptor& descriptor) const
+	void Gravity::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
 		descriptor.getAttribute("value")->setValueVector(getValue());
 	}
 
-	void Friction::innerImport(const Descriptor& descriptor)
+	void Friction::innerImport(const IO::Descriptor& descriptor)
 	{
 		Modifier::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("value"))
 			value = attrib->getValueFloat();
 	}
 
-	void Friction::innerExport(Descriptor& descriptor) const
+	void Friction::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
 		descriptor.getAttribute("value")->setValueFloat(value);

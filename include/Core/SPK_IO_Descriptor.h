@@ -27,9 +27,12 @@
 
 namespace SPK
 {
-	class Descriptor;
 	class SPKObject;
 
+namespace IO
+{
+	class Descriptor;
+	
 	enum AttributeType
 	{
 		ATTRIBUTE_TYPE_CHAR,
@@ -252,6 +255,6 @@ namespace SPK
 			tmpBuffer.push_back(*reinterpret_cast<T*>(&descriptor->buffer[offset + i * sizeof(T)]));
 		return tmpBuffer;
 	}
-}
+}}
 
 #endif

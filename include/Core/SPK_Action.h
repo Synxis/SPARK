@@ -22,7 +22,7 @@
 #ifndef H_SPK_ACTION
 #define H_SPK_ACTION
 
-#include "Core/SPK_Descriptor.h"
+#include "Core/SPK_IO_Descriptor.h"
 #include "Core/SPK_Referenceable.h"
 
 namespace SPK
@@ -71,8 +71,8 @@ namespace SPK
 
 		inline Action();
 
-		inline virtual void innerImport(const Descriptor& descriptor);
-		inline virtual void innerExport(Descriptor& descriptor) const;
+		inline virtual void innerImport(const IO::Descriptor& descriptor);
+		inline virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -93,20 +93,20 @@ namespace SPK
 		return active;
 	}
 
-	inline void Action::innerImport(const Descriptor& descriptor)
+	inline void Action::innerImport(const IO::Descriptor& descriptor)
 	{
 		Referenceable::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if ((attrib = descriptor.getAttribute("active")) && attrib->hasValue())
 			setActive(attrib->getValueBool());
 	}
 
-	inline void Action::innerExport(Descriptor& descriptor) const
+	inline void Action::innerExport(IO::Descriptor& descriptor) const
 	{
 		Referenceable::innerExport(descriptor);
 
-		Attribute* attrib = NULL;
+		IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttribute("active"))
 			attrib->setValueBool(isActive(),isActive());
 	}

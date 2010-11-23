@@ -61,16 +61,16 @@ namespace SPK
 		tNormal.normalize();
 	}
 
-	void Plane::innerImport(const Descriptor& descriptor)
+	void Plane::innerImport(const IO::Descriptor& descriptor)
 	{
 		Zone::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("normal"))
 			setNormal(attrib->getValueVector());
 	}
 
-	void Plane::innerExport(Descriptor& descriptor) const
+	void Plane::innerExport(IO::Descriptor& descriptor) const
 	{
 		Zone::innerExport(descriptor);
 		descriptor.getAttribute("normal")->setValueVector(getNormal());

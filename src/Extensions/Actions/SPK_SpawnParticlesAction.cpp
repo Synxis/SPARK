@@ -134,11 +134,11 @@ namespace SPK
 		return object;
 	}
 
-	void SpawnParticlesAction::innerImport(const Descriptor& descriptor)
+	void SpawnParticlesAction::innerImport(const IO::Descriptor& descriptor)
 	{
 		Action::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;	
+		const IO::Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("spawning numbers"))
 		{
 			std::vector<unsigned long int> nbs = attrib->getValuesUint32();
@@ -154,7 +154,7 @@ namespace SPK
 			setGroupIndex(attrib->getValueUint32());
 	}
 
-	void SpawnParticlesAction::innerExport(Descriptor& descriptor) const
+	void SpawnParticlesAction::innerExport(IO::Descriptor& descriptor) const
 	{
 		Action::innerExport(descriptor);
 

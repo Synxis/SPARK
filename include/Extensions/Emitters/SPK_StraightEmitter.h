@@ -78,8 +78,8 @@ namespace SPK
 
 		virtual void innerUpdateTransform();
 
-		virtual void innerImport(const Descriptor& descriptor);
-		virtual void innerExport(Descriptor& descriptor) const;
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

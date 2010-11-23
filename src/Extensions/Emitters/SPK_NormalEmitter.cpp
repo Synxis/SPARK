@@ -79,18 +79,18 @@ namespace SPK
 		particle.velocity() = zone->computeNormal(particle.position()) * speed;
 	}
 
-	void NormalEmitter::innerImport(const Descriptor& descriptor)
+	void NormalEmitter::innerImport(const IO::Descriptor& descriptor)
 	{
 		Emitter::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("normal zone"))
 			setNormalZone(attrib->getValueRef().cast<Zone>());
 		if (attrib = descriptor.getAttributeWithValue("inverted normals"))
 			setInverted(attrib->getValueBool());
 	}
 
-	void NormalEmitter::innerExport(Descriptor& descriptor) const
+	void NormalEmitter::innerExport(IO::Descriptor& descriptor) const
 	{
 		Emitter::innerExport(descriptor);
 

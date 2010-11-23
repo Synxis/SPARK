@@ -23,6 +23,8 @@
 
 namespace SPK
 {
+namespace IO
+{
 	Attribute::Attribute(const std::string& name,AttributeType type) :
 		name(name),
 		type(type),
@@ -88,7 +90,7 @@ namespace SPK
 
 	void Descriptor::markAttributes()
 	{
-		for (std::vector<Attribute>::iterator it = attributes.begin(); it != attributes.end(); ++it)
+		for (std::vector<IO::Attribute>::iterator it = attributes.begin(); it != attributes.end(); ++it)
 			it->descriptor = this;
 	}
-}
+}}

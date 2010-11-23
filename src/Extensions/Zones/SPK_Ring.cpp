@@ -139,11 +139,11 @@ namespace SPK
 		tNormal.normalize();
 	}
 
-	void Ring::innerImport(const Descriptor& descriptor)
+	void Ring::innerImport(const IO::Descriptor& descriptor)
 	{
 		Zone::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("normal"))
 			setNormal(attrib->getValueVector());
 		if (attrib = descriptor.getAttributeWithValue("radius"))
@@ -157,7 +157,7 @@ namespace SPK
 		}
 	}
 
-	void Ring::innerExport(Descriptor& descriptor) const
+	void Ring::innerExport(IO::Descriptor& descriptor) const
 	{
 		Zone::innerExport(descriptor);
 

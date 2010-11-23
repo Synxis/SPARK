@@ -45,16 +45,16 @@ namespace SPK
 		}
 	}
 
-	void Referenceable::innerImport(const Descriptor& descriptor)
+	void Referenceable::innerImport(const IO::Descriptor& descriptor)
 	{
 		SPKObject::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("shared"))
 			setShared(attrib->getValueBool());
 	}
 	
-	void Referenceable::innerExport(Descriptor& descriptor) const
+	void Referenceable::innerExport(IO::Descriptor& descriptor) const
 	{
 		SPKObject::innerExport(descriptor);
 		descriptor.getAttribute("shared")->setValueBool(isShared());			

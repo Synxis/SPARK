@@ -125,16 +125,16 @@ namespace SPK
 		}
 	}
 
-	void Collider::innerImport(const Descriptor& descriptor)
+	void Collider::innerImport(const IO::Descriptor& descriptor)
 	{
 		Modifier::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("elasticity"))
 			setElasticity(attrib->getValueFloat());
 	}
 
-	void Collider::innerExport(Descriptor& descriptor) const
+	void Collider::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
 		descriptor.getAttribute("elasticity")->setValueFloat(getElasticity());

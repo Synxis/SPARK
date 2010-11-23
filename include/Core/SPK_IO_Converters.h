@@ -19,42 +19,36 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-#include <fstream>
-
-#include <SPARK_Core.h>
+#ifndef H_SPK_IOCONVERTERS
+#define H_SPK_IOCONVERTERS
 
 namespace SPK
 {
-	System* Loader::load(const std::string& path) const
+namespace IO
+{
+	class SPK_PREFIX Loader
 	{
-		std::ifstream is(path.c_str(),std::ios::out | std::ios::binary | std::ios::trunc);
-		if (is)
-		{
-			System* system = load(is);
-			is.close();
-			return system;
-		}
-		else
-		{
-			SPK_LOG_ERROR("Loader::load(const std::string&) - Impossible to read from the file " << path);
-			return NULL;
-		}
-	}
+	public :
 
-	bool Saver::save(const std::string& path,const WeakRef<const System>& system) const 
+		virtual Loader* clone() const = 0;
+
+		virtual System* load(std::istream& os) const = 0;
+		System* load(const std::string& path) const;
+
+	protected :
+
+		SPKObject* createSerializable(const std::string& name);
+	};
+
+	class SPK_PREFIX Saver
 	{
-		std::ofstream os(path.c_str(),std::ios::out | std::ios::binary | std::ios::trunc);
-		if (os)
-		{
-			bool success = save(os,system);
-			os.close();
-			return success;
-		}
-		else
-		{
-			SPK_LOG_ERROR("Saver::saver(const std::string&,const WeakRef<System>&) - Impossible to write to the file " << path);
-			return false;
-		}
-	}
-}
+	public :
+
+		virtual Saver* clone() const = 0;
+
+		virtual bool save(std::ostream& os,const WeakRef<const System>& system) const = 0;
+		bool save(const std::string& path,const WeakRef<const System>& system) const;
+	};
+}}
+
+#endif

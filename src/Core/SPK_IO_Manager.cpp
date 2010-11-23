@@ -24,6 +24,8 @@
 
 namespace SPK
 {
+namespace IO
+{
 	IOManager& IOManager::get()
 	{
 		static IOManager manager;
@@ -105,4 +107,4 @@ namespace SPK
 
 		return "";
 	}
-}
+}}

@@ -27,11 +27,11 @@
 #define SPK_START_DESCRIPTION \
 \
 protected : \
-virtual void fillAttributeList(std::vector<Attribute>& attributes) \
+virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) \
 {
 
 #define SPK_PARENT_ATTRIBUTES(ParentName)	ParentName::fillAttributeList(attributes);
-#define SPK_ATTRIBUTE(Name,Type)			attributes.push_back(Attribute(Name,Type));
+#define SPK_ATTRIBUTE(Name,Type)			attributes.push_back(IO::Attribute(Name,IO::Type));
 
 #define SPK_END_DESCRIPTION }
 
@@ -41,9 +41,9 @@ static std::string getClassName() {return #ClassName;} \
 static ClassName* createSerializable() {return SPK_NEW(ClassName);}
 
 // For templates
-#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : virtual void fillAttributeList(std::vector<Attribute>& attributes);
+#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : virtual void fillAttributeList(std::vector<IO::Attribute>& attributes);
 #define SPK_START_DESCRIPTION_TEMPLATE(ClassName) \
-template<> void ClassName::fillAttributeList(std::vector<Attribute>& attributes) \
+template<> void ClassName::fillAttributeList(std::vector<IO::Attribute>& attributes) \
 {
 
 namespace SPK
@@ -99,8 +99,8 @@ namespace SPK
 		// Serialization //
 		///////////////////
 
-		inline void importAttributes(const Descriptor& descriptor);
-		Descriptor exportAttributes() const;
+		inline void importAttributes(const IO::Descriptor& descriptor);
+		IO::Descriptor exportAttributes() const;
 		
 	protected :
 
@@ -111,7 +111,7 @@ namespace SPK
 			transform(obj.transform)
 		{}
 
-		virtual void fillAttributeList(std::vector<Attribute>& attributes) const {};
+		virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) const {};
 
 		/**
 		* @brief Updates all the parameters in the world coordinates
@@ -132,15 +132,15 @@ namespace SPK
 		inline void transformPos(Vector3D& tPos,const Vector3D& pos);
 		inline void transformDir(Vector3D& tDir,const Vector3D& dir);
 
-		virtual void innerImport(const Descriptor& descriptor);
-		virtual void innerExport(Descriptor& descriptor) const;
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
 		std::string name;
 		Transform transform;
 
-		Descriptor createDescriptor() const;
+		IO::Descriptor createDescriptor() const;
 	};
 
 	inline Transform& SPKObject::getTransform()
@@ -168,7 +168,7 @@ namespace SPK
 		return getName().compare(name) == 0 ? this : NULL;
 	}
 
-	inline void SPKObject::importAttributes(const Descriptor& descriptor)
+	inline void SPKObject::importAttributes(const IO::Descriptor& descriptor)
 	{
 		innerImport(descriptor);
 	}

@@ -201,11 +201,11 @@ namespace SPK
 		}
 	}
 
-	void LinearForce::innerImport(const Descriptor& descriptor)
+	void LinearForce::innerImport(const IO::Descriptor& descriptor)
 	{
 		ZonedModifier::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("value"))
 			setValue(attrib->getValueVector());
 		
@@ -231,7 +231,7 @@ namespace SPK
 			setCoef(attrib->getValueFloat());
 	}
 
-	void LinearForce::innerExport(Descriptor& descriptor) const
+	void LinearForce::innerExport(IO::Descriptor& descriptor) const
 	{
 		ZonedModifier::innerExport(descriptor);
 		descriptor.getAttribute("value")->setValueVector(getValue());

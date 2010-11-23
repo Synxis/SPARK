@@ -65,16 +65,16 @@ namespace SPK
 		tDirection.normalize();
 	}
 
-	void StraightEmitter::innerImport(const Descriptor& descriptor)
+	void StraightEmitter::innerImport(const IO::Descriptor& descriptor)
 	{
 		Emitter::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("direction"))
 			setDirection(attrib->getValueVector());
 	}
 
-	void StraightEmitter::innerExport(Descriptor& descriptor) const
+	void StraightEmitter::innerExport(IO::Descriptor& descriptor) const
 	{
 		Emitter::innerExport(descriptor);
 		descriptor.getAttribute("direction")->setValueVector(getDirection());

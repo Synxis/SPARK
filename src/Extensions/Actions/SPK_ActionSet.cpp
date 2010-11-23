@@ -80,11 +80,11 @@ namespace SPK
 		return SPK_NULL_REF;
 	}
 
-	void ActionSet::innerImport(const Descriptor& descriptor)
+	void ActionSet::innerImport(const IO::Descriptor& descriptor)
 	{
 		Action::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;	
+		const IO::Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("actions"))
 		{
 			std::vector<WeakRef<SPKObject>> tmpActions = attrib->getValuesRef();
@@ -93,7 +93,7 @@ namespace SPK
 		}
 	}
 
-	void ActionSet::innerExport(Descriptor& descriptor) const
+	void ActionSet::innerExport(IO::Descriptor& descriptor) const
 	{
 		Action::innerExport(descriptor);
 		descriptor.getAttribute("actions")->setValuesRef(reinterpret_cast<const WeakRef<SPKObject>*>(&actions[0]),getNbActions());

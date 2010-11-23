@@ -158,11 +158,11 @@ namespace SPK
 		data[index]->getTransform().reset();
 	}
 
-	void EmitterAttacher::innerImport(const Descriptor& descriptor)
+	void EmitterAttacher::innerImport(const IO::Descriptor& descriptor)
 	{
 		Modifier::innerImport(descriptor);
 
-		const Attribute* attrib = NULL;
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("base emitter"))
 			setEmitter(attrib->getValueRef().cast<Emitter>());	
 		
@@ -179,7 +179,7 @@ namespace SPK
 			setGroupIndex(attrib->getValueUint32());
 	}
 
-	void EmitterAttacher::innerExport(Descriptor& descriptor) const
+	void EmitterAttacher::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
 		descriptor.getAttribute("value")->setValueRef(getEmitter());
