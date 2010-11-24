@@ -38,8 +38,8 @@ namespace SPK
 	* The group is the core class of SPARK.<br>
 	* It is responsible for holding particle data, emitting and updating particles.<br>
 	* <br>
-	* A group has some Registerables attached to it that will define the general behaviour of particles.
-	* The registerables are :
+	* A group has some objects attached to it that will define the general behaviour of particles.
+	* The objects are :
 	* <ul>
 	* <li>0..n Emitter : How many particles to emit in which directions and with which frequency ?</li>
 	* <li>0..n Interpolator : How particles parameters (size,color,mass,angle...) will evolve during their lifetime ?</li>

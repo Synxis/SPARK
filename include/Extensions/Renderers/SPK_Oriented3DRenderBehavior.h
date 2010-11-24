@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_ORIENTED3DRENDERERINTERFACE
-#define H_SPK_ORIENTED3DRENDERERINTERFACE
+#ifndef H_SPK_ORIENTED3DRENDERBEHAVIOR
+#define H_SPK_ORIENTED3DRENDERBEHAVIOR
 
 // Packs the orientations parameters into one int for orientation presets
 #define PACK_ORIENTATION(lock,look,up) ((lock << 0x10)|(look << 0x8)|(up))
@@ -79,7 +79,7 @@ namespace SPK
 
 
 	/** @brief Base Interface for rendering particles that can be oriented in a 3D world */
-	class SPK_PREFIX Oriented3DRendererInterface
+	class SPK_PREFIX Oriented3DRenderBehavior
 	{
 	public :
 
@@ -115,8 +115,8 @@ namespace SPK
 		// Destructor //
 		////////////////
 
-		/** @brief Destructor of Oriented3DRendererInterface */
-		virtual inline ~Oriented3DRendererInterface() {}
+		/** @brief Destructor of Oriented3DRenderBehavior */
+		virtual inline ~Oriented3DRenderBehavior() {}
 
 		/////////////
 		// Setters //
@@ -189,8 +189,8 @@ namespace SPK
 		// Constructors //
 		//////////////////
 
-		/** @brief Constructor of Oriented3DRendererInterface */
-		Oriented3DRendererInterface();
+		/** @brief Constructor of Oriented3DRenderBehavior */
+		Oriented3DRenderBehavior();
 
 	private :
 
@@ -217,32 +217,32 @@ namespace SPK
 	};
 
 
-	inline LookOrientation Oriented3DRendererInterface::getLookOrientation() const
+	inline LookOrientation Oriented3DRenderBehavior::getLookOrientation() const
 	{
 		return lookOrientation;
 	}
 
-	inline UpOrientation Oriented3DRendererInterface::getUpOrientation() const
+	inline UpOrientation Oriented3DRenderBehavior::getUpOrientation() const
 	{
 		return upOrientation;
 	}
 
-	inline LockedAxis Oriented3DRendererInterface::getLockedAxis() const
+	inline LockedAxis Oriented3DRenderBehavior::getLockedAxis() const
 	{
 		return lockedAxis;
 	}
 
-	inline const Vector3D& Oriented3DRendererInterface::quadUp() const
+	inline const Vector3D& Oriented3DRenderBehavior::quadUp() const
 	{
 		return upQuad;
 	}
 
-	inline const Vector3D& Oriented3DRendererInterface::quadSide() const
+	inline const Vector3D& Oriented3DRenderBehavior::quadSide() const
 	{
 		return sideQuad;
 	}
 
-	inline bool Oriented3DRendererInterface::precomputeOrientation3D(const Group& group,const Vector3D& modelViewLook,const Vector3D& modelViewUp,const Vector3D& modelViewPos) const
+	inline bool Oriented3DRenderBehavior::precomputeOrientation3D(const Group& group,const Vector3D& modelViewLook,const Vector3D& modelViewUp,const Vector3D& modelViewPos) const
 	{
 		mVLook = modelViewLook;
 		mVUp = modelViewUp;
@@ -268,7 +268,7 @@ namespace SPK
 		return globalOrientation;
 	}
 	
-	inline void Oriented3DRendererInterface::computeGlobalOrientation3D(const Group& group) const
+	inline void Oriented3DRenderBehavior::computeGlobalOrientation3D(const Group& group) const
 	{
 		look = globalLook;
 		up = globalUp;
@@ -289,7 +289,7 @@ namespace SPK
 		side *= group.getGraphicalRadius();
 	}
 	
-	inline void Oriented3DRendererInterface::computeSingleOrientation3D(const Particle& particle) const
+	inline void Oriented3DRenderBehavior::computeSingleOrientation3D(const Particle& particle) const
 	{
 		if (lookOrientation == LOOK_CAMERA_POINT)
 		{
@@ -330,7 +330,7 @@ namespace SPK
 		up *= particle.getGroup().getGraphicalRadius();
 	}
 
-	inline void Oriented3DRendererInterface::scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
+	inline void Oriented3DRenderBehavior::scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
 	{
 		float size = particle.getParam(PARAM_SCALE);
 
@@ -341,7 +341,7 @@ namespace SPK
 		upQuad *= size * scaleY;
 	}
 
-	inline void Oriented3DRendererInterface::rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
+	inline void Oriented3DRenderBehavior::rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const
 	{
 		float size = particle.getParam(PARAM_SCALE);
 

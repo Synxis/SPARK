@@ -24,8 +24,8 @@
 
 #include "Rendering/OpenGL/SPK_GL_Renderer.h"
 #include "Rendering/OpenGL/SPK_GL_ExtHandler.h"
-#include "Extensions/Renderers/SPK_QuadRendererInterface.h"
-#include "Extensions/Renderers/SPK_Oriented3DRendererInterface.h"
+#include "Extensions/Renderers/SPK_QuadRenderBehavior.h"
+#include "Extensions/Renderers/SPK_Oriented3DRenderBehavior.h"
 #include "Rendering/OpenGL/SPK_GL_Buffer.h"
 
 namespace SPK
@@ -47,8 +47,8 @@ namespace GL
 	* </ul>
 	*/
 	class SPK_GL_PREFIX GLQuadRenderer :	public GLRenderer,
-											public QuadRendererInterface,
-											public Oriented3DRendererInterface,
+											public QuadRenderBehavior,
+											public Oriented3DRenderBehavior,
 											public GLExtHandler
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(GLQuadRenderer)

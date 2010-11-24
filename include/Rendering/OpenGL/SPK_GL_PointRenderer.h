@@ -24,7 +24,7 @@
 
 #include "Rendering/OpenGL/SPK_GL_Renderer.h"
 #include "Rendering/OpenGL/SPK_GL_ExtHandler.h"
-#include "Extensions/Renderers/SPK_PointRendererInterface.h"
+#include "Extensions/Renderers/SPK_PointRenderBehavior.h"
 
 namespace SPK
 {
@@ -47,7 +47,7 @@ namespace GL
 	* This renderer do not use any parameters of particles.
 	*/
 	class SPK_GL_PREFIX GLPointRenderer :	public GLRenderer,
-											public PointRendererInterface,
+											public PointRenderBehavior,
 											public GLExtHandler
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(GLPointRenderer)
@@ -104,14 +104,14 @@ namespace GL
 
 	inline GLPointRenderer::GLPointRenderer(float screenSize) :
 		GLRenderer(false),
-		PointRendererInterface(POINT_TYPE_SQUARE,screenSize),
+		PointRenderBehavior(POINT_TYPE_SQUARE,screenSize),
 		GLExtHandler(),
 		textureIndex(0)
 	{}
 
 	inline GLPointRenderer::GLPointRenderer(const GLPointRenderer& renderer) :
 		GLRenderer(renderer),
-		PointRendererInterface(renderer),
+		PointRenderBehavior(renderer),
 		GLExtHandler(renderer),
 		textureIndex(renderer.textureIndex)
 	{}

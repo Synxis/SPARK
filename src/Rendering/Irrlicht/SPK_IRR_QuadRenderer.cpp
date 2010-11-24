@@ -32,14 +32,14 @@ namespace IRR
 
 	IRRQuadRenderer::IRRQuadRenderer(irr::IrrlichtDevice* d,float scaleX,float scaleY) :
 		IRRRenderer(d),
-		QuadRendererInterface(scaleX,scaleY),
-		Oriented3DRendererInterface()
+		QuadRenderBehavior(scaleX,scaleY),
+		Oriented3DRenderBehavior()
 	{}
 
 	IRRQuadRenderer::IRRQuadRenderer(const IRRQuadRenderer& renderer) :
 		IRRRenderer(renderer),
-		QuadRendererInterface(renderer),
-		Oriented3DRendererInterface(renderer)
+		QuadRenderBehavior(renderer),
+		Oriented3DRenderBehavior(renderer)
 	{}
 
 	bool IRRQuadRenderer::setTexturingMode(TextureMode mode)

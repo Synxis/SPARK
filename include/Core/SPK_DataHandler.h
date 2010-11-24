@@ -29,7 +29,7 @@ namespace SPK
 	/**
 	* @brief An interface that allows an object to handle and use some additional data attached to particles
 	* 
-	* When a class dealing with particles needs to maintain an additional set of data in extention to already provided parameters,
+	* When a class dealing with particles needs to maintain an additional set of data in extention to the already provided parameters,
 	* it should inherited from DataHandler.<br>
 	* <br>
 	* Datasets are maintained by groups and passed to datahandlers for update and use. Each datahandler has its own dataset within a given group<br>

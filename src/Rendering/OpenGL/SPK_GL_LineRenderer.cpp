@@ -28,12 +28,12 @@ namespace GL
 {
 	GLLineRenderer::GLLineRenderer(float length,float width) :
 		GLRenderer(false),
-		LineRendererInterface(length,width)
+		LineRenderBehavior(length,width)
 	{}
 
 	GLLineRenderer::GLLineRenderer(const GLLineRenderer& renderer) :
 		GLRenderer(renderer),
-		LineRendererInterface(renderer)
+		LineRenderBehavior(renderer)
 	{}
 
 	RenderBuffer* GLLineRenderer::attachRenderBuffer(const Group& group) const

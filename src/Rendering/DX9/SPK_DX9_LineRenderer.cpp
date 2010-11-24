@@ -32,12 +32,12 @@ namespace DX9
 {
 	DX9LineRenderer::DX9LineRenderer(float length) :
 		DX9Renderer(false),
-		LineRendererInterface(length, 1.0f)
+		LineRenderBehavior(length, 1.0f)
 	{}
 
 	DX9LineRenderer::DX9LineRenderer(const DX9LineRenderer& renderer) :
 		DX9Renderer(renderer),
-		LineRendererInterface(renderer)
+		LineRenderBehavior(renderer)
 	{}
 
 	RenderBuffer* DX9LineRenderer::attachRenderBuffer(const Group& group) const

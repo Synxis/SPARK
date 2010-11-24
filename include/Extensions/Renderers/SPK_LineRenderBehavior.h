@@ -19,15 +19,15 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_LINERENDERERINTERFACE
-#define H_SPK_LINERENDERERINTERFACE
+#ifndef H_SPK_LINERENDERBEHAVIOR
+#define H_SPK_LINERENDERBEHAVIOR
 
 namespace SPK
 {
 	/**
 	* @brief Base Interface for rendering particles with lines
 	*/
-	class LineRendererInterface
+	class LineRenderBehavior
 	{
 	public :
 
@@ -35,15 +35,15 @@ namespace SPK
 		// Destructor //
 		////////////////
 
-		/** @brief Destructor of LineRendererInterface */
-		virtual inline ~LineRendererInterface() {}
+		/** @brief Destructor of LineRenderBehavior */
+		virtual inline ~LineRenderBehavior() {}
 
 		/////////////
 		// Setters //
 		/////////////
 
 		/**
-		* @brief Sets the length multiplier of this LineRendererInterface
+		* @brief Sets the length multiplier of this LineRenderBehavior
 		*
 		* The length multiplier is the value which will be multiplied by the Particle velocity to get the line length in the universe.<br>
 		* A positive length means the line will be drawn in advance to the Particle, as opposed to a negative length.
@@ -53,8 +53,8 @@ namespace SPK
 		inline void setLength(float length);
 
 		/**
-		* @brief Sets the width of this LineRendererInterface
-		* @param width : the width of this LineRendererInterface
+		* @brief Sets the width of this LineRenderBehavior
+		* @param width : the width of this LineRenderBehavior
 		*/
 		virtual inline void setWidth(float width);
 
@@ -63,14 +63,14 @@ namespace SPK
 		/////////////
 
 		/**
-		* @brief Gets the length multiplier of this LineRendererInterface
-		* @return the length multiplier of this LineRendererInterface
+		* @brief Gets the length multiplier of this LineRenderBehavior
+		* @return the length multiplier of this LineRenderBehavior
 		*/
 		inline float getLength() const;
 
 		/**
-		* @brief Gets the width of this LineRendererInterface
-		* @return the width of this LineRendererInterface
+		* @brief Gets the width of this LineRenderBehavior
+		* @return the width of this LineRenderBehavior
 		*/
 		inline float getWidth() const;
 
@@ -84,35 +84,35 @@ namespace SPK
 		/////////////////
 
 		/**
-		* @brief Constructor of LineRendererInterface
-		* @param length : the length multiplier of this LineRendererInterface
+		* @brief Constructor of LineRenderBehavior
+		* @param length : the length multiplier of this LineRenderBehavior
 		* @param width : the width of this GLLineRenderer
 		*/
-		inline LineRendererInterface(float length = 1.0f,float width = 1.0f);
+		inline LineRenderBehavior(float length = 1.0f,float width = 1.0f);
 	};
 
 
-	inline LineRendererInterface::LineRendererInterface(float length,float width) :
+	inline LineRenderBehavior::LineRenderBehavior(float length,float width) :
 		length(length),
 		width(width)
 	{}
 
-	inline void LineRendererInterface::setLength(float length)
+	inline void LineRenderBehavior::setLength(float length)
 	{
 		this->length = length;
 	}
 
-	inline void LineRendererInterface::setWidth(float width)
+	inline void LineRenderBehavior::setWidth(float width)
 	{
 		this->width = width;
 	}
 
-	inline float LineRendererInterface::getLength() const
+	inline float LineRenderBehavior::getLength() const
 	{
 		return length;
 	}
 
-	inline float LineRendererInterface::getWidth() const
+	inline float LineRenderBehavior::getWidth() const
 	{
 		return width;
 	}

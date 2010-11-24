@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_POINTRENDERERINTERFACE
-#define H_SPK_POINTRENDERERINTERFACE
+#ifndef H_SPK_POINTRENDERBEHAVIOR
+#define H_SPK_POINTRENDERBEHAVIOR
 
 namespace SPK
 {
@@ -38,7 +38,7 @@ namespace SPK
 	/**
 	* @brief Base Interface for rendering particles with points
 	*/
-	class PointRendererInterface
+	class PointRenderBehavior
 	{
 	public :
 
@@ -46,26 +46,26 @@ namespace SPK
 		// Destructor //
 		////////////////
 
-		/** @brief Destructor of PointRendererInterface */
-		virtual inline ~PointRendererInterface() {}
+		/** @brief Destructor of PointRenderBehavior */
+		virtual inline ~PointRenderBehavior() {}
 
 		//////////
 		// Type //
 		//////////
 
 		/**
-		* @brief Sets the type of points to use in this PointRendererInterface
+		* @brief Sets the type of points to use in this PointRenderBehavior
 		*
 		* If the type is not supported by the platform, false is returned and the type per default is set.
 		*
-		* @param type : the type of points to use in this PointRendererInterface
+		* @param type : the type of points to use in this PointRenderBehavior
 		* @return true if the type can be set, false otherwise
 		*/
 		virtual inline bool setType(PointType type);
 
 		/**
-		* @brief Gets the type of points in this PointRendererInterface
-		* @return the type of points in this PointRendererInterface
+		* @brief Gets the type of points in this PointRenderBehavior
+		* @return the type of points in this PointRenderBehavior
 		*/
 		inline PointType getType() const;
 
@@ -74,14 +74,14 @@ namespace SPK
 		////////////////
 
 		/**
-		* @brief Sets the size of the points in this PointRendererInterface
-		* @param size : the size of the points in this PointRendererInterface
+		* @brief Sets the size of the points in this PointRenderBehavior
+		* @param size : the size of the points in this PointRenderBehavior
 		*/
 		virtual inline void setScreenSize(float screenSize);
 
 		/**
-		* @brief Gets the size of points in this PointRendererInterface
-		* @return the size of points in this PointRendererInterface
+		* @brief Gets the size of points in this PointRenderBehavior
+		* @return the size of points in this PointRenderBehavior
 		*/
 		inline float getScreenSize() const;
 
@@ -117,57 +117,57 @@ namespace SPK
 		/////////////////
 
 		/**
-		* @brief Constructor of PointRendererInterface
-		* @param type : the initial type of this PointRendererInterface (must be supported by default by the platform)
-		* @param size : the width of this PointRendererInterface
+		* @brief Constructor of PointRenderBehavior
+		* @param type : the initial type of this PointRenderBehavior (must be supported by default by the platform)
+		* @param size : the width of this PointRenderBehavior
 		*/
-		inline PointRendererInterface(PointType type = POINT_TYPE_SQUARE,float screenSize = 1.0f);
+		inline PointRenderBehavior(PointType type = POINT_TYPE_SQUARE,float screenSize = 1.0f);
 	};
 
-	inline PointRendererInterface::PointRendererInterface(PointType type,float screenSize) :
+	inline PointRenderBehavior::PointRenderBehavior(PointType type,float screenSize) :
 		type(type),
 		screenSize(screenSize),
 		worldSize(false)
 	{}
 
-	inline bool PointRendererInterface::setType(PointType type)
+	inline bool PointRenderBehavior::setType(PointType type)
 	{
 		this->type = type;
 		return true;
 	}
 
-	inline PointType PointRendererInterface::getType() const
+	inline PointType PointRenderBehavior::getType() const
 	{
 		return type;
 	}
 
-	inline void PointRendererInterface::setScreenSize(float screenSize)
+	inline void PointRenderBehavior::setScreenSize(float screenSize)
 	{
 		this->screenSize = screenSize;
 	}
 
-	inline float PointRendererInterface::getScreenSize() const
+	inline float PointRenderBehavior::getScreenSize() const
 	{
 		return screenSize;
 	}
 
-	inline void PointRendererInterface::setWorldScale(float worldScale)
+	inline void PointRenderBehavior::setWorldScale(float worldScale)
 	{
 		this->worldScale = worldScale;
 	}
 
-	inline float PointRendererInterface::getWorldScale() const
+	inline float PointRenderBehavior::getWorldScale() const
 	{
 		return worldScale;
 	}
 
-	inline bool PointRendererInterface::enableWorldSize(bool worldSizeEnabled)
+	inline bool PointRenderBehavior::enableWorldSize(bool worldSizeEnabled)
 	{
 		worldSize = worldSizeEnabled;
 		return true;
 	}
 
-	inline bool PointRendererInterface::isWorldSizeEnabled() const
+	inline bool PointRenderBehavior::isWorldSizeEnabled() const
 	{
 		return worldSize;
 	}

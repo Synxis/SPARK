@@ -24,7 +24,7 @@
 #define H_SPK_DX9_POINTRENDERER
 
 //#include "Rendering/DX9/SPK_DX9_Renderer.h"
-//#include "Extensions/Renderers/SPK_PointRendererInterface.h"
+//#include "Extensions/Renderers/SPK_PointRenderBehavior.h"
 //#include "Rendering/DX9/SPK_DX9_Buffer.h"
 
 namespace SPK
@@ -42,7 +42,7 @@ namespace DX9
 	* This renderer do not use any parameters of particles.
 	*/
 	class SPK_DX9_PREFIX DX9PointRenderer :	public DX9Renderer,
-											public PointRendererInterface
+											public PointRenderBehavior
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(DX9PointRenderer)
 
@@ -152,13 +152,13 @@ namespace DX9
 
 	inline DX9PointRenderer::DX9PointRenderer(float screenSize) :
 		DX9Renderer(false),
-		PointRendererInterface(POINT_TYPE_SQUARE, screenSize),
+		PointRenderBehavior(POINT_TYPE_SQUARE, screenSize),
 		textureIndex(0)
 	{}
 
 	inline DX9PointRenderer::DX9PointRenderer(const DX9PointRenderer& renderer) :
 		DX9Renderer(renderer),
-		PointRendererInterface(renderer),
+		PointRenderBehavior(renderer),
 		textureIndex(renderer.textureIndex)
 	{}
 

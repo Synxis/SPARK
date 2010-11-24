@@ -30,14 +30,14 @@ namespace IRR
 {
 	IRRPointRenderer::IRRPointRenderer(irr::IrrlichtDevice* d,float screenSize) :
 		IRRRenderer(d),
-		PointRendererInterface(POINT_TYPE_SQUARE,screenSize)
+		PointRenderBehavior(POINT_TYPE_SQUARE,screenSize)
 	{
 		material.Thickness = screenSize;
 	}
 
 	IRRPointRenderer::IRRPointRenderer(const IRRPointRenderer& renderer) :
 		IRRRenderer(renderer),
-		PointRendererInterface(renderer)
+		PointRenderBehavior(renderer)
 	{}
 
 	bool IRRPointRenderer::setType(PointType type)

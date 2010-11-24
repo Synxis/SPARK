@@ -20,11 +20,11 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #include <SPARK_Core.h>
-#include "Extensions/Renderers/SPK_Oriented3DRendererInterface.h"
+#include "Extensions/Renderers/SPK_Oriented3DRenderBehavior.h"
 
 namespace SPK
 {
-	Oriented3DRendererInterface::Oriented3DRendererInterface() :
+	Oriented3DRenderBehavior::Oriented3DRenderBehavior() :
 		lookOrientation(LOOK_CAMERA_PLANE),
 		upOrientation(UP_CAMERA),
 		lockedAxis(LOCK_UP)
@@ -33,14 +33,14 @@ namespace SPK
 		upVector.set(0.0f,1.0f,0.0f);
 	}
 
-	void Oriented3DRendererInterface::setOrientation(LookOrientation lookOrientation,UpOrientation upOrientation,LockedAxis lockedAxis)
+	void Oriented3DRenderBehavior::setOrientation(LookOrientation lookOrientation,UpOrientation upOrientation,LockedAxis lockedAxis)
 	{
 		this->lookOrientation = lookOrientation;
 		this->upOrientation = upOrientation;
 		this->lockedAxis = lockedAxis;
 	}
 
-	void Oriented3DRendererInterface::setOrientation(OrientationPreset orientation)
+	void Oriented3DRenderBehavior::setOrientation(OrientationPreset orientation)
 	{
 		this->lookOrientation = static_cast<LookOrientation>((orientation >> 0x8) & 0xFF);
 		this->upOrientation = static_cast<UpOrientation>(orientation & 0xFF);

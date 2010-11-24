@@ -30,14 +30,14 @@ namespace IRR
 {
 	IRRLineRenderer::IRRLineRenderer(irr::IrrlichtDevice* d,float length,float width) :
 		IRRRenderer(d),
-		LineRendererInterface(length,width)
+		LineRenderBehavior(length,width)
 	{
 		material.Thickness = width;
 	}
 
 	IRRLineRenderer::IRRLineRenderer(const IRRLineRenderer& renderer) :
 		IRRRenderer(renderer),
-		LineRendererInterface(renderer)
+		LineRenderBehavior(renderer)
 	{}
 
 	RenderBuffer* IRRLineRenderer::attachRenderBuffer(const Group& group) const

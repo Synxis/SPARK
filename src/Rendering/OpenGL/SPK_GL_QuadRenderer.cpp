@@ -30,16 +30,16 @@ namespace GL
 
 	GLQuadRenderer::GLQuadRenderer(float scaleX,float scaleY) :
 		GLRenderer(false),
-		QuadRendererInterface(scaleX,scaleY),
-		Oriented3DRendererInterface(),
+		QuadRenderBehavior(scaleX,scaleY),
+		Oriented3DRenderBehavior(),
 		GLExtHandler(),
 		textureIndex(0)
 	{}
 
 	GLQuadRenderer::GLQuadRenderer(const GLQuadRenderer& renderer) :
 		GLRenderer(renderer),
-		QuadRendererInterface(renderer),
-		Oriented3DRendererInterface(renderer),
+		QuadRenderBehavior(renderer),
+		Oriented3DRenderBehavior(renderer),
 		GLExtHandler(renderer),
 		textureIndex(renderer.textureIndex)
 	{}

@@ -24,7 +24,7 @@
 #define H_SPK_DX9_LINERENDERER
 
 //#include "Rendering/DX9/SPK_DX9_Renderer.h"
-//#include "Extensions/Renderers/SPK_LineRendererInterface.h"
+//#include "Extensions/Renderers/SPK_LineRenderBehavior.h"
 
 namespace SPK
 {
@@ -45,7 +45,7 @@ namespace DX9
 	* <li>SPK::PARAM_ALPHA (only if blending is enabled)</li>
 	* </ul>
 	*/
-	class SPK_DX9_PREFIX DX9LineRenderer : public DX9Renderer, public LineRendererInterface
+	class SPK_DX9_PREFIX DX9LineRenderer : public DX9Renderer, public LineRenderBehavior
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(DX9LineRenderer)
 

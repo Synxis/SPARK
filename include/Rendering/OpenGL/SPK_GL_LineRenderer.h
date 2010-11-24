@@ -23,7 +23,7 @@
 #define H_SPK_GL_LINERENDERER
 
 #include "Rendering/OpenGL/SPK_GL_Renderer.h"
-#include "Extensions/Renderers/SPK_LineRendererInterface.h"
+#include "Extensions/Renderers/SPK_LineRenderBehavior.h"
 #include "Rendering/OpenGL/SPK_GL_Buffer.h"
 
 namespace SPK
@@ -45,7 +45,7 @@ namespace GL
 	* <li>SPK::PARAM_ALPHA (only if blending is enabled)</li>
 	* </ul>
 	*/
-	class SPK_GL_PREFIX GLLineRenderer : public GLRenderer, public LineRendererInterface
+	class SPK_GL_PREFIX GLLineRenderer : public GLRenderer, public LineRenderBehavior
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(GLLineRenderer)
 

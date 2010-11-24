@@ -25,7 +25,7 @@
 #define H_SPK_IRR_LINERENDERER
 
 #include "Rendering/Irrlicht/SPK_IRR_Renderer.h"
-#include "Extensions/Renderers/SPK_LineRendererInterface.h"
+#include "Extensions/Renderers/SPK_LineRenderBehavior.h"
 
 namespace SPK
 {
@@ -40,7 +40,7 @@ namespace IRR
 	* Note that the width only works when using Irrlicht with OpenGL. With Direct3D, the parameter is ignored and 1 is used instead.
 	*/
 	class SPK_IRR_PREFIX IRRLineRenderer :	public IRRRenderer,
-											public LineRendererInterface
+											public LineRenderBehavior
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(IRRLineRenderer)
 

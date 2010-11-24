@@ -62,9 +62,9 @@
 #include "Extensions/Actions/SPK_SpawnParticlesAction.h"
 
 // Renderers
-#include "Extensions/Renderers/SPK_PointRendererInterface.h"
-#include "Extensions/Renderers/SPK_LineRendererInterface.h"
-#include "Extensions/Renderers/SPK_QuadRendererInterface.h"
-#include "Extensions/Renderers/SPK_Oriented3DRendererInterface.h"
+#include "Extensions/Renderers/SPK_PointRenderBehavior.h"
+#include "Extensions/Renderers/SPK_LineRenderBehavior.h"
+#include "Extensions/Renderers/SPK_QuadRenderBehavior.h"
+#include "Extensions/Renderers/SPK_Oriented3DRenderBehavior.h"
 
 #endif

@@ -25,8 +25,8 @@
 #define H_SPK_IRR_QUADRENDERER
 
 #include "Rendering/Irrlicht/SPK_IRR_Renderer.h"
-#include "Extensions/Renderers/SPK_QuadRendererInterface.h"
-#include "Extensions/Renderers/SPK_Oriented3DRendererInterface.h"
+#include "Extensions/Renderers/SPK_QuadRenderBehavior.h"
+#include "Extensions/Renderers/SPK_Oriented3DRenderBehavior.h"
 
 namespace SPK
 {
@@ -45,8 +45,8 @@ namespace IRR
 	* </ul>
 	*/
 	class SPK_IRR_PREFIX IRRQuadRenderer :	public IRRRenderer,
-											public QuadRendererInterface,
-											public Oriented3DRendererInterface
+											public QuadRenderBehavior,
+											public Oriented3DRenderBehavior
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(IRRQuadRenderer)
 
@@ -90,7 +90,7 @@ namespace IRR
 		* @param dim : the atlas dimension of the texture
 		*/
 		inline void setAtlasDimensions(irr::core::dimension2du dim);
-		using QuadRendererInterface::setAtlasDimensions;
+		using QuadRenderBehavior::setAtlasDimensions;
 
 		/**
 		* @brief Gets the atlas dimension of the texture in an Irrlicht way

@@ -20,11 +20,11 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #include <SPARK_Core.h>
-#include "Extensions/Renderers/SPK_QuadRendererInterface.h"
+#include "Extensions/Renderers/SPK_QuadRenderBehavior.h"
 
 namespace SPK
 {
-	QuadRendererInterface::QuadRendererInterface(float scaleX,float scaleY) :
+	QuadRenderBehavior::QuadRenderBehavior(float scaleX,float scaleY) :
 		scaleX(scaleX),
 		scaleY(scaleY),
 		texturingMode(TEXTURE_MODE_NONE),
@@ -34,7 +34,7 @@ namespace SPK
 		textureAtlasH(1.0f)
 	{}
 
-	void QuadRendererInterface::setAtlasDimensions(size_t nbX,size_t nbY)
+	void QuadRenderBehavior::setAtlasDimensions(size_t nbX,size_t nbY)
 	{
 		textureAtlasNbX = nbX;
 		textureAtlasNbY = nbY;

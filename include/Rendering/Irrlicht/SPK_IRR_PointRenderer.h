@@ -25,7 +25,7 @@
 #define H_SPK_IRR_POINTRENDERER
 
 #include "Rendering/Irrlicht/SPK_IRR_Renderer.h"
-#include "Extensions/Renderers/SPK_PointRendererInterface.h"
+#include "Extensions/Renderers/SPK_PointRenderBehavior.h"
 
 namespace SPK
 {
@@ -49,7 +49,7 @@ namespace IRR
 	* In that case, this renderer will become very useful.
 	*/
 	class SPK_IRR_PREFIX IRRPointRenderer :	public IRRRenderer,
-											public PointRendererInterface
+											public PointRenderBehavior
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(IRRPointRenderer)
 
@@ -63,7 +63,7 @@ namespace IRR
 		*/
 		static inline Ref<IRRPointRenderer> create(irr::IrrlichtDevice* d,float screenSize = 1.0f);
 
-		// Reimplemented from PointRendererInterface
+		// Reimplemented from PointRenderBehavior
 		virtual bool setType(PointType type);
 		virtual inline void setScreenSize(float screenSize);
 		virtual bool enableWorldSize(bool worldSizeEnabled);

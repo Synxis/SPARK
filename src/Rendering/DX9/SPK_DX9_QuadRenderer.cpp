@@ -32,15 +32,15 @@ namespace DX9
 
 	DX9QuadRenderer::DX9QuadRenderer(float scaleX,float scaleY) :
 		DX9Renderer(false),
-		QuadRendererInterface(scaleX,scaleY),
-		Oriented3DRendererInterface(),
+		QuadRenderBehavior(scaleX,scaleY),
+		Oriented3DRenderBehavior(),
 		textureIndex(0)
 	{}
 
 	DX9QuadRenderer::DX9QuadRenderer(const DX9QuadRenderer& renderer) :
 		DX9Renderer(renderer),
-		QuadRendererInterface(renderer),
-		Oriented3DRendererInterface(renderer),
+		QuadRenderBehavior(renderer),
+		Oriented3DRenderBehavior(renderer),
 		textureIndex(renderer.textureIndex)
 	{}
 

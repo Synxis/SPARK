@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_QUADRENDERERINTERFACE
-#define H_SPK_QUADRENDERERINTERFACE
+#ifndef H_SPK_QUADRENDERBEHAVIOR
+#define H_SPK_QUADRENDERBEHAVIOR
 
 namespace SPK
 {
@@ -37,7 +37,7 @@ namespace SPK
 
 
 	/** @brief Base Interface for rendering particles with quads */
-	class SPK_PREFIX QuadRendererInterface
+	class SPK_PREFIX QuadRenderBehavior
 	{
 	public :
 
@@ -45,8 +45,8 @@ namespace SPK
 		// Destructor //
 		////////////////
 
-		/** @brief Destructor of QuadRendererInterface */
-		virtual inline ~QuadRendererInterface() {}
+		/** @brief Destructor of QuadRenderBehavior */
+		virtual inline ~QuadRenderBehavior() {}
 
 		/////////////
 		// Setters //
@@ -171,11 +171,11 @@ namespace SPK
 		//////////////////
 
 		/**
-		* @brief Constructor of QuadRendererInterface
+		* @brief Constructor of QuadRenderBehavior
 		* @param scaleX the scale of the width of the quad
 		* @param scaleY the scale of the height of the quad
 		*/
-		QuadRendererInterface(float scaleX = 1.0f,float scaleY = 1.0f);
+		QuadRenderBehavior(float scaleX = 1.0f,float scaleY = 1.0f);
 
 	private :
 
@@ -187,64 +187,64 @@ namespace SPK
 	};
 
 
-	inline bool QuadRendererInterface::setTexturingMode(TextureMode mode)
+	inline bool QuadRenderBehavior::setTexturingMode(TextureMode mode)
 	{
 		texturingMode = mode;
 		return true;
 	}
 
-	inline void QuadRendererInterface::setScale(float scaleX,float scaleY)
+	inline void QuadRenderBehavior::setScale(float scaleX,float scaleY)
 	{
 		this->scaleX = scaleX;
 		this->scaleY = scaleY;
 	}
 
-	inline TextureMode QuadRendererInterface::getTexturingMode() const
+	inline TextureMode QuadRenderBehavior::getTexturingMode() const
 	{
 		return texturingMode;
 	}
 
-	inline size_t QuadRendererInterface::getAtlasDimensionX() const
+	inline size_t QuadRenderBehavior::getAtlasDimensionX() const
 	{
 		return textureAtlasNbX;
 	}
 
-	inline size_t QuadRendererInterface::getAtlasDimensionY() const
+	inline size_t QuadRenderBehavior::getAtlasDimensionY() const
 	{
 		return textureAtlasNbY;
 	}
 
-	inline float QuadRendererInterface::getScaleX() const
+	inline float QuadRenderBehavior::getScaleX() const
 	{
 		return scaleX;
 	}
 
-	inline float QuadRendererInterface::getScaleY() const
+	inline float QuadRenderBehavior::getScaleY() const
 	{
 		return scaleY;
 	}
 
-	inline float QuadRendererInterface::textureAtlasU0() const
+	inline float QuadRenderBehavior::textureAtlasU0() const
 	{
 		return atlasU0;
 	}
 
-	inline float QuadRendererInterface::textureAtlasU1() const
+	inline float QuadRenderBehavior::textureAtlasU1() const
 	{
 		return atlasU1;
 	}
 
-	inline float QuadRendererInterface::textureAtlasV0() const
+	inline float QuadRenderBehavior::textureAtlasV0() const
 	{
 		return atlasV0;
 	}
 
-	inline float QuadRendererInterface::textureAtlasV1() const
+	inline float QuadRenderBehavior::textureAtlasV1() const
 	{
 		return atlasV1;
 	}
 
-	inline void QuadRendererInterface::computeAtlasCoordinates(const Particle& particle) const
+	inline void QuadRenderBehavior::computeAtlasCoordinates(const Particle& particle) const
 	{
 		int textureIndex = static_cast<int>(particle.getParamNC(PARAM_TEXTURE_INDEX));
 		atlasU0 = atlasU1 = static_cast<float>(textureIndex % textureAtlasNbX) / textureAtlasNbX;
