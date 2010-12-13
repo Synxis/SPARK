@@ -90,7 +90,7 @@ namespace SPK
 		* @return A new registered LinearForce
 		* @since 1.04.00
 		*/
-		static inline LinearForce* create(Zone* zone = NULL,
+		static LinearForce* create(Zone* zone = NULL,
 			ModifierTrigger trigger = INSIDE_ZONE,
 			const Vector3D& force = Vector3D(),
 			ForceFactor type = FACTOR_NONE,
@@ -105,14 +105,14 @@ namespace SPK
 		* @param force : the force vector
 		* @since 1.03.02
 		*/
-		inline void setForce(const Vector3D& force);
+		void setForce(const Vector3D& force);
 
 		/**
 		* @brief Sets the factor type to apply to the force
 		* @param type : the type of multiplier for the factor
 		* @param param : the parameter of the Particle to use as the factor
 		*/
-		inline void setFactor(ForceFactor type,ModelParam param = PARAM_SIZE);
+		void setFactor(ForceFactor type,ModelParam param = PARAM_SIZE);
 
 		/////////////
 		// Getters //
@@ -123,30 +123,30 @@ namespace SPK
 		* @return the force vector
 		* @since 1.03.02
 		*/
-		inline const Vector3D& getForce() const;
+		const Vector3D& getForce() const;
 
 		/**
 		* @brief Gets the transformed force vector
 		* @return the transformed force vector
 		* @since 1.03.02
 		*/
-		inline const Vector3D& getTransformedForce() const;
+		const Vector3D& getTransformedForce() const;
 
 		/**
 		* @brief Gets the factor multiplier of this LinearForce
 		* @return the factor multiplier of this LinearForce
 		*/
-		inline ForceFactor getFactorType() const;
+		ForceFactor getFactorType() const;
 
 		/**
 		* @brief Gets the factor parameter of this LinearForce
 		* @return the factor parameter of this LinearForce
 		*/
-		inline ModelParam getFactorParam() const;
+		ModelParam getFactorParam() const;
 
 	protected :
 
-		virtual inline void innerUpdateTransform();
+		virtual void innerUpdateTransform();
 
 	private :
 

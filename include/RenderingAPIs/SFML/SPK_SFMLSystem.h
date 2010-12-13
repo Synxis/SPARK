@@ -82,7 +82,7 @@ namespace SFML
 		* @return A new registered SFMLSystem
 		* @since 1.04.00
 		*/
-		static inline SFMLSystem* create(bool worldTransformed = true,sf::RenderTarget* renderTarget = NULL);
+		static SFMLSystem* create(bool worldTransformed = true,sf::RenderTarget* renderTarget = NULL);
 
 		/////////////
 		// Setters //
@@ -95,7 +95,7 @@ namespace SFML
 		*
 		* @param target : the RenderTarget of this SFMLSystem
 		*/
-		inline void setRenderTarget(sf::RenderTarget* target);
+		void setRenderTarget(sf::RenderTarget* target);
 		
 		/////////////
 		// Getters //
@@ -105,7 +105,7 @@ namespace SFML
 		* @brief Gets the RenderTarget of this SFMLSystem
 		* @return the RenderTarget of this SFMLSystem or NULL if no RenderTarget is set
 		*/
-		inline sf::RenderTarget* getRenderTarget() const;
+		sf::RenderTarget* getRenderTarget() const;
 
 		/**
 		* @brief Tells whether this system is world transformed or not
@@ -118,7 +118,7 @@ namespace SFML
 		* @return true if this system is world transformed, false if not
 		* @since 1.03.01
 		*/
-		inline bool isWorldTransformed() const;
+		bool isWorldTransformed() const;
 
 		///////////////
 		// Interface //

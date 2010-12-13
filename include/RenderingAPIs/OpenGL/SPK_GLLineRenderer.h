@@ -69,7 +69,7 @@ namespace GL
 		* @return A new registered GLLineRenderer
 		* @since 1.04.00
 		*/
-		static inline GLLineRenderer* create(float length = 1.0f,float width = 1.0f);
+		static GLLineRenderer* create(float length = 1.0f,float width = 1.0f);
 
 		///////////////
 		// Interface //

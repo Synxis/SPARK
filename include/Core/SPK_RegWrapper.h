@@ -65,7 +65,7 @@ namespace SPK
 		* @return A new registered RegWrapper
 		* @since 1.04.00
 		*/
-		static inline RegWrapper<T>* create(const T& object = T());
+		static RegWrapper<T>* create(const T& object = T());
 		
 		/////////////
 		// Getters //
@@ -75,13 +75,13 @@ namespace SPK
 		* @brief Gets a reference on the inner object
 		* @return a reference on the inner object
 		*/
-		inline T& get();
+		T& get();
 
 		/**
 		* @brief Gets a constant reference on the inner object
 		* @return a constant reference on the inner object
 		*/
-		inline const T& get() const;
+		const T& get() const;
 		
 	private :
 

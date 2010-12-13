@@ -84,7 +84,7 @@ namespace SFML
 		* @return A new registered SFMLQuadRenderer
 		* @since 1.04.00
 		*/
-		static inline SFMLQuadRenderer* create(sf::Image* image = NULL,float scaleX = 1.0f,float scaleY = 1.0f);
+		static SFMLQuadRenderer* create(sf::Image* image = NULL,float scaleX = 1.0f,float scaleY = 1.0f);
 
 		/////////////
 		// Setters //
@@ -94,9 +94,9 @@ namespace SFML
 		* @brief Sets the image of this SFMLQuadRenderer
 		* @param image : the image of this SFMLQuadRenderer or NULL not to set an image
 		*/
-		inline void setImage(sf::Image* image);
+		void setImage(sf::Image* image);
 
-		virtual inline bool setTexturingMode(TexturingMode mode);
+		virtual bool setTexturingMode(TexturingMode mode);
 
 		/////////////
 		// Getters //
@@ -106,7 +106,7 @@ namespace SFML
 		* @brief Gets the image of this SFMLQuadRenderer
 		* @return the image of this SFMLQuadRenderer or NULL if no image is set
 		*/
-		inline sf::Image* getImage() const;
+		sf::Image* getImage() const;
 
 		///////////////
 		// Interface //
@@ -137,8 +137,8 @@ namespace SFML
 
 		void innerRender(const Group& group);
 
-		inline void GLCallColorAndVertex(const Particle& particle) const;	// OpenGL calls for color and position
-		inline void GLCallTexture2DAtlas(const Particle& particle) const;	// OpenGL calls for 2D atlastexturing 
+		void GLCallColorAndVertex(const Particle& particle) const;	// OpenGL calls for color and position
+		void GLCallTexture2DAtlas(const Particle& particle) const;	// OpenGL calls for 2D atlastexturing 
 
 		static void (SFMLQuadRenderer::*renderParticle)(const Particle&)  const;	// pointer to the right render method
 		

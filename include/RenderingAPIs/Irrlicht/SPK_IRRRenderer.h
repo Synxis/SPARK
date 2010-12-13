@@ -63,7 +63,7 @@ namespace IRR
 		////////////////
 
 		/** @brief Destructor of IRRRenderer */
-		inline virtual ~IRRRenderer(){};
+		virtual ~IRRRenderer(){};
 
 		/////////////
 		// Setters //
@@ -84,7 +84,7 @@ namespace IRR
 		virtual void setBlending(BlendingMode blendMode);
 
 		virtual void enableRenderingHint(RenderingHint renderingHint,bool enable);
-		virtual inline void setAlphaTestThreshold(float alphaThreshold);
+		virtual void setAlphaTestThreshold(float alphaThreshold);
 
 		/////////////
 		// Getters //
@@ -94,25 +94,25 @@ namespace IRR
 		* @brief Gets the Irrlicht device of this renderer
 		* @return the device of this renderer
 		*/
-        inline irr::IrrlichtDevice* getDevice() const;
+        irr::IrrlichtDevice* getDevice() const;
 
 		/**
 		* @brief Gets the source blending funtion of this renderer
 		* @return the source blending funtion of this renderer
 		*/
-		inline irr::video::E_BLEND_FACTOR getBlendSrcFunc() const;
+		irr::video::E_BLEND_FACTOR getBlendSrcFunc() const;
 
 		/**
 		* @brief Gets the destination blending funtion of this renderer
 		* @return the destination blending funtion of this renderer
 		*/
-		inline irr::video::E_BLEND_FACTOR getBlendDestFunc() const;
+		irr::video::E_BLEND_FACTOR getBlendDestFunc() const;
 
 		/**
 		* @brief Gets the alpha source of this renderer
 		* @return the alpha source of this renderer
 		*/
-		inline unsigned int getAlphaSource() const;
+		unsigned int getAlphaSource() const;
 
 		/**
 		* @brief Gets the material of this renderer
@@ -121,7 +121,7 @@ namespace IRR
 		*
 		* @return the material of this renderer
 		*/
-		inline const irr::video::SMaterial& getMaterial() const;
+		const irr::video::SMaterial& getMaterial() const;
 
 		virtual bool isRenderingHintEnabled(RenderingHint renderingHint) const;
 
@@ -129,7 +129,7 @@ namespace IRR
 		// Interface //
 		///////////////
 
-		virtual inline void destroyBuffers(const Group& group);
+		virtual void destroyBuffers(const Group& group);
 
 	protected :
 
@@ -138,8 +138,8 @@ namespace IRR
 
 		mutable IRRBuffer* currentBuffer;
 
-		virtual inline bool checkBuffers(const Group& group);
-		static inline unsigned int getVBOFlag();
+		virtual bool checkBuffers(const Group& group);
+		static unsigned int getVBOFlag();
 
 	private :
 
@@ -156,7 +156,7 @@ namespace IRR
 		*/
 		virtual const std::string& getBufferName() const = 0;
 
-		inline void updateMaterialBlendingMode();
+		void updateMaterialBlendingMode();
 	};
 
 	

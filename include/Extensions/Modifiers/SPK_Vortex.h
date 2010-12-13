@@ -78,7 +78,7 @@ namespace SPK
 		* @param attractionSpeed : the speed of attraction
 		* @return a new registered vortex
 		*/
-		static inline Vortex* create(const Vector3D& position = Vector3D(),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float rotationSpeed = 1.0f,float attractionSpeed = 0.0f);
+		static Vortex* create(const Vector3D& position = Vector3D(),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float rotationSpeed = 1.0f,float attractionSpeed = 0.0f);
 
 		/////////////
 		// Setters //
@@ -91,7 +91,7 @@ namespace SPK
 		*
 		* @param position : the position of the eye of the vortex
 		*/
-		inline void setPosition(const Vector3D& position);
+		void setPosition(const Vector3D& position);
 
 		/**
 		* @brief Sets the direction of the eye of the vortex
@@ -101,7 +101,7 @@ namespace SPK
 		*
 		* @param direction : the direction of the eye of the vortex
 		*/
-		inline void setDirection(const Vector3D& direction);
+		void setDirection(const Vector3D& direction);
 
 		/**
 		* @brief Sets the rotation speed of the vortex
@@ -116,7 +116,7 @@ namespace SPK
 		* @param rotationSpeed : the speed of rotation (either in units per unit of time or in radians per unit of time dependent on the second parameter)
 		* @param angular :  true to have the rotation in radians per unit of time, false to have it in unit per unit of time.
 		*/
-		inline void setRotationSpeed(float rotationSpeed,bool angular);
+		void setRotationSpeed(float rotationSpeed,bool angular);
 
 		/**
 		* @brief Sets the attraction speed of the vortex
@@ -133,7 +133,7 @@ namespace SPK
 		* @param attractionSpeed : the attraction speed of the vortex in units per unit of time
 		* @param linear : true to set the speed function of the distance from the eye, false to set it constant
 		*/
-		inline void setAttractionSpeed(float attractionSpeed,bool linear);
+		void setAttractionSpeed(float attractionSpeed,bool linear);
 
 		/**
 		* @brief Sets the eye radius
@@ -142,13 +142,13 @@ namespace SPK
 		*
 		* @param eyeRadius : the eye radius
 		*/
-		inline void setEyeRadius(float eyeRadius);
+		void setEyeRadius(float eyeRadius);
 
 		/**
 		* @brief Tells whether particles is the eye must be killed or not
 		* @param kill : true to kill particles in the eye, false not to
 		*/
-		inline void enableParticleKilling(bool kill);
+		void enableParticleKilling(bool kill);
 
 		/////////////
 		// Getters //
@@ -158,61 +158,61 @@ namespace SPK
 		* @brief Gets the position of the eye
 		* @return the position of the eye
 		*/
-		inline const Vector3D& getPosition() const;
+		const Vector3D& getPosition() const;
 
 		/**
 		* @brief Gets the direction of the eye
 		* @return the direction of the eye (normalized)
 		*/
-		inline const Vector3D& getDirection() const;
+		const Vector3D& getDirection() const;
 
 		/**
 		* @brief Gets the transformed position of the eye
 		* @return the transformed position of the eye
 		*/
-		inline const Vector3D& getTransformedPosition() const;
+		const Vector3D& getTransformedPosition() const;
 
 		/**
 		* @brief Gets the transformed direction of the eye
 		* @return the transformed direction of the eye (normalized)
 		*/
-		inline const Vector3D& getTransformedDirection() const;
+		const Vector3D& getTransformedDirection() const;
 
 		/**
 		* @brief Gets the rotation speed
 		* @return the rotation speed
 		*/
-		inline float getRotationSpeed() const;
+		float getRotationSpeed() const;
 
 		/**
 		* @brief Gets the attraction speed
 		* @return the attraction speed
 		*/
-		inline float getAttractionSpeed() const;
+		float getAttractionSpeed() const;
 
 		/**
 		* @brief Tells whether rotation speed is angular
 		* @return true if rotation speed is angular, false if not
 		*/
-		inline bool isRotationSpeedAngular() const;
+		bool isRotationSpeedAngular() const;
 
 		/**
 		* @brief Tells whether attraction speed is function of the distance from the eye
 		* @return true if attraction speed is linear, false if it is constant
 		*/
-		inline bool isAttractionSpeedLinear() const;
+		bool isAttractionSpeedLinear() const;
 
 		/**
 		* @brief Returns the eye radius
 		* @return the eye radius
 		*/
-		inline float getEyeRadius() const;
+		float getEyeRadius() const;
 
 		/**
 		* @brief Tells whether particles are killed when in the eye
 		* @return true if particles are killed in the eye, false if not
 		*/
-		inline bool isParticleKillingEnabled() const;
+		bool isParticleKillingEnabled() const;
 
 	protected :
 

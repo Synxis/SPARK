@@ -46,9 +46,9 @@ namespace DX9
 
 		virtual ~DX9BufferHandler() {}
 
-		virtual inline bool DX9CreateBuffers(const Group& group) {return true;};
+		virtual bool DX9CreateBuffers(const Group& group) {return true;};
 
-		virtual inline bool DX9DestroyBuffers(const Group& group) {return true;};
+		virtual bool DX9DestroyBuffers(const Group& group) {return true;};
 
 	protected :
 
@@ -63,7 +63,7 @@ namespace DX9
 
 		bool DX9Create();
 
-		virtual inline bool DX9CheckBuffers(const Group& group);
+		virtual bool DX9CheckBuffers(const Group& group);
 
 		std::map<std::pair<const Group *, int>, IDirect3DResource9 *> DX9Buffers;
 		std::map<std::pair<const Group *, int>, IDirect3DResource9 *>::iterator DX9BuffersIt;

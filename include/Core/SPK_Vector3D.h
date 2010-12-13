@@ -152,7 +152,7 @@ namespace SPK
 		*
 		* return a Vector3D which is the reverse of this Vector3D
 		*/
-		inline Vector3D operator-() const;
+		Vector3D operator-() const;
 
 		/**
 		* @brief Accesses the Vector3D coordinates in an container like fashion
@@ -205,7 +205,7 @@ namespace SPK
 		*
 		* @return the square norm of the Vector3D
 		*/
-		inline float getSqrNorm() const;
+		float getSqrNorm() const;
 
 		/**
 		* @brief Gets the norm of the Vector3D
@@ -214,7 +214,7 @@ namespace SPK
 		*
 		* @return the norm of the Vector3D
 		*/
-		inline float getNorm() const;
+		float getNorm() const;
 
 		/**
 		* @brief Normalizes the Vector3D
@@ -274,7 +274,7 @@ namespace SPK
 	* @param v1 : the second vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator+(const Vector3D& v0,const Vector3D& v1);
+	Vector3D operator+(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Substracts two Vector3D
@@ -288,7 +288,7 @@ namespace SPK
 	* @param v1 : the second vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator-(const Vector3D& v0,const Vector3D& v1);
+	Vector3D operator-(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Adds a Vector3D and a float
@@ -302,7 +302,7 @@ namespace SPK
 	* @param f : the floating number
 	* @return the result vector3D
 	*/
-	inline Vector3D operator+(const Vector3D& v,float f);
+	Vector3D operator+(const Vector3D& v,float f);
 
 	/**
 	* @brief Adds a float and a Vector3D
@@ -316,7 +316,7 @@ namespace SPK
 	* @param v : the vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator+(float f,const Vector3D& v);
+	Vector3D operator+(float f,const Vector3D& v);
 
 	/**
 	* @brief Substracts a float to a Vector3D
@@ -330,7 +330,7 @@ namespace SPK
 	* @param f : the floating number
 	* @return the result vector3D
 	*/
-	inline Vector3D operator-(const Vector3D& v,float f);
+	Vector3D operator-(const Vector3D& v,float f);
 
 	/**
 	* @brief Substracts a Vector3D to a float
@@ -344,7 +344,7 @@ namespace SPK
 	* @param v : the vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator-(float f,const Vector3D& v);
+	Vector3D operator-(float f,const Vector3D& v);
 
 	/**
 	* @brief Multiplies a Vector3D by a float
@@ -358,7 +358,7 @@ namespace SPK
 	* @param f : the floating number
 	* @return the result vector3D
 	*/
-	inline Vector3D operator*(const Vector3D& v,float f);
+	Vector3D operator*(const Vector3D& v,float f);
 
 	/**
 	* @brief Multiplies a float by a Vector3D
@@ -372,7 +372,7 @@ namespace SPK
 	* @param v : the vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator*(float f,const Vector3D& v);
+	Vector3D operator*(float f,const Vector3D& v);
 
 	/**
 	* @brief Divides a Vector3D by a float
@@ -386,7 +386,7 @@ namespace SPK
 	* @param f : the floating number
 	* @return the result vector3D
 	*/
-	inline Vector3D operator/(const Vector3D& v,float f);
+	Vector3D operator/(const Vector3D& v,float f);
 
 	/**
 	* @brief Divides a float by a Vector3D
@@ -400,7 +400,7 @@ namespace SPK
 	* @param v : the vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator/(float f,const Vector3D& v);
+	Vector3D operator/(float f,const Vector3D& v);
 
 	/**
 	* @brief Tests whether 2 Vector3D are equal
@@ -409,7 +409,7 @@ namespace SPK
 	* @return true if the Vector3D are equal, false if not
 	* @since 1.01.01
 	*/
-	inline bool operator==(const Vector3D& v0,const Vector3D& v1);
+	bool operator==(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Tests whether 2 Vector3D are different
@@ -418,7 +418,7 @@ namespace SPK
 	* @return true if the Vector3D are different, false if not
 	* @since 1.01.01
 	*/
-	inline bool operator!=(const Vector3D& v0,const Vector3D& v1);
+	bool operator!=(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Writes a Vector3D on an output stream
@@ -430,7 +430,7 @@ namespace SPK
 	* @return the output stream
 	* @since 1.01.01
 	*/
-	inline std::ostream& operator<<(std::ostream& s,const Vector3D& v);
+	std::ostream& operator<<(std::ostream& s,const Vector3D& v);
 
 	////////////////////////
 	// External functions //
@@ -461,7 +461,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @return the dot product (v0 . v1)
 	*/
-	inline float dotProduct(const Vector3D& v0,const Vector3D& v1);
+	float dotProduct(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Returns the cross product between two Vector3D

@@ -44,7 +44,7 @@ namespace SPK
 		* @return A new registered RandomEmitter
 		* @since 1.04.00
 		*/
-		static inline RandomEmitter* create();
+		static RandomEmitter* create();
 
 	private :
 

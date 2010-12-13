@@ -56,7 +56,7 @@ namespace SPK
 		* @param dimension : the dimension of the AABox
 		* @since 1.04.00
 		*/
-		static inline AABox* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& dimension = Vector3D(0.0f,0.0f,0.0f));
+		static AABox* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& dimension = Vector3D(0.0f,0.0f,0.0f));
 
 		////////////
 		// Setter //
@@ -80,7 +80,7 @@ namespace SPK
 		* @brief Gets the dimensions of this AABox
 		* @return the dimensions of this AABox
 		*/
-		inline const Vector3D& getDimension() const;
+		const Vector3D& getDimension() const;
 
 		///////////////
 		// Interface //
@@ -96,7 +96,7 @@ namespace SPK
 
 		Vector3D dimension;
 
-		inline bool slabIntersects(float p0,float p1,float bMin,float bMax,float& tEnter,float& tExit,int& firstAxis,int axis) const;
+		bool slabIntersects(float p0,float p1,float bMin,float bMax,float& tEnter,float& tExit,int& firstAxis,int axis) const;
 	};
 
 

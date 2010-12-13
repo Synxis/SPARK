@@ -80,7 +80,7 @@ namespace IRR
 		* @param size : the size of the points
 		* @return A new registered IRRPointRenderer
 		*/
-		static inline IRRPointRenderer* create(irr::IrrlichtDevice* d,float size = 1.0f);
+		static IRRPointRenderer* create(irr::IrrlichtDevice* d,float size = 1.0f);
 
 		/////////////
 		// Setters //
@@ -93,11 +93,11 @@ namespace IRR
 		*
 		* @param texture : the texture to set
 		*/
-		inline void setTexture(irr::video::ITexture* texture);
+		void setTexture(irr::video::ITexture* texture);
 
 		// Reimplemented from PointRendererInterface
 		virtual bool setType(PointType type);
-		virtual inline void setSize(float size);
+		virtual void setSize(float size);
 
 		/////////////
 		// Getters //
@@ -107,19 +107,19 @@ namespace IRR
 		* @brief Gets the texture of this renderer
 		* @return the texture of this renderer
 		*/
-		inline irr::video::ITexture* getTexture() const;
+		irr::video::ITexture* getTexture() const;
 
 		/**
 		* @brief Gets the material texture layer
 		* @return the material texture layer
 		*/
-		inline irr::video::SMaterialLayer& getMaterialLayer();
+		irr::video::SMaterialLayer& getMaterialLayer();
 
 		/**
 		* @brief Gets the material texture layer in a constant way
 		* @return the material texture layer
 		*/
-		inline const irr::video::SMaterialLayer& getMaterialLayer() const;
+		const irr::video::SMaterialLayer& getMaterialLayer() const;
 
 		///////////////
 		// Interface //
@@ -137,8 +137,8 @@ namespace IRR
 		// buffer name
 		static const std::string IRR_BUFFER_NAME;
 
-		inline virtual const std::string& getBufferName() const;
-		inline virtual int getBufferPurpose() const;
+		virtual const std::string& getBufferName() const;
+		virtual int getBufferPurpose() const;
 	};
 
 

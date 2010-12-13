@@ -51,17 +51,17 @@ namespace SPK
 		/////////////////
 
 		/** @brief Constructor of Rotator */
-		inline Rotator();
+		Rotator();
 
 		/**
 		* @brief Creates and registers a new Rotator
 		* @return A new registered Rotator
 		*/
-		static inline Rotator* create();
+		static Rotator* create();
 
 	private :
 
-		virtual inline void modify(Particle& particle,float deltaTime) const;
+		virtual void modify(Particle& particle,float deltaTime) const;
 	};
 
 

@@ -105,7 +105,7 @@ namespace SPK
 		* @param active : true to activate this Renderer, false to deactivate it
 		* @since 1.03.00
 		*/
-		inline void setActive(bool active);
+		void setActive(bool active);
 
 		/**
 		* @brief Sets the blending mode of this renderer
@@ -127,7 +127,7 @@ namespace SPK
 		* @param enable : true to enable it, false to disable it
 		* @since 1.04.00
 		*/
-		virtual inline void enableRenderingHint(RenderingHint renderingHint,bool enable);
+		virtual void enableRenderingHint(RenderingHint renderingHint,bool enable);
 
 		/**
 		* @brief Tells the alpha threshold to use when the ALPHA_TEST is enabled
@@ -137,7 +137,7 @@ namespace SPK
 		* @param alphaThreshold : the alpha threshold to use for the alpha test
 		* @since 1.04.00
 		*/
-		virtual inline void setAlphaTestThreshold(float alphaThreshold);
+		virtual void setAlphaTestThreshold(float alphaThreshold);
 
 		/////////////
 		// Getters //
@@ -148,21 +148,21 @@ namespace SPK
 		* @return true if this Renderer is active, false if is is inactive
 		* @since 1.03.00
 		*/
-		inline bool isActive() const;
+		bool isActive() const;
 
 		/**
 		* @brief Tells whether a rendering hint is enabled or not
 		* @param renderingHint : the rendering hint
 		* @since 1.04.00
 		*/
-		virtual inline bool isRenderingHintEnabled(RenderingHint renderingHint) const;
+		virtual bool isRenderingHintEnabled(RenderingHint renderingHint) const;
 
 		/**
 		* @brief Gets the alpha threhold used by the alpha test
 		* @return the alpha threhold used by the alpha test
 		* @since 1.04.00
 		*/
-		inline float getAlphaTestThreshold() const;
+		float getAlphaTestThreshold() const;
 
 		///////////////
 		// Interface //

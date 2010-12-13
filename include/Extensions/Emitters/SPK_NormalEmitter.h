@@ -62,7 +62,7 @@ namespace SPK
 		* @return A new registered NormalEmitter
 		* @since 1.04.00
 		*/
-		static inline NormalEmitter* create(Zone* normalZone = NULL,bool inverted = false);
+		static NormalEmitter* create(Zone* normalZone = NULL,bool inverted = false);
 		
 		/////////////
 		// Setters //
@@ -72,7 +72,7 @@ namespace SPK
 		* @brief Sets whether normals are inverted or not
 		* @param inverted true to use inverted normals, false not to
 		*/
-		inline void setInverted(bool inverted);
+		void setInverted(bool inverted);
 
 		/**
 		* @brief the Zone used to compute normals
@@ -91,13 +91,13 @@ namespace SPK
 		* @brief Tells whether normals are inverted for this NormalEmitter
 		* @return true if normals are inverted, false if not
 		*/
-		inline bool isInverted() const;
+		bool isInverted() const;
 		
 		/**
 		* @brief Gets the normal Zone of this NormalEmitter
 		* @return the normal Zone of this NormalEmitter
 		*/
-		inline Zone* getNormalZone() const;
+		Zone* getNormalZone() const;
 
 		///////////////
 		// Interface //

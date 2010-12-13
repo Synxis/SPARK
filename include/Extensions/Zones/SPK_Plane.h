@@ -66,7 +66,7 @@ namespace SPK
 		* @return a new registered plane
 		* @since 1.04.00
 		*/
-		static inline Plane* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));
+		static Plane* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));
 
 		/////////////
 		// Setters //
@@ -79,7 +79,7 @@ namespace SPK
 		*
 		* @param normal :  the normal of this Plane
 		*/
-		inline void setNormal(const Vector3D& normal);
+		void setNormal(const Vector3D& normal);
 
 		/////////////
 		// Getters //
@@ -89,24 +89,24 @@ namespace SPK
 		* @brief Gets the normal of this Plane
 		* @return the normal of this Plane
 		*/
-		inline const Vector3D& getNormal() const;
+		const Vector3D& getNormal() const;
 
 		/**
 		* @brief Gets the transformed normal of this Plane
 		* @return the transformed normal of this Plane
 		* @since 1.05.00
 		*/
-		inline const Vector3D& getTransformedNormal() const;
+		const Vector3D& getTransformedNormal() const;
 
 		///////////////
 		// Interface //
 		///////////////
 
-		virtual inline void generatePosition(Particle& particle,bool full) const;
-		virtual inline bool contains(const Vector3D& v) const;
+		virtual void generatePosition(Particle& particle,bool full) const;
+		virtual bool contains(const Vector3D& v) const;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,Vector3D* intersection,Vector3D* normal) const;
 		virtual void moveAtBorder(Vector3D& v,bool inside) const;
-		virtual inline Vector3D computeNormal(const Vector3D& point) const;
+		virtual Vector3D computeNormal(const Vector3D& point) const;
 
 	protected :
 

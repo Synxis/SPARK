@@ -68,7 +68,7 @@ namespace IRR
 		*
 		* @param init : true if VBOs are initialized, false of not
 		*/
-		inline void setVBOInitialized(bool init);
+		void setVBOInitialized(bool init);
 
 		/**
 		* @brief Tells the amount of data that are used by the buffer
@@ -77,7 +77,7 @@ namespace IRR
 		*
 		* @param nb : the amount of data that are used by the buffer
 		*/
-		inline void setUsed(size_t nb);
+		void setUsed(size_t nb);
 
 
 		/////////////
@@ -88,19 +88,19 @@ namespace IRR
 		* @brief Gets the inner vertex buffer
 		* @return the inner vertex buffer
 		*/
-		inline irr::scene::IVertexBuffer& getVertexBuffer();
+		irr::scene::IVertexBuffer& getVertexBuffer();
 
 		/**
 		* @brief Gets the inner index buffer
 		* @return the inner index buffer
 		*/
-		inline irr::scene::IIndexBuffer& getIndexBuffer();
+		irr::scene::IIndexBuffer& getIndexBuffer();
 
 		/**
 		* @brief Gets the inner mesh buffer
 		* @return the inner mesh buffer
 		*/
-		inline irr::scene::IDynamicMeshBuffer& getMeshBuffer();
+		irr::scene::IDynamicMeshBuffer& getMeshBuffer();
 
 		/**
 		* @brief Tells whether VBOs are initialized for this buffer
@@ -109,7 +109,7 @@ namespace IRR
 		*
 		* @return true if VBOs are initialized, false of not
 		*/
-		inline bool areVBOInitialized() const;
+		bool areVBOInitialized() const;
 
 
 		////////////
@@ -136,7 +136,7 @@ namespace IRR
 		* @return true if VBO hint is activated, alse if not
 		* @since 1.05.03
 		*/
-		static inline bool isVBOHintActivated();
+		static bool isVBOHintActivated();
 
     private:
 
@@ -231,68 +231,3 @@ namespace IRR
 }}
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//inline irr::video::E_INDEX_TYPE IRRBuffer::getIndexType() const
-	//{
-	//	return IndexType;
-	//}
-
-	//inline int IRRBuffer::getPurpose() const
-	//{ 
-	//	return Purpose;
-	//}
-
-	//IRRBuffer* IRRBuffer::clone() const
-	//{
- //       return new IRRBuffer(*this);
- //   }
-
- //   inline void IRRBuffer::swapPoints(irr::u32 i, irr::u32 j)
- //   {
- //       irr::video::S3DVertex temp = Vertices[i];
- //       Vertices[i] = Vertices[j];
- //       Vertices[j] = temp;
- //   }
-
- //   inline void IRRBuffer::swapLines(irr::u32 i, irr::u32 j)
- //   {
- //       irr::video::S3DVertex temp1 = Vertices[i*2];
- //       irr::video::S3DVertex temp2 = Vertices[i*2+1];
- //       Vertices[i*2] = Vertices[j*2];
- //       Vertices[i*2+1] = Vertices[j*2+1];
- //       Vertices[j*2] = temp1;
- //       Vertices[j*2+1] = temp2;
- //   }
-
- //   inline void IRRBuffer::swapQuads(irr::u32 i, irr::u32 j)
- //   {
- //       irr::video::S3DVertex temp0 = Vertices[i*4+0],
- //                             temp1 = Vertices[i*4+1],
- //                             temp2 = Vertices[i*4+2],
- //                             temp3 = Vertices[i*4+3];
- //       Vertices[4*i+0] = Vertices[4*j+0];
- //       Vertices[4*i+0] = Vertices[4*j+1];
- //       Vertices[4*i+0] = Vertices[4*j+2];
- //       Vertices[4*i+0] = Vertices[4*j+3];
- //       Vertices[4*j+0] = temp0;
- //       Vertices[4*j+1] = temp1;
- //       Vertices[4*j+2] = temp2;
- //       Vertices[4*j+3] = temp3;
- //   }
-

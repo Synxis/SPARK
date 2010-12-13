@@ -54,7 +54,7 @@ namespace SPK
 		* @param direction : the direction of the StraighEmitter
 		* @since 1.04.00
 		*/
-		static inline StraightEmitter* create(const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f));
+		static StraightEmitter* create(const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f));
 
 		/////////////
 		// Setters //
@@ -78,13 +78,13 @@ namespace SPK
 		* @brief Gets the direction of this StraightEmitter
 		* @return the direction of this StraightEmitter
 		*/
-		inline const Vector3D& getDirection() const;
+		const Vector3D& getDirection() const;
 
 		/**
 		* @brief Gets the transformed direction of this StraightEmitter
 		* @return the transformed direction of this StraightEmitter
 		*/
-		inline const Vector3D& getTransformedDirection() const;
+		const Vector3D& getTransformedDirection() const;
 
 	protected :
 
@@ -95,7 +95,7 @@ namespace SPK
 		Vector3D direction;
 		Vector3D tDirection;
 
-		virtual inline void generateVelocity(Particle& particle,float speed) const;
+		virtual void generateVelocity(Particle& particle,float speed) const;
 	};
 
 

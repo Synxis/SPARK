@@ -72,7 +72,7 @@ namespace SPK
 		* @param angleB : the second angle in radians of the SphericEmitter
 		* @since 1.04.00
 		*/
-		static inline SphericEmitter* create(const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),float angleA = 0.0f,float angleB = 0.0f);
+		static SphericEmitter* create(const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),float angleA = 0.0f,float angleB = 0.0f);
 
 		/////////////
 		// Setters //
@@ -107,25 +107,25 @@ namespace SPK
 		* @brief Gets the direction of this SphericEmitter
 		* @return the direction of this SphericEmitter
 		*/
-		inline const Vector3D& getDirection() const;
+		const Vector3D& getDirection() const;
 
 		/**
 		* @brief Gets the direction of this SphericEmitter
 		* @return the direction of this SphericEmitter
 		*/
-		inline const Vector3D& getTransformedDirection() const;
+		const Vector3D& getTransformedDirection() const;
 
 		/**
 		* @brief Gets the minimum angle of this SphericEmitter
 		* @return the minimum angle of this SphericEmitter
 		*/
-		inline float getAngleMin() const;
+		float getAngleMin() const;
 
 		/**
 		* @brief Gets the maximum angle of this SphericEmitter
 		* @return the maximum angle of this SphericEmitter
 		*/
-		inline float getAngleMax() const;
+		float getAngleMax() const;
 
 	protected :
 

@@ -139,7 +139,7 @@ namespace SPK
 		////////////////
 
 		/** @brief Destructor of Oriented3DRendererInterface */
-		virtual inline ~Oriented3DRendererInterface() {}
+		virtual ~Oriented3DRendererInterface() {}
 
 		/////////////
 		// Setters //
@@ -177,19 +177,19 @@ namespace SPK
 		* @brief Gets the look orientation of the quads
 		* @return the look orientation of the quads
 		*/
-		inline LookOrientation getLookOrientation() const;
+		LookOrientation getLookOrientation() const;
 
 		/**
 		* @brief Gets the up orientation of the quads
 		* @return the up orientation of the quads
 		*/
-		inline UpOrientation getUpOrientation() const;
+		UpOrientation getUpOrientation() const;
 
 		/**
 		* @brief Gets the locked axis (the one prevailing over the others)
 		* @return the locked axis
 		*/
-		inline LockedAxis getLockedAxis() const;
+		LockedAxis getLockedAxis() const;
 
 	protected :
 
@@ -198,15 +198,15 @@ namespace SPK
 		UpOrientation upOrientation;
 		LockedAxis lockedAxis;
 
-		inline bool precomputeOrientation3D(const Group& group,const Vector3D& look,const Vector3D& up,const Vector3D& pos);
-		inline void computeGlobalOrientation3D();
-		inline void computeSingleOrientation3D(const Particle& particle);
+		bool precomputeOrientation3D(const Group& group,const Vector3D& look,const Vector3D& up,const Vector3D& pos);
+		void computeGlobalOrientation3D();
+		void computeSingleOrientation3D(const Particle& particle);
 
-		inline void scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
-		inline void rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
+		void scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
+		void rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
 
-		inline const Vector3D& quadUp() const;
-		inline const Vector3D& quadSide() const;
+		const Vector3D& quadUp() const;
+		const Vector3D& quadSide() const;
 
 	private :
 

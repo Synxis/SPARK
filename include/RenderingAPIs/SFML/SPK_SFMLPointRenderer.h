@@ -85,7 +85,7 @@ namespace SFML
 		* @return A new registered SFMLPointRenderer
 		* @since 1.04.00
 		*/
-		static inline SFMLPointRenderer* create(float size = 1.0f,ResizeMode mode = RESIZE_NONE);
+		static SFMLPointRenderer* create(float size = 1.0f,ResizeMode mode = RESIZE_NONE);
 
 		/////////////
 		// Setters //
@@ -100,13 +100,13 @@ namespace SFML
 		*
 		* @param image : the index of the SFML Image of this SFMLPointRenderer
 		*/
-		inline void setImage(sf::Image* image);
+		void setImage(sf::Image* image);
 
 		/**
 		* @brief Sets the resize mode of this SFMLPointRenderer
 		* @param mode : the resize mode of this SFMLPointRenderer
 		*/
-		inline void setResizeMode(ResizeMode mode);
+		void setResizeMode(ResizeMode mode);
 
 		/////////////
 		// Getters //
@@ -116,13 +116,13 @@ namespace SFML
 		* @brief Gets the texture of this SFMLPointRenderer
 		* @return the texture of this SFMLPointRenderer
 		*/
-		inline sf::Image* getImage() const;
+		sf::Image* getImage() const;
 
 		/**
 		* @brief Gets the resize mode of this SFMLPointRenderer
 		* @return the resize mode of this SFMLPointRenderer
 		*/
-		inline ResizeMode getResizeMode() const;
+		ResizeMode getResizeMode() const;
 
 		///////////////
 		// Interface //

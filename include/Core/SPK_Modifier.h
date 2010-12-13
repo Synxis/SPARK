@@ -90,7 +90,7 @@ namespace SPK
 		////////////////
 
 		/** @brief Destructor of Modifier */
-		virtual inline ~Modifier() {}
+		virtual ~Modifier() {}
 
 		/////////////
 		// Setters //
@@ -105,7 +105,7 @@ namespace SPK
 		* @param active : true to activate this Modifier, false to deactivate it
 		* @since 1.03.00
 		*/
-		inline void setActive(bool active);
+		void setActive(bool active);
 
 		/**
 		* @brief Sets the Zone of this Modifier
@@ -136,7 +136,7 @@ namespace SPK
 		* @param local : true to consider the modifier local, false not to
 		* @since 1.03.02
 		*/
-		inline void setLocalToSystem(bool local);
+		void setLocalToSystem(bool local);
 
 		/////////////
 		// Getters //
@@ -147,31 +147,31 @@ namespace SPK
 		* @return true if this Modifier is active, false if is is inactive
 		* @since 1.03.00
 		*/
-		inline bool isActive() const;
+		bool isActive() const;
 
 		/**
 		* @brief Gets the Zone of this Modifier
 		* @return the Zone of this Modifier
 		*/
-		inline Zone* getZone() const;
+		Zone* getZone() const;
 
 		/**
 		* @brief Gets the trigger of this Modifier
 		* @return the trigger of this Modifier
 		*/
-		inline ModifierTrigger getTrigger() const;
+		ModifierTrigger getTrigger() const;
 
 		/**
 		* @brief Gets a flag containing all the available triggers for this Modifier
 		* @return a flag containing all the available triggers for this Modifier
 		*/
-		inline int getAvailableTriggers() const;
+		int getAvailableTriggers() const;
 
 		/**
 		* @brief Tells whether the Zone of this Modifier is considerered to be full or not
 		* @return true if the Zone of this Modifier is considerered to be full, false if not
 		*/
-		inline bool isFullZone() const;
+		bool isFullZone() const;
 
 		/**
 		* @brief Tells whether this modifier is considered as being local to a system or not
@@ -181,7 +181,7 @@ namespace SPK
 		* @return true if it is local, false if not
 		* @since 1.03.02
 		*/
-		inline bool isLocalToSystem() const;
+		bool isLocalToSystem() const;
 
 		///////////////
 		// Interface //
@@ -213,7 +213,7 @@ namespace SPK
 		virtual void copyChildren(const Modifier& modifier,bool createBase);
 		virtual void destroyChildren(bool keepChildren);
 
-		virtual inline void propagateUpdateTransform();
+		virtual void propagateUpdateTransform();
 
 	private :
 
@@ -226,8 +226,8 @@ namespace SPK
 		bool local;
 
 		void beginProcess(Group& group);
-		inline void endProcess(Group& group);
-		inline void process(Particle& particle,float deltaTime) const;
+		void endProcess(Group& group);
+		void process(Particle& particle,float deltaTime) const;
 
 		//////////////////////////
 		// Pure virtual methods //

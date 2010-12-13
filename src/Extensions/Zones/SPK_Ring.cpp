@@ -31,7 +31,7 @@ namespace SPK
 		setRadius(minRadius,maxRadius);
 	}
 
-	inline void Ring::setRadius(float minRadius,float maxRadius)
+	void Ring::setRadius(float minRadius,float maxRadius)
 	{
 		if (minRadius < 0.0f) minRadius = -minRadius;
 		if (maxRadius < 0.0f) maxRadius = -maxRadius;

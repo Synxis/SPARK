@@ -78,7 +78,7 @@ namespace GL
 		* @return A new registered GLPointRenderer
 		* @since 1.04.00
 		*/
-		static inline GLPointRenderer* create(float size = 1.0f);
+		static GLPointRenderer* create(float size = 1.0f);
 
 		/////////////
 		// Setters //
@@ -93,7 +93,7 @@ namespace GL
 		*
 		* @param textureIndex : the index of the openGL texture of this GLPointRenderer
 		*/
-		inline void setTexture(GLuint textureIndex);
+		void setTexture(GLuint textureIndex);
 
 		/**
 		* @brief Sets the way size of points is computed in this GLPointRenderer
@@ -116,13 +116,13 @@ namespace GL
 		* @brief Gets the texture of this GLPointRenderer
 		* @return the texture of this GLPointRenderer
 		*/
-		inline GLuint getTexture() const;
+		GLuint getTexture() const;
 
 		/**
 		* @brief Tells whether world size is enabled or not in this GLPointRenderer
 		* @return true if world size is enabled, false if not
 		*/
-		inline bool isWorldSizeEnabled() const;
+		bool isWorldSizeEnabled() const;
 
 		///////////////
 		// Interface //

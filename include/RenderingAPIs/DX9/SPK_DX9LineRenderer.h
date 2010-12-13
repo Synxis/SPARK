@@ -45,7 +45,7 @@ namespace DX9
 
 		DX9LineRenderer(float length = 1.0f, float width = 1.0f);
 
-		static inline DX9LineRenderer* create(float length = 1.0f, float width = 1.0f);
+		static DX9LineRenderer* create(float length = 1.0f, float width = 1.0f);
 
 		virtual void render(const Group& group);
 

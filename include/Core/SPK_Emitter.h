@@ -68,7 +68,7 @@ namespace SPK
 		////////////////
 
 		/** @brief Destructor of Emitter */
-		virtual inline ~Emitter() {}
+		virtual ~Emitter() {}
 
 		/////////////
 		// Setters //
@@ -83,7 +83,7 @@ namespace SPK
 		* @param active : true to activate this Emitter, false to deactivate it
 		* @since 1.05.00
 		*/
-		inline void setActive(bool active);
+		void setActive(bool active);
 
 		/**
 		* @brief Sets the number of particles in this Emitter's tank
@@ -95,7 +95,7 @@ namespace SPK
 		*
 		* @param tank : the number of particles in this Emitters's tank
 		*/
-		inline void setTank(int tank);
+		void setTank(int tank);
 
 		/**
 		* @brief Changes the number of particles in this Emitters's tank
@@ -116,7 +116,7 @@ namespace SPK
 		*
 		* @param flow : the flow of this Emitter
 		*/
-		inline void setFlow(float flow);
+		void setFlow(float flow);
 
 		/**
 		* @brief Changes the flow of particles of this Emitter
@@ -139,7 +139,7 @@ namespace SPK
 		* @param min : the minimum force of the Emitter
 		* @param max : the maximum force of the Emitter
 		*/
-		inline void setForce(float min,float max);
+		void setForce(float min,float max);
 
 		/**
 		* @brief Sets the Zone of this Emitter
@@ -160,43 +160,43 @@ namespace SPK
 		* @return true if this Emitter is active, false if is is inactive
 		* @since 1.05.00
 		*/
-		inline bool isActive() const;
+		bool isActive() const;
 
 		/**
 		* @brief Gets the number of particles in this Emitter's tank
 		* @return the number of particles in this Emitters's tanl
 		*/
-		inline int getTank() const;
+		int getTank() const;
 
 		/**
 		* @brief Gets the flow of this Emitter
 		* @return the flow of this Emitter
 		*/
-		inline float getFlow() const;
+		float getFlow() const;
 
 		/**
 		* @brief Gets the minimum force of this Emitter
 		* @return the minimum force of this Emitter
 		*/
-		inline float getForceMin() const;
+		float getForceMin() const;
 
 		/**
 		* @brief Gets the maximum force of this Emitter
 		* @return the maximum force of this Emitter
 		*/
-		inline float getForceMax() const;
+		float getForceMax() const;
 
 		/**
 		* @brief Gets the Zone of this Emitter
 		* @return the Zone of this Emitter
 		*/
-		inline Zone* getZone() const;
+		Zone* getZone() const;
 
 		/**
 		* @brief Tells whether this Emitter emits in the whole Zone or only at its borders
 		* @return true if this EMitter emits in the whole Zone, false if it is only at its borders
 		*/
-		inline bool isFullZone() const;
+		bool isFullZone() const;
 
 		/**
 		* @brief Tells whether this Emitter is sleeping or not
@@ -206,7 +206,7 @@ namespace SPK
 		* @return true if this Emitter is sleeping, false if it is active
 		* @since 1.03.00
 		*/
-		inline bool isSleeping() const;
+		bool isSleeping() const;
 
 		///////////////
 		// Interface //
@@ -223,7 +223,7 @@ namespace SPK
 		*
 		* @param particle : the Particle to emit from this Emitter
 		*/
-		inline void emit(Particle& particle) const;
+		void emit(Particle& particle) const;
 
 		/**
 		* @brief Generates the velocity of the Particle
@@ -233,7 +233,7 @@ namespace SPK
 		*
 		* @param particle : the Particle whose velocity has to be updated
 		*/
-		inline void generateVelocity(Particle& particle) const;
+		void generateVelocity(Particle& particle) const;
 
 		virtual Registerable* findByName(const std::string& name);
 
@@ -243,7 +243,7 @@ namespace SPK
 		virtual void copyChildren(const Emitter& emitter,bool createBase);
 		virtual void destroyChildren(bool keepChildren);
 
-		virtual inline void propagateUpdateTransform();
+		virtual void propagateUpdateTransform();
 
 	private :
 
@@ -350,7 +350,7 @@ namespace SPK
 		generateVelocity(particle);
 	}
 
-	void Emitter::generateVelocity(Particle& particle) const
+	inline void Emitter::generateVelocity(Particle& particle) const
 	{
 		generateVelocity(particle,random(forceMin,forceMax) / particle.getParamCurrentValue(PARAM_MASS));
 	}

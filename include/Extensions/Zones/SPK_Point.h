@@ -55,13 +55,13 @@ namespace SPK
 		* @return A new registered Point
 		* @since 1.04.00
 		*/
-		static inline Point* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f));
+		static Point* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f));
 
 		// Interface
-		virtual inline void generatePosition(Particle& particle,bool full) const;
-		virtual inline bool contains(const Vector3D& v) const;
-		virtual inline bool intersects(const Vector3D& v0,const Vector3D& v1,Vector3D* intersection,Vector3D* normal) const;
-		virtual inline void moveAtBorder(Vector3D& v,bool inside) const;
+		virtual void generatePosition(Particle& particle,bool full) const;
+		virtual bool contains(const Vector3D& v) const;
+		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,Vector3D* intersection,Vector3D* normal) const;
+		virtual void moveAtBorder(Vector3D& v,bool inside) const;
 		virtual Vector3D computeNormal(const Vector3D& point) const;
 	};
 

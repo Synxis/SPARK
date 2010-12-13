@@ -56,7 +56,7 @@ namespace SPK
 		* @return A new registered Destroyer
 		* @since 1.04.00
 		*/
-		static inline Destroyer* create(Zone* zone = NULL,ModifierTrigger trigger = INSIDE_ZONE);
+		static Destroyer* create(Zone* zone = NULL,ModifierTrigger trigger = INSIDE_ZONE);
 
 	private :
 

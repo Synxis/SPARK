@@ -79,7 +79,7 @@ namespace IRR
 		* @return A new registered IRRQuadRenderer
 		* @since 1.04.00
 		*/
-		static inline IRRQuadRenderer* create(irr::IrrlichtDevice* d,float scaleX = 1.0f,float scaleY = 1.0f);
+		static IRRQuadRenderer* create(irr::IrrlichtDevice* d,float scaleX = 1.0f,float scaleY = 1.0f);
 
 		/////////////
 		// Setters //
@@ -92,7 +92,7 @@ namespace IRR
 		*
 		* @param texture : the texture to set
 		*/
-		inline void setTexture(irr::video::ITexture* texture);
+		void setTexture(irr::video::ITexture* texture);
 
 		/**
 		* @brief Sets the atlas dimension of the texture in an Irrlicht way
@@ -101,7 +101,7 @@ namespace IRR
 		*
 		* @param dim : the atlas dimension of the texture
 		*/
-		inline void setAtlasDimensions(irr::core::dimension2du dim);
+		void setAtlasDimensions(irr::core::dimension2du dim);
 		using QuadRendererInterface::setAtlasDimensions;
 
 		/////////////
@@ -112,25 +112,25 @@ namespace IRR
 		* @brief Gets the texture of this renderer
 		* @return the texture of this renderer
 		*/
-		inline irr::video::ITexture* getTexture() const;
+		irr::video::ITexture* getTexture() const;
 
 		/**
 		* @brief Gets the material texture layer
 		* @return the material texture layer
 		*/
-		inline irr::video::SMaterialLayer& getMaterialLayer();
+		irr::video::SMaterialLayer& getMaterialLayer();
 
 		/**
 		* @brief Gets the material texture layer in a constant way
 		* @return the material texture layer
 		*/
-		inline const irr::video::SMaterialLayer& getMaterialLayer() const;
+		const irr::video::SMaterialLayer& getMaterialLayer() const;
 
 		/**
 		* @brief Gets the atlas dimension of the texture in an Irrlicht way
 		* @return the atlas dimension of the texture
 		*/
-        inline irr::core::dimension2du getAtlasDimensions() const;
+        irr::core::dimension2du getAtlasDimensions() const;
 
 		///////////////
 		// Interface //
@@ -148,10 +148,10 @@ namespace IRR
 		// buffer name
 		static const std::string IRR_BUFFER_NAME;
 
-		inline virtual const std::string& getBufferName() const;
+		virtual const std::string& getBufferName() const;
 
-		inline void FillBufferColorAndVertex(const Particle& particle) const;	// Fills Irrlicht buffer with color and position
-		inline void FillBufferTextureAtlas(const Particle& particle) const;		// Fills Irrlicht buffer with atlas texture coordinates
+		void FillBufferColorAndVertex(const Particle& particle) const;	// Fills Irrlicht buffer with color and position
+		void FillBufferTextureAtlas(const Particle& particle) const;		// Fills Irrlicht buffer with atlas texture coordinates
 
 		static void (IRRQuadRenderer::*renderParticle)(const Particle&)  const;	// pointer to the right render method
 

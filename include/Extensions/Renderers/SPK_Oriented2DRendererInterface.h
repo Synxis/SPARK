@@ -70,14 +70,14 @@ namespace SPK
 		//////////////////
 
 		/** @brief Constructor of Oriented2DRendererInterface */
-		inline Oriented2DRendererInterface();
+		Oriented2DRendererInterface();
 
 		////////////////
 		// Destructor //
 		////////////////
 
 		/** @brief Destructor of Oriented2DRendererInterface */
-		virtual inline ~Oriented2DRendererInterface() {}
+		virtual ~Oriented2DRendererInterface() {}
 
 		/////////////
 		// Setters //
@@ -87,7 +87,7 @@ namespace SPK
 		* @brief Sets the way quads are oriented in the universe
 		* @param orientation : the orientation of the quad
 		*/
-		inline void setOrientation(Orientation2D orientation);
+		void setOrientation(Orientation2D orientation);
 
 		/////////////
 		// Getters //
@@ -97,21 +97,21 @@ namespace SPK
 		* @brief Gets the orientation of the quads
 		* @return the orientation of the quads
 		*/
-		inline Orientation2D getOrientation() const;
+		Orientation2D getOrientation() const;
 
 	protected :
 
 		Orientation2D orientation;
 
-		inline bool hasGlobalOrientation();
-		inline void computeGlobalOrientation2D();
-		inline void computeSingleOrientation2D(const Particle& particle);
+		bool hasGlobalOrientation();
+		void computeGlobalOrientation2D();
+		void computeSingleOrientation2D(const Particle& particle);
 
-		inline void scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
-		inline void rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
+		void scaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
+		void rotateAndScaleQuadVectors(const Particle& particle,float scaleX,float scaleY) const;
 
-		inline const Vector3D& quadUp() const;
-		inline const Vector3D& quadSide() const;
+		const Vector3D& quadUp() const;
+		const Vector3D& quadSide() const;
 
 	private :
 

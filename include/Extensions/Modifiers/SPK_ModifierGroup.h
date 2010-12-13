@@ -65,7 +65,7 @@ namespace SPK
 		* @return A new registered ModifierGroup
 		* @since 1.04.00
 		*/
-		static inline ModifierGroup* create(Zone* zone = NULL,ModifierTrigger trigger = INSIDE_ZONE);
+		static ModifierGroup* create(Zone* zone = NULL,ModifierTrigger trigger = INSIDE_ZONE);
 
 		/////////////
 		// Setters //
@@ -83,7 +83,7 @@ namespace SPK
 		* @param useIntersection : true to enable intersection computation in this ModifierGroup
 		* @param useNormal : true to enable normal computation in this ModifierGroup
 		*/
-		inline void useGlobalGroup(bool useIntersection = false,bool useNormal = false);
+		void useGlobalGroup(bool useIntersection = false,bool useNormal = false);
 
 		/**
 		* @brief Uses this ModifierGroup as a partition group
@@ -96,7 +96,7 @@ namespace SPK
 		*
 		* @param handleWrongSide : true to enable intersection computation in this ModifierGroup
 		*/
-		inline void usePartitionGroup(bool handleWrongSide = false);
+		void usePartitionGroup(bool handleWrongSide = false);
 
 		/////////////
 		// Getters //
@@ -106,13 +106,13 @@ namespace SPK
 		* @brief Gets the number of modifiers in this ModifierGroup
 		* @return the number of modifiers in this ModifierGroup
 		*/
-		inline size_t getNb() const;
+		size_t getNb() const;
 
 		/**
 		* @brief Gets the vector containing all the children modifiers
 		* @return the vector containing all the children modifiers
 		*/
-		inline const std::vector<Modifier*>& getModifiers() const;
+		const std::vector<Modifier*>& getModifiers() const;
 
 		/**
 		* @brief Tells whether this ModifierGroup is a global group
@@ -121,7 +121,7 @@ namespace SPK
 		*
 		* @return true if this ModifierGroup is a global group, false if not
 		*/
-		inline bool isGlobalGroup() const;
+		bool isGlobalGroup() const;
 
 		/**
 		* @brief Tells whether this ModifierGroup is a partition group
@@ -130,7 +130,7 @@ namespace SPK
 		*
 		* @return true if this ModifierGroup is a partition group, false if not
 		*/
-		inline bool isPartitionGroup() const;
+		bool isPartitionGroup() const;
 
 		/**
 		* @brief Tells whether this partition group handles wrong side
@@ -147,7 +147,7 @@ namespace SPK
 		*
 		* @return true if this ModifierGroup handles wrong size, false if not
 		*/
-		inline bool handlesWrongSide() const;
+		bool handlesWrongSide() const;
 
 		/**
 		* @brief Tells whether this global group computes the intersection
@@ -163,7 +163,7 @@ namespace SPK
 		*
 		* @return true if this ModifierGroup computes the intersection, false if not
 		*/
-		inline bool usesIntersection() const;
+		bool usesIntersection() const;
 
 		/**
 		* @brief Tells whether this global group computes the normal
@@ -179,7 +179,7 @@ namespace SPK
 		*
 		* @return true if this ModifierGroup computes the normal, false if not
 		*/
-		inline bool usesNormal() const;
+		bool usesNormal() const;
 
 		///////////////
 		// Interface //
@@ -201,7 +201,7 @@ namespace SPK
 		/**
 		* @brief Removes all Modifier children from this ModifierGroup
 		*/
-		inline void clear();
+		void clear();
 
 		virtual void createBuffers(const Group& group);
 		virtual void destroyBuffers(const Group& group);

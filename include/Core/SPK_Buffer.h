@@ -57,13 +57,13 @@ namespace SPK
 		* @brief Gets the current flag of this buffer
 		* @return the current flag of this buffer
 		*/
-		inline unsigned int getFlag() const;
+		unsigned int getFlag() const;
 
 		/**
 		* @brief Tells whether data is swapped as particles in the group are swapped
 		* @return true if data must be swapped with particles, false if not
 		*/
-		inline bool isSwapEnabled() const;
+		bool isSwapEnabled() const;
 
 	protected :
 

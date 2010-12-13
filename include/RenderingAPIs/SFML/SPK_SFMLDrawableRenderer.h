@@ -90,7 +90,7 @@ namespace SFML
 		* @return A new registered SFMLDrawableRenderer
 		* @since 1.04.00
 		*/
-		static inline SFMLDrawableRenderer* create(sf::Drawable* drawable = NULL,float scaleX = 1.0f,float scaleY = 1.0f);
+		static SFMLDrawableRenderer* create(sf::Drawable* drawable = NULL,float scaleX = 1.0f,float scaleY = 1.0f);
 
 		/////////////
 		// Setters //
@@ -100,14 +100,14 @@ namespace SFML
 		* @brief Sets the base Drawable of this SFMLDrawableRenderer
 		* @param drawable : the base Drawable of this SFMLDrawableRenderer
 		*/
-		inline void setDrawable(sf::Drawable* drawable);
+		void setDrawable(sf::Drawable* drawable);
 
 		/**
 		* @brief Sets the scale of this SFMLDrawableRenderer
 		* @param scaleX : the scale in X axis of this SFMLDrawableRenderer
 		* @param scaleY : the scale in X axis of this SFMLDrawableRenderer
 		*/
-		inline void setScale(float scaleX,float scaleY);
+		void setScale(float scaleX,float scaleY);
 
 		/////////////
 		// Getters //
@@ -117,19 +117,19 @@ namespace SFML
 		* @brief Gets the base Drawable of this SFMLDrawableRenderer
 		* @return the base Drawable of this SFMLDrawableRenderer or NULL if no Drawable is set
 		*/
-		inline sf::Drawable* getDrawable() const;
+		sf::Drawable* getDrawable() const;
 
 		/**
 		* @brief Gets the scale in X axis of this SFMLDrawableRenderer
 		* @return the scale in X axis of this SFMLDrawableRenderer
 		*/
-		inline float getScaleX() const;
+		float getScaleX() const;
 
 		/**
 		* @brief Gets the scale in Y axis of this SFMLDrawableRenderer
 		* @return the scale in Y axis of this SFMLDrawableRenderer
 		*/
-		inline float getScaleY() const;
+		float getScaleY() const;
 
 	private :
 

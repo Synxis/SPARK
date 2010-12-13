@@ -73,13 +73,13 @@ namespace IRR
 		* @param width : the width of this IRRLineRenderer in pixels
 		* @return A new registered IRRLineRenderer
 		*/
-		static inline IRRLineRenderer* create(irr::IrrlichtDevice* d,float length = 1.0f,float width = 1.0f);
+		static IRRLineRenderer* create(irr::IrrlichtDevice* d,float length = 1.0f,float width = 1.0f);
 
 		/////////////
 		// Setters //
 		/////////////
 
-		virtual inline void setWidth(float width);
+		virtual void setWidth(float width);
 
 		///////////////
 		// Interface //
@@ -97,7 +97,7 @@ namespace IRR
 		// buffer name
 		static const std::string IRR_BUFFER_NAME;
 
-		inline virtual const std::string& getBufferName() const;
+		virtual const std::string& getBufferName() const;
 	};
 
 

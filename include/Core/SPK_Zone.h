@@ -62,7 +62,7 @@ namespace SPK
 		////////////////
 
 		/** @brief Destructor of Zone */
-		virtual inline ~Zone() {}
+		virtual ~Zone() {}
 
 		////////////
 		// Setter //
@@ -72,7 +72,7 @@ namespace SPK
 		* @brief Sets the position of this Zone
 		* @param v : the position of this Zone
 		*/
-		virtual inline void setPosition(const Vector3D& v);
+		virtual void setPosition(const Vector3D& v);
 
 		/////////////
 		// Getters //
@@ -82,14 +82,14 @@ namespace SPK
 		* @brief Gets the position of this Zone
 		* @return the position of this Zone
 		*/
-		inline const Vector3D& getPosition() const;
+		const Vector3D& getPosition() const;
 
 		/**
 		* @brief Gets the transformed position of this Zone
 		* @return the transformed position of this Zone
 		* @since 1.03.00
 		*/
-		inline const Vector3D& getTransformedPosition() const;
+		const Vector3D& getTransformedPosition() const;
 
 		///////////////
 		// Interface //
@@ -152,9 +152,9 @@ namespace SPK
 		* @param v : the Vector3D to normalize or randomize if not normalizable
 		* @since 1.03.00
 		*/
-		static inline void normalizeOrRandomize(Vector3D& v);
+		static void normalizeOrRandomize(Vector3D& v);
 
-		virtual inline void innerUpdateTransform();
+		virtual void innerUpdateTransform();
 
 	private :
 

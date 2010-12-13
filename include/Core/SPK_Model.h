@@ -138,7 +138,7 @@ namespace SPK
 		* @return A new registered Model
 		* @since 1.04.00
 		*/
-		static inline Model* create(int enableFlag = FLAG_RED | FLAG_GREEN | FLAG_BLUE,int mutableFlag = FLAG_NONE,int randomFlag = FLAG_NONE,int interpolatedFlag = FLAG_NONE);
+		static Model* create(int enableFlag = FLAG_RED | FLAG_GREEN | FLAG_BLUE,int mutableFlag = FLAG_NONE,int randomFlag = FLAG_NONE,int interpolatedFlag = FLAG_NONE);
 
 		////////////////
 		// Destructor //
@@ -160,7 +160,7 @@ namespace SPK
 		* @param lifeTimeMin : the minimum life time
 		* @param lifeTimeMax : the maximum life time
 		*/
-		inline void setLifeTime(float lifeTimeMin,float lifeTimeMax);
+		void setLifeTime(float lifeTimeMin,float lifeTimeMax);
 
 		/**
 		* @brief Defines whether to generate immortal particles or not
@@ -171,7 +171,7 @@ namespace SPK
 		*
 		* @param immortal : whether the Model will generate immortal particles or not
 		*/
-		inline void setImmortal(bool immortal);
+		void setImmortal(bool immortal);
 
 		/**
 		* @brief Sets a given parameter with 4 values
@@ -227,40 +227,40 @@ namespace SPK
 		* @brief Gets the minimum life time
 		* @return the minimum life time
 		*/
-		inline float getLifeTimeMin() const;
+		float getLifeTimeMin() const;
 
 		/**
 		* @brief Gets the maximum life time
 		* @return the minimum life time
 		*/
-		inline float getLifeTimeMax() const;
+		float getLifeTimeMax() const;
 
 		/**
 		* @brief Returns whether immortility is set or not
 		* @return whether immortility is set or not
 		*/
-		inline bool isImmortal() const;
+		bool isImmortal() const;
 
 		/**
 		* @brief Checks whether a parameter is enabled or not
 		* @param type : the parameter
 		* @return 0 is the parameter is not enabled, a flag with the parameter bit set otherwise
 		*/
-		inline int isEnabled(ModelParam type) const;
+		int isEnabled(ModelParam type) const;
 
 		/**
 		* @brief Checks whether a parameter is mutable or not
 		* @param type : the parameter
 		* @return 0 is the parameter is not mutable, a flag with the parameter bit set otherwise
 		*/
-		inline int isMutable(ModelParam type) const;
+		int isMutable(ModelParam type) const;
 
 		/**
 		* @brief Checks whether a parameter is random or not
 		* @param type : the parameter
 		* @return 0 is the parameter is not random, a flag with the parameter bit set otherwise
 		*/
-		inline int isRandom(ModelParam type) const;
+		int isRandom(ModelParam type) const;
 
 		/**
 		* @brief Checks whether a parameter is interpolated or not
@@ -268,7 +268,7 @@ namespace SPK
 		* @return 0 is the parameter is not interpolated, a flag with the parameter bit set otherwise
 		* @since 1.05.00
 		*/
-		inline int isInterpolated(ModelParam type) const;
+		int isInterpolated(ModelParam type) const;
 
 		/**
 		* @brief Gets a parameter value
@@ -333,14 +333,14 @@ namespace SPK
 		* @return the number of enabled parameters in the model
 		* @since 1.05.00
 		*/
-		inline size_t getNbEnabled() const;
+		size_t getNbEnabled() const;
 
 		/**
 		* @brief Gets the number of mutable parameters
 		* @return the number of mutable parameters in the model
 		* @since 1.05.00
 		*/
-		inline size_t getNbMutable() const;
+		size_t getNbMutable() const;
 
 
 		/**
@@ -348,7 +348,7 @@ namespace SPK
 		* @return the number of random parameters in the model
 		* @since 1.05.00
 		*/
-		inline size_t getNRandom() const;
+		size_t getNRandom() const;
 
 		/**
 		* @brief Gets the interpolator for the given parameter
@@ -356,14 +356,14 @@ namespace SPK
 		* @return a pointer to the interpolator of the given parameter or NULL if the parameter is not interpolated
 		* @since 1.05.00
 		*/
-		inline Interpolator* getInterpolator(ModelParam param);
+		Interpolator* getInterpolator(ModelParam param);
 
 		/**
 		* @brief Gets the number of interpolated parameters
 		* @return the number of interpolated parameters in the model
 		* @since 1.05.00
 		*/
-		inline size_t getNbInterpolated() const;
+		size_t getNbInterpolated() const;
 
 		/**
 		* @brief Gets the number of float values in the particle current array
@@ -374,7 +374,7 @@ namespace SPK
 		* @return the number of float values in the particle current array
 		* @since 1.02.00
 		*/
-		inline size_t getSizeOfParticleCurrentArray() const;
+		size_t getSizeOfParticleCurrentArray() const;
 
 		/**
 		* @brief Gets the number of float values in the particle extended array
@@ -385,7 +385,7 @@ namespace SPK
 		* @return the number of float values in the particle extended array
 		* @since 1.03.00
 		*/
-		inline size_t getSizeOfParticleExtendedArray() const;
+		size_t getSizeOfParticleExtendedArray() const;
 
 		/**
 		* @brief Gets the number of float values in the model array
@@ -395,7 +395,7 @@ namespace SPK
 		* @return the number of float values in the model array
 		* @since 1.02.00
 		*/
-		inline size_t getSizeOfModelArray() const;
+		size_t getSizeOfModelArray() const;
 
 		/**
 		* @brief Gets the offset of the given parameter in the current array
@@ -406,7 +406,7 @@ namespace SPK
 		* @return the offset of the given parameter in the current array
 		* @since 1.03.00
 		*/
-		inline size_t getParameterOffset(ModelParam param) const;
+		size_t getParameterOffset(ModelParam param) const;
 
 		/**
 		* @brief Gets the default value of the parameter

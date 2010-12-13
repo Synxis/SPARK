@@ -75,7 +75,7 @@ namespace SFML
 		* @return A new registered SFMLLineRenderer
 		* @since 1.04.00
 		*/
-		static inline SFMLLineRenderer* create(float length = 1.0f,float width = 1.0f,ResizeMode mode = RESIZE_NONE);
+		static SFMLLineRenderer* create(float length = 1.0f,float width = 1.0f,ResizeMode mode = RESIZE_NONE);
 
 		/////////////
 		// Setters //
@@ -85,7 +85,7 @@ namespace SFML
 		* @brief Sets the resize mode of this SFMLLineRenderer
 		* @param mode : the resize mode of this SFMLLineRenderer
 		*/
-		inline void setResizeMode(ResizeMode mode);
+		void setResizeMode(ResizeMode mode);
 
 		/////////////
 		// Getters //
@@ -95,7 +95,7 @@ namespace SFML
 		* @brief Gets the resize mode of this SFMLLineRenderer
 		* @return the resize mode of this SFMLLineRenderer
 		*/
-		inline ResizeMode getResizeMode() const;
+		ResizeMode getResizeMode() const;
 
 		///////////////
 		// Interface //

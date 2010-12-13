@@ -75,7 +75,7 @@ namespace DX9
 
 		virtual ~DX9QuadRenderer();
 
-		static inline DX9QuadRenderer* create(float scaleX = 1.0f,float scaleY = 1.0f);
+		static DX9QuadRenderer* create(float scaleX = 1.0f,float scaleY = 1.0f);
 
 		/////////////
 		// Setters //
@@ -83,14 +83,14 @@ namespace DX9
 
 		virtual bool setTexturingMode(TexturingMode mode);
 
-		inline void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
+		void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
 
 
 		/////////////
 		// Getters //
 		/////////////
 
-		inline LPDIRECT3DTEXTURE9 getTexture() const;
+		LPDIRECT3DTEXTURE9 getTexture() const;
 
 		///////////////
 		// Interface //
@@ -149,9 +149,9 @@ namespace DX9
 		float* createTextureBuffer(const Group& group) const;
 
 
-		inline void DX9CallColorAndVertex(const Particle& particle) const;	// DX9 calls for color and position
-		inline void DX9CallTexture2DAtlas(const Particle& particle) const;	// DX9 calls for 2D atlastexturing 
-		inline void DX9CallTexture3D(const Particle& particle) const;		// DX9 calls for 3D texturing
+		void DX9CallColorAndVertex(const Particle& particle) const;	// DX9 calls for color and position
+		void DX9CallTexture2DAtlas(const Particle& particle) const;	// DX9 calls for 2D atlastexturing 
+		void DX9CallTexture3D(const Particle& particle) const;		// DX9 calls for 3D texturing
 
 		static void (DX9QuadRenderer::*renderParticle)(const Particle&)  const;	// pointer to the right render method
 

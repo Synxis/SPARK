@@ -59,7 +59,7 @@ namespace DX9
 		* @brief Enables or disables the blending of this DX9Renderer
 		* @param blendingEnabled true to enable the blending, false to disable it
 		*/
-		virtual inline void enableBlending(bool blendingEnabled);
+		virtual void enableBlending(bool blendingEnabled);
 
 		/**
 		* @brief Sets the blending functions of this DX9Renderer
@@ -69,7 +69,7 @@ namespace DX9
 		* @param src : the source blending function of this DX9Renderer
 		* @param dest : the destination blending function of this DX9Renderer
 		*/
-		inline void setBlendingFunctions(int src,int dest);
+		void setBlendingFunctions(int src,int dest);
 		virtual void setBlending(BlendingMode blendMode);
 
 		/**
@@ -79,7 +79,7 @@ namespace DX9
 		*
 		* @param textureBlending : the texture blending function of this DX9Renderer
 		*/
-		inline void setTextureBlending(int textureBlending);
+		void setTextureBlending(int textureBlending);
 
 		/////////////
 		// Getters //
@@ -89,35 +89,35 @@ namespace DX9
 		* @brief Tells whether blending is enabled for this DX9Renderer
 		* @return true if blending is enabled, false if it is disabled
 		*/
-		inline bool isBlendingEnabled() const;
+		bool isBlendingEnabled() const;
 
 		/**
 		* @brief Gets the source blending function of this DX9Renderer
 		* @return the source blending function of this DX9Renderer
 		*/
-		inline int getSrcBlendingFunction() const;
+		int getSrcBlendingFunction() const;
 
 		/**
 		* @brief Gets the destination blending function of this DX9Renderer
 		* @return the source destination function of this DX9Renderer
 		*/
-		inline int getDestBlendingFunction() const;
+		int getDestBlendingFunction() const;
 
 		/**
 		* @brief Gets the texture blending function of this DX9Renderer
 		* @return the texture blending function of this DX9Renderer
 		*/
-		inline int getTextureBlending() const;
+		int getTextureBlending() const;
 
 
-		/*virtual */inline bool DX9DestroyAllBuffers();
+		/*virtual */bool DX9DestroyAllBuffers();
 
 	protected :
 
 		/** @brief Inits the blending of this DX9Renderer */
-		inline void initBlending() const;
+		void initBlending() const;
 
-		inline void initRenderingHints() const;
+		void initRenderingHints() const;
 
 		//std::map<std::pair<const Group *, int>, IDirect3DResource9 *> DX9Buffers;
 

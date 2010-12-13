@@ -60,7 +60,7 @@ namespace GL
 		* @brief Enables or disables the blending of this GLRenderer
 		* @param blendingEnabled true to enable the blending, false to disable it
 		*/
-		virtual inline void enableBlending(bool blendingEnabled);
+		virtual void enableBlending(bool blendingEnabled);
 
 		/**
 		* @brief Sets the blending functions of this GLRenderer
@@ -70,7 +70,7 @@ namespace GL
 		* @param src : the source blending function of this GLRenderer
 		* @param dest : the destination blending function of this GLRenderer
 		*/
-		inline void setBlendingFunctions(GLuint src,GLuint dest);
+		void setBlendingFunctions(GLuint src,GLuint dest);
 		virtual void setBlending(BlendingMode blendMode);
 
 		/**
@@ -80,7 +80,7 @@ namespace GL
 		*
 		* @param textureBlending : the texture blending function of this GLRenderer
 		*/
-		inline void setTextureBlending(GLuint textureBlending);
+		void setTextureBlending(GLuint textureBlending);
 
 		/////////////
 		// Getters //
@@ -90,25 +90,25 @@ namespace GL
 		* @brief Tells whether blending is enabled for this GLRenderer
 		* @return true if blending is enabled, false if it is disabled
 		*/
-		inline bool isBlendingEnabled() const;
+		bool isBlendingEnabled() const;
 
 		/**
 		* @brief Gets the source blending function of this GLRenderer
 		* @return the source blending function of this GLRenderer
 		*/
-		inline GLuint getSrcBlendingFunction() const;
+		GLuint getSrcBlendingFunction() const;
 
 		/**
 		* @brief Gets the destination blending function of this GLRenderer
 		* @return the source destination function of this GLRenderer
 		*/
-		inline GLuint getDestBlendingFunction() const;
+		GLuint getDestBlendingFunction() const;
 
 		/**
 		* @brief Gets the texture blending function of this GLRenderer
 		* @return the texture blending function of this GLRenderer
 		*/
-		inline GLuint getTextureBlending() const;
+		GLuint getTextureBlending() const;
 
 		///////////////
 		// Interface //
@@ -135,13 +135,13 @@ namespace GL
 	protected :
 
 		/** @brief Inits the blending of this GLRenderer */
-		inline void initBlending() const;
+		void initBlending() const;
 
 		/**
 		* @brief Inits the rendering hints of this GLRenderer
 		* @since 1.04.00
 		*/
-		inline void initRenderingHints() const;
+		void initRenderingHints() const;
 
 	private :
 

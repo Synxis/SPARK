@@ -54,7 +54,7 @@ namespace DX9
 		*/
 		DX9PointRenderer(float size = 1.0f);
 
-		static inline DX9PointRenderer* create(float size = 1.0f);
+		static DX9PointRenderer* create(float size = 1.0f);
 
 		/////////////
 		// Setters //
@@ -62,9 +62,9 @@ namespace DX9
 
 		bool setType(PointType type);
 
-		inline void setSize(float size);
+		void setSize(float size);
 
-		inline void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
+		void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
 
 		bool enableWorldSize(bool worldSizeEnabled);
 
@@ -76,13 +76,13 @@ namespace DX9
 		// Getters //
 		/////////////
 
-		inline PointType getType() const;
+		PointType getType() const;
 
-		inline float getSize() const;
+		float getSize() const;
 
-		inline LPDIRECT3DTEXTURE9 getTexture() const;
+		LPDIRECT3DTEXTURE9 getTexture() const;
 
-		inline bool isWorldSizeEnabled() const;
+		bool isWorldSizeEnabled() const;
 
 		///////////////
 		// Interface //

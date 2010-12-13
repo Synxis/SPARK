@@ -61,7 +61,7 @@ namespace SPK
 		* @return A new registered Obstacle
 		* @since 1.04.00
 		*/
-		static inline Obstacle* create(Zone* zone = NULL,ModifierTrigger trigger = INTERSECT_ZONE,float bouncingRatio = 1.0f,float friction = 1.0f);
+		static Obstacle* create(Zone* zone = NULL,ModifierTrigger trigger = INTERSECT_ZONE,float bouncingRatio = 1.0f,float friction = 1.0f);
 
 		/////////////
 		// Setters //
@@ -74,7 +74,7 @@ namespace SPK
 		*
 		* @param bouncingRatio : the bouncing ratio of this Obstacle
 		*/
-		inline void setBouncingRatio(float bouncingRatio);
+		void setBouncingRatio(float bouncingRatio);
 
 		/**
 		* @brief Sets the friction of this Obstacle
@@ -83,7 +83,7 @@ namespace SPK
 		*
 		* @param friction : the friction of this Obstacle
 		*/
-		inline void setFriction(float friction);
+		void setFriction(float friction);
 
 		/////////////
 		// Getters //
@@ -93,13 +93,13 @@ namespace SPK
 		* @brief Gets the bouncing ratio of this Obstacle
 		* @return the bouncing ratio of this Obstacle
 		*/
-		inline float getBouncingRatio() const;
+		float getBouncingRatio() const;
 
 		/**
 		* @brief Gets the friction of this Obstacle
 		* @return the friction of this Obstacle
 		*/
-		inline float getFriction() const;
+		float getFriction() const;
 
 	private :
 
@@ -107,7 +107,7 @@ namespace SPK
 		float friction;
 
 		virtual void modify(Particle& particle,float deltaTime) const;
-		virtual inline void modifyWrongSide(Particle& particle,bool inside) const;
+		virtual void modifyWrongSide(Particle& particle,bool inside) const;
 	};
 
 

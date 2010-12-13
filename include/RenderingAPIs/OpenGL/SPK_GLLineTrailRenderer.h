@@ -75,7 +75,7 @@ namespace GL
 		* @return A new registered GLLineTrailRenderer
 		* @since 1.04.00
 		*/
-		static inline GLLineTrailRenderer* create();
+		static GLLineTrailRenderer* create();
 
 		/////////////
 		// Setters //
@@ -89,7 +89,7 @@ namespace GL
 		*
 		* @param nbSamples : the number of samples to construct the trails
 		*/
-		inline void setNbSamples(size_t nbSamples);
+		void setNbSamples(size_t nbSamples);
 
 		/**
 		* @brief Sets the width of a trail
@@ -98,7 +98,7 @@ namespace GL
 		*
 		* @param width : the width of trails in pixels
 		*/
-		inline void setWidth(float width);
+		void setWidth(float width);
 
 		/**
 		* @brief Sets the duration of a sample
@@ -108,7 +108,7 @@ namespace GL
 		*
 		* @param duration : the duration of a sample
 		*/
-		inline void setDuration(float duration);
+		void setDuration(float duration);
 
 		/**
 		* @brief Sets the color components of degenerated lines
@@ -119,7 +119,7 @@ namespace GL
 		*/
 		void setDegeneratedLines(float r,float g,float b,float a);
 
-		virtual inline void enableBlending(bool blendingEnabled);
+		virtual void enableBlending(bool blendingEnabled);
 
 		/////////////
 		// Getters //
@@ -129,19 +129,19 @@ namespace GL
 		* @brief Gets the number of samples per trail
 		* @return the number of samples per trail
 		*/
-		inline size_t getNbSamples() const;
+		size_t getNbSamples() const;
 
 		/**
 		* @brief Gets the width of a trail
 		* @return the width of a trail (in pixels)
 		*/
-		inline float getWidth() const;
+		float getWidth() const;
 
 		/**
 		* @brief Gets the duration of a sample
 		* @return the duration of a sample
 		*/
-		inline float getDuration() const;
+		float getDuration() const;
 
 		///////////////
 		// Interface //
@@ -191,7 +191,7 @@ namespace GL
 		static const std::string COLOR_BUFFER_NAME;
 		static const std::string VALUE_BUFFER_NAME;
 
-		inline void init(const Particle& particle,float age) const;
+		void init(const Particle& particle,float age) const;
 	};
 
 

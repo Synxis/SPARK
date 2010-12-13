@@ -67,7 +67,7 @@ namespace SPK
 		* @param radius : the  radius of the cylinder
 		* @return a new registered cylinder
 		*/
-		static inline Cylinder* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float radius = 1.0f,float length = 1.0f);
+		static Cylinder* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float radius = 1.0f,float length = 1.0f);
 
 		/////////////
 		// Setters //
@@ -80,7 +80,7 @@ namespace SPK
 		*
 		* @param direction : the direction of the cylinder
 		*/
-		inline void setDirection(const Vector3D& direction);
+		void setDirection(const Vector3D& direction);
 
 		/**
 		* @brief Sets the radius of this cylinder
@@ -90,7 +90,7 @@ namespace SPK
 		*
 		* @param radius : the radius of this cylinder
 		*/
-		inline void setRadius(float radius);
+		void setRadius(float radius);
 
 		/**
 		* @brief Sets the length of this cylinder
@@ -100,7 +100,7 @@ namespace SPK
 		*
 		* @param length : the length of this cylinder
 		*/
-		inline void setLength(float length);
+		void setLength(float length);
 
 		/////////////
 		// Getters //
@@ -110,25 +110,25 @@ namespace SPK
 		* @brief Gets the direction of this cylinder
 		* @return the direction of this cylinder
 		*/
-		inline const Vector3D& getDirection() const;
+		const Vector3D& getDirection() const;
 
 		/**
 		* @brief Gets the transformed direction of this cylinder
 		* @return the transformed direction of this cylinder
 		*/
-		inline const Vector3D& getTransformedDirection() const;
+		const Vector3D& getTransformedDirection() const;
 
 		/**
 		* @brief Gets the radius of this cylinder
 		* @return the radius of this cylinder
 		*/
-		inline float getRadius() const;
+		float getRadius() const;
 
 		/**
 		* @brief Gets the length of this cylinder
 		* @return the length of this cylinder
 		*/
-		inline float getLength() const;
+		float getLength() const;
 
 		///////////////
 		// Interface //

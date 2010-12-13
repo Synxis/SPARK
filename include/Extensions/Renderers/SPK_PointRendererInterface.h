@@ -55,14 +55,14 @@ namespace SPK
 		* @param type : the initial type of this PointRendererInterface (must be supported by default by the platform)
 		* @param size : the width of this PointRendererInterface
 		*/
-		inline PointRendererInterface(PointType type = POINT_SQUARE,float size = 1.0f);
+		PointRendererInterface(PointType type = POINT_SQUARE,float size = 1.0f);
 
 		////////////////
 		// Destructor //
 		////////////////
 
 		/** @brief Destructor of PointRendererInterface */
-		virtual inline ~PointRendererInterface() {}
+		virtual ~PointRendererInterface() {}
 
 		/////////////
 		// Setters //
@@ -76,13 +76,13 @@ namespace SPK
 		* @param type : the type of points to use in this PointRendererInterface
 		* @return true if the type can be set, false otherwise
 		*/
-		virtual inline bool setType(PointType type);
+		virtual bool setType(PointType type);
 
 		/**
 		* @brief Sets the size of the points in this PointRendererInterface
 		* @param size : the size of the points in this PointRendererInterface
 		*/
-		virtual inline void setSize(float size);
+		virtual void setSize(float size);
 
 		/////////////
 		// Getters //
@@ -92,13 +92,13 @@ namespace SPK
 		* @brief Gets the type of points in this PointRendererInterface
 		* @return the type of points in this PointRendererInterface
 		*/
-		inline PointType getType() const;
+		PointType getType() const;
 
 		/**
 		* @brief Gets the size of points in this PointRendererInterface
 		* @return the size of points in this PointRendererInterface
 		*/
-		inline float getSize() const;
+		float getSize() const;
 
 	protected :
 

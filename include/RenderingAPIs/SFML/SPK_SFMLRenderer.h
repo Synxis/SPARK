@@ -90,7 +90,7 @@ namespace SFML
 		* @brief Sets the blend mode of this SFMLRenderer
 		* @param mode : the blend mode of this SFMLRenderer in SFML style
 		*/
-		inline void setBlendMode(sf::Blend::Mode mode);
+		void setBlendMode(sf::Blend::Mode mode);
 		virtual void setBlending(BlendingMode blendMode);
 
 		/**
@@ -102,7 +102,7 @@ namespace SFML
 		* @param cull : true to enable the ground culling, false to disable it
 		* @since 1.03.00
 		*/
-		inline void setGroundCulling(bool cull);
+		void setGroundCulling(bool cull);
 
 		/////////////
 		// Getters //
@@ -112,7 +112,7 @@ namespace SFML
 		* @brief Gets the blend mode of this SFMLRenderer
 		* @return the blend mode of this SFMLRenderer in SFML style
 		*/
-		inline sf::Blend::Mode getBlendMode() const;
+		sf::Blend::Mode getBlendMode() const;
 
 		/**
 		* @brief Tells whether the ground culling is enabled or not
@@ -122,7 +122,7 @@ namespace SFML
 		* @return true if the ground culling is enabled, false if it is disabled
 		* @since 1.03.00
 		*/
-		inline bool hasGroundCulling() const;
+		bool hasGroundCulling() const;
 
 		///////////////
 		// Interface //
@@ -181,7 +181,7 @@ namespace SFML
 		* @since 1.03.01
 		* @deprecated 1.05.05 Does nothing
 		*/
-		static inline void bindCurrentSystem(const SFMLSystem& system) {}
+		static void bindCurrentSystem(const SFMLSystem& system) {}
 
 		/**
 		* @brief Releases the current SFMLSystem
@@ -191,7 +191,7 @@ namespace SFML
 		* @since 1.03.01
 		* @deprecated 1.05.05 Does nothing
 		*/
-		static inline void releaseCurrentSystem() {}
+		static void releaseCurrentSystem() {}
 
 	protected :
 
@@ -218,7 +218,7 @@ namespace SFML
 
 		bool groundCulling;
 
-		inline void initBlending() const;
+		void initBlending() const;
 
 		/**
 		* @brief Calls the rendering of a child of SFMLRenderer

@@ -43,11 +43,11 @@ namespace SPK
 		* @brief Creates and registers a new StaticEmitter
 		* @return A new registered StaticEmitter
 		*/
-		static inline StaticEmitter* create();
+		static StaticEmitter* create();
 
 	private :
 
-		virtual inline void generateVelocity(Particle& particle,float speed) const;
+		virtual void generateVelocity(Particle& particle,float speed) const;
 	};
 
 

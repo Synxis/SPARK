@@ -44,14 +44,14 @@ namespace SPK
 		* @param length : the length multiplier of this LineRendererInterface
 		* @param width : the width of this GLLineRenderer
 		*/
-		inline LineRendererInterface(float length = 1.0f,float width = 1.0f);
+		LineRendererInterface(float length = 1.0f,float width = 1.0f);
 
 		////////////////
 		// Destructor //
 		////////////////
 
 		/** @brief Destructor of LineRendererInterface */
-		virtual inline ~LineRendererInterface() {}
+		virtual ~LineRendererInterface() {}
 
 		/////////////
 		// Setters //
@@ -65,13 +65,13 @@ namespace SPK
 		*
 		* @param length : the length multiplier of this GLLineRenderer
 		*/
-		inline void setLength(float length);
+		void setLength(float length);
 
 		/**
 		* @brief Sets the width of this LineRendererInterface
 		* @param width : the width of this LineRendererInterface
 		*/
-		virtual inline void setWidth(float width);
+		virtual void setWidth(float width);
 
 		/////////////
 		// Getters //
@@ -81,13 +81,13 @@ namespace SPK
 		* @brief Gets the length multiplier of this LineRendererInterface
 		* @return the length multiplier of this LineRendererInterface
 		*/
-		inline float getLength() const;
+		float getLength() const;
 
 		/**
 		* @brief Gets the width of this LineRendererInterface
 		* @return the width of this LineRendererInterface
 		*/
-		inline float getWidth() const;
+		float getWidth() const;
 
 	protected :
 

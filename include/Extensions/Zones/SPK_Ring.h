@@ -67,7 +67,7 @@ namespace SPK
 		* @param maxRadius : the maximum radius of the ring
 		* @return a new registered ring
 		*/
-		static inline Ring* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f),float minRadius = 0.0f,float maxRadius = 1.0f);
+		static Ring* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f),float minRadius = 0.0f,float maxRadius = 1.0f);
 
 		/////////////
 		// Setters //
@@ -80,7 +80,7 @@ namespace SPK
 		*
 		* @param normal : the normal of the plane on which lies the ring
 		*/
-		inline void setNormal(const Vector3D& normal);
+		void setNormal(const Vector3D& normal);
 
 		/**
 		* @brief Sets the min and max radius of this ring
@@ -101,35 +101,35 @@ namespace SPK
 		* @brief Gets the normal of this ring
 		* @return the normal of this ring
 		*/
-		inline const Vector3D& getNormal() const;
+		const Vector3D& getNormal() const;
 
 		/**
 		* @brief Gets the transformed normal of this ring
 		* @return the transformed normal of this ring
 		*/
-		inline const Vector3D& getTransformedNormal() const;
+		const Vector3D& getTransformedNormal() const;
 
 		/**
 		* @brief Gets the minimum radius of this ring
 		* @return the minimum radius of this ring
 		*/
-		inline float getMinRadius() const;
+		float getMinRadius() const;
 
 		/**
 		* @brief Gets the maximum radius of this ring
 		* @return the maximum radius of this ring
 		*/
-		inline float getMaxRadius() const;
+		float getMaxRadius() const;
 
 		///////////////
 		// Interface //
 		///////////////
 
 		virtual void generatePosition(Particle& particle,bool full) const;
-		virtual inline bool contains(const Vector3D& v) const;
+		virtual bool contains(const Vector3D& v) const;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,Vector3D* intersection,Vector3D* normal) const;
 		virtual void moveAtBorder(Vector3D& v,bool inside) const;
-		virtual inline Vector3D computeNormal(const Vector3D& point) const;
+		virtual Vector3D computeNormal(const Vector3D& point) const;
 
 	protected :
 

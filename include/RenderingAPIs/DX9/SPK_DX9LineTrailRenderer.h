@@ -50,24 +50,24 @@ namespace DX9
 
 		virtual ~DX9LineTrailRenderer();
 
-		static inline DX9LineTrailRenderer* create();
+		static DX9LineTrailRenderer* create();
 
 
-		inline void setNbSamples(size_t nbSamples);
+		void setNbSamples(size_t nbSamples);
 
-		inline void setWidth(float width);
+		void setWidth(float width);
 
-		inline void setDuration(float duration);
+		void setDuration(float duration);
 
 		void setDegeneratedLines(float r,float g,float b,float a);
 
-		virtual inline void enableBlending(bool blendingEnabled);
+		virtual void enableBlending(bool blendingEnabled);
 
-		inline size_t getNbSamples() const;
+		size_t getNbSamples() const;
 
-		inline float getWidth() const;
+		float getWidth() const;
 
-		inline float getDuration() const;
+		float getDuration() const;
 
 		virtual void createBuffers(const Group& group);
 		virtual void destroyBuffers(const Group& group);
@@ -116,7 +116,7 @@ namespace DX9
 		// vertex declaration
 		static LPDIRECT3DVERTEXDECLARATION9 pVertexDecl;
 
-		inline void init(const Particle& particle,float age) const;
+		void init(const Particle& particle,float age) const;
 	};
 
 

@@ -45,20 +45,20 @@ namespace SPK
 		* @brief Gets the starting address of the inner array
 		* @return the starting address of the first element of the inner array
 		*/
-		inline T* getData() const;
+		T* getData() const;
 
 		/**
 		* @brief Gets the number of elements for a single particle
 		* @return the number of elements for a single particle
 		*/
-		inline const size_t getParticleSize() const;
+		const size_t getParticleSize() const;
 
 		/**
 		* @brief Gets the total number of T in the inner array
 		* The value is equal to <i>particleSize * nbParticles</i>.
 		* @return the total number of T in the inner array
 		*/
-		inline size_t getDataSize() const;
+		size_t getDataSize() const;
 
 	private :
 

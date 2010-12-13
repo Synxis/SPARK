@@ -78,7 +78,7 @@ namespace SPK
 		* @param elasticity : the elasticity of the collisions
 		* @since 1.04.00
 		*/
-		static inline Collision* create(float scale = 1.0f,float elasticity = 1.0f);
+		static Collision* create(float scale = 1.0f,float elasticity = 1.0f);
 
 		/////////////
 		// Setters //
@@ -92,7 +92,7 @@ namespace SPK
 		*
 		* @param scale : the scale of the particles
 		*/
-		inline void setScale(float scale);
+		void setScale(float scale);
 
 		/**
 		* @brief Sets the elasticity of the collisions
@@ -102,7 +102,7 @@ namespace SPK
 		*
 		* @param elasticity : the elasticity of the collisions
 		*/
-		inline void setElasticity(float elasticity);
+		void setElasticity(float elasticity);
 
 		/////////////
 		// Getters //
@@ -112,13 +112,13 @@ namespace SPK
 		* @brief Gets the elasticity of the collisions
 		* @return the elasticity of the collisions
 		*/
-		inline float getElasticity() const;
+		float getElasticity() const;
 
 		/**
 		* @brief Gets the scale applied on particle radius
 		* @return the scale
 		*/
-		inline float getScale() const;
+		float getScale() const;
 
 	private :
 
@@ -127,8 +127,8 @@ namespace SPK
 
 		virtual void modify(Particle& particle,float deltaTime) const;
 
-		static inline void getMinMax(const Vector3D& v0,const Vector3D& v1,Vector3D& min,Vector3D& max);
-		static inline bool checkBoundingRect(const Vector3D& min1,const Vector3D& max1,const Vector3D& min2,const Vector3D& max2);
+		static void getMinMax(const Vector3D& v0,const Vector3D& v1,Vector3D& min,Vector3D& max);
+		static bool checkBoundingRect(const Vector3D& min1,const Vector3D& max1,const Vector3D& min2,const Vector3D& max2);
 	};
 
 

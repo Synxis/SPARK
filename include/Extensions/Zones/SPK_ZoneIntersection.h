@@ -60,7 +60,7 @@ namespace SPK
 		* @param amountEstimation : an estimation of the number of zones
 		* which will be included in this ZoneIntersection (used for an optimisation of the vector)
 		*/
-		static inline ZoneIntersection* create(size_t amountEstimation);
+		static ZoneIntersection* create(size_t amountEstimation);
 
 		////////////
 		// Setter //

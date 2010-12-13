@@ -63,7 +63,7 @@ namespace SPK
 		* @return A new registered PointMass
 		* @since 1.04.00
 		*/
-		static inline PointMass* create(Zone* zone = NULL,ModifierTrigger trigger = INSIDE_ZONE,float mass = 1.0f,float minDistance = 0.05f);
+		static PointMass* create(Zone* zone = NULL,ModifierTrigger trigger = INSIDE_ZONE,float mass = 1.0f,float minDistance = 0.05f);
 
 		/////////////
 		// Setters //
@@ -74,7 +74,7 @@ namespace SPK
 		* @param pos : the delta position
 		* @since 1.03.02
 		*/
-		inline void setPosition(const Vector3D& pos);
+		void setPosition(const Vector3D& pos);
 
 		/**
 		* @brief Sets the mass of this PointMass
@@ -85,7 +85,7 @@ namespace SPK
 		*
 		* @param mass : the mass of this PointMass
 		*/
-		inline void setMass(float mass);
+		void setMass(float mass);
 
 		/**
 		* @brief Sets the minimum distance of this PointMass
@@ -96,7 +96,7 @@ namespace SPK
 		*
 		* @param minDistance : the minimum distance of this PointMass
 		*/
-		inline void setMinDistance(float minDistance);
+		void setMinDistance(float minDistance);
 
 		/////////////
 		// Getters //
@@ -107,30 +107,30 @@ namespace SPK
 		* @return the delta position
 		* @since 1.03.02
 		*/
-		inline const Vector3D& getPosition() const;
+		const Vector3D& getPosition() const;
 
 		/**
 		* @brief Gets the transformed delta position
 		* @return the transformed delta position
 		* @since 1.03.02
 		*/
-		inline const Vector3D& getTransformedPosition() const;
+		const Vector3D& getTransformedPosition() const;
 
 		/**
 		* @brief Gets the mass of this PointMass
 		* @return the mass of this PointMass
 		*/
-		inline float getMass() const;
+		float getMass() const;
 
 		/**
 		* @brief Gets the minimum distance of this PointMass
 		* @return the minimum distance of this PointMass
 		*/
-		inline float getMinDistance() const;
+		float getMinDistance() const;
 
 	protected :
 
-		virtual inline void innerUpdateTransform();
+		virtual void innerUpdateTransform();
 
 	private :
 

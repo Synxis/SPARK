@@ -124,7 +124,7 @@ namespace SPK
 		* @return the number of active elements in this Pool
 		* @since 1.01.01
 		*/
-		inline size_t size() const;
+		size_t size() const;
 
 		/**
 		* @brief Gets the number of active elements in this Pool
@@ -133,13 +133,13 @@ namespace SPK
 		*
 		* @return the number of active elements in this Pool
 		*/
-		inline size_t getNbActive() const;
+		size_t getNbActive() const;
 
 		/**
 		* @brief Gets the number of inactive elements in this Pool
 		* @return the number of inactive elements in this Pool
 		*/
-		inline size_t getNbInactive() const;
+		size_t getNbInactive() const;
 
 		/**
 		* @brief Gets the number of elements in this Pool
@@ -148,7 +148,7 @@ namespace SPK
 		*
 		* @return the number of elements in this Pool
 		*/
-		inline size_t getNbTotal() const;
+		size_t getNbTotal() const;
 
 		/**
 		* @brief Gets the capacity of this Pool
@@ -157,7 +157,7 @@ namespace SPK
 		*
 		* @return the capacity of this Pool
 		*/
-		inline size_t getNbReserved() const;
+		size_t getNbReserved() const;
 
 		/**
 		* @brief Gets the room left for new elements in this Pool
@@ -166,7 +166,7 @@ namespace SPK
 		*
 		* @return the room left in this Pool
 		*/
-		inline size_t getNbEmpty() const;
+		size_t getNbEmpty() const;
 
 		/**
 		* @brief Gets the maximum number of elements this Pool had
@@ -175,7 +175,7 @@ namespace SPK
 		*
 		* @return the maximum number of elements this Pool had
 		*/
-		inline size_t getMaxTotal() const;
+		size_t getMaxTotal() const;
 
 		///////////////
 		// Iterators //
@@ -188,7 +188,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the first active element in this Pool
 		*/
-		inline iterator begin();
+		iterator begin();
 
 		/**
 		* @brief Gets an iterator referring to the past-the-end active element in this Pool
@@ -198,7 +198,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the past-the-end active element in this Pool
 		*/
-		inline iterator end();
+		iterator end();
 
 		/**
 		* @brief Gets an iterator referring to the first active element in this Pool
@@ -207,7 +207,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the first active element in this Pool
 		*/
-		inline iterator beginActive();
+		iterator beginActive();
 
 		/**
 		* @brief Gets an iterator referring to the past-the-end active element in this Pool
@@ -217,7 +217,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the past-the-end active element in this Pool
 		*/
-		inline iterator endActive();
+		iterator endActive();
 
 		/**
 		* @brief Gets an iterator referring to the first inactive element in this Pool
@@ -226,13 +226,13 @@ namespace SPK
 		*
 		* @return an iterator referring to the first inactive element in this Pool
 		*/
-		inline iterator beginInactive();
+		iterator beginInactive();
 
 		/**
 		* @brief Gets an iterator referring to the past-the-end inactive element in this Pool
 		* @return an iterator referring to the past-the-end inactive element in this Pool
 		*/
-		inline iterator endInactive();
+		iterator endInactive();
 
 		/**
 		* @brief Gets an iterator referring to the first active element in this Pool
@@ -241,7 +241,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the first active element in this Pool
 		*/
-		inline const_iterator begin() const;
+		const_iterator begin() const;
 
 		/**
 		* @brief Gets an iterator referring to the past-the-end active element in this Pool
@@ -250,7 +250,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the past-the-end active element in this Pool
 		*/
-		inline const_iterator end() const;
+		const_iterator end() const;
 
 		/**
 		* @brief Gets an iterator referring to the first active element in this Pool
@@ -259,7 +259,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the first active element in this Pool
 		*/
-		inline const_iterator beginActive() const;
+		const_iterator beginActive() const;
 
 		/**
 		* @brief Gets an iterator referring to the past-the-end active element in this Pool
@@ -268,7 +268,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the past-the-end active element in this Pool
 		*/
-		inline const_iterator endActive() const;
+		const_iterator endActive() const;
 
 		/**
 		* @brief Gets an iterator referring to the first inactive element in this Pool
@@ -277,7 +277,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the first inactive element in this Pool
 		*/
-		inline const_iterator beginInactive() const;
+		const_iterator beginInactive() const;
 
 		/**
 		* @brief Gets an iterator referring to the past-the-end inactive element in this Pool
@@ -286,7 +286,7 @@ namespace SPK
 		*
 		* @return an iterator referring to the past-the-end inactive element in this Pool
 		*/
-		inline const_iterator endInactive() const;
+		const_iterator endInactive() const;
 
 		/**
 		* @brief Gets a reverse iterator referring to the first active element in this Pool
@@ -295,7 +295,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the first active element in this Pool
 		*/
-		inline reverse_iterator rbegin();
+		reverse_iterator rbegin();
 
 		/**
 		* @brief Gets a reverse iterator referring to the past-the-end active element in this Pool
@@ -305,7 +305,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the past-the-end active element in this Pool
 		*/
-		inline reverse_iterator rend();
+		reverse_iterator rend();
 
 		/**
 		* @brief Gets a reverse iterator referring to the first active element in this Pool
@@ -314,7 +314,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the first active element in this Pool
 		*/
-		inline reverse_iterator rbeginActive();
+		reverse_iterator rbeginActive();
 
 		/**
 		* @brief Gets a reverse iterator referring to the past-the-end active element in this Pool
@@ -324,7 +324,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the past-the-end active element in this Pool
 		*/
-		inline reverse_iterator rendActive();
+		reverse_iterator rendActive();
 
 		/**
 		* @brief Gets a reverse iterator referring to the first inactive element in this Pool
@@ -333,13 +333,13 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the first inactive element in this Pool
 		*/
-		inline reverse_iterator rbeginInactive();
+		reverse_iterator rbeginInactive();
 
 		/**
 		* @brief Gets a reverse iterator referring to the past-the-end inactive element in this Pool
 		* @return a reverse iterator referring to the past-the-end inactive element in this Pool
 		*/
-		inline reverse_iterator rendInactive();
+		reverse_iterator rendInactive();
 
 		/**
 		* @brief Gets a reverse iterator referring to the first active element in this Pool
@@ -348,7 +348,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the first active element in this Pool
 		*/
-		inline const_reverse_iterator rbegin() const;
+		const_reverse_iterator rbegin() const;
 
 		/**
 		* @brief Gets a reverse iterator referring to the past-the-end active element in this Pool
@@ -357,7 +357,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the past-the-end active element in this Pool
 		*/
-		inline const_reverse_iterator rend() const;
+		const_reverse_iterator rend() const;
 
 		/**
 		* @brief Gets a reverse iterator referring to the first active element in this Pool
@@ -366,7 +366,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the first active element in this Pool
 		*/
-		inline const_reverse_iterator rbeginActive() const;
+		const_reverse_iterator rbeginActive() const;
 
 		/**
 		* @brief Gets a reverse iterator referring to the past-the-end active element in this Pool
@@ -375,7 +375,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the past-the-end active element in this Pool
 		*/
-		inline const_reverse_iterator rendActive() const;
+		const_reverse_iterator rendActive() const;
 
 		/**
 		* @brief Gets a reverse iterator referring to the first inactive element in this Pool
@@ -384,7 +384,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the first inactive element in this Pool
 		*/
-		inline const_reverse_iterator rbeginInactive() const;
+		const_reverse_iterator rbeginInactive() const;
 
 		/**
 		* @brief Gets a reverse iterator referring to the past-the-end inactive element in this Pool
@@ -393,7 +393,7 @@ namespace SPK
 		*
 		* @return a reverse iterator referring to the past-the-end inactive element in this Pool
 		*/
-		inline const_reverse_iterator rendInactive() const;
+		const_reverse_iterator rendInactive() const;
 
 		/////////////////////
 		// Elements access //
@@ -407,7 +407,7 @@ namespace SPK
 		* @return the first active element
 		* @since 1.01.01
 		*/
-		inline T& front();
+		T& front();
 
 		/**
 		* @brief Gets the last active element
@@ -417,7 +417,7 @@ namespace SPK
 		* @return the last active element
 		* @since 1.01.01
 		*/
-		inline T& back();
+		T& back();
 
 		/**
 		* @brief Gets the first active element
@@ -427,7 +427,7 @@ namespace SPK
 		* @return the first active element
 		* @since 1.01.01
 		*/
-		inline T& frontActive();
+		T& frontActive();
 
 		/**
 		* @brief Gets the last active element
@@ -437,21 +437,21 @@ namespace SPK
 		* @return the last active element
 		* @since 1.01.01
 		*/
-		inline T& backActive();
+		T& backActive();
 
 		/**
 		* @brief Gets the first inactive element
 		* @return the first inactive element
 		* @since 1.01.01
 		*/
-		inline T& frontInactive();
+		T& frontInactive();
 
 		/**
 		* @brief Gets the last inactive element
 		* @return the last inactive element
 		* @since 1.01.01
 		*/
-		inline T& backInactive();
+		T& backInactive();
 
 		/**
 		* @brief Gets the first active element
@@ -461,7 +461,7 @@ namespace SPK
 		* @return the first active element
 		* @since 1.01.01
 		*/
-		inline const T& front() const;
+		const T& front() const;
 
 		/**
 		* @brief Gets the last active element
@@ -471,7 +471,7 @@ namespace SPK
 		* @return the last active element
 		* @since 1.01.01
 		*/
-		inline const T& back() const;
+		const T& back() const;
 
 		/**
 		* @brief Gets the first active element
@@ -481,7 +481,7 @@ namespace SPK
 		* @return the first active element
 		* @since 1.01.01
 		*/
-		inline const T& frontActive() const;
+		const T& frontActive() const;
 
 		/**
 		* @brief Gets the last active element
@@ -491,7 +491,7 @@ namespace SPK
 		* @return the last active element
 		* @since 1.01.01
 		*/
-		inline const T& backActive() const;
+		const T& backActive() const;
 
 		/**
 		* @brief Gets the first inactive element
@@ -501,7 +501,7 @@ namespace SPK
 		* @return the first inactive element
 		* @since 1.01.01
 		*/
-		inline const T& frontInactive() const;
+		const T& frontInactive() const;
 
 		/**
 		* @brief Gets the last inactive element
@@ -511,7 +511,7 @@ namespace SPK
 		* @return the last inactive element
 		* @since 1.01.01
 		*/
-		inline const T& backInactive() const;
+		const T& backInactive() const;
 		
 
 		///////////////
@@ -526,7 +526,7 @@ namespace SPK
 		*
 		* @param value : the element which will be copied into the Pool
 		*/
-		inline void assign(T& value);
+		void assign(T& value);
 
 		/**
 		* @brief Adds an active element to this Pool
@@ -552,7 +552,7 @@ namespace SPK
 		void makeInactive(size_t index);
 
 		/** @brief Inactivates all the elements */
-		inline void makeAllInactive();
+		void makeAllInactive();
 
 		/**
 		* @brief Activates the first inactive element
@@ -599,7 +599,7 @@ namespace SPK
 		*
 		* @param capacity : the new desired capacity for this Pool
 		*/
-		inline void reallocate(size_t capacity);
+		void reallocate(size_t capacity);
 
 	private :
 
@@ -608,7 +608,7 @@ namespace SPK
 		size_t nbActive;
 		size_t maxTotal;
 
-		inline void swapElements(T& a,T& b);
+		void swapElements(T& a,T& b);
 	};
 
 

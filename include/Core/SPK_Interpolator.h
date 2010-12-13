@@ -78,7 +78,7 @@ namespace SPK
 	};
 
     // forward declaration to allow the set of entries in interpolator to be constructed
-    inline bool operator<(const InterpolatorEntry& entry0,const InterpolatorEntry& entry1);
+    bool operator<(const InterpolatorEntry& entry0,const InterpolatorEntry& entry1);
 
 	/**
 	* @class Interpolator
@@ -147,7 +147,7 @@ namespace SPK
 		* @param type : the type of value used to interpolate
 		* @param param : the parameter used to interpolate when the type is INTERPOLATOR_PARAM.
 		*/
-		inline void setType(InterpolationType type,ModelParam param = PARAM_SIZE);
+		void setType(InterpolationType type,ModelParam param = PARAM_SIZE);
 
 		/**
 		* @brief Enables or disables the looping of the graph
@@ -159,7 +159,7 @@ namespace SPK
 		*
 		* @param loop : true to enabled the looping, false to disable it
 		*/
-		inline void enableLooping(bool loop);
+		void enableLooping(bool loop);
 
 		/**
 		* @brief Sets the scale variation in x
@@ -168,7 +168,7 @@ namespace SPK
 		*
 		* @param scaleXVariation : the scale variation in x
 		*/
-		inline void setScaleXVariation(float scaleXVariation);
+		void setScaleXVariation(float scaleXVariation);
 
 		/**
 		* @brief Sets the offset variation in x
@@ -177,7 +177,7 @@ namespace SPK
 		*
 		* @param offsetXVariation : the offset variation in x
 		*/
-		inline void setOffsetXVariation(float offsetXVariation);
+		void setOffsetXVariation(float offsetXVariation);
 
 		/////////////
 		// Getters //
@@ -187,7 +187,7 @@ namespace SPK
 		* @brief Gets the type of value used to interpolate
 		* @return the type of value used to interpolate
 		*/
-		inline InterpolationType getType() const;
+		InterpolationType getType() const;
 
 		/**
 		* @brief Gets the parameter used to interpolate
@@ -196,37 +196,37 @@ namespace SPK
 		*
 		* @return the parameter used to interpolate
 		*/
-		inline ModelParam getInterpolatorParam() const;
+		ModelParam getInterpolatorParam() const;
 
 		/**
 		* @brief Tells whether the looping is enabled or not
 		* @return true if the looping is enabled, false if not
 		*/
-		inline bool isLoopingEnabled() const;
+		bool isLoopingEnabled() const;
 
 		/**
 		* @brief Gets the scale variation along x
 		* @return the scale variation along x
 		*/
-		inline float getScaleXVariation() const;
+		float getScaleXVariation() const;
 
 		/**
 		* @brief Gets the offset variation along x
 		* @return the offset variation along x
 		*/
-		inline float getOffsetXVariation() const;
+		float getOffsetXVariation() const;
 
 		/**
 		* @brief Gets the graph of the interpolator
 		* @return the graph of the interpolator
 		*/
-		inline std::set<InterpolatorEntry>& getGraph();
+		std::set<InterpolatorEntry>& getGraph();
 
 		/**
 		* @brief Gets the graph of the interpolator (constant version)
 		* @return the graph of the interpolator
 		*/
-		inline const std::set<InterpolatorEntry>& getGraph() const;
+		const std::set<InterpolatorEntry>& getGraph() const;
 
 		///////////////
 		// Interface //
@@ -237,7 +237,7 @@ namespace SPK
 		* @param entry : the entry to add to the graph
 		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
 		*/
-		inline bool addEntry(const InterpolatorEntry& entry);
+		bool addEntry(const InterpolatorEntry& entry);
 
 		/**
 		* @brief Adds an entry to the graph
@@ -245,7 +245,7 @@ namespace SPK
 		* @param y : the y of the entry to add (y0 and y1 are set to y)
 		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
 		*/
-		inline bool addEntry(float x,float y);
+		bool addEntry(float x,float y);
 
 		/**
 		* @brief Adds an entry to the graph
@@ -254,10 +254,10 @@ namespace SPK
 		* @param y1 : the y1 of the entry to add
 		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
 		*/
-		inline bool addEntry(float x,float y0,float y1);
+		bool addEntry(float x,float y0,float y1);
 
 		/** @brief Clears the graph (removes all the entries) */
-		inline void clearGraph();
+		void clearGraph();
 
 		/**
 		* @brief Generates a sinusoidal curve
@@ -285,7 +285,7 @@ namespace SPK
 		float offsetXVariation;
 
 		float interpolate(const Particle& particle,ModelParam interpolatedParam,float ratioY,float offsetX,float scaleX);
-		inline float interpolateY(const InterpolatorEntry& entry,float ratio);
+		float interpolateY(const InterpolatorEntry& entry,float ratio);
 
 		// methods to compute X
 		typedef float (Interpolator::*computeXFn)(const Particle&) const;

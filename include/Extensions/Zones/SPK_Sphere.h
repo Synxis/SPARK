@@ -55,7 +55,7 @@ namespace SPK
 		* @return A new registered Sphere
 		* @since 1.04.00
 		*/
-		static inline Sphere* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),float radius = 0.0f);
+		static Sphere* create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),float radius = 0.0f);
 
 		////////////
 		// Setter //
@@ -68,7 +68,7 @@ namespace SPK
 		*
 		* @param radius : the radius of this Sphere
 		*/
-		inline void setRadius(float radius);
+		void setRadius(float radius);
 
 		////////////
 		// Getter //
@@ -78,7 +78,7 @@ namespace SPK
 		* @brief Gets the radius of this Sphere
 		* @return the radius of this Sphere
 		*/
-		inline float getRadius() const;
+		float getRadius() const;
 
 		///////////////
 		// Interface //

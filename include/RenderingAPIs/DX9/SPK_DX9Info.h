@@ -42,14 +42,14 @@ namespace DX9
 		static std::vector<DX9Renderer *> renderers;
 
 	public:
-		inline static LPDIRECT3DDEVICE9 getDevice();
-		inline static D3DPOOL getPool();
+		static LPDIRECT3DDEVICE9 getDevice();
+		static D3DPOOL getPool();
 
-		inline static void setDevice(LPDIRECT3DDEVICE9 device);
-		inline static void setPool(D3DPOOL pool);
+		static void setDevice(LPDIRECT3DDEVICE9 device);
+		static void setPool(D3DPOOL pool);
 
-		inline static void DX9RegisterRenderer(DX9Renderer *renderer);
-		inline static void DX9ReleaseRenderer(DX9Renderer *renderer);
+		static void DX9RegisterRenderer(DX9Renderer *renderer);
+		static void DX9ReleaseRenderer(DX9Renderer *renderer);
 
 		static void DX9DestroyAllBuffers();
 	};

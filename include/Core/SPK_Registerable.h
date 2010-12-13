@@ -120,7 +120,7 @@ namespace SPK
 		*
 		* @param shared : true to make this Registerable shared, false to make it unshared
 		*/
-		inline void setShared(bool shared);
+		void setShared(bool shared);
 
 		/**
 		* @brief Makes this Registerable destroyable or not
@@ -129,7 +129,7 @@ namespace SPK
 		*
 		* @param destroyable : true to make this Registerable destroyable, false to make it undestroyable
 		*/
-		inline void setDestroyable(bool destroyable);
+		void setDestroyable(bool destroyable);
 
 		/**
 		* @brief Sets the name of this Registerable
@@ -142,7 +142,7 @@ namespace SPK
 		* @param name : the name of this registerable
 		* @since 1.05.00
 		*/
-		inline void setName(const std::string& name);
+		void setName(const std::string& name);
 
 		/////////////
 		// Getters //
@@ -157,14 +157,14 @@ namespace SPK
 		* @return the ID of this Registerable or NO_ID if it is not registered
 		* @since 1.05.04
 		*/
-		inline SPK_ID getSPKID() const;
+		SPK_ID getSPKID() const;
 
 		/**
 		* @brief Gets the ID of this Registerable
 		* @return the ID of this Registerable or NO_ID if it is not registered
 		* @deprecated 1.05.04 Use getSPKID instead
 		*/
-		inline SPK_ID getID() const;
+		SPK_ID getID() const;
 
 		/**
 		* @brief Gets the number of references of this Registerable
@@ -176,25 +176,25 @@ namespace SPK
 		*
 		* @return the number of references of this Registerable
 		*/
-		inline unsigned int getNbReferences() const;
+		unsigned int getNbReferences() const;
 		
 		/**
 		* @brief Tells whether this Registerable is registered or not
 		* @return true if this Registerable is registered, false if not
 		*/
-		inline bool isRegistered() const;
+		bool isRegistered() const;
 
 		/**
 		* @brief Tells whether this Registerable is shared or not
 		* @return true if this Registerable is shared, false if not
 		*/
-		inline bool isShared() const;
+		bool isShared() const;
 
 		/**
 		* @brief Tells whether this Registerable is destroyable or not
 		* @return true if this Registerable is destroyable, false if not
 		*/
-		inline bool isDestroyable() const;
+		bool isDestroyable() const;
 
 		/**
 		* @brief Gets the name of this registerable
@@ -205,7 +205,7 @@ namespace SPK
 		* @return the name of this registerable
 		* @since 1.05.00
 		*/
-		inline const std::string& getName() const;
+		const std::string& getName() const;
 
 		/**
 		* @brief Gets the name of the class of the object
@@ -232,7 +232,7 @@ namespace SPK
 		* @return : the first registerable with that name within this registerable or NULL if none is found
 		* @since 1.05.00
 		*/
-		inline virtual Registerable* findByName(const std::string& name);
+		virtual Registerable* findByName(const std::string& name);
 
 	protected :
 
@@ -280,7 +280,7 @@ namespace SPK
 		*
 		* @param child : the child of this Registerable to increment references of
 		*/
-		inline void incrementChildReference(Registerable* child);
+		void incrementChildReference(Registerable* child);
 
 		/**
 		* @brief Decrements the number of references of the child by one
@@ -290,7 +290,7 @@ namespace SPK
 		*
 		* @param child : the child of this Registerable to decrement references of
 		*/
-		inline void decrementChildReference(Registerable* child);
+		void decrementChildReference(Registerable* child);
 
 		/**
 		* @brief Registers a Registerable in the factory
@@ -360,11 +360,11 @@ namespace SPK
 		bool destroyable;
 
 		// Those methods allow specific behavior when registering and unregistering in the SPKFactory
-		virtual inline void onRegister() {}		// Called when a registerable is registered in the SPKFactory
-		virtual inline void onUnregister() {}	// Called when a registerable is unregistered from the SPKFactory
+		virtual void onRegister() {}		// Called when a registerable is registered in the SPKFactory
+		virtual void onUnregister() {}	// Called when a registerable is unregistered from the SPKFactory
 
-		inline void incrementReference();
-		inline void decrementReference();
+		void incrementReference();
+		void decrementReference();
 
 		// the assignment operator is private
 		Registerable& operator=(const Registerable& registerable);

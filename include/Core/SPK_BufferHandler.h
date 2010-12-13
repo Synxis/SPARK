@@ -83,7 +83,7 @@ namespace SPK
 		*
 		* @param group : the Group in which to create the buffers for this buffer handler
 		*/
-		virtual inline void createBuffers(const Group& group) {};
+		virtual void createBuffers(const Group& group) {};
 
 		/**
 		* @brief Destroys the buffers for this buffer handler in the given group
@@ -94,7 +94,7 @@ namespace SPK
 		*
 		* @param group : the Group in which to destroy the buffers for this buffer handler
 		*/
-		virtual inline void destroyBuffers(const Group& group) {};
+		virtual void destroyBuffers(const Group& group) {};
 
 
 	protected :
@@ -129,7 +129,7 @@ namespace SPK
 		* @param group : the group in which to check the buffers
 		* @return true if buffers are ready, false otherwise
 		*/
-		virtual inline bool checkBuffers(const Group& group);
+		virtual bool checkBuffers(const Group& group);
 
 	private :
 

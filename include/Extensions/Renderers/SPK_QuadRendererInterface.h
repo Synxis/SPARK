@@ -65,7 +65,7 @@ namespace SPK
 		////////////////
 
 		/** @brief Destructor of QuadRendererInterface */
-		virtual inline ~QuadRendererInterface() {}
+		virtual ~QuadRendererInterface() {}
 
 		/////////////
 		// Setters //
@@ -83,7 +83,7 @@ namespace SPK
 		* @param mode : the texturing mode of this GLQuadRenderer
 		* @return true if the rendering mode can be set, false if it cannot
 		*/
-		virtual inline bool setTexturingMode(TexturingMode mode);
+		virtual bool setTexturingMode(TexturingMode mode);
 
 		/**
 		* @brief Sets the cut of the texture
@@ -123,7 +123,7 @@ namespace SPK
 		* @param scaleX : the scale of the width of the quad
 		* @param scaleY : the scale of the height of the quad
 		*/
-		inline void setScale(float scaleX,float scaleY);
+		void setScale(float scaleX,float scaleY);
 
 		/////////////
 		// Getters //
@@ -133,7 +133,7 @@ namespace SPK
 		* @brief Gets the texturing mode of this GLQuadRenderer
 		* @return the texturing mode of this GLQuadRenderer
 		*/
-		inline TexturingMode getTexturingMode() const;
+		TexturingMode getTexturingMode() const;
 
 		/**
 		* @brief Gets the atlas dimension on the X axis
@@ -142,7 +142,7 @@ namespace SPK
 		*
 		* @return the atlas dimension on the X axis
 		*/
-		inline size_t getAtlasDimensionX() const;
+		size_t getAtlasDimensionX() const;
 
 		/**
 		* @brief Gets the atlas dimension on the Y axis
@@ -151,19 +151,19 @@ namespace SPK
 		*
 		* @return the atlas dimension on the Y axis
 		*/
-		inline size_t getAtlasDimensionY() const;
+		size_t getAtlasDimensionY() const;
 
 		/**
 		* @brief Gets the scale of the width of this GLQuadRenderer
 		* @return the scale of the width of this GLQuadRenderer
 		*/
-		inline float getScaleX() const;
+		float getScaleX() const;
 
 		/**
 		* @brief Gets the scale of the height of this GLQuadRenderer
 		* @return the scale of the height of this GLQuadRenderer
 		*/
-		inline float getScaleY() const;
+		float getScaleY() const;
 
 	protected :
 
@@ -178,12 +178,12 @@ namespace SPK
 		float textureAtlasW;
 		float textureAtlasH;
 
-		inline void computeAtlasCoordinates(const Particle& particle) const;
+		void computeAtlasCoordinates(const Particle& particle) const;
 
-		inline float textureAtlasU0() const;
-		inline float textureAtlasU1() const;
-		inline float textureAtlasV0() const;
-		inline float textureAtlasV1() const;
+		float textureAtlasU0() const;
+		float textureAtlasU1() const;
+		float textureAtlasV0() const;
+		float textureAtlasV1() const;
 
 	private :
 

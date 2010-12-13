@@ -92,7 +92,7 @@ namespace SPK
 		* @return A new registered Group
 		* @since 1.04.00
 		*/
-		static inline Group* create(Model* model = NULL,size_t capacity = Pool<Particle>::DEFAULT_CAPACITY);
+		static Group* create(Model* model = NULL,size_t capacity = Pool<Particle>::DEFAULT_CAPACITY);
 
 		////////////////
 		// Destructor //
@@ -143,7 +143,7 @@ namespace SPK
 		*
 		* @param friction the friction of the Group
 		*/
-		inline void setFriction(float friction);
+		void setFriction(float friction);
 
 		/**
 		* @brief Sets the gravity of this Group
@@ -156,7 +156,7 @@ namespace SPK
 		*
 		* @param gravity : the Vector3D that will be used as the gravity for this Group
 		*/
-		inline void setGravity(const Vector3D& gravity);
+		void setGravity(const Vector3D& gravity);
 
 		/**
 		* @brief Assigns a callback for the custom update
@@ -173,7 +173,7 @@ namespace SPK
 		*
 		* @param fupdate : A pointer to the callback function that will perform custom update for this Group
 		*/
-		inline void setCustomUpdate(bool (*fupdate)(Particle&,float));
+		void setCustomUpdate(bool (*fupdate)(Particle&,float));
 
 		/**
 		* @brief Assigns a callback for custom birth
@@ -185,7 +185,7 @@ namespace SPK
 		*
 		* @param fbirth : A pointer to the callback function that will perform custom birth for this Group
 		*/
-		inline void setCustomBirth(void (*fbirth)(Particle&));
+		void setCustomBirth(void (*fbirth)(Particle&));
 
 		/**
 		* @brief Assigns a callback for custom death
@@ -197,7 +197,7 @@ namespace SPK
 		*
 		* @param fdeath : A pointer to the callback function that will perform custom death for this Group
 		*/
-		inline void setCustomDeath(void (*fdeath)(Particle&));
+		void setCustomDeath(void (*fdeath)(Particle&));
 
 		/**
 		* @brief Enables or disables the sorting of particles
@@ -211,7 +211,7 @@ namespace SPK
 		*
 		* @param sort : true to enable the sorting of particles, false otherwise
 		*/
-		inline void enableSorting(bool sort);
+		void enableSorting(bool sort);
 
 		/**
 		* @brief Enables or disables the computation of the distance of a Particle from the camera
@@ -226,7 +226,7 @@ namespace SPK
 		* @param distanceComputation : true to enable the computation of the camera distance, false not to
 		* @since 1.01.00
 		*/
-		inline void enableDistanceComputation(bool distanceComputation);
+		void enableDistanceComputation(bool distanceComputation);
 
 		/**
 		* @brief Enables or disables the computation of the axis aligned bouding box of the Group
@@ -240,7 +240,7 @@ namespace SPK
 		*
 		* @param AABB : true to enable the computing of the AABB of the Group, false to disable it
 		*/
-		inline void enableAABBComputing(bool AABB);
+		void enableAABBComputing(bool AABB);
 
 		/**
 		* @brief Enables or not Renderer buffers management in a statix way
@@ -266,7 +266,7 @@ namespace SPK
 		*
 		* @return the Pool of the Group
 		*/
-		inline const Pool<Particle>& getParticles() const;
+		const Pool<Particle>& getParticles() const;
 
 		/**
 		* @brief Gets a single Particle in the Group by its index
@@ -277,7 +277,7 @@ namespace SPK
 		* @param index : the position in the Group's Pool of the Particle to get
 		* @return : the Particle at index
 		*/
-		inline Particle& getParticle(size_t index);
+		Particle& getParticle(size_t index);
 
 		/**
 		* @brief Gets a single Particle in the Group by its index
@@ -288,63 +288,63 @@ namespace SPK
 		* @return the Particle at index
 		* @since 1.02.00
 		*/
-		inline const Particle& getParticle(size_t index) const;
+		const Particle& getParticle(size_t index) const;
 
 		/**
 		* @brief Gets the number of particles in the Group
 		* @return the number of particles in the Group
 		*/
-		inline size_t getNbParticles() const;
+		size_t getNbParticles() const;
 
 		/**
 		* @brief Gets the emitters of the Group
 		* @return the vector of emitters of the Group
 		*/
-		inline const std::vector<Emitter*>& getEmitters() const;
+		const std::vector<Emitter*>& getEmitters() const;
 
 		/**
 		* @brief Gets an Emitter of the Group by its index
 		* @param index : the position in the vector of emitters of the Emitter to get
 		* @return : the Emitter at index
 		*/
-		inline Emitter* getEmitter(size_t index) const;
+		Emitter* getEmitter(size_t index) const;
 
 		/**
 		* @brief Gets the number of emitters in this Group
 		* @return the number of emitters in this Group
 		*/
-		inline size_t getNbEmitters() const;
+		size_t getNbEmitters() const;
 
 		/**
 		* @brief Gets the modifiers of the Group
 		* @return the vector of modifiers of the Group
 		*/
-		inline const std::vector<Modifier*>& getModifiers() const;
+		const std::vector<Modifier*>& getModifiers() const;
 
 		/**
 		* @brief Gets an Modifier of the Group by its index
 		* @param index : the position in the vector of modifiers of the Modifier to get
 		* @return : the Modifier at index
 		*/
-		inline Modifier* getModifier(size_t index) const;
+		Modifier* getModifier(size_t index) const;
 
 		/**
 		* @brief Gets the number of modifiers in this Group
 		* @return the number of modifiers in this Group
 		*/
-		inline size_t getNbModifiers() const;
+		size_t getNbModifiers() const;
 
 		/**
 		* @brief Gets the Model of this Group
 		* @return the Model of this Group
 		*/
-		inline Model* getModel() const;
+		Model* getModel() const;
 
 		/**
 		* @brief Gets the Renderer of this Group
 		* @return the Renderer of this Group
 		*/
-		inline Renderer* getRenderer() const;
+		Renderer* getRenderer() const;
 
 		/**
 		* @brief Gets the friction coefficient of this Group
@@ -353,7 +353,7 @@ namespace SPK
 		*
 		* @return the friction coefficient of this Group
 		*/
-		inline float getFriction() const;
+		float getFriction() const;
 
 		/**
 		* @brief Gets the gravity Vector3D of this Group
@@ -362,7 +362,7 @@ namespace SPK
 		*
 		* @return the gravity Vector3D of this Group
 		*/
-		inline const Vector3D& getGravity() const;
+		const Vector3D& getGravity() const;
 
 		/**
 		* @brief Tells whether the sorting of particles from back to front is enabled
@@ -371,14 +371,14 @@ namespace SPK
 		*
 		* @return true if the sorting is enabled, false otherwise
 		*/
-		inline bool isSortingEnabled() const;
+		bool isSortingEnabled() const;
 
 		/**
 		* @brief Tells whether the distance computation between particles and camera is enabled
 		* @return true is the distance computation is enabled, false if not
 		* @since 1.01.00
 		*/
-		inline bool isDistanceComputationEnabled() const;
+		bool isDistanceComputationEnabled() const;
 
 		/**
 		* @brief Tells whether the computation of the axis aligned bouding box is enabled
@@ -387,7 +387,7 @@ namespace SPK
 		*
 		* @return true if the computation of the AABB is enabled, false if it is disabled
 		*/
-		inline bool isAABBComputingEnabled() const;
+		bool isAABBComputingEnabled() const;
 
 		/**
 		* @brief Gets a Vector3D holding the minimum coordinates of the AABB of the Group.
@@ -396,7 +396,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the minimum coordinates of the AABB of the Group
 		*/
-		inline const Vector3D& getAABBMin() const;
+		const Vector3D& getAABBMin() const;
 
 		/**
 		* @brief Gets a Vector3D holding the maximum coordinates of the AABB of the Group.
@@ -405,7 +405,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the maximum coordinates of the AABB of the Group
 		*/
-		inline const Vector3D& getAABBMax() const;
+		const Vector3D& getAABBMax() const;
 
 		/**
 		* @brief Gets the start address of the given param
@@ -428,7 +428,7 @@ namespace SPK
 		*
 		* @since 1.03.00
 		*/
-		inline const void* getPositionAddress() const;
+		const void* getPositionAddress() const;
 
 		/**
 		* @brief Gets the stride for parameters
@@ -448,7 +448,7 @@ namespace SPK
 		*
 		* @since 1.03.00
 		*/
-		inline size_t getPositionStride() const;
+		size_t getPositionStride() const;
 
 		/**
 		* @brief Tells whether renderers buffer management is enabled or not
@@ -488,7 +488,7 @@ namespace SPK
 		* @param position : the position where the Particles will be added
 		* @param velocity : the velocity of the Particles
 		*/
-		inline void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity);
+		void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -512,7 +512,7 @@ namespace SPK
 		* @param velocity : the velocity of the Particles
 		* @param full : true to generate a position within the whole Zonz, false only at its borders
 		*/
-		inline void addParticles(unsigned int nb,const Zone* zone,const Vector3D& velocity,bool full = true);
+		void addParticles(unsigned int nb,const Zone* zone,const Vector3D& velocity,bool full = true);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -523,7 +523,7 @@ namespace SPK
 		* @param position : the position where the Particles will be added
 		* @param emitter : the Emitter that will be used to generate the velocity
 		*/
-		inline void addParticles(unsigned int nb,const Vector3D& position,Emitter* emitter);
+		void addParticles(unsigned int nb,const Vector3D& position,Emitter* emitter);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -609,7 +609,7 @@ namespace SPK
 		*
 		* @param index : the position of the Particle in this Group
 		*/
-		inline void removeParticle(size_t index);
+		void removeParticle(size_t index);
 
 		/**
 		* @brief Adds an Emitter in this Group

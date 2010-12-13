@@ -132,7 +132,7 @@ namespace SPK
 		* @brief Returns the number of Regiterable objects registered in the SPKFactory
 		* @return the number of Regiterable objects registered in the SPKFactoty
 		*/
-		inline size_t getNbObjects() const;
+		size_t getNbObjects() const;
 
 		/**
 		* @brief Creates a registered Registerable from the passed Registerable
@@ -247,9 +247,9 @@ namespace SPK
 
 		void traceObject(const std::map<SPK_ID,Registerable*>::iterator& it,bool nextLine);
 
-		inline bool isAlreadyProcessed(const Registerable* source);
-		inline Registerable* getProcessedObject(const Registerable* source);
-		inline void markAsProcessed(const Registerable* source,Registerable* object);
+		bool isAlreadyProcessed(const Registerable* source);
+		Registerable* getProcessedObject(const Registerable* source);
+		void markAsProcessed(const Registerable* source,Registerable* object);
 		
 		Registerable* registerObject(Registerable* object);
 		void unregisterObject(std::map<SPK_ID,Registerable*>::iterator& it,bool keepChildren = false);

@@ -60,7 +60,7 @@ namespace SPK
 		* @param amountEstimation : an estimation of the number of zones
 		* which will be included in this ZoneUnion (used for an optimisation of the vector)
 		*/
-		static inline ZoneUnion* create(size_t amountEstimation);
+		static ZoneUnion* create(size_t amountEstimation);
 
 		////////////
 		// Setter //

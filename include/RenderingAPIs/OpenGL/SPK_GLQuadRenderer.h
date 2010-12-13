@@ -80,7 +80,7 @@ namespace GL
 		* @return A new registered GLQuadRenderer
 		* @since 1.04.00
 		*/
-		static inline GLQuadRenderer* create(float scaleX = 1.0f,float scaleY = 1.0f);
+		static GLQuadRenderer* create(float scaleX = 1.0f,float scaleY = 1.0f);
 
 		/////////////
 		// Setters //
@@ -88,7 +88,7 @@ namespace GL
 
 		virtual bool setTexturingMode(TexturingMode mode);
 
-		inline void setTexture(GLuint textureIndex);
+		void setTexture(GLuint textureIndex);
 
 		/////////////
 		// Getters //
@@ -98,7 +98,7 @@ namespace GL
 		* @brief Gets the texture of this GLQuadRenderer
 		* @return the texture of this GLQuadRenderer
 		*/
-		inline GLuint getTexture() const;
+		GLuint getTexture() const;
 
 		///////////////
 		// Interface //
@@ -132,11 +132,11 @@ namespace GL
 
 		float* createTextureBuffer(const Group& group) const;
 
-		inline void invertModelView() const;
+		void invertModelView() const;
 
-		inline void GLCallColorAndVertex(const Particle& particle) const;	// OpenGL calls for color and position
-		inline void GLCallTexture2DAtlas(const Particle& particle) const;	// OpenGL calls for 2D atlastexturing 
-		inline void GLCallTexture3D(const Particle& particle) const;		// OpenGL calls for 3D texturing
+		void GLCallColorAndVertex(const Particle& particle) const;	// OpenGL calls for color and position
+		void GLCallTexture2DAtlas(const Particle& particle) const;	// OpenGL calls for 2D atlastexturing 
+		void GLCallTexture3D(const Particle& particle) const;		// OpenGL calls for 3D texturing
 
 		static void (GLQuadRenderer::*renderParticle)(const Particle&)  const;	// pointer to the right render method
 

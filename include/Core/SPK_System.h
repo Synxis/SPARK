@@ -78,7 +78,7 @@ namespace SPK
 		* @return A new registered System
 		* @since 1.04.00
 		*/
-		static inline System* create();
+		static System* create();
 
 		////////////////
 		// Destructor //
@@ -170,7 +170,7 @@ namespace SPK
 		*
 		* @param AABB : true to enable the computing of the AABB of this System, false to disable it
 		*/
-		inline void enableAABBComputing(bool AABB);
+		void enableAABBComputing(bool AABB);
 
 		/////////////
 		// Getters //
@@ -201,7 +201,7 @@ namespace SPK
 		*
 		* @return the number of active particle in the system
 		*/
-		inline size_t getNbParticles() const;
+		size_t getNbParticles() const;
 
 		/**
 		* @brief Computes the number of active particles in this System and returns it
@@ -222,7 +222,7 @@ namespace SPK
 		* @brief Gets the number of groups in the System
 		* @return the number of groups in the System
 		*/
-		inline size_t getNbGroups() const;
+		size_t getNbGroups() const;
 
 		/**
 		* @brief Gets the vector of the groups (pointers) in this System
@@ -232,7 +232,7 @@ namespace SPK
 		*
 		* @return a STL vector containing the groups in the System
 		*/
-		inline const std::vector<Group*>& getGroups() const;
+		const std::vector<Group*>& getGroups() const;
 
 		/**
 		* @brief Gets the Group at index
@@ -243,7 +243,7 @@ namespace SPK
 		* @return the Group at index
 		* @since 1.03.00
 		*/
-		inline Group* getGroup(size_t index);
+		Group* getGroup(size_t index);
 
 		/**
 		* @brief Tells whether the computation of the axis aligned bouding box is enabled
@@ -252,7 +252,7 @@ namespace SPK
 		*
 		* @return true if the computation of the AABB is enabled, false if it is disabled
 		*/
-		inline bool isAABBComputingEnabled() const;
+		bool isAABBComputingEnabled() const;
 
 		/**
 		* @brief Gets a Vector3D holding the minimum coordinates of the AABB of this System.
@@ -262,7 +262,7 @@ namespace SPK
 		* @return a Vector3D holding the minimum coordinates of the AABB of this System
 		* @since 1.01.00
 		*/
-		inline const Vector3D& getAABBMin() const;
+		const Vector3D& getAABBMin() const;
 
 		/**
 		* @brief Gets a Vector3D holding the maximum coordinates of the AABB of this System.
@@ -272,7 +272,7 @@ namespace SPK
 		* @return a Vector3D holding the maximum coordinates of the AABB of this System
 		* @since 1.01.00
 		*/
-		inline const Vector3D& getAABBMax() const;
+		const Vector3D& getAABBMax() const;
 
 		///////////////
 		// Interface //
