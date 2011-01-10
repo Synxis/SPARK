@@ -39,9 +39,9 @@ namespace SPK
 	Logger::Logger() :
 		enabled(true),
 #ifdef _DEBUG
-		priorityLevel(LOG_PRIORITY_INFO), // default priority level is INFO in debug
+		priorityLevel(LOG_PRIORITY_DEBUG), // default priority level is DEBUG in debug
 #else
-		priorityLevel(LOG_PRIORITY_WARNING), // default priority level is WARNING in release
+		priorityLevel(LOG_PRIORITY_INFO), // default priority level is INFO in release
 #endif
 		innerStream(&std::cout),
 		prefixFlag(LOG_PREFIX_TIME | LOG_PREFIX_LIB | LOG_PREFIX_PRIORITY)

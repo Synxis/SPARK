@@ -392,6 +392,7 @@ namespace SPK
 		s.unsetf(std::ios_base::dec | std::ios_base::oct);
 		s << c.getRGBA();
 		s.flags(oldFormat);
+		return s;
 	}
 
 	// Specialization of the random generation of colors
