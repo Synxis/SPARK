@@ -71,33 +71,49 @@ namespace SPK
 
 		Ref& operator=(T* ptr)
 		{
-			decrement();
-			this->ptr = ptr;
-			increment();
+			if (*this != ptr)
+			{
+				decrement();
+				this->ptr = ptr;
+				increment();
+			}
+
 			return *this;
 		}
 
 		Ref& operator=(const Ref& ref)
 		{
-			decrement();
-			ptr = ref.get();
-			increment();
+			if (*this != ref)
+			{
+				decrement();
+				ptr = ref.get();
+				increment();
+			}
+
 			return *this;
 		}
 
 		template<typename U> Ref& operator=(const Ref<U>& ref)
 		{
-			decrement();
-			ptr = ref.get();
-			increment();
+			if (*this != ref)
+			{
+				decrement();
+				ptr = ref.get();
+				increment();
+			}
+
 			return *this;
 		}
 
 		template<typename U> Ref& operator=(const WeakRef<U>& ref)
 		{
-			decrement();
-			ptr = ref.get();
-			increment();
+			if (*this != ref)
+			{
+				decrement();
+				ptr = ref.get();
+				increment();
+			}
+
 			return *this;
 		}
 
@@ -188,6 +204,7 @@ namespace SPK
 	template<typename T,typename U> bool operator==(const WeakRef<T>& ref0,const WeakRef<U>& ref1) { return ref0.get() == ref1.get(); }
 	template<typename T,typename U> bool operator==(const WeakRef<T>& ref,U* ptr) { return ref.get() == ptr; }
 	template<typename T,typename U> bool operator==(T* ptr,const WeakRef<U>& ref) { return ref.get() == ptr; }
+	template<typename T,typename U> bool operator<(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() < ref1.get(); }
 
 	template<typename T,typename U> bool operator!=(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() != ref1.get(); }
 	template<typename T,typename U> bool operator!=(const Ref<T>& ref,U* ptr) { return ref.get() != ptr; }
@@ -195,6 +212,7 @@ namespace SPK
 	template<typename T,typename U> bool operator!=(const WeakRef<T>& ref0,const WeakRef<U>& ref1) { return ref0.get() != ref1.get(); }
 	template<typename T,typename U> bool operator!=(const WeakRef<T>& ref,U* ptr) { return ref.get() != ptr; }
 	template<typename T,typename U> bool operator!=(T* ptr,const WeakRef<U>& ref) { return ref.get() != ptr; }
+	template<typename T,typename U> bool operator<(const WeakRef<T>& ref0,const WeakRef<U>& ref1) { return ref0.get() < ref1.get(); }
 }
 
 #endif
