@@ -360,7 +360,7 @@ namespace GL
 #elif defined(__APPLE__) || defined(macintosh)
 		return (void*)SPK_NSGLGetProcAddress(name);					// MAC
 #elif defined(linux) || defined(__linux)
-		return (void*)glXGetProcAddressARB((unsigned char*)name);	// Linux
+		return (void*)glXGetProcAddressARB(reinterpret_cast<const GLubyte*>(name));	// Linux
 #else
 		return (void*)NULL;
 #endif

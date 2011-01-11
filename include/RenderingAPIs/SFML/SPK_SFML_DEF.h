@@ -43,6 +43,10 @@
 #include "RenderingAPIs/OpenGL/SPK_GL_DEF.h"
 
 #ifndef SPK_NO_SFML_INC
+// None is already defined in Xlib.h => We need to undef it !
+#ifdef None
+#undef None   
+#endif
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #endif
