@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK Irrlicht Rendering library												//
-// Copyright (C) 2008-2010														//
+// Copyright (C) 2008-2011														//
 // Julien Fryer - julienfryer@gmail.com											//
 // Thibault Lescoat -  info-tibo <at> orange <dot> fr							//
 //																				//
