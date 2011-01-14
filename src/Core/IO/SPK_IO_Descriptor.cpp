@@ -25,14 +25,6 @@ namespace SPK
 {
 namespace IO
 {
-	Attribute::Attribute(const std::string& name,AttributeType type) :
-		name(name),
-		type(type),
-		offset(0),
-		descriptor(NULL),
-		valueSet(false)
-	{}
-
 	Descriptor::Descriptor(const std::vector<Attribute>& attributes) :
 		attributes(attributes),
 		name()

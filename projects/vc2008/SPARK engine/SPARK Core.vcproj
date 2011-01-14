@@ -607,6 +607,10 @@
 					Name="IO"
 					>
 					<File
+						RelativePath="..\..\..\include\Core\IO\SPK_IO_Attribute.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\Core\IO\SPK_IO_Descriptor.h"
 						>
 					</File>
