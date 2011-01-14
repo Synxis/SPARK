@@ -356,9 +356,9 @@ namespace GL
 	inline void* GLExtHandler::glGetProcAddress(const char* name)
 	{
 #if defined(WIN32) || defined(_WIN32)
-		return (void*)wglGetProcAddress(name);						// Windows
+		return (void*)wglGetProcAddress(name);										// Windows
 #elif defined(__APPLE__) || defined(macintosh)
-		return (void*)SPK_NSGLGetProcAddress(name);					// MAC
+		return (void*)SPK_NSGLGetProcAddress(name);									// MAC
 #elif defined(linux) || defined(__linux)
 		return (void*)glXGetProcAddressARB(reinterpret_cast<const GLubyte*>(name));	// Linux
 #else
