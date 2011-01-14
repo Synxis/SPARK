@@ -28,6 +28,7 @@ namespace SPK
 	class DefaultInitializer : public Interpolator<T>
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(DefaultInitializer<T>);
+	SPK_IMPLEMENT_SERIALIZABLE(DefaultInitializer<T>)
 	SPK_DEFINE_DESCRIPTION_TEMPLATE
 
 	public :

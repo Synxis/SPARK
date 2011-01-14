@@ -31,8 +31,9 @@
 
 #include <SDL.h>
 #include <SPARK.h>
-#include <Extensions/Modifiers/SPK_RandomForce.h>
 #include <SPARK_GL.h>
+
+//#include "TestSaver.h"
 
 float angleX = 0.0f;
 float angleY = 0.0f;
@@ -177,7 +178,7 @@ int main(int argc, char *argv[])
 	// Loads particle texture
 	GLuint textureParticle;
 	if (!loadTexture(textureParticle,"res/explosion.bmp",GL_LUMINANCE,GL_CLAMP,true))
-		return 1;
+	{}//	return 1;
 
 	// inits openGL
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
@@ -281,11 +282,15 @@ int main(int argc, char *argv[])
 			frameFPS.pop_front();
 	};
 
+	//TestSaver saver;
+	//saver.save("test.txt",system);
+
 	SPK_DUMP_MEMORY
 	delete system;
 	SPK_DUMP_MEMORY
 
 	SDL_Quit();
+	//std::system("pause");
 	
 	return 0;
-}
+} 

@@ -182,7 +182,7 @@ namespace SPK
 	void EmitterAttacher::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValueRef(getEmitter());
+		descriptor.getAttribute("base emitter")->setValueRef(getEmitter());
 		descriptor.getAttribute("orientation enabled")->setValueBool(isEmitterOrientationEnabled());
 		descriptor.getAttribute("rotation enabled")->setValueBool(isEmitterRotationEnabled());
 		descriptor.getAttribute("group index")->setValueUint32(getGroupIndex());

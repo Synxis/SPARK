@@ -29,6 +29,7 @@ namespace SPK
 	class EmitterAttacher : public Modifier
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(EmitterAttacher)
+	SPK_IMPLEMENT_SERIALIZABLE(EmitterAttacher)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Modifier)

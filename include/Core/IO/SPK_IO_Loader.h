@@ -1,0 +1,124 @@
+//////////////////////////////////////////////////////////////////////////////////
+// SPARK particle engine														//
+// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+//																				//
+// This software is provided 'as-is', without any express or implied			//
+// warranty.  In no event will the authors be held liable for any damages		//
+// arising from the use of this software.										//
+//																				//
+// Permission is granted to anyone to use this software for any purpose,		//
+// including commercial applications, and to alter it and redistribute it		//
+// freely, subject to the following restrictions:								//
+//																				//
+// 1. The origin of this software must not be misrepresented; you must not		//
+//    claim that you wrote the original software. If you use this software		//
+//    in a product, an acknowledgment in the product documentation would be		//
+//    appreciated but is not required.											//
+// 2. Altered source versions must be plainly marked as such, and must not be	//
+//    misrepresented as being the original software.							//
+// 3. This notice may not be removed or altered from any source distribution.	//
+//////////////////////////////////////////////////////////////////////////////////
+
+#ifndef H_SPK_IO_LOADER
+#define H_SPK_IO_LOADER
+
+#include <list>
+
+namespace SPK
+{
+namespace IO
+{
+	/** @brief An abstract class to load an entire particle system from a resource */
+	class SPK_PREFIX Loader
+	{
+	public :
+
+		//////////////////////////////
+		// Constructor / Destructor //
+		//////////////////////////////
+
+		virtual ~Loader() {}
+		virtual Loader* clone() const = 0;
+
+		/////////////////////
+		// Loading methods //
+		/////////////////////
+
+		/**
+		* @brief Loads a system from an input stream
+		* @param is : the input stream from which to load the system
+		* @return the loaded system or NULL if loading failed
+		*/
+		System* load(std::istream& is) const;
+
+		/**
+		* @brief Loads a system from a file
+		* @param path : the path from which to load the file
+		* @return the loaded system or NULL if loading failed
+		*/
+		System* load(const std::string& path) const;
+
+		////////////////////
+		// nested classes //
+		////////////////////
+
+		class Node
+		{
+		friend class Graph;
+		friend class Loader;
+
+		public :
+
+			WeakRef<const SPKObject> getObject() const	{ return object; }
+			Descriptor& getDescriptor()					{ return descriptor; }
+
+		private :
+
+			Node(const WeakRef<SPKObject>& object);
+
+			WeakRef<SPKObject> object;
+			Descriptor descriptor;
+		};
+
+		class Graph
+		{
+		friend class Loader;
+
+		public :
+
+			~Graph() { destroyAllNodes(false); }
+
+			bool addNode(size_t key,const std::string& name);
+			bool validateNodes();
+			bool importNodesAttributes();
+
+			const Node* getNode(size_t key) const { return getNode(key,true); }
+
+		private :
+
+			std::map<size_t,Node*> key2Ptr;
+			std::list<Node*> nodes;
+
+			bool nodesValidated;
+			WeakRef<System> system;
+
+			Node* getNode(size_t key,bool withCheck) const; // inner getNode that allows to bypass validation check
+			void destroyAllNodes(bool destroyRefs);
+			void destroyUnusedObject(Node& node) const;
+
+			WeakRef<System>& finalize();
+		};
+
+	private :
+
+		/**
+		* @brief The inner load method to be implemented in derived classes
+		* @param is : the input stream from which to load the syste
+		* @param graph : the graph that allows to build the system
+		* @return true if the loading was successful, false if it failed
+		*/
+		virtual bool innerLoad(std::istream& is,Graph& graph) const = 0;
+	};
+}}
+
+#endif

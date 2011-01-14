@@ -860,7 +860,7 @@ namespace SPK
 		result.z = v0.x * v1.y - v0.y * v1.x;
 	}
 
-	// Specialization of the random generation of colors
+	// Specialization of the random generation of vectors 3D
 	template<>
 	inline Vector3D SPKContext::generateRandom(const Vector3D& v0,const Vector3D& v1)
 	{

@@ -33,10 +33,21 @@ namespace IO
 		valueSet(false)
 	{}
 
-	Descriptor::Descriptor(std::vector<Attribute> attributes) :
-		attributes(attributes)
+	Descriptor::Descriptor(const std::vector<Attribute>& attributes) :
+		attributes(attributes),
+		name()
 	{
+		markAttributes();
 		computeSignature();
+	}
+
+	Descriptor::Descriptor(const Descriptor& descriptor) :
+		attributes(descriptor.attributes),
+		buffer(descriptor.buffer),
+		signature(descriptor.signature),
+		name(descriptor.name)
+	{
+		markAttributes();
 	}
 
 	Attribute* Descriptor::getAttribute(const std::string& name)

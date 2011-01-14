@@ -159,7 +159,7 @@ namespace SPK
 		* @brief Sets the priority level of the logger
 		*
 		* Only entries with a priority superior or equal to the logger priority level are logged in.
-		* Bu default the priority level is PRIORITY_DEBUG in debug mode and PRIORITY_WARNING in release mode.
+		* Bu default the priority level is PRIORITY_DEBUG in debug mode and PRIORITY_info in release mode.
 		*
 		* @param priorityLevel : the priority level of the logger
 		*/

@@ -46,6 +46,7 @@ namespace SPK
 	class SPK_PREFIX SphericEmitter : public Emitter
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(SphericEmitter)
+	SPK_IMPLEMENT_SERIALIZABLE(SphericEmitter)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Emitter)

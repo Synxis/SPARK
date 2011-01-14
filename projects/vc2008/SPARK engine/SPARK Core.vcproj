@@ -334,18 +334,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\Core\SPK_IO_Converters.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\Core\SPK_IO_Descriptor.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\Core\SPK_IO_Manager.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\Core\SPK_Logger.cpp"
 					>
 				</File>
@@ -377,6 +365,26 @@
 					RelativePath="..\..\..\src\Core\SPK_ZonedModifier.cpp"
 					>
 				</File>
+				<Filter
+					Name="IO"
+					>
+					<File
+						RelativePath="..\..\..\src\Core\IO\SPK_IO_Descriptor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Core\IO\SPK_IO_Loader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Core\IO\SPK_IO_Manager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Core\IO\SPK_IO_Saver.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Extensions"
@@ -536,18 +544,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\Core\SPK_IO_Converters.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\Core\SPK_IO_Descriptor.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\Core\SPK_IO_Manager.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\include\Core\SPK_Iterator.h"
 					>
 				</File>
@@ -607,6 +603,26 @@
 					RelativePath="..\..\..\include\Core\SPK_ZonedModifier.h"
 					>
 				</File>
+				<Filter
+					Name="IO"
+					>
+					<File
+						RelativePath="..\..\..\include\Core\IO\SPK_IO_Descriptor.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Core\IO\SPK_IO_Loader.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Core\IO\SPK_IO_Manager.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Core\IO\SPK_IO_Saver.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Extensions"

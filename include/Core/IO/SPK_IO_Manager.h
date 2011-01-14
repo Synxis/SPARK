@@ -39,15 +39,15 @@ namespace IO
 	
 		template<typename T> void registerObject();
 		template<typename T> void unregisterObject();
-		template<typename T> inline bool isObjectRegistered() const;
+		template<typename T> bool isObjectRegistered() const;
 
-		inline void registerLoader(const std::string& ext,const Loader& loader);
-		inline void unregisterLoader(const std::string& ext);
-		inline WeakRef<Loader> getLoader(const std::string& ext) const;
+		void registerLoader(const std::string& ext,const Loader& loader);
+		void unregisterLoader(const std::string& ext);
+		WeakRef<Loader> getLoader(const std::string& ext) const;
 
-		inline void registerSaver(const std::string& ext,const Saver& saver);
-		inline void unregisterSaver(const std::string& ext);
-		inline WeakRef<Saver> getSaver(const std::string& ext) const;
+		void registerSaver(const std::string& ext,const Saver& saver);
+		void unregisterSaver(const std::string& ext);
+		WeakRef<Saver> getSaver(const std::string& ext) const;
 
 		System* load(const std::string& path) const;
 		System* load(const std::string& ext,std::istream& is) const;
@@ -73,6 +73,14 @@ namespace IO
 		template<typename T> static void registerGeneric(const std::string& ext,const T& t,std::map<std::string,T*>& table);
 		template<typename T> static void unregisterGeneric(const std::string& ext,std::map<std::string,T*>& table);
 		template<typename T> static WeakRef<T> getGeneric(const std::string& ext,const std::map<std::string,T*>& table);
+
+		/////////////////////////////////////
+		// Helper methods to build objects //
+		/////////////////////////////////////
+
+		friend class Loader::Graph;
+		WeakRef<SPKObject> createObject(const std::string& id) const;
+		void linkGroup(Group& group,System& system) const;
 	};
 
 	template<typename T> void IOManager::registerObject()
@@ -81,7 +89,7 @@ namespace IO
 		if (registeredObjects.find(name) != registeredObjects.end())
 			SPK_LOG_WARNING("IOManager::registerSerializable<T> - " << name << " is already registered");
 
-		registeredObjects.insert(std::pair(name,&(T::createSerializable)));
+		registeredObjects.insert(std::make_pair(name,&(T::createSerializable)));
 	}
 
 	template<typename T> void IOManager::unregisterObject()
@@ -117,11 +125,11 @@ namespace IO
 		if (it != table.end())
 		{
 			SPK_LOG_WARNING("IOManager::registerGeneric<T> - " << name << " is already registered. Previous one is overriden");
-			delete it->second;
+			SPK_DELETE(it->second);
 			table.erase(it);
 		}
 
-		table.insert(std::pair<std::string,T*>(name,t.clone()));
+		table.insert(std::make_pair(name,t.clone()));
 	}
 
 	template<typename T>
@@ -135,7 +143,7 @@ namespace IO
 		}
 		else
 		{
-			delete it->second;
+			SPK_DELETE(it->second);
 			table.erase(it);
 		}
 	}

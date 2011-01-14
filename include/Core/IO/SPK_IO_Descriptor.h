@@ -78,6 +78,9 @@ namespace IO
 		void setValueColor(const Color& value,bool optional = false)							{ setValue(ATTRIBUTE_TYPE_COLOR,value,optional); }
 		void setValueString(const std::string& value,bool optional = false)						{ setValue(ATTRIBUTE_TYPE_STRING,value,optional); }
 		void setValueRef(const WeakRef<SPKObject>& value,bool optional = false)					{ setValue(ATTRIBUTE_TYPE_REF,value,optional); }
+		
+		void setValueRefOptionalOnNull(const WeakRef<SPKObject>& value)							{ setValueRef(value,value == NULL); }
+		void setValueBoolOptionalOnFalse(bool value)											{ setValueBool(value,!value); }
 
 		void setValuesChar(const char* values,size_t nb,bool optional = false)					{ setValues(ATTRIBUTE_TYPE_CHARS,values,nb,optional); }
 		void setValuesBool(const bool* values,size_t nb,bool optional = false)					{ setValues(ATTRIBUTE_TYPE_BOOLS,values,nb,optional); }
@@ -135,6 +138,8 @@ namespace IO
 
 	public :
 
+		Descriptor(const Descriptor& descriptor);
+
 		Attribute* getAttribute(const std::string& name);
 		Attribute* getAttributeWithValue(const std::string& name);
 		Attribute& getAttribute(size_t index);
@@ -146,17 +151,23 @@ namespace IO
 		inline size_t getNbAttributes() const;
 		inline size_t getSignature() const;
 
+		inline const std::string& getName() const;
+
 	private :
 
-		Descriptor(const std::vector<Attribute> attributes); // Constructor only accessible by SPKObject
+		Descriptor(const std::vector<Attribute>& attributes); // Constructor only accessible by SPKObject
 
 		std::vector<Attribute> attributes;		
 		std::vector<char> buffer; // An internal buffer is used to limit memory allocation of attribute values
 
 		unsigned long int signature;
 
+		std::string name;
+
 		void computeSignature();
 		void markAttributes();
+
+		inline void setName(const std::string& name);
 	};
 
 	inline const std::string& Attribute::getName() const
@@ -204,6 +215,16 @@ namespace IO
 		return signature;
 	}
 
+	inline const std::string& Descriptor::getName() const
+	{
+		return name;
+	}
+
+	inline void Descriptor::setName(const std::string& name)
+	{
+		this->name = name;
+	}
+
 	template<typename T>
 	void Attribute::setValue(AttributeType valueType,const T& value,bool optional)
 	{
@@ -215,6 +236,8 @@ namespace IO
 			descriptor->buffer.push_back(valueC[i]);
 		valueSet = true;
 		this->optional = optional;
+
+		SPK_LOG_DEBUG("Set value for attribute \"" << name << "\" : " << value);
 	}
 
 	template<typename T>
@@ -224,7 +247,7 @@ namespace IO
 		SPK_ASSERT(nb > 0,"Attribute::setValues<T>(AttributeType,const T&,size_t,bool) - An array of size 0 cannot be serialized");
 
 		offset = descriptor->buffer.size();
-		const char* nbC = reinterpret_cast<char*>(nb);
+		const char* nbC = reinterpret_cast<char*>(&nb);
 		const char* valuesC = reinterpret_cast<const char*>(values);
 		for (size_t i = 0; i < sizeof(size_t); ++i)
 			descriptor->buffer.push_back(nbC[i]);
@@ -232,6 +255,15 @@ namespace IO
 			descriptor->buffer.push_back(valuesC[i]);
 		valueSet = true;
 		this->optional = optional;
+
+#if !defined(SPK_NO_LOG) && defined(_DEBUG)
+		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);
+		os << "Set " << nb << " values for attribute \"" << name << "\" : ";
+		for (size_t i = 0; i < nb; ++i)
+			os << " " << values[i];
+		os << '\n';
+		SPK::Logger::getInstance().flush();
+#endif
 	}
 
 	template<typename T>
@@ -239,6 +271,8 @@ namespace IO
 	{
 		SPK_ASSERT(valueType == type,"Attribute::getValue<T>(AttributeType) - The desired value is not of the right type");
 		SPK_ASSERT(valueSet,"Attribute::getValue<T>(AttributeType) - The value is not set and therefore cannot be read");
+
+		SPK_LOG_DEBUG("Get value for attribute \"" << name << "\" : " << (*reinterpret_cast<T*>(&descriptor->buffer[offset])));
 
 		return *reinterpret_cast<T*>(&descriptor->buffer[offset]);
 	}
@@ -252,7 +286,17 @@ namespace IO
 		size_t nb = *reinterpret_cast<size_t*>(&descriptor->buffer[offset]);
 		std::vector<T> tmpBuffer;
 		for (size_t i = 0; i < nb; ++i)
-			tmpBuffer.push_back(*reinterpret_cast<T*>(&descriptor->buffer[offset + i * sizeof(T)]));
+			tmpBuffer.push_back(*reinterpret_cast<T*>(&descriptor->buffer[offset + sizeof(size_t) + i * sizeof(T)]));
+
+#if !defined(SPK_NO_LOG) && defined(_DEBUG)
+		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);
+		os << "Get " << nb << " values for attribute \"" << name << "\" : ";
+		for (size_t i = 0; i < nb; ++i)
+			os << " " << tmpBuffer[i];
+		os << '\n';
+		SPK::Logger::getInstance().flush();
+#endif
+
 		return tmpBuffer;
 	}
 }}

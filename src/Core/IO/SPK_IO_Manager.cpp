@@ -107,4 +107,19 @@ namespace IO
 
 		return "";
 	}
+
+	WeakRef<SPKObject> IOManager::createObject(const std::string& id) const
+	{
+		std::map<std::string,createSerializableFn>::const_iterator it = registeredObjects.find(id);
+		if (it != registeredObjects.end())
+			return (*it->second)();
+		else
+			return SPK_NULL_REF;
+	}
+
+	void IOManager::linkGroup(Group& group,System& system) const
+	{
+		group.system = &system;
+		group.reallocate(1); // dummy allocation
+	}
 }}

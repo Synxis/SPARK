@@ -29,10 +29,20 @@ namespace SPK
 		transform.update(parent,*this);
 	}
 
+	void SPKObject::importAttributes(const IO::Descriptor& descriptor)
+	{
+		const std::string& descName = descriptor.getName(); 
+		if (descName != getClassName())
+		{
+			SPK_LOG_ERROR("SPKObject::importAttributes(const Descriptor&) - The descriptor does not match the object : \""+descName+"\" for \""+getClassName()+"\"");
+		}
+		else
+			innerImport(descriptor);
+	}
+
 	IO::Descriptor SPKObject::exportAttributes() const
 	{
-		IO::Descriptor descriptor = createDescriptor();
-		//descriptor.setName(name); //TODO
+		IO::Descriptor& descriptor = createDescriptor();
 		innerExport(descriptor);
 		return descriptor;
 	}
@@ -41,7 +51,10 @@ namespace SPK
 	{
 		std::vector<IO::Attribute> attributes;
 		fillAttributeList(attributes);
-		return IO::Descriptor(attributes);
+		IO::Descriptor descriptor(attributes);
+		descriptor.setName(getClassName());
+		SPK_LOG_DEBUG("Create descriptor for " << descriptor.getName() << " with " << descriptor.getNbAttributes() << " attributes and signature " << descriptor.getSignature());
+		return descriptor;
 	}
 
 	void SPKObject::innerImport(const IO::Descriptor& descriptor)

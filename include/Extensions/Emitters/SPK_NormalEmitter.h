@@ -35,6 +35,7 @@ namespace SPK
 	class SPK_PREFIX NormalEmitter : public Emitter
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(NormalEmitter)
+	SPK_IMPLEMENT_SERIALIZABLE(NormalEmitter)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Emitter)

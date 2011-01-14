@@ -57,6 +57,8 @@ namespace SPK
 	*/
 	class SPK_PREFIX System : public SPKObject
 	{
+	SPK_IMPLEMENT_SERIALIZABLE(System)
+
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(SPKObject)
 	SPK_ATTRIBUTE("groups",ATTRIBUTE_TYPE_REFS)
@@ -281,6 +283,9 @@ namespace SPK
 		std::vector<Group*> groups; // vector containing all the groups of the system
 
 		virtual void propagateUpdateTransform();
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

@@ -37,7 +37,7 @@ namespace SPK
 
 	Group::Group(System& system,size_t capacity) :
 		SPKObject(),
-		system(system),
+		system(&system),
 		nbEnabledParameters(0),
 		minLifeTime(1.0f),
 		maxLifeTime(1.0f),
@@ -58,7 +58,7 @@ namespace SPK
 
 	Group::Group(System& system,const Group& group) :
 		SPKObject(group),
-		system(system),
+		system(&system),
 		nbEnabledParameters(0),
 		minLifeTime(group.minLifeTime),
 		maxLifeTime(group.maxLifeTime),
@@ -97,6 +97,24 @@ namespace SPK
 		birthAction = Referenceable::copyChild(group.birthAction);
 		deathAction = Referenceable::copyChild(group.deathAction);
 	}
+
+	Group::Group() : // WARNING : used only when unserializing. The initial state is invalid
+		SPKObject(),
+		nbEnabledParameters(0),
+		minLifeTime(1.0f),
+		maxLifeTime(1.0f),
+		immortal(false),
+		still(false),
+		distanceComputationEnabled(false),
+		sortingEnabled(false),
+		AABBMin(),
+		AABBMax(),
+		graphicalRadius(0.0f),
+		physicalRadius(0.0f),
+		nbBufferedParticles(0),
+		birthAction(),
+		deathAction()
+	{}
 
 	Group::~Group()
 	{
@@ -261,7 +279,7 @@ namespace SPK
 	{
 		SPK_ASSERT(capacity != 0,"Group::reallocate(size_t) - Group capacity must not be 0");
 
-		if (system.isInitialized() && (!particleData.initialized || capacity != particleData.maxParticles))
+		if (system->isInitialized() && (!particleData.initialized || capacity != particleData.maxParticles))
 		{
 			destroyAllAdditionnalData();
 
@@ -299,33 +317,36 @@ namespace SPK
 
 	void Group::setParamInterpolator(Param param,const Ref<FloatInterpolator>& interpolator)
 	{
-		if (paramInterpolators[param].obj == NULL && interpolator != NULL)
+		if (paramInterpolators[param].obj != interpolator)
 		{
-			if (particleData.parameters[param] != NULL)
-				SPK_LOG_ERROR("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected memory leak happened");
-
-			// Creates the data for the parameter
-			if (system.isInitialized())
-				particleData.parameters[param] = SPK_NEW_ARRAY(float,particleData.maxParticles);
-		}
-		else if (paramInterpolators[param].obj != NULL && interpolator == NULL)
-		{
-			if (particleData.parameters[param] == NULL)
+			if (paramInterpolators[param].obj == NULL && interpolator != NULL)
 			{
-				SPK_LOG_ERROR("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected error happened");
+				if (particleData.parameters[param] != NULL)
+					SPK_LOG_ERROR("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected memory leak happened");
+
+				// Creates the data for the parameter
+				if (system->isInitialized())
+					particleData.parameters[param] = SPK_NEW_ARRAY(float,particleData.maxParticles);
+			}
+			else if (paramInterpolators[param].obj != NULL && interpolator == NULL)
+			{
+				if (particleData.parameters[param] == NULL)
+				{
+					SPK_LOG_ERROR("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected error happened");
+				}
+
+				// Destroys the data for the parameter
+				SPK_DELETE_ARRAY(particleData.parameters[param]);
+				particleData.parameters[param] = NULL;
 			}
 
-			// Destroys the data for the parameter
-			SPK_DELETE_ARRAY(particleData.parameters[param]);
-			particleData.parameters[param] = NULL;
+			detachDataSet(paramInterpolators[param].dataSet);
+
+			paramInterpolators[param].obj = interpolator;
+			paramInterpolators[param].dataSet = attachDataSet(interpolator);
+
+			recomputeEnabledParamIndices();
 		}
-
-		detachDataSet(paramInterpolators[param].dataSet);
-
-		paramInterpolators[param].obj = interpolator;
-		paramInterpolators[param].dataSet = attachDataSet(interpolator);
-
-		recomputeEnabledParamIndices();
 	}
 
 	void Group::addEmitter(const Ref<Emitter>& emitter)
@@ -372,7 +393,7 @@ namespace SPK
 
 		ModifierDef modifierDef(modifier,attachDataSet(modifier));
 		modifiers.push_back(modifierDef);
-		if (system.isInitialized())
+		if (system->isInitialized())
 		{
 			sortedModifiers.push_back(modifierDef);
 			std::sort(sortedModifiers.begin(),sortedModifiers.end(),CompareModifierPriority());
@@ -386,7 +407,7 @@ namespace SPK
 			if (it->obj == modifier)
 			{
 				detachDataSet(it->dataSet);
-				if (system.isInitialized())
+				if (system->isInitialized())
 					for (std::vector<WeakModifierDef>::iterator it2 = sortedModifiers.begin(); it2 != sortedModifiers.end(); ++it2)
 						if (it2->obj == modifier)
 						{
@@ -397,7 +418,7 @@ namespace SPK
 				return;
 			}
 
-		if (system.isInitialized())
+		if (system->isInitialized())
 			SPK_ASSERT(modifiers.size() == sortedModifiers.size(),"Group::addModifier(Modifier*) - Internal Error - Inconsistent storage of modifiers");
 		SPK_LOG_WARNING("The modifier was not found in the group and cannot be removed");
 	}
@@ -507,7 +528,7 @@ namespace SPK
 
 	DataSet* Group::attachDataSet(const WeakRef<DataHandler>& dataHandler)
 	{
-		if (!system.isInitialized())
+		if (!system->isInitialized())
 			return NULL;
 
 		if (dataHandler != NULL && dataHandler->needsDataSet())
@@ -597,11 +618,11 @@ namespace SPK
 	{
 		for (std::vector<Ref<Emitter>>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 			if (!(*it)->isShared())
-				(*it)->updateTransform(&system);
+				(*it)->updateTransform(system);
 
 		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
 			if (!it->obj->isShared() && it->obj->isLocalToSystem())
-				it->obj->updateTransform(&system);
+				it->obj->updateTransform(system);
 	}
 
 	void Group::addParticles(unsigned int nb,const Ref<Zone>& zone,const Ref<Emitter>& emitter,bool full)
@@ -693,7 +714,7 @@ namespace SPK
 		if (nb == 0)
 			return;
 
-		SPK_ASSERT(system.isInitialized(),"Group::addParticles(unsigned int,const Vector3D&,const Vector3D&,Zone*,Emitter*,bool) - Particles cannot be added to an uninitialized group");
+		SPK_ASSERT(system->isInitialized(),"Group::addParticles(unsigned int,const Vector3D&,const Vector3D&,Zone*,Emitter*,bool) - Particles cannot be added to an uninitialized group");
 
 		CreationData data = {nb,position,velocity,zone,emitter,full};
 		creationBuffer.push_back(data);
@@ -867,5 +888,124 @@ namespace SPK
 		}
 
 		return SPK_NULL_REF;
+	}
+
+	void Group::innerImport(const IO::Descriptor& descriptor)
+	{
+		SPKObject::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+
+		if (attrib = descriptor.getAttributeWithValue("color interpolator"))
+			setColorInterpolator(attrib->getValueRef().cast<ColorInterpolator>());
+		if (attrib = descriptor.getAttributeWithValue("scale interpolator"))
+			setParamInterpolator(PARAM_SCALE,attrib->getValueRef().cast<FloatInterpolator>());
+		if (attrib = descriptor.getAttributeWithValue("mass interpolator"))
+			setParamInterpolator(PARAM_MASS,attrib->getValueRef().cast<FloatInterpolator>());
+		if (attrib = descriptor.getAttributeWithValue("angle interpolator"))
+			setParamInterpolator(PARAM_ANGLE,attrib->getValueRef().cast<FloatInterpolator>());
+		if (attrib = descriptor.getAttributeWithValue("texture index interpolator"))
+			setParamInterpolator(PARAM_TEXTURE_INDEX,attrib->getValueRef().cast<FloatInterpolator>());
+		if (attrib = descriptor.getAttributeWithValue("rotation speed interpolator"))
+			setParamInterpolator(PARAM_ROTATION_SPEED,attrib->getValueRef().cast<FloatInterpolator>());
+
+		if (attrib = descriptor.getAttributeWithValue("emitters"))
+		{
+			std::vector<WeakRef<SPKObject>> tmpEmitters = attrib->getValuesRef();
+			for (size_t i = 0; i < tmpEmitters.size(); ++i)
+				addEmitter(tmpEmitters[i].cast<Emitter>());
+		}
+
+		if (attrib = descriptor.getAttributeWithValue("modifiers"))
+		{
+			std::vector<WeakRef<SPKObject>> tmpModifiers = attrib->getValuesRef();
+			for (size_t i = 0; i < tmpModifiers.size(); ++i)
+				addModifier(tmpModifiers[i].cast<Modifier>());
+		}
+
+		if (attrib = descriptor.getAttributeWithValue("birth action"))
+			setBirthAction(attrib->getValueRef().cast<Action>());
+		if (attrib = descriptor.getAttributeWithValue("death action"))
+			setDeathAction(attrib->getValueRef().cast<Action>());
+		if (attrib = descriptor.getAttributeWithValue("renderer"))
+			setRenderer(attrib->getValueRef().cast<Renderer>());
+
+		if (attrib = descriptor.getAttributeWithValue("life time"))
+		{
+			std::vector<float> tmpTimes = attrib->getValuesFloat();
+			switch(tmpTimes.size())
+			{
+				case 1 : setLifeTime(tmpTimes[0],tmpTimes[0]); break;
+				case 2 : setLifeTime(tmpTimes[0],tmpTimes[1]); break;
+				default : SPK_LOG_ERROR("Group::innerImport(const IO::Descriptor&) - Wrong number of life times : "+tmpTimes.size());
+			}
+		}
+
+		if (attrib = descriptor.getAttributeWithValue("immortal"))
+			setImmortal(attrib->getValueBool());
+		if (attrib = descriptor.getAttributeWithValue("still"))
+			setStill(attrib->getValueBool());
+		if (attrib = descriptor.getAttributeWithValue("distance computation enabled"))
+			enableDistanceComputation(attrib->getValueBool());
+		if (attrib = descriptor.getAttributeWithValue("sorting enabled"))
+			enableSorting(attrib->getValueBool());
+
+		if (attrib = descriptor.getAttributeWithValue("radius"))
+		{
+			std::vector<float> tmpRadiuses = attrib->getValuesFloat();
+			switch(tmpRadiuses.size())
+			{
+				case 1 : setRadius(tmpRadiuses[0]); break;
+				case 2 : setGraphicalRadius(tmpRadiuses[0]); setPhysicalRadius(tmpRadiuses[1]); break;
+				default : SPK_LOG_ERROR("Group::innerImport(const IO::Descriptor&) - Wrong number of radiuses : "+tmpRadiuses.size());
+			}
+		}
+	}
+
+	void Group::innerExport(IO::Descriptor& descriptor) const
+	{
+		SPKObject::innerExport(descriptor);
+
+		descriptor.getAttribute("color interpolator")->setValueRefOptionalOnNull(getColorInterpolator());
+		descriptor.getAttribute("scale interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_SCALE));
+		descriptor.getAttribute("mass interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_MASS));
+		descriptor.getAttribute("angle interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_ANGLE));
+		descriptor.getAttribute("texture index interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_TEXTURE_INDEX));
+		descriptor.getAttribute("rotation speed interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_ROTATION_SPEED));
+
+		size_t nbEmitters = getNbEmitters();
+		if (nbEmitters > 0)
+		{
+			WeakRef<SPKObject>* tmpEmitters = SPK_NEW_ARRAY(WeakRef<SPKObject>,nbEmitters);
+			for (size_t i = 0; i < nbEmitters; ++i)
+				tmpEmitters[i] = getEmitter(i);
+			descriptor.getAttribute("emitters")->setValuesRef(tmpEmitters,nbEmitters);
+			SPK_DELETE_ARRAY(tmpEmitters);
+		}
+
+		size_t nbModifiers = getNbModifiers();
+		if (nbModifiers > 0)
+		{
+			WeakRef<SPKObject>* tmpModifiers = SPK_NEW_ARRAY(WeakRef<SPKObject>,nbModifiers);
+			for (size_t i = 0; i < nbModifiers; ++i)
+				tmpModifiers[i] = getModifier(i);
+			descriptor.getAttribute("modifiers")->setValuesRef(tmpModifiers,nbModifiers);
+			SPK_DELETE_ARRAY(tmpModifiers);
+		}
+
+		descriptor.getAttribute("birth action")->setValueRefOptionalOnNull(getBirthAction());
+		descriptor.getAttribute("death action")->setValueRefOptionalOnNull(getDeathAction());
+		descriptor.getAttribute("renderer")->setValueRefOptionalOnNull(getRenderer());
+
+		float tmpTimes[2] = {minLifeTime,maxLifeTime};
+		descriptor.getAttribute("life time")->setValuesFloat(tmpTimes,2);
+
+		descriptor.getAttribute("immortal")->setValueBoolOptionalOnFalse(immortal);
+		descriptor.getAttribute("still")->setValueBoolOptionalOnFalse(still);
+		descriptor.getAttribute("distance computation enabled")->setValueBoolOptionalOnFalse(distanceComputationEnabled);
+		descriptor.getAttribute("sorting enabled")->setValueBoolOptionalOnFalse(sortingEnabled);
+	
+		float tmpRadiuses[2] = {graphicalRadius,physicalRadius};
+		descriptor.getAttribute("radius")->setValuesFloat(tmpRadiuses,2);
 	}
 }

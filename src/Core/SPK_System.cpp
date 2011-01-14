@@ -216,4 +216,23 @@ namespace SPK
 		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->propagateUpdateTransform();
 	}
+
+	void System::innerImport(const IO::Descriptor& descriptor)
+	{
+		SPKObject::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;	
+		if (attrib = descriptor.getAttributeWithValue("groups"))
+		{
+			std::vector<WeakRef<SPKObject>> tmpGroups = attrib->getValuesRef();
+			for (size_t i = 0; i < tmpGroups.size(); ++i)
+				groups.push_back(tmpGroups[i].cast<Group>().get());
+		}
+	}
+
+	void System::innerExport(IO::Descriptor& descriptor) const
+	{
+		SPKObject::innerExport(descriptor);
+		descriptor.getAttribute("groups")->setValuesRef(reinterpret_cast<const WeakRef<SPKObject>*>(&groups[0]),getNbGroups());
+	}
 }

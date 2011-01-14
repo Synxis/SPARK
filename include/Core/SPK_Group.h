@@ -55,9 +55,16 @@ namespace SPK
 	friend class System;
 	friend class DataSet;
 
+	SPK_IMPLEMENT_SERIALIZABLE(Group)
+
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(SPKObject)
-	SPK_ATTRIBUTE("interpolators",ATTRIBUTE_TYPE_REFS)
+	SPK_ATTRIBUTE("color interpolator",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("scale interpolator",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("mass interpolator",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("angle interpolator",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("texture index interpolator",ATTRIBUTE_TYPE_REF)
+	SPK_ATTRIBUTE("rotation speed interpolator",ATTRIBUTE_TYPE_REF)
 	SPK_ATTRIBUTE("emitters",ATTRIBUTE_TYPE_REFS)
 	SPK_ATTRIBUTE("modifiers",ATTRIBUTE_TYPE_REFS)
 	SPK_ATTRIBUTE("birth action",ATTRIBUTE_TYPE_REF)
@@ -78,10 +85,10 @@ namespace SPK
 		inline void setStill(bool still);
 
 		void setColorInterpolator(const Ref<ColorInterpolator>& interpolator);
-		const Ref<ColorInterpolator>& getColorInterpolator() const;
+		inline const Ref<ColorInterpolator>& getColorInterpolator() const;
 
 		void setParamInterpolator(Param param,const Ref<FloatInterpolator>& interpolator);
-		const Ref<FloatInterpolator>& getParamInterpolator(Param param) const;
+		inline const Ref<FloatInterpolator>& getParamInterpolator(Param param) const;
 
 		inline float getMinLifeTime() const;
 		inline float getMaxLifeTime() const;
@@ -356,6 +363,11 @@ namespace SPK
 		///////////////////////
 
 		virtual WeakRef<SPKObject> findByName(const std::string& name);
+	
+	protected :
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -483,7 +495,7 @@ namespace SPK
 			bool full;
 		};
 
-		System& system;
+		WeakRef<System> system;
 
 		ParticleData particleData;
 		size_t enabledParamIndices[NB_PARAMETERS];
@@ -524,6 +536,7 @@ namespace SPK
 		Group(System& system,size_t capacity);
 		Group(System& system,const Group& group);
 		Group(const Group& group); // never used
+		Group(); // default constructor, used when unserializing
 		~Group();
 
 		bool updateParticles(float deltaTime);
@@ -583,6 +596,16 @@ namespace SPK
 	inline void Group::setStill(bool still)
 	{
 		this->still = still;
+	}
+
+	inline const Ref<FloatInterpolator>& Group::getParamInterpolator(Param param) const
+	{
+		return paramInterpolators[param].obj;
+	}
+
+	inline const Ref<ColorInterpolator>& Group::getColorInterpolator() const
+	{
+		return colorInterpolator.obj;
 	}
 
 	inline float Group::getMinLifeTime() const
@@ -725,7 +748,7 @@ namespace SPK
 
 	inline System& Group::getSystem() const
 	{
-		return system;
+		return *system;
 	}
 
 	inline const Ref<Action>& Group::getBirthAction() const

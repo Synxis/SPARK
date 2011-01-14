@@ -60,8 +60,6 @@ namespace SPK
 		template<typename T>
 		static Ref<T> copyRegisterable(const Ref<T>& ref);
 
-		//virtual std::string getClassName() const = 0;
-
 	protected :
 
 		Referenceable();
@@ -124,7 +122,7 @@ namespace SPK
 			return it->second.cast<T>();
 
 		Referenceable* clone = ref->clone();
-		copyBuffer.insert(std::pair<WeakRef<Referenceable>,WeakRef<Referenceable>>(WeakRef<Referenceable>(ref),WeakRef<Referenceable>(clone)));
+		copyBuffer.insert(std::make_pair(WeakRef<Referenceable>(ref),WeakRef<Referenceable>(clone)));
 		return Ref<T>(dynamic_cast<T*>(clone));
 	}
 }

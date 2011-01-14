@@ -27,7 +27,7 @@
 #define SPK_START_DESCRIPTION \
 \
 protected : \
-virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) \
+virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) const \
 {
 
 #define SPK_PARENT_ATTRIBUTES(ParentName)	ParentName::fillAttributeList(attributes);
@@ -37,8 +37,11 @@ virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) \
 
 #define SPK_IMPLEMENT_SERIALIZABLE(ClassName) \
 private : \
-static std::string getClassName() {return #ClassName;} \
-static ClassName* createSerializable() {return SPK_NEW(ClassName);}
+friend class IO::IOManager; \
+static ClassName* createSerializable() {return SPK_NEW(ClassName);} \
+static std::string getName() {return #ClassName;} \
+public : \
+virtual std::string getClassName() const { return ClassName::getName(); }
 
 // For templates
 #define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : virtual void fillAttributeList(std::vector<IO::Attribute>& attributes);
@@ -99,8 +102,10 @@ namespace SPK
 		// Serialization //
 		///////////////////
 
-		inline void importAttributes(const IO::Descriptor& descriptor);
+		void importAttributes(const IO::Descriptor& descriptor);
 		IO::Descriptor exportAttributes() const;
+
+		virtual std::string getClassName() const { return std::string(); } // TODO Make pure virtual
 		
 	protected :
 
@@ -110,8 +115,6 @@ namespace SPK
 			name(obj.name),
 			transform(obj.transform)
 		{}
-
-		virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) const {};
 
 		/**
 		* @brief Updates all the parameters in the world coordinates
@@ -166,11 +169,6 @@ namespace SPK
 	WeakRef<SPKObject> SPKObject::findByName(const std::string& name)
 	{
 		return getName().compare(name) == 0 ? this : NULL;
-	}
-
-	inline void SPKObject::importAttributes(const IO::Descriptor& descriptor)
-	{
-		innerImport(descriptor);
 	}
 
 	inline void SPKObject::transformPos(Vector3D& tPos,const Vector3D& pos)

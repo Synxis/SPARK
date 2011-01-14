@@ -40,6 +40,7 @@ namespace SPK
 	class SPK_PREFIX SpawnParticlesAction : public Action
 	{
 	SPK_IMPLEMENT_REFERENCEABLE(SpawnParticlesAction)
+	SPK_IMPLEMENT_SERIALIZABLE(SpawnParticlesAction)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Action)
