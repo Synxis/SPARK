@@ -62,7 +62,7 @@ namespace IO
 	{
 		SPK_ASSERT(!nodesValidated,"Loader::Graph::addNode(size_t,string) - Graph has been processed. Nodes cannot be added any longer");
 
-		WeakRef<SPKObject> object = IOManager::get().createObject(name);
+		WeakRef<SPKObject> object = IOManager::getInstance().createObject(name);
 		
 		if (object == NULL)
 		{
@@ -106,7 +106,7 @@ namespace IO
 		{
 			WeakRef<Group> groupRef = (*it)->object.cast<Group>();
 			if (groupRef != NULL) // Associates each group with the system
-				IOManager::get().linkGroup(*groupRef,*system);
+				IOManager::getInstance().linkGroup(*groupRef,*system);
 		}
 
 		return nodesValidated = true;

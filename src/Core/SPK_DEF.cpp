@@ -28,7 +28,11 @@
 namespace SPK
 {
 #ifdef SPK_TRACE_MEMORY
-	SPKMemoryTracer SPKMemoryTracer::instance = SPKMemoryTracer();
+	SPKMemoryTracer& SPKMemoryTracer::getInstance() 
+	{
+		static SPKMemoryTracer instance;
+		return instance;
+	}
 #endif
 
 	SPKContext SPKContext::instance = SPKContext();
@@ -57,9 +61,6 @@ namespace SPK
 	{
 		// Default zone is destroyed
 		defaultZone.reset();
-
-		// Singletons are destroyed
-		Logger::destroyInstance();
 	}
 
 	const Ref<Zone>& SPKContext::getDefaultZone()

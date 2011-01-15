@@ -25,11 +25,18 @@
 namespace SPK
 {
 namespace IO
-{
-	IOManager& IOManager::get()
+{	
+	IOManager& IOManager::getInstance()
 	{
-		static IOManager manager;
-		return manager;
+		static IOManager instance;
+		return instance;
+	}
+
+	void IOManager::unregisterAll()
+	{
+		registeredObjects.clear();
+		registeredLoaders.clear();
+		registeredSavers.clear();
 	}
 
 	System* IOManager::load(const std::string& path) const

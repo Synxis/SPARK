@@ -35,7 +35,9 @@ namespace IO
 	{
 	public : 
 
-		static IOManager& get();
+		static IOManager& getInstance();
+		
+		void unregisterAll();
 	
 		template<typename T> void registerObject();
 		template<typename T> void unregisterObject();

@@ -60,7 +60,7 @@ namespace SPK
 
 	public :
 
-		static SPKMemoryTracer& getInstance() { return instance; }
+		static SPKMemoryTracer& getInstance();
 
 		void* registerAllocation(void* position,size_t size,const std::string& type,const std::string& file,size_t line)
 		{
@@ -160,8 +160,6 @@ namespace SPK
 
 		SPKMemoryTracer(const SPKMemoryTracer&); // Not used
 		SPKMemoryTracer& operator=(const SPKMemoryTracer&); // Not used
-
-		static SPKMemoryTracer instance;
 
 		unsigned long int nextIndex;
 

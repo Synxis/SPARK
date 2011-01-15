@@ -69,6 +69,11 @@
 #define SPK_DEFAULT_ZONE	SPK::SPKContext::getInstance().getDefaultZone()
 
 /**
+* @namespace SPK::IO
+* @brief the namespace for input/output relative SPARK code
+*/
+
+/**
 * @namespace SPK
 * @brief the namespace for core SPARK code
 */

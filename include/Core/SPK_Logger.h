@@ -137,9 +137,6 @@ namespace SPK
 		* @return the instance of Logger
 		*/
 		static Logger& getInstance();
-
-		/** @brief Destroys the unique instance of logger (if one) */
-		static void destroyInstance();
 	
 		/////////////
 		// Setters //

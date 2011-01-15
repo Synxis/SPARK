@@ -49,16 +49,8 @@ namespace SPK
 
 	Logger& Logger::getInstance()
 	{
-		if (instance == NULL)
-			instance = SPK_NEW(Logger);
-
-		return *instance;
-	}
-
-	void Logger::destroyInstance()
-	{
-		SPK_DELETE(instance);
-		instance = NULL;
+		static Logger instance;
+		return instance;
 	}
 
 	Logger::Stream Logger::getStream(LogPriority priority,bool skipPrefix)
