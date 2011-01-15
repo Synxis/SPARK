@@ -78,19 +78,19 @@ namespace IO
 		* @brief Gets the name of this attribute
 		* @return the name
 		*/
-		inline const std::string& getName() const;
+		const std::string& getName() const;
 
 		/**
 		* @brief Gets the type of the attribute
 		* @return the type
 		*/
-		inline AttributeType getType() const;
+		AttributeType getType() const;
 
 		/**
 		* @brief Tells whether the value of this attribute is set
 		* @return true if the value is set, false if not
 		*/
-		inline bool hasValue() const;
+		bool hasValue() const;
 
 		/**
 		* @brief Tells whether the value of this attribute is optional
@@ -101,7 +101,7 @@ namespace IO
 		*
 		* @return true if the value is optinal, false otherwise
 		*/
-		inline bool isValueOptional() const;
+		bool isValueOptional() const;
 
 		// For type safety
 
@@ -377,6 +377,26 @@ namespace IO
 		template<typename T> T getValue(AttributeType valueType) const;
 		template<typename T> const std::vector<T> getValues(AttributeType valueType) const;
 	};
+
+	inline const std::string& Attribute::getName() const
+	{
+		return name;
+	}
+
+	inline AttributeType Attribute::getType() const
+	{
+		return type;
+	}
+
+	inline bool Attribute::hasValue() const
+	{
+		return valueSet;
+	}
+
+	inline bool Attribute::isValueOptional() const
+	{
+		return optional;
+	}
 
 	inline Attribute::Attribute(const std::string& name,AttributeType type) :
 		name(name),

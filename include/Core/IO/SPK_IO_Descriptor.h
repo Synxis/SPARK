@@ -84,27 +84,27 @@ namespace IO
 		* @param name : the name of the attribute
 		* @return the attribute or NULL if no attribute with this name is found
 		*/
-		inline const Attribute* getAttribute(const std::string& name) const;
+		const Attribute* getAttribute(const std::string& name) const;
 
 		/**
 		* @brief Gets the attribute with its value set with the given name (const version)
 		* @param name : the name of the attribute
 		* @return the attribute or NULL if no attribute with this name is found or if the attribute with this name is not set
 		*/
-		inline const Attribute* getAttributeWithValue(const std::string& name) const;
+		const Attribute* getAttributeWithValue(const std::string& name) const;
 
 		/**
 		* @brief Gets the attribute at the given index (const version)
 		* @param name : the index of the attribute
 		* @return the attribute at the given index
 		*/
-		inline const Attribute& getAttribute(size_t index) const;
+		const Attribute& getAttribute(size_t index) const;
 
 		/**
 		* @brief Gets the number of attributes
 		* @return the number of attributes
 		*/
-		inline size_t getNbAttributes() const;
+		size_t getNbAttributes() const;
 
 		//////////
 		// Misc //
@@ -118,14 +118,14 @@ namespace IO
 		*
 		* @return the signature
 		*/
-		inline size_t getSignature() const;
+		size_t getSignature() const;
 
 		/**
 		* @brief Gets the name of this descriptor
 		* The name of a descriptor is the name of the class which is described.
 		* @return the name
 		*/
-		inline const std::string& getName() const;
+		const std::string& getName() const;
 
 	private :
 
@@ -143,26 +143,6 @@ namespace IO
 
 		inline void setName(const std::string& name);
 	};
-
-	inline const std::string& Attribute::getName() const
-	{
-		return name;
-	}
-
-	inline AttributeType Attribute::getType() const
-	{
-		return type;
-	}
-
-	inline bool Attribute::hasValue() const
-	{
-		return valueSet;
-	}
-
-	inline bool Attribute::isValueOptional() const
-	{
-		return optional;
-	}
 
 	inline const Attribute* Descriptor::getAttribute(const std::string& name) const
 	{
