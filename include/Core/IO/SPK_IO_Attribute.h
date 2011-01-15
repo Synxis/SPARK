@@ -33,28 +33,39 @@ namespace IO
 {
 	class Descriptor;
 	
+	/** @brief Constants defining attribute's types */
 	enum AttributeType
 	{
-		ATTRIBUTE_TYPE_CHAR,
-		ATTRIBUTE_TYPE_BOOL,
-		ATTRIBUTE_TYPE_INT32,
-		ATTRIBUTE_TYPE_UINT32,
-		ATTRIBUTE_TYPE_FLOAT,
-		ATTRIBUTE_TYPE_VECTOR,
-		ATTRIBUTE_TYPE_COLOR,
-		ATTRIBUTE_TYPE_STRING,
-		ATTRIBUTE_TYPE_REF,
-		ATTRIBUTE_TYPE_CHARS,
-		ATTRIBUTE_TYPE_BOOLS,
-		ATTRIBUTE_TYPE_INT32S,
-		ATTRIBUTE_TYPE_UINT32S,
-		ATTRIBUTE_TYPE_FLOATS,
-		ATTRIBUTE_TYPE_VECTORS,
-		ATTRIBUTE_TYPE_COLORS,
-		ATTRIBUTE_TYPE_STRINGS,
-		ATTRIBUTE_TYPE_REFS,
+		ATTRIBUTE_TYPE_CHAR,		/**< @brief the value is a char */
+		ATTRIBUTE_TYPE_BOOL,		/**< @brief the value is a boolean */
+		ATTRIBUTE_TYPE_INT32,		/**< @brief the value is an int 32 bits */
+		ATTRIBUTE_TYPE_UINT32,		/**< @brief the value is an unsigned int 32 bits */
+		ATTRIBUTE_TYPE_FLOAT,		/**< @brief the value is a float */
+		ATTRIBUTE_TYPE_VECTOR,		/**< @brief the value is a Vector3D */
+		ATTRIBUTE_TYPE_COLOR,		/**< @brief the value is a Color */
+		ATTRIBUTE_TYPE_STRING,		/**< @brief the value is a std::string */
+		ATTRIBUTE_TYPE_REF,			/**< @brief the value is a Ref<SPKObject> */
+		ATTRIBUTE_TYPE_CHARS,		/**< @brief the value is an array of char */
+		ATTRIBUTE_TYPE_BOOLS,		/**< @brief the value is an array of boolean */		
+		ATTRIBUTE_TYPE_INT32S,		/**< @brief the value is an array of int 32 bits */
+		ATTRIBUTE_TYPE_UINT32S,		/**< @brief the value is an array of unsigned int 32 bits */
+		ATTRIBUTE_TYPE_FLOATS,		/**< @brief the value is an array of float */
+		ATTRIBUTE_TYPE_VECTORS,		/**< @brief the value is an array of Vector3D */
+		ATTRIBUTE_TYPE_COLORS,		/**< @brief the value is an array of Color */
+		ATTRIBUTE_TYPE_STRINGS,		/**< @brief the value is an array of std::string */
+		ATTRIBUTE_TYPE_REFS,		/**< @brief the value is an array of Ref<SPKObject> */
 	};
 
+	/**
+	* @brief A single field of a serializable object
+	*
+	* An attribute is defined by :
+	* <ul>
+	* <li>a name</li>
+	* <li>a type</li>
+	* <li>a value (which can be set or not</li>
+	* </ul>
+	*/
 	class Attribute
 	{
 	friend class Descriptor;
@@ -63,53 +74,290 @@ namespace IO
 
 		Attribute(const std::string& name,AttributeType type);
 
+		/**
+		* @brief Gets the name of this attribute
+		* @return the name
+		*/
 		inline const std::string& getName() const;
+
+		/**
+		* @brief Gets the type of the attribute
+		* @return the type
+		*/
 		inline AttributeType getType() const;
+
+		/**
+		* @brief Tells whether the value of this attribute is set
+		* @return true if the value is set, false if not
+		*/
 		inline bool hasValue() const;
+
+		/**
+		* @brief Tells whether the value of this attribute is optional
+		* 
+		* An optional value will not necessarily be exported when serializing because it is not needed to deserialize the object
+		* (Typically it is the default value of the attribute).
+		* Optional value are useful when serializing in human readable format (xml for instance) to keep the information clear.
+		*
+		* @return true if the value is optinal, false otherwise
+		*/
 		inline bool isValueOptional() const;
 
 		// For type safety
+
+		/**
+		* @brief Sets the value (char)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueChar(char value,bool optional = false)										{ setValue(ATTRIBUTE_TYPE_CHAR,value,optional); }
+
+		/**
+		* @brief Sets the value (bool)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueBool(bool value,bool optional = false)										{ setValue(ATTRIBUTE_TYPE_BOOL,value,optional); }
+
+		/**
+		* @brief Sets the value (int 32 bits)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueInt32(long int value,bool optional = false)								{ setValue(ATTRIBUTE_TYPE_INT32,value,optional); }
+
+		/**
+		* @brief Sets the value (unsigned int 32 bits)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueUint32(unsigned long int value,bool optional = false)						{ setValue(ATTRIBUTE_TYPE_UINT32,value,optional); }
+
+		/**
+		* @brief Sets the value (float)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueFloat(float value,bool optional = false)									{ setValue(ATTRIBUTE_TYPE_FLOAT,value,optional); }
+
+		/**
+		* @brief Sets the value (Vector3D)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueVector(const Vector3D& value,bool optional = false)						{ setValue(ATTRIBUTE_TYPE_VECTOR,value,optional); }
+
+		/**
+		* @brief Sets the value (Color)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueColor(const Color& value,bool optional = false)							{ setValue(ATTRIBUTE_TYPE_COLOR,value,optional); }
+
+		/**
+		* @brief Sets the value (std::string)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueString(const std::string& value,bool optional = false)						{ setValue(ATTRIBUTE_TYPE_STRING,value,optional); }
+
+		/**
+		* @brief Sets the value (Ref)
+		* @param value : the value
+		* @param optional : is this value optional ?
+		*/
 		void setValueRef(const WeakRef<SPKObject>& value,bool optional = false)					{ setValue(ATTRIBUTE_TYPE_REF,value,optional); }
 		
+		/**
+		* @brief Sets the reference value and make it optional if NULL
+		* @param value : the value
+		*/
 		void setValueRefOptionalOnNull(const WeakRef<SPKObject>& value)							{ setValueRef(value,value == NULL); }
+
+		/**
+		* @brief Sets the boolean value and make it optional if false
+		* @param value : the value
+		*/
 		void setValueBoolOptionalOnFalse(bool value)											{ setValueBool(value,!value); }
 
+		/**
+		* @brief Sets the array of values (char)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesChar(const char* values,size_t nb,bool optional = false)					{ setValues(ATTRIBUTE_TYPE_CHARS,values,nb,optional); }
+		
+		/**
+		* @brief Sets the array of values (bool)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesBool(const bool* values,size_t nb,bool optional = false)					{ setValues(ATTRIBUTE_TYPE_BOOLS,values,nb,optional); }
+		
+		/**
+		* @brief Sets the array of values (int 32 bits)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesInt32(const long int* values,size_t nb,bool optional = false)				{ setValues(ATTRIBUTE_TYPE_INT32S,values,nb,optional); }
+		
+		/**
+		* @brief Sets the array of values (unsigned int 32 bits)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesUint32(const unsigned long int* values,size_t nb,bool optional = false)	{ setValues(ATTRIBUTE_TYPE_UINT32S,values,nb,optional); }
+		
+		/**
+		* @brief Sets the array of values (float)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesFloat(const float* values,size_t nb,bool optional = false)				{ setValues(ATTRIBUTE_TYPE_FLOATS,values,nb,optional); }
+		
+		/**
+		* @brief Sets the array of values (Vector3D)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesVector(const Vector3D* values,size_t nb,bool optional = false)			{ setValues(ATTRIBUTE_TYPE_VECTORS,values,nb,optional); }
+		
+		/**
+		* @brief Sets the array of values (Color)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesColor(const Color* values,size_t nb,bool optional = false)				{ setValues(ATTRIBUTE_TYPE_COLORS,values,nb,optional); }
+		
+		/**
+		* @brief Sets the array of values (std::string)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesString(const std::string* values,size_t nb,bool optional = false)			{ setValues(ATTRIBUTE_TYPE_STRINGS,values,nb,optional); }
+		
+		/**
+		* @brief Sets the array of values (Ref)
+		* @param value : the array of values
+		* @param nb : the number of values
+		* @param optional : is this value optional ?
+		*/
 		void setValuesRef(const WeakRef<SPKObject>* values,size_t nb,bool optional = false)		{ setValues(ATTRIBUTE_TYPE_REFS,values,nb,optional); }
 		
+		/**
+		* @brief Gets the value (char)
+		* @return value : the array of values
+		*/
 		char getValueChar() const									{ return getValue<char>(ATTRIBUTE_TYPE_CHAR); }
+
+		/**
+		* @brief Gets the value (bool)
+		* @return value : the array of values
+		*/
 		bool getValueBool() const									{ return getValue<bool>(ATTRIBUTE_TYPE_BOOL); }
+
+		/**
+		* @brief Gets the value (int 32 bits)
+		* @return value : the array of values
+		*/
 		long int getValueInt32() const								{ return getValue<long int>(ATTRIBUTE_TYPE_INT32); }
+
+		/**
+		* @brief Gets the value (unsigned int 32 bits)
+		* @return value : the array of values
+		*/
 		unsigned long int getValueUint32() const					{ return getValue<unsigned long int>(ATTRIBUTE_TYPE_UINT32); }
+
+		/**
+		* @brief Gets the value (float)
+		* @return value : the array of values
+		*/
 		float getValueFloat() const									{ return getValue<float>(ATTRIBUTE_TYPE_FLOAT); }
+
+		/**
+		* @brief Gets the value (Vector3D)
+		* @return value : the array of values
+		*/
 		Vector3D getValueVector() const								{ return getValue<Vector3D>(ATTRIBUTE_TYPE_VECTOR); }
+
+		/**
+		* @brief Gets the value (Color)
+		* @return value : the array of values
+		*/
 		Color getValueColor() const									{ return getValue<Color>(ATTRIBUTE_TYPE_COLOR); }
+
+		/**
+		* @brief Gets the value (std::string)
+		* @return value : the array of values
+		*/
 		std::string getValueString() const							{ return getValue<std::string>(ATTRIBUTE_TYPE_STRING); }
+
+		/**
+		* @brief Gets the value (Ref)
+		* @return value : the array of values
+		*/
 		WeakRef<SPKObject> getValueRef() const						{ return getValue<WeakRef<SPKObject>>(ATTRIBUTE_TYPE_REF); }
 
+		/**
+		* @brief Gets the array of values (char)
+		* @return value : the array of values
+		*/
 		std::vector<char> getValuesChar() const						{ return getValues<char>(ATTRIBUTE_TYPE_CHARS); }
+
+		/**
+		* @brief Gets the array of values (bool)
+		* @return value : the array of values
+		*/
 		std::vector<bool> getValuesBool() const						{ return getValues<bool>(ATTRIBUTE_TYPE_BOOLS); }
+
+		/**
+		* @brief Gets the array of values (int 32 bits)
+		* @return value : the array of values
+		*/
 		std::vector<long int> getValuesInt32() const				{ return getValues<long int>(ATTRIBUTE_TYPE_INT32S); }
+
+		/**
+		* @brief Gets the array of values (unsigned int 32 bits)
+		* @return value : the array of values
+		*/
 		std::vector<unsigned long int> getValuesUint32() const		{ return getValues<unsigned long int>(ATTRIBUTE_TYPE_UINT32S); }
+
+		/**
+		* @brief Gets the array of values (float)
+		* @return value : the array of values
+		*/
 		std::vector<float> getValuesFloat() const					{ return getValues<float>(ATTRIBUTE_TYPE_FLOATS); }
+
+		/**
+		* @brief Gets the array of values (Vector3d)
+		* @return value : the array of values
+		*/
 		std::vector<Vector3D> getValuesVector() const				{ return getValues<Vector3D>(ATTRIBUTE_TYPE_VECTORS); }
+
+		/**
+		* @brief Gets the array of values (Color)
+		* @return value : the array of values
+		*/
 		std::vector<Color> getValuesColor() const					{ return getValues<Color>(ATTRIBUTE_TYPE_COLORS); }
+
+		/**
+		* @brief Gets the array of values (std::string)
+		* @return value : the array of values
+		*/
 		std::vector<std::string> getValuesString() const			{ return getValues<std::string>(ATTRIBUTE_TYPE_STRINGS); }
+
+		/**
+		* @brief Gets the array of values (Ref)
+		* @return value : the array of values
+		*/
 		std::vector<WeakRef<SPKObject>> getValuesRef() const		{ return getValues<WeakRef<SPKObject>>(ATTRIBUTE_TYPE_REFS); }
 
 	private :

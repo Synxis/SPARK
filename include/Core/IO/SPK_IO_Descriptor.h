@@ -31,6 +31,16 @@ namespace SPK
 
 namespace IO
 {
+	/** 
+	* @brief A description of a SPKObject for serialization/deserialization 
+	* 
+	* A descriptor is basically a set of attributes with a name, a type and possibly a value.<br>
+	* <br>
+	* A descriptor cannot be created directly but is gotten via a serializable SPKObject with the method SPKObject::exportAttributes().<br>
+	* A descriptor can be used to set a serializable object with the method SPKObject::importAttributes(const IO::Descriptor&).<br>
+	* <br>
+	* Descriptors are used by loaders and savers but can also be used to set objects within an application or to retrieve object structure. (in an editor for instance)
+	*/
 	class SPK_PREFIX Descriptor
 	{
 	friend class Attribute;
@@ -38,19 +48,83 @@ namespace IO
 
 	public :
 
+		/////////////////
+		// Constructor //
+		/////////////////
+
 		Descriptor(const Descriptor& descriptor);
 
+		////////////////
+		// Attributes //
+		////////////////
+
+		/**
+		* @brief Gets the attribute with the given name
+		* @param name : the name of the attribute
+		* @return the attribute or NULL if no attribute with this name is found
+		*/
 		Attribute* getAttribute(const std::string& name);
+
+		/**
+		* @brief Gets the attribute with its value set with the given name
+		* @param name : the name of the attribute
+		* @return the attribute or NULL if no attribute with this name is found or if the attribute with this name is not set
+		*/
 		Attribute* getAttributeWithValue(const std::string& name);
+
+		/**
+		* @brief Gets the attribute at the given index
+		* @param name : the index of the attribute
+		* @return the attribute at the given index
+		*/
 		Attribute& getAttribute(size_t index);
 
+		/**
+		* @brief Gets the attribute with the given name (const version)
+		* @param name : the name of the attribute
+		* @return the attribute or NULL if no attribute with this name is found
+		*/
 		inline const Attribute* getAttribute(const std::string& name) const;
+
+		/**
+		* @brief Gets the attribute with its value set with the given name (const version)
+		* @param name : the name of the attribute
+		* @return the attribute or NULL if no attribute with this name is found or if the attribute with this name is not set
+		*/
 		inline const Attribute* getAttributeWithValue(const std::string& name) const;
+
+		/**
+		* @brief Gets the attribute at the given index (const version)
+		* @param name : the index of the attribute
+		* @return the attribute at the given index
+		*/
 		inline const Attribute& getAttribute(size_t index) const;
 
+		/**
+		* @brief Gets the number of attributes
+		* @return the number of attributes
+		*/
 		inline size_t getNbAttributes() const;
+
+		//////////
+		// Misc //
+		//////////
+
+		/**
+		* @brief Gets the signature
+		*
+		* The signature of a descriptor is a hash build with the concatenation of all its attribute names and types.<br>
+		* It allows to handle different versions of serializable objects and ensure a descriptor is valid for a given type.
+		*
+		* @return the signature
+		*/
 		inline size_t getSignature() const;
 
+		/**
+		* @brief Gets the name of this descriptor
+		* The name of a descriptor is the name of the class which is described.
+		* @return the name
+		*/
 		inline const std::string& getName() const;
 
 	private :
