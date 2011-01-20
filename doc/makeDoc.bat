@@ -1,5 +1,5 @@
 cd doxygen
-doxygen doxygen.cfg
+doxygen doxygen.cfg > doxy_log.txt
 @echo off
 @echo Creating doc shortcut...
 MakeShortcut "..\html\index.html" "" "..\DocIndex.lnk" ""
@@ -16,4 +16,3 @@ MakeShortcut "..\html\index.html" "" "..\DocIndex.lnk" ""
 @echo ##############################
 @echo ##############################
 @echo on
-pause
