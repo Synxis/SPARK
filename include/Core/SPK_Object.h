@@ -46,7 +46,7 @@ virtual std::string getClassName() const { return ClassName::getName(); }
 // For templates
 #define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : virtual void fillAttributeList(std::vector<IO::Attribute>& attributes);
 #define SPK_START_DESCRIPTION_TEMPLATE(ClassName) \
-template<> void ClassName::fillAttributeList(std::vector<IO::Attribute>& attributes) \
+template<> inline void ClassName::fillAttributeList(std::vector<IO::Attribute>& attributes) \
 {
 
 namespace SPK

@@ -40,8 +40,8 @@ namespace SPK
 
 	protected :
 
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+		inline virtual void innerImport(const IO::Descriptor& descriptor);
+		inline virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -104,7 +104,7 @@ namespace SPK
 	}
 
 	template<>
-	void DefaultInitializer<float>::innerImport(const IO::Descriptor& descriptor)
+	inline void DefaultInitializer<float>::innerImport(const IO::Descriptor& descriptor)
 	{
 		Interpolator<float>::innerImport(descriptor);
 
@@ -114,14 +114,14 @@ namespace SPK
 	}
 
 	template<>
-	void DefaultInitializer<float>::innerExport(IO::Descriptor& descriptor) const
+	inline void DefaultInitializer<float>::innerExport(IO::Descriptor& descriptor) const
 	{
 		Interpolator<float>::innerExport(descriptor);
 		descriptor.getAttribute("default value")->setValueFloat(getDefaultValue());
 	}
 
 	template<>
-	void DefaultInitializer<Color>::innerImport(const IO::Descriptor& descriptor)
+	inline void DefaultInitializer<Color>::innerImport(const IO::Descriptor& descriptor)
 	{
 		Interpolator<Color>::innerImport(descriptor);
 
@@ -131,7 +131,7 @@ namespace SPK
 	}
 
 	template<>
-	void DefaultInitializer<Color>::innerExport(IO::Descriptor& descriptor) const
+	inline void DefaultInitializer<Color>::innerExport(IO::Descriptor& descriptor) const
 	{
 		Interpolator<Color>::innerExport(descriptor);
 		descriptor.getAttribute("default value")->setValueColor(getDefaultValue());
