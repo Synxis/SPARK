@@ -55,7 +55,7 @@ namespace SPK
 	friend class System;
 	friend class DataSet;
 
-	SPK_IMPLEMENT_SERIALIZABLE(Group)
+	SPK_IMPLEMENT_OBJECT(Group)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(SPKObject)
@@ -79,6 +79,11 @@ namespace SPK
 	SPK_END_DESCRIPTION
 
 	public :
+
+		static Ref<Group> create(size_t capacity = 100);
+		~Group();
+
+		bool isInitialized() const;
 
 		void setLifeTime(float minLife,float maxLife);
 		inline void setImmortal(bool immortal);
@@ -296,7 +301,7 @@ namespace SPK
 
 		void flushBufferedParticles();
 
-		inline System& getSystem() const;
+		inline Ref<System> getSystem() const;
 
 		/////////////
 		// Actions //
@@ -362,7 +367,7 @@ namespace SPK
 		// Virtual interface //
 		///////////////////////
 
-		virtual WeakRef<SPKObject> findByName(const std::string& name);
+		virtual Ref<SPKObject> findByName(const std::string& name);
 	
 	protected :
 
@@ -416,11 +421,11 @@ namespace SPK
 
 		struct WeakEmitterPair
 		{
-			WeakRef<Emitter> obj;
+			Emitter* obj;
 			size_t nbBorn;
 
-			WeakEmitterPair(const WeakRef<Emitter>& obj,size_t nbBorn) :
-				obj(obj),
+			WeakEmitterPair(const Ref<Emitter>& obj,size_t nbBorn) :
+				obj(obj.get()),
 				nbBorn(nbBorn)
 			{}
 		};
@@ -440,18 +445,32 @@ namespace SPK
 				obj(obj),
 				dataSet(dataSet)
 			{}
+		};
 
-			// This is to allow Ref to WeakRef DataHandler
-			template<class U>
-			DataHandlerDef(const DataHandlerDef<U>& def) :
-				obj(def.obj),
+		template<class T>
+		struct WeakDataHandlerDef
+		{
+			T* obj;
+			DataSet* dataSet;
+
+			WeakDataHandlerDef() :
+				obj(NULL),
+				dataSet(NULL)
+			{}
+
+			WeakDataHandlerDef(T* obj,DataSet* dataSet) :
+				obj(obj),
+				dataSet(dataSet)
+			{}
+
+			WeakDataHandlerDef(const DataHandlerDef<Ref<T>>& def) :
+				obj(def.obj.get()),
 				dataSet(def.dataSet)
 			{}
 
-			template<class U>
-			DataHandlerDef& operator=(const DataHandlerDef<U>& def) :	
+			WeakDataHandlerDef& operator=(const DataHandlerDef<Ref<T>>& def)	
 			{
-				obj = def.obj;
+				obj = def.obj.get();
 				dataSet = def.dataSet;
 				return *this;
 			}
@@ -471,7 +490,7 @@ namespace SPK
 		};
 
 		typedef DataHandlerDef<Ref<Modifier>> ModifierDef;
-		typedef DataHandlerDef<WeakRef<Modifier>> WeakModifierDef;
+		typedef WeakDataHandlerDef<Modifier> WeakModifierDef;
 
 		typedef DataHandlerDef<Ref<ColorInterpolator>> ColorInterpolatorDef;
 		typedef DataHandlerDef<Ref<FloatInterpolator>> FloatInterpolatorDef;
@@ -479,7 +498,7 @@ namespace SPK
 		// Functor used to sort modifiers by priority
 		struct CompareModifierPriority
 		{
-			inline bool operator()(const ModifierDef& modifier0, const ModifierDef& modifier1) const
+			inline bool operator()(const WeakModifierDef& modifier0, const WeakModifierDef& modifier1) const
 			{
 				return modifier0.obj->getPriority() < modifier1.obj->getPriority();
 			}
@@ -495,7 +514,7 @@ namespace SPK
 			bool full;
 		};
 
-		WeakRef<System> system;
+		System* system;
 
 		ParticleData particleData;
 		size_t enabledParamIndices[NB_PARAMETERS];
@@ -533,11 +552,8 @@ namespace SPK
 		float physicalRadius;
 		float graphicalRadius;
 
-		Group(System& system,size_t capacity);
-		Group(System& system,const Group& group);
-		Group(const Group& group); // never used
-		Group(); // default constructor, used when unserializing
-		~Group();
+		Group(const Ref<System>& system = SPK_NULL_REF,size_t capacity = 100);
+		Group(const Group& group);
 
 		bool updateParticles(float deltaTime);
 		void renderParticles();
@@ -550,7 +566,7 @@ namespace SPK
 		template<typename T>
 		void reallocateArray(T*& t,size_t newSize,size_t copySize);
 
-		DataSet* attachDataSet(const WeakRef<DataHandler>& dataHandler);
+		DataSet* attachDataSet(DataHandler* dataHandler);
 		void detachDataSet(DataSet* dataHandler);
 
 		void sortParticles(int start,int end);
@@ -578,6 +594,11 @@ namespace SPK
 		void initData();
 	};
 
+	inline Ref<Group> Group::create(size_t capacity)
+	{
+		return SPK_NEW(Group,SPK_NULL_REF,capacity);
+	}
+
 	template<typename T>
 	void Group::reallocateArray(T*& t,size_t newSize,size_t copySize)
 	{
@@ -586,6 +607,11 @@ namespace SPK
 		if (oldT != NULL && copySize != 0)
 			memcpy(oldT,t,copySize * sizeof(T));
 		SPK_DELETE_ARRAY(oldT);
+	}
+		
+	inline bool Group::isInitialized() const
+	{
+		return system != NULL && system->isInitialized();
 	}
 
 	inline void Group::setImmortal(bool immortal)
@@ -746,9 +772,9 @@ namespace SPK
 		addParticles(nb,position,velocity,SPK_NULL_REF,SPK_NULL_REF);
 	}
 
-	inline System& Group::getSystem() const
+	inline Ref<System> Group::getSystem() const
 	{
-		return *system;
+		return system;
 	}
 
 	inline const Ref<Action>& Group::getBirthAction() const

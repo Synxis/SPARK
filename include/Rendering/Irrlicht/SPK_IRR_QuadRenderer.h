@@ -48,7 +48,7 @@ namespace IRR
 											public QuadRenderBehavior,
 											public Oriented3DRenderBehavior
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(IRRQuadRenderer)
+	SPK_IMPLEMENT_OBJECT(IRRQuadRenderer)
 
 	public :
 
@@ -59,7 +59,7 @@ namespace IRR
 		* @param scaleY the scale of the height of the quad
 		* @return A new registered IRRQuadRenderer
 		*/
-		static inline Ref<IRRQuadRenderer> create(irr::IrrlichtDevice* d,float scaleX = 1.0f,float scaleY = 1.0f);
+		static inline Ref<IRRQuadRenderer> create(irr::IrrlichtDevice* d = NULL,float scaleX = 1.0f,float scaleY = 1.0f);
 
 		//////////////
 		// Textures //
@@ -115,7 +115,7 @@ namespace IRR
 		static const size_t NB_INDICES_PER_PARTICLE = 6;
 		static const size_t NB_VERTICES_PER_PARTICLE = 4;
 
-		IRRQuadRenderer(irr::IrrlichtDevice* d,float scaleX = 1.0f,float scaleY = 1.0f);
+		IRRQuadRenderer(irr::IrrlichtDevice* d = NULL,float scaleX = 1.0f,float scaleY = 1.0f);
 		IRRQuadRenderer(const IRRQuadRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;

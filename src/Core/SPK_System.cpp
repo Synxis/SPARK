@@ -36,6 +36,16 @@ namespace SPK
 
 	Vector3D System::cameraPosition;
 
+	System::System(bool initialize) :
+		SPKObject(false),
+		groups(),
+		deltaStep(0.0f),
+		AABBComputationEnabled(false),
+		AABBMin(),
+		AABBMax(),
+		initialized(initialize)
+	{}
+
 	System::System(const System& system) :
 		SPKObject(system),
 		deltaStep(0.0f),
@@ -44,44 +54,62 @@ namespace SPK
 		AABBMax(system.AABBMax),
 		initialized(system.initialized)
 	{
-		Referenceable::copyBuffer.clear();
-
-		for (std::vector<Group*>::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
-			groups.push_back(SPK_NEW(Group,*this,**it));
+		for (std::vector<Ref<Group>>::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
+		{
+			Ref<Group> group = copyChild(*it);
+			setGroupSystem(group,this);
+			groups.push_back(group);	
+		}
 	}
 	
 	System::~System()
 	{
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			SPK_DELETE(*it);
+		while (groups.size() > 0)
+			removeGroup(groups.back());
 	}
 
-	WeakRef<Group> System::createGroup(size_t capacity)
+	Ref<Group> System::createGroup(size_t capacity)
 	{
 		if (capacity == 0)
 		{
-			SPK_LOG_WARNING("System::addGroup(size_t) - The capacity of a Group cannot be 0, NULL is returned");
+			SPK_LOG_ERROR("System::createGroup(size_t) - The capacity of a Group cannot be 0, NULL is returned");
 			return SPK_NULL_REF;
 		}
 
-		Group* newGroup = SPK_NEW(Group,*this,capacity);
+		Ref<Group> newGroup = SPK_NEW(Group,this,capacity);
 		groups.push_back(newGroup);
 		return newGroup;
 	}
 
-	WeakRef<Group> System::createGroup(const Group& group)
+	Ref<Group> System::createGroup(const Ref<Group>& group)
 	{
-		Group* newGroup = SPK_NEW(Group,*this,group);
+		if (group == NULL)
+		{
+			SPK_LOG_ERROR("System::createGroup(const Ref<Group>&) - The group to copy is NULL");
+			return SPK_NULL_REF;
+		}
+
+		Ref<Group> newGroup = copy(group);
+		setGroupSystem(newGroup,this);
 		groups.push_back(newGroup);
 		return newGroup;
 	}
 
-	void System::destroyGroup(const WeakRef<Group>& group)
+	void System::addGroup(const Ref<Group>& group)
 	{
-		std::vector<Group*>::iterator it = std::find(groups.begin(),groups.end(),group.get());
+		if (group == NULL)
+			SPK_LOG_ERROR("System::addGroup(const Ref<Group>&) - The group to add is NULL");
+
+		setGroupSystem(group,this);
+		groups.push_back(group);
+	}
+
+	void System::removeGroup(const Ref<Group>& group)
+	{
+		std::vector<Ref<Group>>::iterator it = std::find(groups.begin(),groups.end(),group.get());
 		if (it != groups.end())
 		{
-			SPK_DELETE(*it);
+			setGroupSystem(*it,SPK_NULL_REF,false); // false to avoid infinite loop
 			groups.erase(it);
 		}
 		else
@@ -93,7 +121,7 @@ namespace SPK
 	size_t System::getNbParticles() const
 	{
 		size_t nbParticles = 0;
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			nbParticles += (*it)->getNbParticles();
 		return nbParticles;
 	}
@@ -139,7 +167,7 @@ namespace SPK
 		else
 			alive = innerUpdate(deltaTime);
 
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->sortParticles();
 
 		if (isAABBComputationEnabled())
@@ -148,7 +176,7 @@ namespace SPK
 			AABBMin.set(maxFloat,maxFloat,maxFloat);
 			AABBMax.set(-maxFloat,-maxFloat,-maxFloat);
 
-			for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+			for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			{
 				(*it)->computeAABB();
 
@@ -173,7 +201,7 @@ namespace SPK
 			return;
 		}
 
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->renderParticles();
 	}
 
@@ -183,16 +211,16 @@ namespace SPK
 			return; // the system is already initialized
 
 		initialized = true;
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->initData();
 	}
 
-	WeakRef<SPKObject> System::findByName(const std::string& name)
+	Ref<SPKObject> System::findByName(const std::string& name)
 	{
-		WeakRef<SPKObject> object = SPKObject::findByName(name);
+		Ref<SPKObject>& object = SPKObject::findByName(name);
 		if (object != NULL) return object;
 
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 		{
 			object = (*it)->findByName(name);
 			if (object != NULL) return object;
@@ -206,14 +234,14 @@ namespace SPK
 		updateTransform();
 
 		bool alive = false;
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			alive |= (*it)->updateParticles(deltaTime);
 		return alive;
 	}
 
 	void System::propagateUpdateTransform()
 	{
-		for (std::vector<Group*>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->propagateUpdateTransform();
 	}
 
@@ -224,7 +252,7 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("groups"))
 		{
-			std::vector<WeakRef<SPKObject>> tmpGroups = attrib->getValuesRef();
+			std::vector<Ref<SPKObject>>& tmpGroups = attrib->getValuesRef<SPKObject>();
 			for (size_t i = 0; i < tmpGroups.size(); ++i)
 				groups.push_back(tmpGroups[i].cast<Group>().get());
 		}
@@ -233,6 +261,21 @@ namespace SPK
 	void System::innerExport(IO::Descriptor& descriptor) const
 	{
 		SPKObject::innerExport(descriptor);
-		descriptor.getAttribute("groups")->setValuesRef(reinterpret_cast<const WeakRef<SPKObject>*>(&groups[0]),getNbGroups());
+		descriptor.getAttribute("groups")->setValuesRef(&groups[0],getNbGroups());
 	}
+
+	void System::setGroupSystem(const Ref<Group>& group,const Ref<System>& system,bool remove)
+	{
+		if (group->system != system)
+		{
+			if (group == NULL)
+				SPK_LOG_ERROR("System::setGroupSystem(const Ref<Group>&) - Internal Error - The group is NULL");
+
+			if (remove && group->system != NULL)
+				group->system->removeGroup(group);
+
+			group->system = system.get();
+			group->initData(); // To initialize the group if needed
+		}
+	}	
 }

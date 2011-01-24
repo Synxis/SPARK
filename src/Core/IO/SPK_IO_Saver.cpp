@@ -33,24 +33,24 @@ namespace IO
 		return node0->priority < node1->priority || (node0->priority == node1->priority && node0->refID < node1->refID);
 	}
 
-	bool Saver::save(std::ostream& os,const WeakRef<const System>& system) const
+	bool Saver::save(std::ostream& os,const Ref<System>& system) const
 	{
 		if (system == NULL)
 		{
-			SPK_LOG_WARNING("Saver::saver(std::ostream&,const WeakRef<const System>&) - Impossible to write a NULL Syste. Nothing is done");
+			SPK_LOG_WARNING("Saver::saver(std::ostream&,const Ref<System>&) - Impossible to write a NULL Syste. Nothing is done");
 			return false;			
 		}
 
 		Graph graph;
-		constructGraph(graph,system);
+		constructGraph(graph,system.get());
 		return innerSave(os,graph);
 	}
 
-	bool Saver::save(const std::string& path,const WeakRef<const System>& system) const 
+	bool Saver::save(const std::string& path,const Ref<System>& system) const 
 	{
 		if (system == NULL)
 		{
-			SPK_LOG_WARNING("Saver::saver(const std::string&,const WeakRef<const System>&) - Impossible to write a NULL Syste. Nothing is done");
+			SPK_LOG_WARNING("Saver::saver(const std::string&,const Ref<System>&) - Impossible to write a NULL Syste. Nothing is done");
 			return false;			
 		}
 		
@@ -63,23 +63,23 @@ namespace IO
 		}
 		else
 		{
-			SPK_LOG_ERROR("Saver::saver(const std::string&,const WeakRef<const System>&) - Impossible to write to the file " << path);
+			SPK_LOG_ERROR("Saver::saver(const std::string&,const Ref<System>&) - Impossible to write to the file " << path);
 			return false;
 		}
 	}
 
-	void Saver::constructGraph(Saver::Graph& graph,const WeakRef<const System>& system)
+	void Saver::constructGraph(Saver::Graph& graph,const System* system)
 	{
-		constructNode(graph,const_cast<System*>(system.get()),0);
+		constructNode(graph,system,0);
 		graph.nodes.sort(compareNodePriority);			 
 	}
 
-	void Saver::constructNode(Saver::Graph& graph,const WeakRef<SPKObject>& object,size_t level)
+	void Saver::constructNode(Saver::Graph& graph,const SPKObject* object,size_t level)
 	{
 		if (object == NULL)
 			return;
 
-		std::map<WeakRef<SPKObject>,Node*>::iterator it = graph.ptr2Nodes.find(object);
+		std::map<const SPKObject*,Node*>::iterator it = graph.ptr2Nodes.find(object);
 		if (it != graph.ptr2Nodes.end())
 		{
 			Node* node = it->second;
@@ -100,12 +100,12 @@ namespace IO
 			{
 				Attribute& attribute = descriptor.getAttribute(i);
 				if (attribute.getType() == ATTRIBUTE_TYPE_REF && attribute.hasValue())
-					constructNode(graph,attribute.getValueRef(),level + 1);
+					constructNode(graph,attribute.getValueRef().get(),level + 1);
 				else if (attribute.getType() == ATTRIBUTE_TYPE_REFS && attribute.hasValue())
 				{
-					std::vector<WeakRef<SPKObject>>& refs = attribute.getValuesRef();
-					for (std::vector<WeakRef<SPKObject>>::iterator it = refs.begin(); it != refs.end(); ++it)
-						constructNode(graph,*it,level + 1);
+					std::vector<Ref<SPKObject>>& refs = attribute.getValuesRef<SPKObject>();
+					for (std::vector<Ref<SPKObject>>::iterator it = refs.begin(); it != refs.end(); ++it)
+						constructNode(graph,(*it).get(),level + 1);
 				}
 			}
 		}
@@ -127,9 +127,9 @@ namespace IO
 			SPK_DELETE(*it);
 	}
 
-	Saver::Node* Saver::Graph::getNode(const WeakRef<SPKObject>& ptr) 
+	Saver::Node* Saver::Graph::getNode(const Ref<SPKObject>& ptr) 
 	{ 
-		std::map<WeakRef<SPKObject>,Node*>::iterator it = ptr2Nodes.find(ptr);
+		std::map<const SPKObject*,Node*>::iterator it = ptr2Nodes.find(ptr.get());
 		if (it != ptr2Nodes.end())
 			return it->second;
 		else

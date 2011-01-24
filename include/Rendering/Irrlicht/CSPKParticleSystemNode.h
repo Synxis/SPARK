@@ -68,21 +68,21 @@ namespace scene
 		*/
 		CSPKParticleSystemNode(const CSPKParticleSystemNode& system,ISceneNode* newParent = NULL,ISceneManager* newManager = NULL);
 
-		inline ~CSPKParticleSystemNode();
-
 		virtual CSPKParticleSystemNode* clone(ISceneNode* newParent = NULL,ISceneManager* newManager = NULL);
+
+
 
 		/**
 		* @brief Enables or disables update when the system is not visible
         * @param onlyWhenVisible : True to perform update only if node is visible
 		*/
-		inline void setUpdateOnlyWhenVisible(bool onlyWhenVisible);
+		void setUpdateOnlyWhenVisible(bool onlyWhenVisible);
 
 		/**
 		* @brief Returns true if update is performed only when visible
 		* @return True if particles are updated only if the scene node is visible (use setVisible() to change visibility).
 		*/
-        inline bool isUpdatedOnlyWhenVisible() const;
+        bool isUpdatedOnlyWhenVisible() const;
 
 		/**
 		* @brief Tells whether this system is world transformed or not
@@ -94,7 +94,7 @@ namespace scene
 		*
 		* @return true if this system is world transformed, false if not
 		*/
-		inline bool isWorldTransformed() const;
+		bool isWorldTransformed() const;
 
 		/**
 		* @brief Tells whether the system is alive or not
@@ -109,7 +109,7 @@ namespace scene
 		*
 		* @return true if the system is still alive, false otherwise
 		*/
-		inline bool isAlive() const;
+		bool isAlive() const;
 
 		/** 
 		* @brief Gets the bounding box
@@ -155,11 +155,6 @@ namespace scene
 		// This sets the right camera position if distance computation is enabled for a group of the system
 		void updateCameraPosition() const;
 	};
-
-	inline CSPKParticleSystemNode::~CSPKParticleSystemNode()
-	{
-		SPK_DELETE(SPKSystem);
-	}
 
 	inline void CSPKParticleSystemNode::setUpdateOnlyWhenVisible(bool onlyWhenVisible)
 	{

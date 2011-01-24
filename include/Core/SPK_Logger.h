@@ -114,7 +114,7 @@ namespace SPK
 	* <ul>
 	* <li>SPK_LOG_DEBUG(entry) : to log a debug information (for low level checks)</li>
 	* <li>SPK_LOG_INFO(entry) : to log a standard information</li>
-	* <li>SPK_LOG_WARNING(entry) : to log a warning (like for example a failed assertion in release)</li>
+	* <li>SPK_LOG_WARNING(entry) : to log a warning</li>
 	* <li>SPK_LOG_ERROR(entry) : to log an error which will most likely result to an immediate crash</li>
 	* </ul>
 	* Those macros are shortcuts to a call to the logger. Moreover they flush the inner stream so that the entry is logged instantly.<br>

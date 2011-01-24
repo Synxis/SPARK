@@ -28,12 +28,14 @@
 #define SPK_IMPLEMENT_SYSTEM_WRAPPER \
 \
 private : \
-SPK::System* SPKSystem; \
+SPK::Ref<SPK::System> SPKSystem; \
 public : \
-inline SPK::WeakRef<SPK::Group> createSPKGroup(size_t capacity) { return SPKSystem->createGroup(capacity); } \
-inline SPK::WeakRef<SPK::Group> createSPKGroup(const SPK::Group& group) { return SPKSystem->createGroup(group); } \
-inline void destroySPKGroup(SPK::WeakRef<SPK::Group> group) { SPKSystem->destroyGroup(group); } \
-inline SPK::WeakRef<SPK::Group> getSPKGroup(size_t index) const { return SPKSystem->getGroup(index); } \
+inline const SPK::Ref<SPK::System>& getSPKSystem() { return SPKSystem; } \
+inline SPK::Ref<SPK::Group> createSPKGroup(size_t capacity) { return SPKSystem->createGroup(capacity); } \
+inline SPK::Ref<SPK::Group> createSPKGroup(SPK::Ref<SPK::Group>& group) { return SPKSystem->createGroup(group); } \
+inline void addSPKGroup(SPK::Ref<SPK::Group>& group) { SPKSystem->addGroup(group); } \
+inline void removeSPKGroup(SPK::Ref<SPK::Group> group) { SPKSystem->removeGroup(group); } \
+inline SPK::Ref<SPK::Group> getSPKGroup(size_t index) const { return SPKSystem->getGroup(index); } \
 inline size_t getNbSPKGroups() const { return SPKSystem->getNbGroups(); } \
 inline size_t getNbParticles() const { return SPKSystem->getNbParticles(); } \
 inline void initializeSPK() { SPKSystem->initialize(); } \
@@ -57,7 +59,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX System : public SPKObject
 	{
-	SPK_IMPLEMENT_SERIALIZABLE(System)
+	SPK_IMPLEMENT_OBJECT(System)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(SPKObject)
@@ -66,25 +68,12 @@ namespace SPK
 
 	public :
 
-		//////////////////
-		// Constructors //
-		//////////////////
-		
-		/** @brief Default constructor of system */
-		inline System(bool initialize = true);
+		/////////////////////////////
+		// Constructor/Desctructor //
+		/////////////////////////////
 
-		/** 
-		* @brief Copy constructor of system
-		* @param system : the system to copy from
-		*/
-		System(const System& system);
-
-		////////////////
-		// Destructor //
-		////////////////
-
-		/** @brief Destructor of system */
-		virtual ~System();
+		static Ref<System> create(bool initialize = true);
+		~System();
 
 		///////////////////////
 		// Groups management //
@@ -94,13 +83,15 @@ namespace SPK
 		* @brief Adds a group to the system
 		* @param group : a pointer on the group to add to the system
 		*/
-		WeakRef<Group> createGroup(size_t capacity);
+		Ref<Group> createGroup(size_t capacity);
 
 		/**
 		* @brief Adds a group to the system which is a copy of an existing group
 		*
 		*/
-		WeakRef<Group> createGroup(const Group& group);
+		Ref<Group> createGroup(const Ref<Group>& group);
+
+		void addGroup(const Ref<Group>& group);
 
 		/**
 		* @brief Removes a group from the system
@@ -109,20 +100,20 @@ namespace SPK
 		*
 		* @param group : a pointer on the group to remove from the system
 		*/
-		void destroyGroup(const WeakRef<Group>& group);
+		void removeGroup(const Ref<Group>& group);
 
 		/**
 		* @brief Gets the group at index
 		* @param index : the index of the group to get
 		* @return the group at index
 		*/
-		inline WeakRef<Group> getGroup(size_t index) const;
+		const Ref<Group>& getGroup(size_t index) const;
 
 		/**
 		* @brief Gets the number of groups in the system
 		* @return the number of groups in the system
 		*/
-		inline size_t getNbGroups() const;
+		size_t getNbGroups() const;
 
 		/**
 		* @brief Gets the number of particles in the system
@@ -138,7 +129,7 @@ namespace SPK
 		* @brief Updates the particles in the system of the current time step
 		*
 		* Note that this method updates all groups in the system from first to last.<br>
-		* A call to updateTransform(const WeakRef<const SPKObject>&) of the system is also performed prior to the groups update.
+		* A call to updateTransform(const Ref<SPKObject>&) of the system is also performed prior to the groups update.
 		*
 		* @param deltaTime : the time step
 		* @return true if the System is still active (has active groups)
@@ -160,13 +151,13 @@ namespace SPK
 		* @brief Enables or disables the computation of the axis aligned bounding box for this System
 		* @param AABB : true to enable the computing of the AABB of this System, false to disable it
 		*/
-		inline void enableAABBComputation(bool AABB);
+		void enableAABBComputation(bool AABB);
 
 		/**
 		* @brief Tells whether the computation of the axis aligned bouding box is enabled
 		* @return true if the computation of the AABB is enabled, false if it is disabled
 		*/
-		inline bool isAABBComputationEnabled() const;
+		bool isAABBComputationEnabled() const;
 
 		/**
 		* @brief Gets a Vector3D holding the minimum coordinates of the AABB of this System.
@@ -175,7 +166,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the minimum coordinates of the AABB of this System
 		*/
-		inline const Vector3D& getAABBMin() const;
+		const Vector3D& getAABBMin() const;
 
 		/**
 		* @brief Gets a Vector3D holding the maximum coordinates of the AABB of this System.
@@ -184,7 +175,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the maximum coordinates of the AABB of this System
 		*/
-		inline const Vector3D& getAABBMax() const;
+		const Vector3D& getAABBMax() const;
 
 		/////////////////////
 		// Camera position //
@@ -199,13 +190,13 @@ namespace SPK
 		*
 		* @param cameraPosition the camera position
 		*/
-		static inline void setCameraPosition(const Vector3D& cameraPosition);
+		static void setCameraPosition(const Vector3D& cameraPosition);
 
 		/**
 		* @brief Gets the camera position
 		* @return the camera position
 		*/
-		static inline const Vector3D& getCameraPosition();
+		static const Vector3D& getCameraPosition();
 
 		///////////////
 		// Step Mode //
@@ -225,7 +216,7 @@ namespace SPK
 		* @param useClampStep : true to use a clamp value on the step, false not to
 		* @param clamp : the clamp value
 		*/
-		static inline void setClampStep(bool useClampStep,float clamp = 1.0f);
+		static void setClampStep(bool useClampStep,float clamp = 1.0f);
 
 		/**
 		* @brief Uses a constant step to update the systems
@@ -238,7 +229,7 @@ namespace SPK
 		* 
 		* @param constantStep : the value of the step
 		*/
-		static inline void useConstantStep(float constantStep);
+		static void useConstantStep(float constantStep);
 
 		/**
 		* @brief Uses an adaptive step to update the systems
@@ -254,7 +245,7 @@ namespace SPK
 		* @param minStep : the minimal time step
 		* @param maxStep : the maximal time step
 		*/
-		static inline void useAdaptiveStep(float minStep,float maxStep);
+		static void useAdaptiveStep(float minStep,float maxStep);
 
 		/**
 		* @brief Uses the real step to update the systems
@@ -265,22 +256,25 @@ namespace SPK
 		* This mode is the simpler and the one that allows best performance on low end systems.<br>
 		* However the update may be inaccurate (due to too big deltaTime) and it performs badly with frame rate variation.
 		*/
-		static inline void useRealStep();
+		static void useRealStep();
 
 		/**
 		* @brief Gets the current step mode
 		* @return the current step mode
 		*/
-		static inline StepMode getStepMode();
+		static StepMode getStepMode();
 
 		void initialize();
-		inline bool isInitialized() const;
+		bool isInitialized() const;
 
-		virtual WeakRef<SPKObject> findByName(const std::string& name);
+		virtual Ref<SPKObject> findByName(const std::string& name);
 
 	protected :
 
-		std::vector<Group*> groups; // vector containing all the groups of the system
+		std::vector<Ref<Group>> groups; // vector containing all the groups of the system
+
+		System(bool initialize = true);
+		System(const System& system);
 
 		virtual void propagateUpdateTransform();
 
@@ -310,19 +304,16 @@ namespace SPK
 		Vector3D AABBMax;
 
 		bool innerUpdate(float deltaTime);
+
+		static void setGroupSystem(const Ref<Group>& group,const Ref<System>& system,bool remove = true);
 	};
 
-	inline System::System(bool initialize) :
-		SPKObject(),
-		groups(),
-		deltaStep(0.0f),
-		AABBComputationEnabled(false),
-		AABBMin(),
-		AABBMax(),
-		initialized(initialize)
-	{}
+	inline Ref<System> System::create(bool initialize) 
+	{ 
+		return SPK_NEW(System,initialize); 
+	}
 
-	inline WeakRef<Group> System::getGroup(size_t index) const
+	inline const Ref<Group>& System::getGroup(size_t index) const
 	{
 		SPK_ASSERT(index < getNbGroups(),"System::getGroup(size_t) - Index of group is out of bounds : " << index);
 		return groups[index];

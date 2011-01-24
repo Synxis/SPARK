@@ -35,7 +35,7 @@ namespace scene
 		bool worldTransformed,
 		s32 id) :
 			irr::scene::ISceneNode(parent,mgr,id),
-			SPKSystem(SPK_NEW(SPK::System,initialize)),
+			SPKSystem(SPK::System::create(initialize)),
 			worldTransformed(worldTransformed),
 			onlyWhenVisible(false),
 			alive(true),
@@ -52,12 +52,13 @@ namespace scene
 		ISceneNode* newParent,
 		ISceneManager* newManager) :
 			ISceneNode(NULL,NULL),
-			SPKSystem(SPK_NEW(SPK::System,*system.SPKSystem)),
 			worldTransformed(system.worldTransformed),
 			onlyWhenVisible(system.onlyWhenVisible),
 			alive(system.alive),
 			lastUpdatedTime(0)
 	{
+		SPKSystem = SPK::SPKObject::copy(system.SPKSystem);
+
 		if (newParent == NULL)
 			newParent = system.Parent;
 		if (newManager == NULL)

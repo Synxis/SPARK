@@ -27,7 +27,7 @@ namespace SPK
 	template<typename T>
 	class SimpleInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(SimpleInterpolator<T>);
+	SPK_IMPLEMENT_OBJECT(SimpleInterpolator<T>);
 
 	public :
 

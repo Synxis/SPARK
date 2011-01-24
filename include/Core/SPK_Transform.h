@@ -320,7 +320,7 @@ namespace SPK
 		unsigned long int lastParentUpdate;
 		bool localIdentity;
 
-		WeakRef<const SPKObject> parent;
+		SPKObject* parent;
 
 		Transform();
 		Transform(const Transform& transform);
@@ -328,7 +328,7 @@ namespace SPK
 		inline void notifyForUpdate();
 		inline bool isUpdateNotified() const;
 
-		inline const WeakRef<const SPKObject> getParent() const;
+		inline Ref<SPKObject> getParent() const;
 
 		/**
 		* @brief Updates the world transform of this Transform
@@ -340,7 +340,7 @@ namespace SPK
 		*
 		* @param parent : the parent node of this Transform or NULL
 		*/
-		void update(const WeakRef<const SPKObject>& parent,SPKObject& owner);
+		void update(const Ref<SPKObject>& parent,SPKObject& owner);
 
 		inline static void multiply(
 			float* dest,
@@ -459,7 +459,7 @@ namespace SPK
 		++currentUpdate;
 	}
 
-	inline const WeakRef<const SPKObject> Transform::getParent() const
+	inline Ref<SPKObject> Transform::getParent() const
 	{
 		return parent;
 	}

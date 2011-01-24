@@ -39,38 +39,38 @@ namespace IO
 		registeredSavers.clear();
 	}
 
-	System* IOManager::load(const std::string& path) const
+	Ref<System> IOManager::load(const std::string& path) const
 	{
 		std::string name = getExtension(path);
-		WeakRef<Loader> loader = getLoader(name);
+		Loader* loader = getLoader(name);
 		
 		if (loader == NULL)
 		{
 			SPK_LOG_ERROR("IOManager::load(const std::string&) - The extension " << name << " is not known");
-			return NULL;
+			return SPK_NULL_REF;
 		}
 		
 		return loader->load(path);
 	}
 
-	System* IOManager::load(const std::string& ext,std::istream& is) const
+	Ref<System> IOManager::load(const std::string& ext,std::istream& is) const
 	{
 		std::string name = formatExtension(ext);
-		WeakRef<Loader> loader = getLoader(name);
+		Loader* loader = getLoader(name);
 		
 		if (loader == NULL)
 		{
 			SPK_LOG_ERROR("IOManager::load(const std::string&,std::ostream&) - The extension " << name << " is not known");
-			return NULL;
+			return SPK_NULL_REF;
 		}
 		
 		return loader->load(is);
 	}
 
-	bool IOManager::save(const std::string& path,const System* system) const
+	bool IOManager::save(const std::string& path,const Ref<System>& system) const
 	{
 		std::string name = getExtension(path);
-		WeakRef<Saver> saver = getSaver(name);
+		Saver* saver = getSaver(name);
 
 		if (saver == NULL)
 		{
@@ -81,10 +81,10 @@ namespace IO
 		return saver->save(path,system);
 	}
 
-	bool IOManager::save(const std::string& ext,std::ostream& os,const System* system) const
+	bool IOManager::save(const std::string& ext,std::ostream& os,const Ref<System>& system) const
 	{
 		std::string name = formatExtension(ext);
-		WeakRef<Saver> saver = getSaver(name);
+		Saver* saver = getSaver(name);
 
 		if (saver == NULL)
 		{
@@ -115,7 +115,7 @@ namespace IO
 		return "";
 	}
 
-	WeakRef<SPKObject> IOManager::createObject(const std::string& id) const
+	Ref<SPKObject> IOManager::createObject(const std::string& id) const
 	{
 		std::map<std::string,createSerializableFn>::const_iterator it = registeredObjects.find(id);
 		if (it != registeredObjects.end())

@@ -27,7 +27,7 @@ namespace SPK
 	template<typename T>
 	class RandomInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(RandomInterpolator<T>);
+	SPK_IMPLEMENT_OBJECT(RandomInterpolator<T>);
 
 	public :
 

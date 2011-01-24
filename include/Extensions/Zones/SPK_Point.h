@@ -26,7 +26,7 @@ namespace SPK
 {
 	class Point : public Zone
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(Point);
+	SPK_IMPLEMENT_OBJECT(Point);
 
 	public :
 

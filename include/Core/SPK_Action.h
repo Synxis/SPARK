@@ -23,7 +23,7 @@
 #define H_SPK_ACTION
 
 #include "Core/IO/SPK_IO_Descriptor.h"
-#include "Core/SPK_Referenceable.h"
+//#include "Core/SPK_Object.h"
 
 namespace SPK
 {
@@ -37,29 +37,29 @@ namespace SPK
 	* The equivalent method exists with particle's death (Group::setDeathAction(Action*).<br>
 	* Some modifiers can also trigger actions. In a more general way, any object can potentially triggers actions.
 	*/
-	class Action : public Referenceable
+	class Action : public SPKObject
 	{
 	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_PARENT_ATTRIBUTES(SPKObject)
 	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
 	SPK_END_DESCRIPTION
 
 	public :
 
-		virtual inline ~Action() {}
+		virtual ~Action() {}
 
 		/**
 		* @brief Activates or deactivates the action
 		* An inactive action cannot be triggered 
 		* @param active : true to activate, false to deactivate
 		*/
-		inline void setActive(bool active);
+		void setActive(bool active);
 
 		/**
 		* @brief Tells whether the action is active or not
 		* @return true if the action is active, false of not
 		*/
-		inline bool isActive() const;
+		bool isActive() const;
 
 		/**
 		* @brief Applies the action on a given particle
@@ -68,11 +68,11 @@ namespace SPK
 		virtual void apply(Particle& particle) const = 0;
 
 	protected :
+	
+		Action();
 
-		inline Action();
-
-		inline virtual void innerImport(const IO::Descriptor& descriptor);
-		inline virtual void innerExport(IO::Descriptor& descriptor) const;
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -95,7 +95,7 @@ namespace SPK
 
 	inline void Action::innerImport(const IO::Descriptor& descriptor)
 	{
-		Referenceable::innerImport(descriptor);
+		SPKObject::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
 		if ((attrib = descriptor.getAttribute("active")) && attrib->hasValue())
@@ -104,7 +104,7 @@ namespace SPK
 
 	inline void Action::innerExport(IO::Descriptor& descriptor) const
 	{
-		Referenceable::innerExport(descriptor);
+		SPKObject::innerExport(descriptor);
 
 		IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttribute("active"))

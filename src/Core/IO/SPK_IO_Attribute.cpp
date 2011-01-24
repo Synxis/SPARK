@@ -23,40 +23,40 @@
 
 namespace SPK
 {
-	std::map<WeakRef<Referenceable>,WeakRef<Referenceable>> Referenceable::copyBuffer;
-
-	Referenceable::Referenceable() :
-		SPKObject(),
-		nbReferences(0),
-		shared(false)
+namespace IO
+{
+	Attribute::Attribute(const std::string& name,AttributeType type) :
+		name(name),
+		type(type),
+		offset(0),
+		descriptor(NULL),
+		valueSet(false)
 	{}
 
-	Referenceable::Referenceable(const Referenceable& referenceable) :
-		SPKObject(referenceable),
-		nbReferences(0),
-		shared(referenceable.shared)
-	{}
+	void Attribute::setValueRef(const Ref<SPKObject>& value,bool optional)				
+	{ 
+		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::setValueRef(const Ref<SPKObject>&,bool) - The value is not a reference");
 
-	Referenceable::~Referenceable()
-	{
-		if (nbReferences != 0)
-		{
-			SPK_LOG_ERROR("Referenceable::~Referenceable() - The number of references of the object is not 0 during destruction");
-		}
-	}
+		offset = descriptor->buffer.size();
+		const char* refOffset = reinterpret_cast<const char*>(descriptor->refBuffer.size());
+		for (size_t i = 0; i < sizeof(size_t); ++i)
+			descriptor->buffer.push_back(refOffset[i]);
 
-	void Referenceable::innerImport(const IO::Descriptor& descriptor)
-	{
-		SPKObject::innerImport(descriptor);
+		descriptor->refBuffer.push_back(value);
+		
+		valueSet = true;
+		this->optional = optional;
 
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("shared"))
-			setShared(attrib->getValueBool());
+		SPK_LOG_DEBUG("Set value for attribute \"" << name << "\" : " << value);
 	}
 	
-	void Referenceable::innerExport(IO::Descriptor& descriptor) const
-	{
-		SPKObject::innerExport(descriptor);
-		descriptor.getAttribute("shared")->setValueBool(isShared());			
+	Ref<SPKObject> Attribute::getValueRef() const												
+	{ 
+		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::getValueRef() - The desired value is not a reference");
+		SPK_ASSERT(valueSet,"Attribute::getValueRef() - The value is not set and therefore cannot be read");
+
+		SPK_LOG_DEBUG("Get value for attribute \"" << name << "\" : " << descriptor->refBuffer[*reinterpret_cast<size_t*>(descriptor->buffer[offset])]);
+
+		return descriptor->refBuffer[*reinterpret_cast<size_t*>(descriptor->buffer[offset])];
 	}
-}
+}}

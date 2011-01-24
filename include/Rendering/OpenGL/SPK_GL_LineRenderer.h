@@ -47,7 +47,7 @@ namespace GL
 	*/
 	class SPK_GL_PREFIX GLLineRenderer : public GLRenderer, public LineRenderBehavior
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(GLLineRenderer)
+	SPK_IMPLEMENT_OBJECT(GLLineRenderer)
 
 	public :
 

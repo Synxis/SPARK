@@ -22,7 +22,7 @@
 #include <ctime>
 #include <limits>
 
-#include <SPARK_Core.h>
+#include <SPARK.h>
 #include "Extensions/Zones/SPK_Point.h" // for default zone
 
 namespace SPK
@@ -48,7 +48,7 @@ namespace SPK
 			randomSeed = generateRandom(static_cast<unsigned int>(1),std::numeric_limits<unsigned int>::max());
 	
 		// Registers all core objects for loading
-		registerCoreForLoading();	
+		// registerCoreForLoading();	
 	}
 
 	// This allows SPARK finalization at application exit
@@ -74,54 +74,59 @@ namespace SPK
 		return defaultZone;
 	}
 
-	void registerCoreForLoading()
+	/*void SPKContext::registerIOConverters()
 	{
-		//Loader::Table& table = Loader::table();
+
+	}
+
+	void SPKContext::registerCoreObjects()
+	{
+		IO::IOManager& manager = IO::IOManager::getInstance();
 
 		// Core
-		/*table.registerSerializable<System>();	
-		table.registerSerializable<Group>();
+		manager.registerObject<System>();	
+		manager.registerObject<Group>();
 		
 		// Interpolators
-		table.registerSerializable<FloatDefaultInitializer>();	
-		table.registerSerializable<ColorDefaultInitializer>();
-		table.registerSerializable<FloatRandomInitializer>();
-		table.registerSerializable<ColorRandomInitializer>();
-		table.registerSerializable<FloatSimpleInterpolator>();
-		table.registerSerializable<ColorSimpleInterpolator>();
-		table.registerSerializable<FloatRandomInterpolator>();
-		table.registerSerializable<ColorRandomInterpolator>();
-		table.registerSerializable<FloatGraphInterpolator>();
-		table.registerSerializable<ColorGraphInterpolator>();
+		manager.registerObject<FloatDefaultInitializer>();	
+		manager.registerObject<ColorDefaultInitializer>();
+		manager.registerObject<FloatRandomInitializer>();
+		manager.registerObject<ColorRandomInitializer>();
+		manager.registerObject<FloatSimpleInterpolator>();
+		manager.registerObject<ColorSimpleInterpolator>();
+		manager.registerObject<FloatRandomInterpolator>();
+		manager.registerObject<ColorRandomInterpolator>();
+		manager.registerObject<FloatGraphInterpolator>();
+		manager.registerObject<ColorGraphInterpolator>();
 
 		// Zones
-		table.registerSerializable<Point>();
-		table.registerSerializable<Sphere>();
-		table.registerSerializable<Plane>();
-		table.registerSerializable<Ring>();
+		manager.registerObject<Point>();
+		manager.registerObject<Sphere>();
+		manager.registerObject<Plane>();
+		manager.registerObject<Ring>();
 
 		// Emitters
-		table.registerSerializable<StaticEmitter>();
-		table.registerSerializable<RandomEmitter>();
-		table.registerSerializable<StraightEmitter>();
-		table.registerSerializable<SphericEmitter>();
-		table.registerSerializable<NormalEmitter>();
+		manager.registerObject<StaticEmitter>();
+		manager.registerObject<RandomEmitter>();
+		manager.registerObject<StraightEmitter>();
+		manager.registerObject<SphericEmitter>();
+		manager.registerObject<NormalEmitter>();
 
 		// Modifiers
-		table.registerSerializable<Gravity>();
-		table.registerSerializable<Friction>();
-		table.registerSerializable<Obstacle>();
-		table.registerSerializable<Rotator>();
-		table.registerSerializable<Collider>();
-		table.registerSerializable<Destroyer>();
-		table.registerSerializable<Vortex>();
-		table.registerSerializable<EmitterAttacher>();
-		table.registerSerializable<PointMass>();
-		table.registerSerializable<RandomForce>();
-		table.registerSerializable<LinearForce>();
+		manager.registerObject<Gravity>();
+		manager.registerObject<Friction>();
+		manager.registerObject<Obstacle>();
+		manager.registerObject<Rotator>();
+		manager.registerObject<Collider>();
+		manager.registerObject<Destroyer>();
+		manager.registerObject<Vortex>();
+		manager.registerObject<EmitterAttacher>();
+		manager.registerObject<PointMass>();
+		manager.registerObject<RandomForce>();
+		manager.registerObject<LinearForce>();
 
 		// Actions
-		table.registerSerializable<ActionSet>();
-		table.registerSerializable<SpawnParticlesAction>();*/
-	}
+		manager.registerObject<ActionSet>();
+		manager.registerObject<SpawnParticlesAction>();
+	}*/
 }

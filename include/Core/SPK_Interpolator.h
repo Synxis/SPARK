@@ -29,13 +29,13 @@ namespace SPK
 
 	/** @brief An abstract generic class that allows to interpolate data */
 	template<typename T>
-	class Interpolator :	public Referenceable,
+	class Interpolator :	public SPKObject,
 							public DataHandler
 	{
 	friend class Group;
 
 	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_PARENT_ATTRIBUTES(SPKObject)
 	SPK_END_DESCRIPTION
 
 	public :
@@ -90,7 +90,7 @@ namespace SPK
 
 	template<typename T>
 	inline Interpolator<T>::Interpolator(bool NEEDS_DATASET) :
-		Referenceable(),
+		SPKObject(),
 		DataHandler(NEEDS_DATASET)
 	{}
 

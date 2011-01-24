@@ -42,7 +42,7 @@ namespace IRR
 	class SPK_IRR_PREFIX IRRLineRenderer :	public IRRRenderer,
 											public LineRenderBehavior
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(IRRLineRenderer)
+	SPK_IMPLEMENT_OBJECT(IRRLineRenderer)
 
 	public :
 
@@ -53,7 +53,7 @@ namespace IRR
 		* @param width : the width of this IRRLineRenderer in pixels
 		* @return A new registered IRRLineRenderer
 		*/
-		static inline Ref<IRRLineRenderer> create(irr::IrrlichtDevice* d,float length = 1.0f,float width = 1.0f);
+		static inline Ref<IRRLineRenderer> create(irr::IrrlichtDevice* d = NULL,float length = 1.0f,float width = 1.0f);
 
 		virtual inline void setWidth(float width);
 
@@ -62,7 +62,7 @@ namespace IRR
 		static const size_t NB_INDICES_PER_PARTICLE = 2;
 		static const size_t NB_VERTICES_PER_PARTICLE = 2;
 
-		IRRLineRenderer(irr::IrrlichtDevice* d,float length = 1.0f,float width = 1.0f);
+		IRRLineRenderer(irr::IrrlichtDevice* d = NULL,float length = 1.0f,float width = 1.0f);
 		IRRLineRenderer(const IRRLineRenderer& renderer);
 	
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;

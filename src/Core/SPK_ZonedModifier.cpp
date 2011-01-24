@@ -75,9 +75,9 @@ namespace SPK
 		}
 	}
 
-	WeakRef<SPKObject> ZonedModifier::findByName(const std::string& name)
+	Ref<SPKObject> ZonedModifier::findByName(const std::string& name)
 	{
-		WeakRef<SPKObject> object = SPKObject::findByName(name);
+		Ref<SPKObject>& object = SPKObject::findByName(name);
 		if (object != NULL) return object;
 
 		object = zone->findByName(name);

@@ -36,7 +36,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Rotator : public Modifier
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(Rotator)
+	SPK_IMPLEMENT_OBJECT(Rotator)
 
 	public :
 

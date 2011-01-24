@@ -37,11 +37,11 @@ namespace SPK
 		ZONE_TEST_ALWAYS,		/**< The test is always passed */
 	};
 
-	class SPK_PREFIX Zone : public Referenceable
+	class SPK_PREFIX Zone : public SPKObject
 	{
 
 	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_PARENT_ATTRIBUTES(SPKObject)
 	SPK_ATTRIBUTE("position",ATTRIBUTE_TYPE_VECTOR)
 	SPK_END_DESCRIPTION
 
@@ -103,7 +103,7 @@ namespace SPK
 	};
 
 	inline Zone::Zone(const Vector3D& position) :
-		Referenceable(),
+		SPKObject(),
 		position(position)
 	{
 		transformPos(tPosition,position);	

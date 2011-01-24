@@ -35,7 +35,7 @@ namespace SPK
 		currentUpdate(0),
 		lastUpdate(0),
 		lastParentUpdate(0),
-		parent(SPK_NULL_REF),
+		parent(NULL),
 		localIdentity(true)
 	{
 		memcpy(local,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
@@ -46,7 +46,7 @@ namespace SPK
 		currentUpdate(0),
 		lastUpdate(0),
 		lastParentUpdate(0),
-		parent(SPK_NULL_REF),
+		parent(NULL),
 		localIdentity(transform.localIdentity)
 	{
 		memcpy(local,transform.local,sizeof(float) * TRANSFORM_LENGTH);
@@ -198,7 +198,7 @@ namespace SPK
 		notifyForUpdate();
 	}
 
-	void Transform::update(const WeakRef<const SPKObject>& parent,SPKObject& owner)
+	void Transform::update(const Ref<SPKObject>& parent,SPKObject& owner)
 	{
 		if (isUpdateNotified() ||														// the local transform or instance param have been updated
 			parent != this->parent ||													// the parent has changed
@@ -217,7 +217,7 @@ namespace SPK
 				lastParentUpdate = parent->transform.lastUpdate;
 			}
 
-			this->parent = parent;
+			this->parent = parent.get();
 			lastUpdate = ++currentUpdate;
 
 			owner.innerUpdateTransform();

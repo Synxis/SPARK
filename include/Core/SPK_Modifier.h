@@ -42,13 +42,13 @@ namespace SPK
 	*
 	* 
 	*/
-	class Modifier :	public Referenceable,
+	class Modifier :	public SPKObject,
 						public DataHandler
 	{
 	friend class Group;
 
 	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_PARENT_ATTRIBUTES(SPKObject)
 	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
 	SPK_ATTRIBUTE("local",ATTRIBUTE_TYPE_BOOL)
 	SPK_END_DESCRIPTION

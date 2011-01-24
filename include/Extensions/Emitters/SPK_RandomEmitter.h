@@ -30,7 +30,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX RandomEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(RandomEmitter)
+	SPK_IMPLEMENT_OBJECT(RandomEmitter)
 
 	public :
 

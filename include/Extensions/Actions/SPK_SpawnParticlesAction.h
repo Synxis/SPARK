@@ -39,14 +39,13 @@ namespace SPK
 	*/
 	class SPK_PREFIX SpawnParticlesAction : public Action
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(SpawnParticlesAction)
-	SPK_IMPLEMENT_SERIALIZABLE(SpawnParticlesAction)
+	SPK_IMPLEMENT_OBJECT(SpawnParticlesAction)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Action)
 	SPK_ATTRIBUTE("spawning numbers",ATTRIBUTE_TYPE_FLOATS)
 	SPK_ATTRIBUTE("base emitter",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("group index",ATTRIBUTE_TYPE_UINT32)
+	SPK_ATTRIBUTE("target group",ATTRIBUTE_TYPE_REF)
 	SPK_END_DESCRIPTION
 
 	public :
@@ -62,14 +61,11 @@ namespace SPK
 		* @param groupIndex : the index of the group in the system in which to spawn particles
 		* @param emitter : the emitter used to spawn particles
 		*/
-		static inline Ref<SpawnParticlesAction> create(
+		static Ref<SpawnParticlesAction> create(
 			unsigned int minNb = 1,
 			unsigned int maxNb = 1,
-			size_t groupIndex = 0,
+			const Ref<Group>& group = SPK_NULL_REF,
 			const Ref<Emitter>& emitter = SPK_NULL_REF);
-
-		/** @brief Destructor of spawnParticles action */
-		virtual ~SpawnParticlesAction();
 
 		/////////////////////////
 		// Number of particles //
@@ -80,7 +76,7 @@ namespace SPK
 		* Note that this sets both the minimum and maximum number
 		* @param nb : the number of particles to spawn
 		*/
-		inline void setNb(unsigned int nb);
+		void setNb(unsigned int nb);
 
 		/**
 		* @brief Sets the number of particle to spawn
@@ -94,13 +90,13 @@ namespace SPK
 		* @brief Gets the minimum number of particles to spawn
 		* @return the minimum number of particles to spawn
 		*/
-		inline unsigned int getMinNb() const;
+		unsigned int getMinNb() const;
 
 		/**
 		* @brief Gets the maximum number of particles to spawn
 		* @return the maximum number of particles to spawn
 		*/
-		inline unsigned int getMaxNb() const;
+		unsigned int getMaxNb() const;
 
 		//////////////////
 		// Base emitter //
@@ -119,7 +115,7 @@ namespace SPK
 		* If the base emitter is modified, a call to resetPool() will allow the changes to take effects
 		* @return the base emitter
 		*/
-		inline const Ref<Emitter>& getEmitter() const;
+		const Ref<Emitter>& getEmitter() const;
 
 		/////////////////
 		// Group index //
@@ -131,13 +127,13 @@ namespace SPK
 		* Note that setting the group index to the index of the group which owns the spawn particle action may result in infinitely growing group.
 		* @param index : the index of the group in the parent system in which to spawn particles
 		*/
-		inline void setGroupIndex(size_t index);
+		void setTargetGroup(const Ref<Group>& group);
 
 		/**
 		* @brief Gets the index of the group within the parent system in which to spawn particles
 		* @return the index of the group in which to spawn particles
 		*/
-		inline size_t getGroupIndex() const;
+		const Ref<Group>& getTargetGroup() const;
 
 		///////////////
 		// Interface //
@@ -147,7 +143,7 @@ namespace SPK
 		void resetPool();
 
 		virtual void apply(Particle& particle) const;
-		virtual WeakRef<SPKObject> findByName(const std::string& name);
+		virtual Ref<SPKObject> findByName(const std::string& name);
 
 	protected :
 
@@ -160,20 +156,19 @@ namespace SPK
 		unsigned int maxNb;
 
 		Ref<Emitter> baseEmitter;
-
-		size_t groupIndex;
+		Ref<Group> targetGroup;
 
 		mutable std::deque<Ref<Emitter>> emitterPool;
 		
 		SpawnParticlesAction(
 			unsigned int minNb = 1,
 			unsigned int maxNb = 1,
-			size_t groupIndex = 0,
+			const Ref<Group>& group = SPK_NULL_REF,
 			const Ref<Emitter>& emitter = SPK_NULL_REF);
 
 		SpawnParticlesAction(const SpawnParticlesAction& action);
 
-		bool checkEmitterValidity() const;
+		bool checkValidity() const;
 		const Ref<Emitter>& getNextAvailableEmitter() const;
 	};
 
@@ -195,10 +190,10 @@ namespace SPK
 	inline Ref<SpawnParticlesAction> SpawnParticlesAction::create(
 		unsigned int minNb,
 		unsigned int maxNb,
-		size_t groupIndex,
+		const Ref<Group>& group,
 		const Ref<Emitter>& emitter)
 	{
-		return SPK_NEW(SpawnParticlesAction,minNb,maxNb,groupIndex,emitter);
+		return SPK_NEW(SpawnParticlesAction,minNb,maxNb,group,emitter);
 	}
 
 	inline const Ref<Emitter>& SpawnParticlesAction::getEmitter() const
@@ -206,14 +201,14 @@ namespace SPK
 		return baseEmitter;
 	}
 
-	inline void SpawnParticlesAction::setGroupIndex(size_t index)
+	inline void SpawnParticlesAction::setTargetGroup(const Ref<Group>& group)
 	{
-		groupIndex = index;
+		targetGroup = group;
 	}
 
-	inline size_t SpawnParticlesAction::getGroupIndex() const
+	inline const Ref<Group>& SpawnParticlesAction::getTargetGroup() const
 	{
-		return groupIndex;
+		return targetGroup;
 	}
 }
 

@@ -168,7 +168,7 @@ namespace SPK
         return static_cast<T>(min + ((randomSeed - 1) / 2147483646.0) * (max - min));
     }
 
-	extern SPK_PREFIX void registerCoreForLoading();
+	// extern SPK_PREFIX void registerCoreForLoading();
 }
 
 #endif

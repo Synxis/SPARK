@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
 	irr::scene::CSPKParticleSystemNode* system = new irr::scene::CSPKParticleSystemNode(smgr->getRootSceneNode(),smgr);
 	system->drop(); // We let the scene manager take care of the system life time
 
+	{
 	SPK::Ref<SPK::IRR::IRRQuadRenderer> quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
 	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
@@ -113,7 +114,7 @@ int main(int argc, char *argv[])
 	graphInterpolator->addEntry(0.5f,0x00FF0088);
 	graphInterpolator->addEntry(1.0f,0x0000FF88);
 
-	SPK::WeakRef<SPK::Group> group = system->createSPKGroup(400);
+	SPK::Ref<SPK::Group> group = system->createSPKGroup(400);
 	group->setRadius(0.15f);
 	group->setLifeTime(1.0f,2.0f);
 	group->setColorInterpolator(graphInterpolator);
@@ -138,6 +139,7 @@ int main(int argc, char *argv[])
 	}
 
 	SPK_DUMP_MEMORY
+	}
 	device->drop();
 	SPK_DUMP_MEMORY
 

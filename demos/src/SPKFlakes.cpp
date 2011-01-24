@@ -138,6 +138,7 @@ int main(int argc, char *argv[])
 	SPK::System::setClampStep(true,0.01f); // clamp the step to 10 ms
 	SPK::System::useRealStep();
 
+	{
 	// Renderers
 	SPK::Ref<SPK::GL::GLPointRenderer> basicRenderer = SPK::GL::GLPointRenderer::create();
 
@@ -151,10 +152,10 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::Gravity> gravity = SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f));
 
 	// System
-	SPK::System* particleSystem = new SPK::System(true); 
+	SPK::Ref<SPK::System> particleSystem = SPK::System::create(true); 
 
 	// Group
-	SPK::WeakRef<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES[NB_PARTICLES_SIZE - 1]);
+	SPK::Ref<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES[NB_PARTICLES_SIZE - 1]);
 	particleGroup->setRadius(0.0f);
 	particleGroup->setRenderer(particleRenderer);
 	particleGroup->setColorInterpolator(SPK::ColorDefaultInitializer::create(0xFFCC4C66));
@@ -308,7 +309,7 @@ int main(int argc, char *argv[])
 	}
 
 	SPK_DUMP_MEMORY
-	delete particleSystem;
+	}
 	SPK_DUMP_MEMORY
 
 	SDL_Quit();

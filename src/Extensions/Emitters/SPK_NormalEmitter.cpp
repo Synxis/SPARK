@@ -54,9 +54,9 @@ namespace SPK
 		normalZone = zone;
 	}
 
-	WeakRef<SPKObject> NormalEmitter::findByName(const std::string& name)
+	Ref<SPKObject> NormalEmitter::findByName(const std::string& name)
 	{
-		WeakRef<SPKObject> object = Emitter::findByName(name);
+		Ref<SPKObject>& object = Emitter::findByName(name);
 		if (object != NULL) return object;
 
 		if (normalZone != NULL)

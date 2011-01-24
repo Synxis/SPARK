@@ -27,7 +27,7 @@ namespace SPK
 	/** @brief A Modifier that destroy particles */
 	class Destroyer : public ZonedModifier
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(Destroyer)
+	SPK_IMPLEMENT_OBJECT(Destroyer)
 
 	public :
 

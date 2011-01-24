@@ -47,7 +47,7 @@ namespace DX9
 	*/
 	class SPK_DX9_PREFIX DX9LineRenderer : public DX9Renderer, public LineRenderBehavior
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(DX9LineRenderer)
+	SPK_IMPLEMENT_OBJECT(DX9LineRenderer)
 
 	public :
 

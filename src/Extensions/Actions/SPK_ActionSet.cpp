@@ -66,9 +66,9 @@ namespace SPK
 			(*it)->apply(particle);
 	}
 
-	WeakRef<SPKObject> ActionSet::findByName(const std::string& name)
+	Ref<SPKObject> ActionSet::findByName(const std::string& name)
 	{
-		WeakRef<SPKObject> object = Action::findByName(name);
+		Ref<SPKObject>& object = Action::findByName(name);
 		if (object != NULL) return object;
 
 		for (std::vector<Ref<Action>>::const_iterator it = actions.begin(); it != actions.end(); ++it)
@@ -87,15 +87,15 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("actions"))
 		{
-			std::vector<WeakRef<SPKObject>> tmpActions = attrib->getValuesRef();
+			std::vector<Ref<Action>> tmpActions = attrib->getValuesRef<Action>();
 			for (size_t i = 0; i < tmpActions.size(); ++i)
-				addAction(tmpActions[i].cast<Action>());
+				addAction(tmpActions[i]);
 		}
 	}
 
 	void ActionSet::innerExport(IO::Descriptor& descriptor) const
 	{
 		Action::innerExport(descriptor);
-		descriptor.getAttribute("actions")->setValuesRef(reinterpret_cast<const WeakRef<SPKObject>*>(&actions[0]),getNbActions());
+		descriptor.getAttribute("actions")->setValuesRef(reinterpret_cast<const Ref<SPKObject>*>(&actions[0]),getNbActions());
 	}
 }

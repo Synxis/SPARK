@@ -66,7 +66,7 @@ namespace IO
 	* <li>a value (which can be set or not</li>
 	* </ul>
 	*/
-	class Attribute
+	class SPK_PREFIX Attribute
 	{
 	friend class Descriptor;
 
@@ -166,13 +166,13 @@ namespace IO
 		* @param value : the value
 		* @param optional : is this value optional ?
 		*/
-		void setValueRef(const WeakRef<SPKObject>& value,bool optional = false)					{ setValue(ATTRIBUTE_TYPE_REF,value,optional); }
+		void setValueRef(const Ref<SPKObject>& value,bool optional = false);
 		
 		/**
 		* @brief Sets the reference value and make it optional if NULL
 		* @param value : the value
 		*/
-		void setValueRefOptionalOnNull(const WeakRef<SPKObject>& value)							{ setValueRef(value,value == NULL); }
+		void setValueRefOptionalOnNull(const Ref<SPKObject>& value)								{ setValueRef(value,value == NULL); }
 
 		/**
 		* @brief Sets the boolean value and make it optional if false
@@ -250,7 +250,8 @@ namespace IO
 		* @param nb : the number of values
 		* @param optional : is this value optional ?
 		*/
-		void setValuesRef(const WeakRef<SPKObject>* values,size_t nb,bool optional = false)		{ setValues(ATTRIBUTE_TYPE_REFS,values,nb,optional); }
+		template<typename T>
+		void setValuesRef(const Ref<T>* values,size_t nb,bool optional = false);
 		
 		/**
 		* @brief Gets the value (char)
@@ -304,7 +305,7 @@ namespace IO
 		* @brief Gets the value (Ref)
 		* @return value : the array of values
 		*/
-		WeakRef<SPKObject> getValueRef() const						{ return getValue<WeakRef<SPKObject>>(ATTRIBUTE_TYPE_REF); }
+		Ref<SPKObject> getValueRef() const;
 
 		/**
 		* @brief Gets the array of values (char)
@@ -358,7 +359,8 @@ namespace IO
 		* @brief Gets the array of values (Ref)
 		* @return value : the array of values
 		*/
-		std::vector<WeakRef<SPKObject>> getValuesRef() const		{ return getValues<WeakRef<SPKObject>>(ATTRIBUTE_TYPE_REFS); }
+		template<typename T>
+		std::vector<Ref<T>> getValuesRef() const;
 
 	private :
 
@@ -398,14 +400,6 @@ namespace IO
 		return optional;
 	}
 
-	inline Attribute::Attribute(const std::string& name,AttributeType type) :
-		name(name),
-		type(type),
-		offset(0),
-		descriptor(NULL),
-		valueSet(false)
-	{}
-
 	template<typename T>
 	void Attribute::setValue(AttributeType valueType,const T& value,bool optional)
 	{
@@ -424,7 +418,7 @@ namespace IO
 	template<typename T>
 	void Attribute::setValues(AttributeType valueType,const T* values,size_t nb,bool optional)
 	{
-		SPK_ASSERT(valueType == type,"Attribute::setValues<T>(AttributeType,const T&,size_t,bool) - The array of values not of the right type");
+		SPK_ASSERT(valueType == type,"Attribute::setValues<T>(AttributeType,const T&,size_t,bool) - The array of values is not of the right type");
 		SPK_ASSERT(nb > 0,"Attribute::setValues<T>(AttributeType,const T&,size_t,bool) - An array of size 0 cannot be serialized");
 
 		offset = descriptor->buffer.size();
@@ -461,13 +455,65 @@ namespace IO
 	template<typename T>
 	const std::vector<T> Attribute::getValues(AttributeType valueType) const
 	{
-		SPK_ASSERT(valueType == type,"Attribute::getValue<T>(AttributeType) - The desired array of values is not of the right type");
-		SPK_ASSERT(valueSet,"Attribute::getValues(size_t& nb) - The value is not set and therefore cannot be read");
+		SPK_ASSERT(valueType == type,"Attribute::getValues<T>(AttributeType) - The desired array of values is not of the right type");
+		SPK_ASSERT(valueSet,"Attribute::getValues<T>(AttributeType) - The value is not set and therefore cannot be read");
 
 		size_t nb = *reinterpret_cast<size_t*>(&descriptor->buffer[offset]);
 		std::vector<T> tmpBuffer;
 		for (size_t i = 0; i < nb; ++i)
 			tmpBuffer.push_back(*reinterpret_cast<T*>(&descriptor->buffer[offset + sizeof(size_t) + i * sizeof(T)]));
+
+#if !defined(SPK_NO_LOG) && defined(_DEBUG)
+		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);
+		os << "Get " << nb << " values for attribute \"" << name << "\" : ";
+		for (size_t i = 0; i < nb; ++i)
+			os << " " << tmpBuffer[i];
+		os << '\n';
+		SPK::Logger::getInstance().flush();
+#endif
+
+		return tmpBuffer;
+	}
+
+	template<typename T>
+	void Attribute::setValuesRef(const Ref<T>* values,size_t nb,bool optional)	
+	{ 
+		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::setValuesRef<T>(const Ref<T>*,size_t,bool) - The array of values is not an array of references");
+		SPK_ASSERT(nb > 0,"Attribute::setValuesRef<T>(const Ref<T>*,size_t,bool) - An array of size 0 cannot be serialized");
+
+		offset = descriptor->buffer.size();
+		const char* nbC = reinterpret_cast<char*>(&nb);
+		const char* refOffset = reinterpret_cast<const char*>(descriptor->refBuffer.size());
+		for (size_t i = 0; i < sizeof(size_t); ++i)			// Writes the number of objects
+			descriptor->buffer.push_back(nbC[i]);
+		for (size_t i = 0; i < sizeof(size_t); ++i)			// Writes the starting offset in the refBuffer
+			descriptor->buffer.push_back(refOffset[i]);
+		for (size_t i = 0; i < nb; ++i)						// Writes each objects
+			descriptor->refBuffer.push_back(values[i]);
+		valueSet = true;
+		this->optional = optional;
+
+#if !defined(SPK_NO_LOG) && defined(_DEBUG)
+		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);
+		os << "Set " << nb << " values for attribute \"" << name << "\" : ";
+		for (size_t i = 0; i < nb; ++i)
+			os << " " << values[i];
+		os << '\n';
+		SPK::Logger::getInstance().flush();
+#endif
+	}
+
+	template<typename T>
+	std::vector<Ref<T>> Attribute::getValuesRef() const				
+	{ 
+		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::getValuesRef<T>() - The desired array of values is an array of references");
+		SPK_ASSERT(valueSet,"Attribute::getValuesRef<T>() - The value is not set and therefore cannot be read");
+
+		size_t nb = *reinterpret_cast<size_t*>(&descriptor->buffer[offset]);
+		size_t refOffset = *reinterpret_cast<size_t*>(&descriptor->buffer[offset + sizeof(size_t)]);
+		std::vector<Ref<T>> tmpBuffer;
+		for (size_t i = 0; i < nb; ++i)
+			tmpBuffer.push_back(descriptor->refBuffer[refOffset + i].cast<T>());
 
 #if !defined(SPK_NO_LOG) && defined(_DEBUG)
 		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);

@@ -27,12 +27,12 @@ namespace SPK
 	SpawnParticlesAction::SpawnParticlesAction(
 		unsigned int minNb,
 		unsigned int maxNb,
-		size_t groupIndex,
+		const Ref<Group>& group,
 		const Ref<Emitter>& emitter) :
 		minNb(minNb),
 		maxNb(maxNb),
 		baseEmitter(),
-		groupIndex(groupIndex)
+		targetGroup(group)
 	{
 		setEmitter(emitter);
 	}
@@ -41,13 +41,12 @@ namespace SPK
         Action(action),
 		minNb(action.minNb),
 		maxNb(action.maxNb),
-		groupIndex(action.groupIndex),
+		targetGroup(action.targetGroup),
 		emitterPool()
 	{
+		targetGroup = copyChild(action.targetGroup);
 		baseEmitter = copyChild(action.baseEmitter);
 	}
-
-	SpawnParticlesAction::~SpawnParticlesAction(){}
 
 	void SpawnParticlesAction::setNb(unsigned int min,unsigned int max)
 	{
@@ -72,7 +71,7 @@ namespace SPK
 
 	void SpawnParticlesAction::apply(Particle& particle) const
 	{
-		if (!checkEmitterValidity())
+		if (!checkValidity())
 			return;
 
 		const Ref<Emitter>& emitter = getNextAvailableEmitter();
@@ -82,20 +81,30 @@ namespace SPK
 		zone->getTransform().setPosition(particle.position());
 		zone->updateTransform();
 
-		WeakRef<Group> group = particle.getGroup().getSystem().getGroup(groupIndex);
-		group->addParticles(SPK_RANDOM(minNb,maxNb + 1),emitter);
+		targetGroup->addParticles(SPK_RANDOM(minNb,maxNb + 1),emitter);
 	}
 
-	bool SpawnParticlesAction::checkEmitterValidity() const
+	bool SpawnParticlesAction::checkValidity() const
 	{
+		if (targetGroup == NULL)
+		{
+			SPK_LOG_ERROR("SpawnParticlesAction::checkValidity() - The target group is NULL and cannot be used");
+			return false;
+		}
+		else if (targetGroup->getSystem() == NULL)
+		{
+			SPK_LOG_ERROR("SpawnParticlesAction::checkValidity() - The target group is invalid (it is not bound to a system) and cannot be used");
+			return false;
+		}
+
 		if (baseEmitter == NULL)
 		{
-			SPK_LOG_WARNING("SpawnParticlesAction::checkEmitterValidity() - The base emitter is NULL and cannot be used");
+			SPK_LOG_ERROR("SpawnParticlesAction::checkValidity() - The base emitter is NULL and cannot be used");
 			return false;
 		}
 		else if (baseEmitter->getZone()->isShared())
 		{
-			SPK_LOG_WARNING("SpawnParticlesAction::checkEmitterValidity() - The base emitter is invalid (its zone is shared) and cannot be used");
+			SPK_LOG_ERROR("SpawnParticlesAction::checkValidity() - The base emitter is invalid (its zone is shared) and cannot be used");
 			return false;
 		}
 
@@ -113,7 +122,7 @@ namespace SPK
 		}
 
 		// No emitter is available is the pool, a new one must be created
-		emitterPool.push_back(copyRegisterable(baseEmitter));
+		emitterPool.push_back(copy(baseEmitter));
 		emitterPool.back()->getTransform().reset();
 		return emitterPool.back();
 	}
@@ -123,9 +132,9 @@ namespace SPK
 		emitterPool.clear();
 	}
 
-	WeakRef<SPKObject> SpawnParticlesAction::findByName(const std::string& name)
+	Ref<SPKObject> SpawnParticlesAction::findByName(const std::string& name)
 	{
-		WeakRef<SPKObject> object = Action::findByName(name);
+		Ref<SPKObject>& object = Action::findByName(name);
 		if (object != NULL) return object;
 
 		if (baseEmitter != NULL)
@@ -146,12 +155,13 @@ namespace SPK
 			{
 			case 1 : setNb(nbs[0]); break;
 			case 2 : setNb(nbs[0],nbs[1]); break;
+			default : SPK_LOG_ERROR("SpawnParticlesAction::innerImport(const IO::Descriptor& - The number of numbers set must be 1 or 2");
 			}
 		}
 		if (attrib = descriptor.getAttributeWithValue("base emitter"))
 			setEmitter(attrib->getValueRef().cast<Emitter>());
-		if (attrib = descriptor.getAttributeWithValue("group index"))
-			setGroupIndex(attrib->getValueUint32());
+		if (attrib = descriptor.getAttributeWithValue("target group"))
+			setTargetGroup(attrib->getValueRef().cast<Group>());
 	}
 
 	void SpawnParticlesAction::innerExport(IO::Descriptor& descriptor) const
@@ -161,6 +171,6 @@ namespace SPK
 		unsigned long int nbs[2] = {minNb,maxNb};
 		descriptor.getAttribute("spawning numbers")->setValuesUint32(nbs,2);
 		descriptor.getAttribute("base emitter")->setValueRef(getEmitter());
-		descriptor.getAttribute("group index")->setValueUint32(getGroupIndex());
+		descriptor.getAttribute("target group")->setValueRef(getTargetGroup());
 	}
 }

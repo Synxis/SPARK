@@ -342,10 +342,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\Core\SPK_Referenceable.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\Core\SPK_Renderer.cpp"
 					>
 				</File>
@@ -368,6 +364,10 @@
 				<Filter
 					Name="IO"
 					>
+					<File
+						RelativePath="..\..\..\src\Core\IO\SPK_IO_Attribute.cpp"
+						>
+					</File>
 					<File
 						RelativePath="..\..\..\src\Core\IO\SPK_IO_Descriptor.cpp"
 						>
@@ -569,10 +569,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\Core\SPK_Reference.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\Core\SPK_Referenceable.h"
 					>
 				</File>
 				<File

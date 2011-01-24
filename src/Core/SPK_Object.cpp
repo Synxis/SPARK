@@ -23,7 +23,41 @@
 
 namespace SPK
 {
-	void SPKObject::updateTransform(const WeakRef<const SPKObject>& parent)
+	std::map<SPKObject*,SPKObject*> SPKObject::copyBuffer;
+
+	SPKObject::SPKObject(bool SHAREABLE) : 
+		name(),
+		transform(),
+		nbReferences(0),
+		SHAREABLE(SHAREABLE),
+		shared(false)	
+	{}
+	
+	SPKObject::SPKObject(const SPKObject& obj) : 
+		name(obj.name),
+		transform(obj.transform),
+		nbReferences(0),
+		SHAREABLE(obj.SHAREABLE),
+		shared(obj.shared)
+	{}
+
+	SPKObject::~SPKObject()
+	{
+		SPK_ASSERT(nbReferences == 0,"SPKObject::~SPKObject() - The number of references of the object is not 0 during destruction");
+	}
+
+	void SPKObject::setShared(bool shared)
+	{
+		if (shared && !SHAREABLE)
+		{
+			SPK_LOG_ERROR("SPKObject::setShared(bool) - This object is of a type that is not shareable");
+			return;
+		}
+
+		this->shared = shared;
+	}
+
+	void SPKObject::updateTransform(const Ref<SPKObject>& parent)
 	{
 		SPK_ASSERT(parent != this,"SPKObject::updateTransform(const SPKObject*) - A SPKObject cannot be its own parent");
 		transform.update(parent,*this);
@@ -60,16 +94,23 @@ namespace SPK
 	void SPKObject::innerImport(const IO::Descriptor& descriptor)
 	{
 		const IO::Attribute* attrib = NULL;
+
 		if (attrib = descriptor.getAttributeWithValue("transform"))
 		{
 			std::vector<float> t = attrib->getValuesFloat();
 			if (t.size() == 16)
 				transform.set(&t[0]);
+			else
+				SPK_LOG_ERROR("SPKObject::innerImport(const IO::Descriptor&) - Wrong number of entries for attribute transform");
 		}
+
+		if (attrib = descriptor.getAttributeWithValue("shared"))
+			setShared(attrib->getValueBool());
 	}
 	
 	void SPKObject::innerExport(IO::Descriptor& descriptor) const
 	{
 		descriptor.getAttribute("transform")->setValuesFloat(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
+		descriptor.getAttribute("shared")->setValueBool(isShared());
 	}
 }

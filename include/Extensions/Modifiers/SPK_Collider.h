@@ -49,8 +49,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Collider : public Modifier
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(Collider)
-	SPK_IMPLEMENT_SERIALIZABLE(Collider)
+	SPK_IMPLEMENT_OBJECT(Collider)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Modifier)

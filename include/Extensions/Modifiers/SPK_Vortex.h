@@ -48,7 +48,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Vortex : public Modifier
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(Vortex)
+	SPK_IMPLEMENT_OBJECT(Vortex)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Modifier)

@@ -40,8 +40,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX LinearForce : public ZonedModifier
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(LinearForce)
-	SPK_IMPLEMENT_SERIALIZABLE(LinearForce)
+	SPK_IMPLEMENT_OBJECT(LinearForce)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(ZonedModifier)

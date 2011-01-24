@@ -125,7 +125,7 @@ namespace SPK
 	template<typename T>
 	class GraphInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(GraphInterpolator<T>);
+	SPK_IMPLEMENT_OBJECT(GraphInterpolator<T>);
 
 	public :
 

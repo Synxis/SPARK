@@ -57,7 +57,7 @@ namespace DX9
 	*/
 	class SPK_DX9_PREFIX DX9LineTrailRenderer : public DX9Renderer
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(DX9LineTrailRenderer)
+	SPK_IMPLEMENT_OBJECT(DX9LineTrailRenderer)
 
 	public :
 

@@ -50,7 +50,7 @@ namespace GL
 											public PointRenderBehavior,
 											public GLExtHandler
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(GLPointRenderer)
+	SPK_IMPLEMENT_OBJECT(GLPointRenderer)
 
 	public :
 

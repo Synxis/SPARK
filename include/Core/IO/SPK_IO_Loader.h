@@ -26,6 +26,8 @@
 
 namespace SPK
 {
+	class System;
+
 namespace IO
 {
 	/** @brief An abstract class to load an entire particle system from a resource */
@@ -49,14 +51,14 @@ namespace IO
 		* @param is : the input stream from which to load the system
 		* @return the loaded system or NULL if loading failed
 		*/
-		System* load(std::istream& is) const;
+		Ref<System> load(std::istream& is) const;
 
 		/**
 		* @brief Loads a system from a file
 		* @param path : the path from which to load the file
 		* @return the loaded system or NULL if loading failed
 		*/
-		System* load(const std::string& path) const;
+		Ref<System> load(const std::string& path) const;
 
 		////////////////////
 		// nested classes //
@@ -69,14 +71,14 @@ namespace IO
 
 		public :
 
-			WeakRef<const SPKObject> getObject() const	{ return object; }
-			Descriptor& getDescriptor()					{ return descriptor; }
+			const Ref<SPKObject>& getObject() const	{ return object; }
+			Descriptor& getDescriptor()				{ return descriptor; }
 
 		private :
 
-			Node(const WeakRef<SPKObject>& object);
+			Node(const Ref<SPKObject>& object);
 
-			WeakRef<SPKObject> object;
+			Ref<SPKObject> object;
 			Descriptor descriptor;
 		};
 
@@ -86,27 +88,25 @@ namespace IO
 
 		public :
 
-			~Graph() { destroyAllNodes(false); }
-
 			bool addNode(size_t key,const std::string& name);
 			bool validateNodes();
-			bool importNodesAttributes();
 
 			const Node* getNode(size_t key) const { return getNode(key,true); }
 
 		private :
 
+			~Graph();
+
 			std::map<size_t,Node*> key2Ptr;
 			std::list<Node*> nodes;
 
 			bool nodesValidated;
-			WeakRef<System> system;
+			Ref<System> system;
 
 			Node* getNode(size_t key,bool withCheck) const; // inner getNode that allows to bypass validation check
-			void destroyAllNodes(bool destroyRefs);
-			void destroyUnusedObject(Node& node) const;
+			void destroyAllNodes();
 
-			WeakRef<System>& finalize();
+			const Ref<System>& finalize();
 		};
 
 	private :

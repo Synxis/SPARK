@@ -51,7 +51,7 @@ namespace DX9
 											public QuadRenderBehavior,
 											public Oriented3DRenderBehavior
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(DX9QuadRenderer)
+	SPK_IMPLEMENT_OBJECT(DX9QuadRenderer)
 
 	public :
 

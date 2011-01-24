@@ -30,8 +30,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX StraightEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(StraightEmitter)
-	SPK_IMPLEMENT_SERIALIZABLE(StraightEmitter)
+	SPK_IMPLEMENT_OBJECT(StraightEmitter)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Emitter)

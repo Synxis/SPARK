@@ -44,7 +44,7 @@ namespace DX9
 	class SPK_DX9_PREFIX DX9PointRenderer :	public DX9Renderer,
 											public PointRenderBehavior
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(DX9PointRenderer)
+	SPK_IMPLEMENT_OBJECT(DX9PointRenderer)
 
 	public :
 

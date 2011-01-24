@@ -135,7 +135,7 @@ namespace SPK
 	inline Iterator<Group>::Iterator(Group& group) :
 		particle(group,0)
 	{
-		SPK_ASSERT(group.getSystem().isInitialized(),"Iterator::Iterator(Group&) - An iterator from an uninitialized group cannot be retrieved");
+		SPK_ASSERT(group.isInitialized(),"Iterator::Iterator(Group&) - An iterator from an uninitialized group cannot be retrieved");
 	}
 
 	inline Particle& Iterator<Group>::operator*() const
@@ -168,7 +168,7 @@ namespace SPK
 	inline ConstIterator<Group>::ConstIterator(const Group& group) :
 		particle(const_cast<Group&>(group),0)
 	{
-		SPK_ASSERT(group.getSystem().isInitialized(),"ConstIterator::ConstIterator(Group&) - An const iterator from a uninitialized group cannot be retrieved");	
+		SPK_ASSERT(group.isInitialized(),"ConstIterator::ConstIterator(Group&) - An const iterator from a uninitialized group cannot be retrieved");	
 	}
 
 	inline const Particle& ConstIterator<Group>::operator*() const

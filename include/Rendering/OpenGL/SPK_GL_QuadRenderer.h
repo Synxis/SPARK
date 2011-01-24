@@ -51,7 +51,7 @@ namespace GL
 											public Oriented3DRenderBehavior,
 											public GLExtHandler
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(GLQuadRenderer)
+	SPK_IMPLEMENT_OBJECT(GLQuadRenderer)
 
 	public :
 

@@ -24,26 +24,26 @@
 
 namespace SPK
 {
-	EmitterAttacher::EmitterAttacher(size_t groupIndex,const Ref<Emitter>& emitter,bool orientate,bool rotate) :
+	EmitterAttacher::EmitterAttacher(const Ref<Group>& group,const Ref<Emitter>& emitter,bool orientate,bool rotate) :
 		Modifier(MODIFIER_PRIORITY_CHECK,true,true),
 		baseEmitter(emitter),
-		groupIndex(groupIndex),
+		targetGroup(group),
 		orientationEnabled(orientate),
 		rotationEnabled(rotate)
 	{}
 
 	EmitterAttacher::EmitterAttacher(const EmitterAttacher& emitterAttacher) :
 		Modifier(emitterAttacher),
-		groupIndex(emitterAttacher.groupIndex),
 		orientationEnabled(emitterAttacher.orientationEnabled),
 		rotationEnabled(emitterAttacher.rotationEnabled)
 	{
 		baseEmitter = copyChild(emitterAttacher.baseEmitter);
+		targetGroup = copyChild(emitterAttacher.targetGroup);
 	}
 
 	EmitterAttacher::~EmitterAttacher(){}
 
-	EmitterAttacher::EmitterData::EmitterData(size_t nbParticles,const WeakRef<Group>& emittingGroup) :
+	EmitterAttacher::EmitterData::EmitterData(size_t nbParticles,Group* emittingGroup) :
 		data(SPK_NEW_ARRAY(Ref<Emitter>,nbParticles)),
 		dataSize(nbParticles),
 		group(emittingGroup)
@@ -54,60 +54,70 @@ namespace SPK
 		SPK_DELETE_ARRAY(data);
 	}
 
-	void EmitterAttacher::setEmitter(const Ref<Emitter>& emitter)
-	{
-		baseEmitter = emitter;
-	}
-
 	void EmitterAttacher::createData(DataSet& dataSet,const Group& group) const
 	{
 		dataSet.init(NB_DATA);
-		dataSet.setData(EMITTER_INDEX,SPK_NEW(EmitterData,group.getCapacity(),group.getSystem().getGroup(groupIndex)));
+		EmitterData* data = SPK_NEW(EmitterData,group.getCapacity(),targetGroup.get());
+		dataSet.setData(EMITTER_INDEX,data);
+		initData(*data,group);
 	}
 
 	void EmitterAttacher::checkData(DataSet& dataSet,const Group& group) const
 	{
 		EmitterData& data = SPK_GET_DATA(EmitterData,&dataSet,EMITTER_INDEX);
-		WeakRef<Group> currentDataGroup = data.getGroup();
-		WeakRef<Group> emittingGroup = group.getSystem().getGroup(groupIndex);
-		if (currentDataGroup != emittingGroup)
+		Group* currentDataGroup = data.getGroup();
+		if (currentDataGroup != targetGroup)
 		{
-			data.setGroup(emittingGroup);
-			for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
-				data.setEmitter(particleIt->getIndex(),baseEmitter);
+			data.setGroup(targetGroup.get());
+			initData(data,group);	
 		}
 	}
 
-	bool EmitterAttacher::checkEmitterValidity() const
+	bool EmitterAttacher::checkValidity() const
 	{
+		if (targetGroup == NULL)
+		{
+			SPK_LOG_ERROR("EmitterAttacher::checkValidity() - The target group is NULL and cannot be used");
+			return false;
+		}
+		else if (targetGroup->getSystem() == NULL)
+		{
+			SPK_LOG_ERROR("EmitterAttacher::checkValidity() - The target group is invalid (it is not bound to a system) and cannot be used");
+			return false;
+		}
+
 		if (baseEmitter == NULL)
 		{
-			SPK_LOG_WARNING("SpawnParticlesAction::checkEmitterValidity() - The base emitter is NULL and cannot be used");
+			SPK_LOG_ERROR("EmitterAttacher::checkValidity() - The base emitter is NULL and cannot be used");
 			return false;
 		}
 		else if (baseEmitter->getZone()->isShared())
 		{
-			SPK_LOG_WARNING("SpawnParticlesAction::checkEmitterValidity() - The base emitter is invalid (its zone is shared) and cannot be used");
+			SPK_LOG_ERROR("EmitterAttacher::checkValidity() - The base emitter is invalid (its zone is shared) and cannot be used");
 			return false;
 		}
 
 		return true;
 	}
 
+	void EmitterAttacher::initData(EmitterData& data,const Group& group) const
+	{
+		for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
+			data.setEmitter(particleIt->getIndex(),baseEmitter);
+	}
+
 	void EmitterAttacher::init(Particle& particle,DataSet* dataSet) const
 	{
-		// Only destroy the old emitter here as we need to ensure the emitters validity
 		SPK_GET_DATA(EmitterData,dataSet,EMITTER_INDEX).setEmitter(particle.getIndex(),baseEmitter);
 	}
 
 	void EmitterAttacher::modify(Group& group,DataSet* dataSet,float deltaTime) const
 	{
-		if (!checkEmitterValidity())
+		if (!checkValidity())
 			return;
 
 		EmitterData& data = SPK_GET_DATA(EmitterData,dataSet,EMITTER_INDEX);
 		Ref<Emitter>* emitterIt = data.getEmitters();
-		WeakRef<Group> emittingGroup = data.getGroup();
 
 		bool rotationEnabled = this->rotationEnabled && group.isEnabled(PARAM_ANGLE);
 
@@ -146,7 +156,7 @@ namespace SPK
 			}
 
 			emitter->updateTransform();
-			emittingGroup->addParticles(emitter,deltaTime);
+			targetGroup->addParticles(emitter,deltaTime);
 
 			++emitterIt;
 		}
@@ -154,7 +164,7 @@ namespace SPK
 
 	void EmitterAttacher::EmitterData::setEmitter(size_t index,const Ref<Emitter>& emitter)
 	{
-		data[index] = Referenceable::copyRegisterable(emitter);
+		data[index] = copy(emitter);
 		data[index]->getTransform().reset();
 	}
 
@@ -175,8 +185,8 @@ namespace SPK
 			enableEmitterOrientation(tmpOrientationEnabled,tmpRotationEnabled);
 		}
 
-		if (attrib = descriptor.getAttributeWithValue("group index"))
-			setGroupIndex(attrib->getValueUint32());
+		if (attrib = descriptor.getAttributeWithValue("target group"))
+			setTargetGroup(attrib->getValueRef().cast<Group>());
 	}
 
 	void EmitterAttacher::innerExport(IO::Descriptor& descriptor) const
@@ -185,6 +195,6 @@ namespace SPK
 		descriptor.getAttribute("base emitter")->setValueRef(getEmitter());
 		descriptor.getAttribute("orientation enabled")->setValueBool(isEmitterOrientationEnabled());
 		descriptor.getAttribute("rotation enabled")->setValueBool(isEmitterRotationEnabled());
-		descriptor.getAttribute("group index")->setValueUint32(getGroupIndex());
+		descriptor.getAttribute("target group")->setValueRef(getTargetGroup());
 	}
 }

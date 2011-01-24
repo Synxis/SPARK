@@ -28,21 +28,20 @@ namespace SPK
 
 	class EmitterAttacher : public Modifier
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(EmitterAttacher)
-	SPK_IMPLEMENT_SERIALIZABLE(EmitterAttacher)
+	SPK_IMPLEMENT_OBJECT(EmitterAttacher)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Modifier)
 	SPK_ATTRIBUTE("base emitter",ATTRIBUTE_TYPE_REF)
 	SPK_ATTRIBUTE("orientation enabled",ATTRIBUTE_TYPE_BOOL)
 	SPK_ATTRIBUTE("rotation enabled",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("group index",ATTRIBUTE_TYPE_UINT32)
+	SPK_ATTRIBUTE("target group",ATTRIBUTE_TYPE_REF)
 	SPK_END_DESCRIPTION
 
 	public :
 
-		static inline Ref<EmitterAttacher> create(
-			size_t groupIndex = 0,
+		static Ref<EmitterAttacher> create(
+			const Ref<Group>& group = SPK_NULL_REF,
 			const Ref<Emitter>& emitter = SPK_NULL_REF,
 			bool orientate = false,
 			bool rotate = false);
@@ -50,14 +49,14 @@ namespace SPK
 		~EmitterAttacher();
 
 		void setEmitter(const Ref<Emitter>& emitter);
-		inline const Ref<Emitter>& getEmitter() const;
+		const Ref<Emitter>& getEmitter() const;
 
-		inline void setGroupIndex(size_t index);
-		inline size_t getGroupIndex() const;
+		void setTargetGroup(const Ref<Group>& group);
+		const Ref<Group>& getTargetGroup() const;
 
-		inline void enableEmitterOrientation(bool orientate,bool rotate = false);
-		inline bool isEmitterOrientationEnabled() const;
-		inline bool isEmitterRotationEnabled() const;
+		void enableEmitterOrientation(bool orientate,bool rotate = false);
+		bool isEmitterOrientationEnabled() const;
+		bool isEmitterRotationEnabled() const;
 
 	protected :
 
@@ -77,11 +76,11 @@ namespace SPK
 		{
 		public :
 
-			inline EmitterData(size_t nbParticles,const WeakRef<Group>& emittingGroup);
+			EmitterData(size_t nbParticles,Group* emittingGroup);
 			
-			inline Ref<Emitter>* getEmitters() const;
-			inline void setGroup(const WeakRef<Group>& group);
-			inline WeakRef<Group> getGroup() const;
+			Ref<Emitter>* getEmitters() const;
+			void setGroup(Group* group);
+			Group* getGroup() const;
 
 			void setEmitter(size_t index,const Ref<Emitter>& emitter);
 
@@ -90,7 +89,7 @@ namespace SPK
 			Ref<Emitter>* data;
 			size_t dataSize;
 
-			WeakRef<Group> group;
+			Group* group;
 
 			~EmitterData();
 
@@ -98,33 +97,39 @@ namespace SPK
 		};
 
 		Ref<Emitter> baseEmitter;
+		Ref<Group> targetGroup;
 
 		bool orientationEnabled;
 		bool rotationEnabled;
 
-		size_t groupIndex;
-
 		EmitterAttacher(
-			size_t groupIndex = 0,
+			const Ref<Group>& group = SPK_NULL_REF,
 			const Ref<Emitter>& emitter = SPK_NULL_REF,
 			bool orientate = false,
 			bool rotate = false);
 
 		EmitterAttacher(const EmitterAttacher& emitterAttacher);
 
-		bool checkEmitterValidity() const;
+		bool checkValidity() const;
+
+		void initData(EmitterData& data,const Group& group) const;
 
 		virtual void init(Particle& particle,DataSet* dataSet) const;
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
 	inline Ref<EmitterAttacher> EmitterAttacher::create(
-		size_t groupIndex,
+		const Ref<Group>& group,
 		const Ref<Emitter>& emitter,
 		bool orientate,
 		bool rotate)
 	{
-		return SPK_NEW(EmitterAttacher,groupIndex,emitter,orientate,rotate);
+		return SPK_NEW(EmitterAttacher,group,emitter,orientate,rotate);
+	}
+
+	inline void EmitterAttacher::setEmitter(const Ref<Emitter>& emitter)
+	{
+		baseEmitter = emitter;
 	}
 
 	inline const Ref<Emitter>& EmitterAttacher::getEmitter() const
@@ -132,14 +137,14 @@ namespace SPK
 		return baseEmitter;
 	}
 
-	inline void EmitterAttacher::setGroupIndex(size_t index)
+	inline void EmitterAttacher::setTargetGroup(const Ref<Group>& group)
 	{
-		groupIndex = index;
+		targetGroup = group;
 	}
 
-	inline size_t EmitterAttacher::getGroupIndex() const
+	inline const Ref<Group>& EmitterAttacher::getTargetGroup() const
 	{
-		return groupIndex;
+		return targetGroup;
 	}
 
 	inline void EmitterAttacher::enableEmitterOrientation(bool orientate,bool rotate)
@@ -163,12 +168,12 @@ namespace SPK
 		return data;
 	}
 
-	inline void EmitterAttacher::EmitterData::setGroup(const WeakRef<Group>& group)
+	inline void EmitterAttacher::EmitterData::setGroup(Group* group)
 	{
 		this->group = group;
 	}
 
-	inline WeakRef<Group> EmitterAttacher::EmitterData::getGroup() const
+	inline Group* EmitterAttacher::EmitterData::getGroup() const
 	{
 		return group;
 	}

@@ -34,7 +34,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX RandomForce : public Modifier
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(RandomForce)
+	SPK_IMPLEMENT_OBJECT(RandomForce)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Modifier)

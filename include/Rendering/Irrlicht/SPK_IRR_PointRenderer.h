@@ -51,7 +51,7 @@ namespace IRR
 	class SPK_IRR_PREFIX IRRPointRenderer :	public IRRRenderer,
 											public PointRenderBehavior
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(IRRPointRenderer)
+	SPK_IMPLEMENT_OBJECT(IRRPointRenderer)
 
 	public :
 
@@ -61,7 +61,7 @@ namespace IRR
 		* @param size : the size of the points
 		* @return A new registered IRRPointRenderer
 		*/
-		static inline Ref<IRRPointRenderer> create(irr::IrrlichtDevice* d,float screenSize = 1.0f);
+		static inline Ref<IRRPointRenderer> create(irr::IrrlichtDevice* d = NULL,float screenSize = 1.0f);
 
 		// Reimplemented from PointRenderBehavior
 		virtual bool setType(PointType type);
@@ -104,7 +104,7 @@ namespace IRR
 		static const size_t NB_INDICES_PER_PARTICLE = 1;
 		static const size_t NB_VERTICES_PER_PARTICLE = 1;
 
-		IRRPointRenderer(irr::IrrlichtDevice* d,float screenSize = 1.0f);
+		IRRPointRenderer(irr::IrrlichtDevice* d = NULL,float screenSize = 1.0f);
 		IRRPointRenderer(const IRRPointRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;

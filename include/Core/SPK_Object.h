@@ -23,6 +23,7 @@
 #define H_SPK_OBJECT
 
 #include <string>
+#include <map>
 
 #define SPK_START_DESCRIPTION \
 \
@@ -35,13 +36,15 @@ virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) const \
 
 #define SPK_END_DESCRIPTION }
 
-#define SPK_IMPLEMENT_SERIALIZABLE(ClassName) \
+#define SPK_IMPLEMENT_OBJECT(ClassName) \
 private : \
 friend class IO::IOManager; \
-static ClassName* createSerializable() {return SPK_NEW(ClassName);} \
-static std::string getName() {return #ClassName;} \
+template<typename T> friend class Ref; \
+static ClassName* createSerializable()		{ return SPK_NEW(ClassName); } \
+static std::string asName()					{ return #ClassName; } \
+virtual Ref<SPKObject> clone() const		{ return SPK_NEW(ClassName,*this); } \
 public : \
-virtual std::string getClassName() const { return ClassName::getName(); }
+virtual std::string getClassName() const	{ return ClassName::asName(); }
 
 // For templates
 #define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : virtual void fillAttributeList(std::vector<IO::Attribute>& attributes);
@@ -51,24 +54,42 @@ template<> inline void ClassName::fillAttributeList(std::vector<IO::Attribute>& 
 
 namespace SPK
 {
+	namespace IO { class IOManager; }
+
 	class SPK_PREFIX SPKObject
 	{
 	friend class Transform;
+	template<typename T> friend class Ref;
 
 	SPK_START_DESCRIPTION
 	SPK_ATTRIBUTE("transform",ATTRIBUTE_TYPE_FLOATS)
+	SPK_ATTRIBUTE("shared",ATTRIBUTE_TYPE_BOOL)
 	SPK_END_DESCRIPTION
 
 	public :
+
+		template<typename T>
+		static Ref<T> copy(const Ref<T>& ref);
+
+		virtual ~SPKObject();
+
+		///////////////
+		// Reference //
+		///////////////
+
+		unsigned int getNbReferences() const;
+		
+		bool isShared() const;
+		void setShared(bool shared);
 		
 		///////////////
 		// Transform //
 		///////////////
 
-		inline Transform& getTransform();
-		inline const Transform& getTransform() const;
+		Transform& getTransform();
+		const Transform& getTransform() const;
 
-		void updateTransform(const WeakRef<const SPKObject>& parent = SPK_NULL_REF);
+		void updateTransform(const Ref<SPKObject>& parent = SPK_NULL_REF);
 
 		//////////
 		// Name //
@@ -78,13 +99,13 @@ namespace SPK
 		* @brief Sets the name of this nameable
 		* @param name : the name
 		*/
-		inline void setName(const std::string& name);
+		void setName(const std::string& name);
 
 		/**
 		* @brief Gets the name of this nameable
 		* @return the name
 		*/
-		inline const std::string& getName() const;
+		const std::string& getName() const;
 		
 		/**
 		* @brief Traverses this nameable to find a nameable with the given name
@@ -96,7 +117,7 @@ namespace SPK
 		* @param name : the name of the nameable to find
 		* @return : the nameable with the given name or null
 		*/
-		virtual inline WeakRef<SPKObject> findByName(const std::string& name);
+		virtual Ref<SPKObject> findByName(const std::string& name);
 
 		///////////////////
 		// Serialization //
@@ -110,11 +131,8 @@ namespace SPK
 	protected :
 
 		// abstract class
-		inline SPKObject() {}
-		inline SPKObject(const SPKObject& obj) : 
-			name(obj.name),
-			transform(obj.transform)
-		{}
+		SPKObject(bool SHAREABLE = false);
+		SPKObject(const SPKObject& obj);
 
 		/**
 		* @brief Updates all the parameters in the world coordinates
@@ -122,7 +140,7 @@ namespace SPK
 		* This method can be overriden in derived classes of SPKObject (By default it does nothing).<br>
 		* It is this method task to compute all parameters of the class that are dependent of the world transform.
 		*/
-		virtual inline void innerUpdateTransform() {}
+		virtual void innerUpdateTransform() {}
 
 		/**
 		* @brief Propagates the update of the transform to object's children of this object
@@ -130,21 +148,43 @@ namespace SPK
 		* This method can be overriden in derived classes of SPKObject (By default it does nothing).<br>
 		* It is this method task to call the updateTransform method of the object's children of this object.
 		*/
-		virtual inline void propagateUpdateTransform() {}
+		virtual void propagateUpdateTransform() {}
 
-		inline void transformPos(Vector3D& tPos,const Vector3D& pos);
-		inline void transformDir(Vector3D& tDir,const Vector3D& dir);
+		void transformPos(Vector3D& tPos,const Vector3D& pos);
+		void transformDir(Vector3D& tDir,const Vector3D& dir);
 
 		virtual void innerImport(const IO::Descriptor& descriptor);
 		virtual void innerExport(IO::Descriptor& descriptor) const;
+
+		template<typename T>
+		static Ref<T> copyChild(const Ref<T>& ref);
 
 	private :
 
 		std::string name;
 		Transform transform;
 
+		static std::map<SPKObject*,SPKObject*> copyBuffer;
+
+		unsigned int nbReferences;
+		
+		const bool SHAREABLE;
+		bool shared;
+		
+		virtual Ref<SPKObject> clone() const = 0;
+
 		IO::Descriptor createDescriptor() const;
 	};
+
+	inline unsigned int SPKObject::getNbReferences() const
+	{
+		return nbReferences;
+	}
+
+	inline bool SPKObject::isShared() const
+	{
+		return shared;
+	}
 
 	inline Transform& SPKObject::getTransform()
 	{
@@ -156,17 +196,17 @@ namespace SPK
 		return transform;
 	}
 
-	void SPKObject::setName(const std::string& name)
+	inline void SPKObject::setName(const std::string& name)
 	{
 		this->name = name;
 	}
 
-	const std::string& SPKObject::getName() const
+	inline const std::string& SPKObject::getName() const
 	{
 		return name;
 	}
 
-	WeakRef<SPKObject> SPKObject::findByName(const std::string& name)
+	inline Ref<SPKObject> SPKObject::findByName(const std::string& name)
 	{
 		return getName().compare(name) == 0 ? this : NULL;
 	}
@@ -179,6 +219,34 @@ namespace SPK
 	inline void SPKObject::transformDir(Vector3D& tDir,const Vector3D& dir)
 	{
 		transform.transformDir(tDir,dir);
+	}
+
+	template<typename T>
+	Ref<T> SPKObject::copy(const Ref<T>& ref)
+	{
+		if (ref == NULL)
+			return ref;
+
+		copyBuffer.clear();
+		return ref.cast<SPKObject>()->clone().cast<T>();
+	}
+
+	template<typename T>
+	Ref<T> SPKObject::copyChild(const Ref<T>& ref)
+	{
+		if (ref == NULL)
+			return SPK_NULL_REF;
+
+		if (ref->isShared())
+			return ref;
+
+		std::map<SPKObject*,SPKObject*>::const_iterator it = copyBuffer.find(ref.get());
+		if (it != copyBuffer.end())
+			return dynamic_cast<T*>(it->second);
+
+		Ref<SPKObject> clone = ref.cast<SPKObject>()->clone();
+		copyBuffer.insert(std::make_pair(ref.get(),clone.get()));
+		return clone.cast<T>();
 	}
 }
 

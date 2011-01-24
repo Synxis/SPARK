@@ -49,14 +49,14 @@ namespace IO
 		* @param os : the output stream to save the system to
 		* @return true if the system has been successfully saved, false if not
 		*/
-		bool save(std::ostream& os,const WeakRef<const System>& system) const;
+		bool save(std::ostream& os,const Ref<System>& system) const;
 
 		/**
 		* @brief Saves a system in a file
 		* @param path : the path of the file to save the system in
 		* @return true if the system has been successfully saved, false if not
 		*/
-		bool save(const std::string& path,const WeakRef<const System>& system) const;
+		bool save(const std::string& path,const Ref<System>& system) const;
 
 		////////////////////
 		// Nested classes //
@@ -95,7 +95,7 @@ namespace IO
 
 			~Graph();
 
-			Node* getNode(const WeakRef<SPKObject>& ptr);
+			Node* getNode(const Ref<SPKObject>& ptr);
 			Node* getNextUnprocessedNode();
 
 		private :
@@ -103,8 +103,8 @@ namespace IO
 			Graph();
 			Graph(const Graph&);
 			
-			std::map<WeakRef<SPKObject>,Node*> ptr2Nodes;
-			std::map<WeakRef<SPKObject>,Node*> ref2Nodes;
+			std::map<const SPKObject*,Node*> ptr2Nodes;
+			std::map<const SPKObject*,Node*> ref2Nodes;
 			std::list<Node*> nodes;
 
 			mutable std::list<Node*>::iterator currentPosIt;
@@ -123,8 +123,8 @@ namespace IO
 		*/
 		virtual bool innerSave(std::ostream& os,Graph& graph) const = 0;
 
-		static void constructGraph(Graph& graph,const WeakRef<const System>& system);
-		static void constructNode(Graph& graph,const WeakRef<SPKObject>& object,size_t level);
+		static void constructGraph(Graph& graph,const System* system);
+		static void constructNode(Graph& graph,const SPKObject* object,size_t level);
 	};	
 }}
 

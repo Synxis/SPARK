@@ -29,11 +29,17 @@ namespace SPK
 	// Hack to allow easy null reference initialization
 	class NullReferenceValue {};
 
-	template<typename T> class WeakRef;
-
 	/**
-	* @brief A reference on a Referenceable
+	* @brief A strong reference on a SPKObject
 	*
+	* This class defines a smart pointer with intrusive reference counting.<br>
+	* Ref objects are responsible for SPKObjects destruction. An SPKObject is destroyed as soon as no more references are pointing to it.<br>
+	* <br>
+	* A Ref offers the same operations (* and ->) and comparison operators as a standard pointers.<br>
+	* Moreover implicit conversions exists between Ref and standard pointer.<br>
+	* Implicit downcasting is also implemented. Upcasting can be performed with a call to cast<T> (equivalent to dynamic_cast<T>)<br>
+	* <br>
+	* In practice, An SPKObject must always be manipulated through a reference.
 	*/
 	template<typename T>
 	class Ref
@@ -52,8 +58,6 @@ namespace SPK
 		template<typename U> inline Ref(U* ptr) : 
 			ptr(ptr) { increment(); }
 		template<typename U> inline Ref(const Ref<U>& ref) : 
-			ptr(ref.get()) { increment(); }
-		template<typename U> inline Ref(const WeakRef<U>& ref) : 
 			ptr(ref.get()) { increment(); }
 		
 		inline ~Ref() { 
@@ -105,18 +109,6 @@ namespace SPK
 			return *this;
 		}
 
-		template<typename U> Ref& operator=(const WeakRef<U>& ref)
-		{
-			if (*this != ref)
-			{
-				decrement();
-				ptr = ref.get();
-				increment();
-			}
-
-			return *this;
-		}
-
 		inline T& operator*() const { return *ptr; }
 		inline T* operator->() const { return ptr; }
 		inline T* get() const { return ptr; }
@@ -130,70 +122,9 @@ namespace SPK
 	private :
 
 		inline void increment() { if (ptr != NULL) ++(ptr->nbReferences); }
+
+		// HACK : The pointer is cast to SPKObject* to allow the Ref class to access the destructor
 		inline void decrement() { if (ptr != NULL && --(ptr->nbReferences) == 0) SPK_DELETE(ptr); }
-
-		T* ptr;
-	};
-
-	/**
-	* @brief A weak on a Referenceable
-	*
-	*/
-	template<typename T>
-	class WeakRef
-	{
-	public :
-
-		/////////////////////////////
-		// Constructors/Destructor //
-		/////////////////////////////
-
-		inline WeakRef() : ptr(NULL) {}
-		inline WeakRef(NullReferenceValue) : ptr(NULL) {}
-		inline WeakRef(const WeakRef& ref) : ptr(ref.get()) {}
-		template<typename U> inline WeakRef(U* ptr) : ptr(ptr) {}
-		template<typename U> inline WeakRef(const WeakRef<U>& ref) : ptr(ref.get()) {}
-		template<typename U> inline WeakRef(const Ref<U>& ref) : ptr(ref.get()) {}
-
-		//////////////////////////
-		// Operator overloading //
-		//////////////////////////
-
-		WeakRef& operator=(T* ptr)
-		{
-			this->ptr = ptr;
-			return *this;
-		}
-
-		WeakRef& operator=(const WeakRef& ref)
-		{
-			ptr = ref.get();
-			return *this;
-		}
-
-		template<typename U> WeakRef& operator=(const WeakRef<U>& ref)
-		{
-			ptr = ref.get();
-			return *this;
-		}
-
-		template<typename U> WeakRef& operator=(const Ref<U>& ref)
-		{
-			ptr = ref.get();
-			return *this;
-		}
-
-		inline T& operator*() const { return *ptr; }
-		inline T* operator->() const { return ptr; }
-		inline T* get() const { return ptr; }
-
-		operator bool() const { return ptr != 0; }
-
-		void reset() { ptr = NULL; }
-
-		template<typename U> WeakRef<U> cast() const { return WeakRef<U>(dynamic_cast<U*>(ptr)); }
-
-	private :
 
 		T* ptr;
 	};
@@ -201,18 +132,11 @@ namespace SPK
 	template<typename T,typename U> bool operator==(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() == ref1.get(); }
 	template<typename T,typename U> bool operator==(const Ref<T>& ref,U* ptr) { return ref.get() == ptr; }
 	template<typename T,typename U> bool operator==(T* ptr,const Ref<U>& ref) { return ref.get() == ptr; }
-	template<typename T,typename U> bool operator==(const WeakRef<T>& ref0,const WeakRef<U>& ref1) { return ref0.get() == ref1.get(); }
-	template<typename T,typename U> bool operator==(const WeakRef<T>& ref,U* ptr) { return ref.get() == ptr; }
-	template<typename T,typename U> bool operator==(T* ptr,const WeakRef<U>& ref) { return ref.get() == ptr; }
 	template<typename T,typename U> bool operator<(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() < ref1.get(); }
 
 	template<typename T,typename U> bool operator!=(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() != ref1.get(); }
 	template<typename T,typename U> bool operator!=(const Ref<T>& ref,U* ptr) { return ref.get() != ptr; }
 	template<typename T,typename U> bool operator!=(T* ptr,const Ref<U>& ref) { return ref.get() != ptr; }
-	template<typename T,typename U> bool operator!=(const WeakRef<T>& ref0,const WeakRef<U>& ref1) { return ref0.get() != ref1.get(); }
-	template<typename T,typename U> bool operator!=(const WeakRef<T>& ref,U* ptr) { return ref.get() != ptr; }
-	template<typename T,typename U> bool operator!=(T* ptr,const WeakRef<U>& ref) { return ref.get() != ptr; }
-	template<typename T,typename U> bool operator<(const WeakRef<T>& ref0,const WeakRef<U>& ref1) { return ref0.get() < ref1.get(); }
 }
 
 #endif

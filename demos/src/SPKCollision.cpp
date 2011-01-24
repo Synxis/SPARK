@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
 	SPK::System::setClampStep(true,0.01f);			// clamp the step to 10 ms
 	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
-
+	{
 	// Renderers
 	SPK::Ref<SPK::GL::GLPointRenderer> basicRenderer = SPK::GL::GLPointRenderer::create();
 	SPK::Ref<SPK::GL::GLRenderer> particleRenderer = SPK_NULL_REF;
@@ -229,12 +229,12 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::Gravity> gravity = SPK::Gravity::create();
 
 	// System
-	SPK::System* particleSystem = new SPK::System(true);
+	SPK::Ref<SPK::System> particleSystem = SPK::System::create(true);
 
 	SPK::Ref<SPK::Collider> collider = SPK::Collider::create(0.9f);
 	
 	// Group
-	SPK::WeakRef<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES);
+	SPK::Ref<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES);
 	particleGroup->setImmortal(true);
 	particleGroup->setRadius(RADIUS);
 	particleGroup->setRenderer(particleRenderer);
@@ -356,7 +356,7 @@ int main(int argc, char *argv[])
 	}
 
 	SPK_DUMP_MEMORY
-	delete particleSystem;
+	}
 	SPK_DUMP_MEMORY
 
 	SDL_Quit();

@@ -49,13 +49,13 @@ namespace SPK
 		SHADER_HINT_GEOMETRY,	/**< Use geometry shader for computation when possible (else fallback to vertex shader if possible) */
 	};
 
-	class SPK_PREFIX Renderer :	public Referenceable,
+	class SPK_PREFIX Renderer :	public SPKObject,
 								public DataHandler
 	{
 	friend class Group;
 
 	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Referenceable)
+	SPK_PARENT_ATTRIBUTES(SPKObject)
 	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
 	SPK_ATTRIBUTE("rendering options",ATTRIBUTE_TYPE_INT32)
 	SPK_ATTRIBUTE("alpha threshold",ATTRIBUTE_TYPE_FLOAT)
@@ -139,7 +139,7 @@ namespace SPK
 	};
 
 	inline Renderer::Renderer(bool NEEDS_DATASET) :
-		Referenceable(),
+		SPKObject(),
 		DataHandler(NEEDS_DATASET),
 		active(true),
 		renderingOptionsMask(RENDERING_OPTION_DEPTH_WRITE),

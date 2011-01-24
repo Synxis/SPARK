@@ -45,17 +45,17 @@ namespace IO
 
 		void registerLoader(const std::string& ext,const Loader& loader);
 		void unregisterLoader(const std::string& ext);
-		WeakRef<Loader> getLoader(const std::string& ext) const;
+		Loader* getLoader(const std::string& ext) const;
 
 		void registerSaver(const std::string& ext,const Saver& saver);
 		void unregisterSaver(const std::string& ext);
-		WeakRef<Saver> getSaver(const std::string& ext) const;
+		Saver* getSaver(const std::string& ext) const;
 
-		System* load(const std::string& path) const;
-		System* load(const std::string& ext,std::istream& is) const;
+		Ref<System> load(const std::string& path) const;
+		Ref<System> load(const std::string& ext,std::istream& is) const;
 
-		bool save(const std::string& path,const System* system) const;
-		bool save(const std::string& ext,std::ostream& os,const System* system) const;
+		bool save(const std::string& path,const Ref<System>& system) const;
+		bool save(const std::string& ext,std::ostream& os,const Ref<System>& system) const;
 
 	private :
 
@@ -74,20 +74,20 @@ namespace IO
 
 		template<typename T> static void registerGeneric(const std::string& ext,const T& t,std::map<std::string,T*>& table);
 		template<typename T> static void unregisterGeneric(const std::string& ext,std::map<std::string,T*>& table);
-		template<typename T> static WeakRef<T> getGeneric(const std::string& ext,const std::map<std::string,T*>& table);
+		template<typename T> static T* getGeneric(const std::string& ext,const std::map<std::string,T*>& table);
 
 		/////////////////////////////////////
 		// Helper methods to build objects //
 		/////////////////////////////////////
 
 		friend class Loader::Graph;
-		WeakRef<SPKObject> createObject(const std::string& id) const;
+		Ref<SPKObject> createObject(const std::string& id) const;
 		void linkGroup(Group& group,System& system) const;
 	};
 
 	template<typename T> void IOManager::registerObject()
 	{
-		const std::string name = T::getSerializableName();
+		const std::string name = T::asName();
 		if (registeredObjects.find(name) != registeredObjects.end())
 			SPK_LOG_WARNING("IOManager::registerSerializable<T> - " << name << " is already registered");
 
@@ -113,11 +113,11 @@ namespace IO
 
 	inline void IOManager::registerLoader(const std::string& ext,const Loader& loader) { registerGeneric<Loader>(ext,loader,registeredLoaders); }
 	inline void IOManager::unregisterLoader(const std::string& ext) { unregisterGeneric<Loader>(ext,registeredLoaders); }
-	inline WeakRef<Loader> IOManager::getLoader(const std::string& ext) const { return getGeneric<Loader>(ext,registeredLoaders); }
+	inline Loader* IOManager::getLoader(const std::string& ext) const { return getGeneric<Loader>(ext,registeredLoaders); }
 
 	inline void IOManager::registerSaver(const std::string& ext,const Saver& saver) { registerGeneric<Saver>(ext,saver,registeredSavers); }
 	inline void IOManager::unregisterSaver(const std::string& ext) { unregisterGeneric<Saver>(ext,registeredSavers); }
-	inline WeakRef<Saver> IOManager::getSaver(const std::string& ext) const { return getGeneric<Saver>(ext,registeredSavers); }
+	inline Saver* IOManager::getSaver(const std::string& ext) const { return getGeneric<Saver>(ext,registeredSavers); }
 
 	template<typename T>
 	void IOManager::registerGeneric(const std::string& ext,const T& t,std::map<std::string,T*>& table)
@@ -151,7 +151,7 @@ namespace IO
 	}
 
 	template<typename T>
-	WeakRef<T> IOManager::getGeneric(const std::string& ext,const std::map<std::string,T*>& table)
+	T* IOManager::getGeneric(const std::string& ext,const std::map<std::string,T*>& table)
 	{
 		const std::string name = formatExtension(ext);
 		std::map<std::string,T*>::const_iterator it = table.find(name);

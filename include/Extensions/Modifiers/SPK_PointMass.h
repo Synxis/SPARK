@@ -34,7 +34,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX PointMass : public Modifier
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(PointMass)
+	SPK_IMPLEMENT_OBJECT(PointMass)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Modifier)

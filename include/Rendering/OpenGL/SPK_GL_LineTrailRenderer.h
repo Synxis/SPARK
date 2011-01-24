@@ -54,7 +54,7 @@ namespace GL
 	*/
 	class SPK_GL_PREFIX GLLineTrailRenderer : public GLRenderer
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(GLLineTrailRenderer)
+	SPK_IMPLEMENT_OBJECT(GLLineTrailRenderer)
 
 	public :
 

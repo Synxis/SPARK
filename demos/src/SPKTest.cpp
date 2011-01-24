@@ -192,7 +192,8 @@ int main(int argc, char *argv[])
 	SPK::System::setClampStep(true,0.1f);			// clamp the step to 100 ms
 	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
-	SPK::System* system = new SPK::System(true);
+	{
+	SPK::Ref<SPK::System> system = SPK::System::create(true);
 	
 	SPK::Ref<SPK::GL::GLQuadRenderer> renderer = SPK::GL::GLQuadRenderer::create();
 	renderer->setBlendMode(SPK::BLEND_MODE_ADD);
@@ -203,15 +204,16 @@ int main(int argc, char *argv[])
 
 	SPK::Ref<SPK::SphericEmitter> emitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,-1.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(),true,-1,100.0f,0.2f,0.5f);
 
-	SPK::WeakRef<SPK::Group> phantomGroup = system->createGroup(40);
+	SPK::Ref<SPK::Group> phantomGroup = system->createGroup(40);
+	SPK::Ref<SPK::Group> trailGroup = system->createGroup(1000);
+
 	phantomGroup->setLifeTime(5.0f,5.0f);
 	phantomGroup->setRadius(0.06f);
 	phantomGroup->addEmitter(SPK::SphericEmitter::create(SPK::Vector3D(0.0f,1.0f,0.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),true,-1,2.0f,1.2f,2.0f));
 	phantomGroup->addModifier(SPK::Gravity::create(SPK::Vector3D(0.0f,-1.0f,0.0f)));
 	phantomGroup->addModifier(SPK::Obstacle::create(SPK::Plane::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),0.8f));
-	phantomGroup->addModifier(SPK::EmitterAttacher::create(1,emitter,true));
-
-	SPK::WeakRef<SPK::Group> trailGroup = system->createGroup(1000);
+	phantomGroup->addModifier(SPK::EmitterAttacher::create(trailGroup,emitter,true));
+	
 	trailGroup->setLifeTime(0.5f,1.0f);
 	trailGroup->setRadius(0.06f);
 	trailGroup->setRenderer(renderer);
@@ -286,7 +288,8 @@ int main(int argc, char *argv[])
 	//saver.save("test.txt",system);
 
 	SPK_DUMP_MEMORY
-	delete system;
+	//delete system;
+	}
 	SPK_DUMP_MEMORY
 
 	SDL_Quit();

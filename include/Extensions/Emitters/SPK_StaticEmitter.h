@@ -30,7 +30,7 @@ namespace SPK
 	*/
 	class StaticEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_REFERENCEABLE(StaticEmitter)
+	SPK_IMPLEMENT_OBJECT(StaticEmitter)
 
 	public :
 

@@ -96,7 +96,7 @@ namespace SPK
 		// Virtual interface //
 		///////////////////////
 
-		virtual WeakRef<SPKObject> findByName(const std::string& name);
+		virtual Ref<SPKObject> findByName(const std::string& name);
 
 	protected :
 
