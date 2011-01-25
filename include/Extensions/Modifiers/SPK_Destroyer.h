@@ -41,8 +41,8 @@ namespace SPK
 
 	private :
 
-		inline Destroyer(const Ref<Zone>& zone = SPK_NULL_REF,ZoneTest zoneTest = ZONE_TEST_INSIDE);
-		inline Destroyer(const Destroyer& destroyer);
+		Destroyer(const Ref<Zone>& zone = SPK_NULL_REF,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		Destroyer(const Destroyer& destroyer);
 
 		virtual inline void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};

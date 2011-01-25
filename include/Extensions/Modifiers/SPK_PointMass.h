@@ -61,19 +61,19 @@ namespace SPK
 		* @brief Sets the position of the point mass
 		* @param pos : the position
 		*/
-		inline void setPosition(const Vector3D& pos);
+		void setPosition(const Vector3D& pos);
 
 		/**
 		* @brief Gets the position of the point mass
 		* @return the position
 		*/
-		inline const Vector3D& getPosition() const;
+		const Vector3D& getPosition() const;
 
 		/**
 		* @brief Gets the transformed position of the point mass
 		* @return the transformed position
 		*/
-		inline const Vector3D& getTransformedPosition() const;
+		const Vector3D& getTransformedPosition() const;
 
 		//////////
 		// Mass //
@@ -88,13 +88,13 @@ namespace SPK
 		*
 		* @param mass : the mass
 		*/
-		inline void setMass(float mass);
+		void setMass(float mass);
 
 		/**
 		* @brief Gets the mass of the point mass
 		* @return the mass
 		*/
-		inline float getMass() const;
+		float getMass() const;
 
 		////////////
 		// Offset //
@@ -116,7 +116,7 @@ namespace SPK
 		* @brief Gets the offset of the point mass
 		* @return the offset
 		*/
-		inline float getOffset() const;
+		float getOffset() const;
 
 	protected :
 

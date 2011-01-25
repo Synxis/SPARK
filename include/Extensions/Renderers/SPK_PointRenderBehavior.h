@@ -67,7 +67,7 @@ namespace SPK
 		* @brief Gets the type of points in this PointRenderBehavior
 		* @return the type of points in this PointRenderBehavior
 		*/
-		inline PointType getType() const;
+		PointType getType() const;
 
 		////////////////
 		// point size //
@@ -83,10 +83,10 @@ namespace SPK
 		* @brief Gets the size of points in this PointRenderBehavior
 		* @return the size of points in this PointRenderBehavior
 		*/
-		inline float getScreenSize() const;
+		float getScreenSize() const;
 
 		virtual inline void setWorldScale(float worldScale);
-		inline float getWorldScale() const;
+		float getWorldScale() const;
 
 		/**
 		* @brief Sets the way size of points is computed
@@ -99,7 +99,7 @@ namespace SPK
 		* @brief Tells whether world size is enabled or not in this GLPointRenderer
 		* @return true if world size is enabled, false if not
 		*/
-		inline bool isWorldSizeEnabled() const;
+		bool isWorldSizeEnabled() const;
 
 	protected :
 
@@ -121,7 +121,7 @@ namespace SPK
 		* @param type : the initial type of this PointRenderBehavior (must be supported by default by the platform)
 		* @param size : the width of this PointRenderBehavior
 		*/
-		inline PointRenderBehavior(PointType type = POINT_TYPE_SQUARE,float screenSize = 1.0f);
+		PointRenderBehavior(PointType type = POINT_TYPE_SQUARE,float screenSize = 1.0f);
 	};
 
 	inline PointRenderBehavior::PointRenderBehavior(PointType type,float screenSize) :

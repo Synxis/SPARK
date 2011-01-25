@@ -54,26 +54,26 @@ namespace SPK
 		* @brief Accesses the current position of the particle
 		* @return a reference to the current position of the particle
 		*/
-		inline Vector3D& position();
+		Vector3D& position();
 
 		/**
 		* @brief Accesses the current velocity of the particle
 		* @return a reference to the current velocity of the particle
 		*/
-		inline Vector3D& velocity();
+		Vector3D& velocity();
 
 		/**
 		* @brief Accesses the position at previous update of the particle
 		* Note that the old position must be modified with care in order to keep the displacement integrity of the particles for the physics engine.
 		* @return a reference to the position at previous update of the particle
 		*/
-		inline Vector3D& oldPosition();
+		Vector3D& oldPosition();
 
 		/**
 		* @brief Sets the color of the particle
 		* @param color : the color of the particle
 		*/
-		inline void setColor(Color color);
+		void setColor(Color color);
 
 		/**
 		* @brief Sets a given parameter of the particle
@@ -81,7 +81,7 @@ namespace SPK
 		* @param parameter : the parameter to set
 		* @param value : the value of the parameter
 		*/
-		inline void setParam(Param parameter,float value);
+		void setParam(Param parameter,float value);
 
 		/**
 		* @brief Sets a given parameter of the particle with no check on the existence of the parameter
@@ -91,7 +91,7 @@ namespace SPK
 		* @param parameter : the parameter to set
 		* @param value : the value of the parameter
 		*/
-		inline void setParamNC(Param parameter,float value);
+		void setParamNC(Param parameter,float value);
 
 		/////////////
 		// Getters //
@@ -101,43 +101,43 @@ namespace SPK
 		* @brief Gets the group to which belongs the particle
 		* @return the group to which belongs the particle
 		*/
-		inline Group& getGroup();
+		Group& getGroup();
 
 		/**
 		* @brief Gets the group to which belongs the particle in a constant way
 		* @return the group to which belongs the particle
 		*/
-		inline const Group& getGroup() const;
+		const Group& getGroup() const;
 
 		/**
 		* @brief Gets the index of the particle within its group
 		* @return the index of the particle
 		*/
-		inline size_t getIndex() const;
+		size_t getIndex() const;
 
 		/**
 		* @brief Gets the current position of the particle
 		* @return the current position of the particle
 		*/
-		inline const Vector3D& position() const;
+		const Vector3D& position() const;
 
 		/**
 		* @brief Gets the current velocity of the particle
 		* @return the current velocity of the particle
 		*/
-		inline const Vector3D& velocity() const;
+		const Vector3D& velocity() const;
 
 		/**
 		* @brief Gets the old position of the particle
 		* @return the old position of the particle
 		*/
-		inline const Vector3D& oldPosition() const;
+		const Vector3D& oldPosition() const;
 
 		/**
 		* @brief Gets the age of the particle in units of time
 		* @return the age of the particle 
 		*/
-		inline float getAge() const;
+		float getAge() const;
 
 		/**
 		* @brief Gets the energy of the particle
@@ -145,21 +145,21 @@ namespace SPK
 		* It is computed as follow : <i>1.0 - age / lifeTime</i>
 		* @return the energy of the particle
 		*/
-		inline float getEnergy() const;
+		float getEnergy() const;
 
 		/**
 		* @brief Gets the life time of the particle in units of time
 		* The life time is the total amount of time the particle can live.
 		* @return the life time of the particle
 		*/
-		inline float getLifeTime() const;
+		float getLifeTime() const;
 
 		/**
 		* @brief Gets the distance of the particle from the camera
 		* This value is relevant only if the group had the distance computation enabled.
 		* @return the distance of the particle from the camera
 		*/
-		inline float getDistanceFromCamera() const;
+		float getDistanceFromCamera() const;
 
 		/**
 		* @brief Gets the square of the distance of the particle from the camera
@@ -167,20 +167,20 @@ namespace SPK
 		* The square distance is faster to compute that the real distance and should be used instead when possible.
 		* @return the square of the distance of the particle from the camera
 		*/
-		inline float getSqrDistanceFromCamera() const;
+		float getSqrDistanceFromCamera() const;
 
 		/**
 		* @brief Gets the color of the particle
 		* @return the color of the particle
 		*/
-		inline Color getColor() const;
+		Color getColor() const;
 
 		/**
 		* @brief Gets the value of the given parameter of the particle
 		* If the parameter does not exist, its default value is returned
 		* @return the value of the given parameter of the particle
 		*/
-		inline float getParam(Param parameter) const;
+		float getParam(Param parameter) const;
 
 		/**
 		* @brief Gets the value of the given parameter of the particle with no check on the existence of the parameter
@@ -189,14 +189,14 @@ namespace SPK
 		* Calling this method on a parameter that does exist is unsafe.
 		* @return the value of the given parameter of the particle
 		*/
-		inline float getParamNC(Param parameter) const;
+		float getParamNC(Param parameter) const;
 
 		/**
 		* @brief Tells whether the particle is alive or not
 		* Typically returns <i>energy > 0.0</i>
 		* @return true if the particle is alive, false if not
 		*/
-		inline bool isAlive() const;
+		bool isAlive() const;
 
 		///////////////
 		// Interface //
@@ -206,11 +206,11 @@ namespace SPK
 		* @brief Kills the particle
 		* This sets the energy of the particle to 0
 		*/
-		inline void kill();
+		void kill();
 
 	private :
 
-		inline Particle(Group& group,size_t index);
+		Particle(Group& group,size_t index);
 
 		Group& group;
 		mutable size_t index;

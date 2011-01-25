@@ -33,9 +33,9 @@ namespace SPK
 
 		static inline Ref<RandomInitializer<T>> create(const T& minValue,const T& maxValue);
 
-		inline void setValues(const T& minValue,const T& maxValue);
-		inline const T& getMinValue() const;
-		inline const T& getMaxValue() const;
+		void setValues(const T& minValue,const T& maxValue);
+		const T& getMinValue() const;
+		const T& getMaxValue() const;
 
 	private :
 		

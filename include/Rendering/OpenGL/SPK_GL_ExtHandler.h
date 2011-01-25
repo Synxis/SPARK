@@ -203,14 +203,14 @@ namespace GL
 		*
 		* Note that before calling this method, the user must ensure that the point sprite extension is loaded.
 		*/
-		inline static void enablePointSpriteGLExt();
+		static void enablePointSpriteGLExt();
 
 		/** 
 		* @brief Disables the use of point sprites 
 		*
 		* Note that before calling this method, the user must ensure that the point sprite extension is loaded.
 		*/
-		inline static void disablePointSpriteGLExt();
+		static void disablePointSpriteGLExt();
 
 		//////////////////////
 		// Point Parameters //

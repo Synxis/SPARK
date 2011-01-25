@@ -46,13 +46,13 @@ namespace SPK
 
 	private :
 
-		inline StaticEmitter(
+		StaticEmitter(
 			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
 			float flow = 1.0f);
 
-		inline StaticEmitter(const StaticEmitter& emitter);
+		StaticEmitter(const StaticEmitter& emitter);
 
 		virtual inline void generateVelocity(Particle& particle,float speed) const;
 	};

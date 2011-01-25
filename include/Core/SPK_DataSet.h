@@ -52,17 +52,17 @@ namespace SPK
 		* @brief Sets the flag of the data
 		* @param flag : the flag of the data
 		*/
-		inline void setFlag(long int flag);
+		void setFlag(long int flag);
 
 		/**
 		* @brief Gets the flag of the data
 		* @return the flag of the data
 		*/
-		inline long int getFlag() const;
+		long int getFlag() const;
 
 	protected :
 
-		inline Data();
+		Data();
 		virtual inline ~Data() {}
 
 	private :
@@ -91,8 +91,8 @@ namespace SPK
 
 	public :
 
-		inline DataSet();
-		inline ~DataSet();
+		DataSet();
+		~DataSet();
 
 		/**
 		* @brief Inializes the data with the given number of slots of Data
@@ -114,7 +114,7 @@ namespace SPK
 		* @param index : the index of the slot from where to retrieve the data
 		* @return the data in the given slot
 		*/
-		inline Data* getData(size_t index);
+		Data* getData(size_t index);
 
 		/**
 		* @brief Gets the data at a given slot
@@ -122,20 +122,20 @@ namespace SPK
 		* @param index : the index of the slot from where to retrieve the data
 		* @return the data in the given slot
 		*/
-		inline const Data* getData(size_t index) const;
+		const Data* getData(size_t index) const;
 
 		/**
 		* @brief Tells whether this dataset is initialized
 		* Typically the dataset used by a DataHandler is considered as initialized after a call to DataHandler::createData(DataSet&,const Group&) const
 		* @return true if the data set is initialized, false if not
 		*/
-		inline bool isInitialized() const;
+		bool isInitialized() const;
 
 		/**
 		* @brief Destroys the data of a particular slot
 		* @param index : the index of the slot in which to destroy the data
 		*/
-		inline void destroyData(size_t index);
+		void destroyData(size_t index);
 
 		/** @brief Destroys all the data held */
 		void destroyAllData();
@@ -146,8 +146,8 @@ namespace SPK
 		size_t nbData;
 		bool initialized;
 
-		inline void setInitialized();
-		inline void swap(size_t index0,size_t index1);
+		void setInitialized();
+		void swap(size_t index0,size_t index1);
 	};
 
 	inline Data::Data() :

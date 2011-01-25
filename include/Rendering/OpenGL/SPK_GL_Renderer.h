@@ -61,7 +61,7 @@ namespace GL
 		* @param src : the source blending function of this GLRenderer
 		* @param dest : the destination blending function of this GLRenderer
 		*/
-		inline void setBlendingFunctions(GLuint src,GLuint dest);
+		void setBlendingFunctions(GLuint src,GLuint dest);
 		virtual void setBlendMode(BlendMode blendMode);
 
 		/////////////
@@ -72,19 +72,19 @@ namespace GL
 		* @brief Tells whether blending is enabled for this GLRenderer
 		* @return true if blending is enabled, false if it is disabled
 		*/
-		inline bool isBlendingEnabled() const;
+		bool isBlendingEnabled() const;
 
 		/**
 		* @brief Gets the source blending function of this GLRenderer
 		* @return the source blending function of this GLRenderer
 		*/
-		inline GLuint getSrcBlendingFunction() const;
+		GLuint getSrcBlendingFunction() const;
 
 		/**
 		* @brief Gets the destination blending function of this GLRenderer
 		* @return the source destination function of this GLRenderer
 		*/
-		inline GLuint getDestBlendingFunction() const;
+		GLuint getDestBlendingFunction() const;
 
 		///////////////
 		// Interface //
@@ -110,13 +110,13 @@ namespace GL
 
 	protected :
 
-		inline GLRenderer(bool NEEDS_DATASET);
+		GLRenderer(bool NEEDS_DATASET);
 
 		/** @brief Inits the blending of this GLRenderer */
-		inline void initBlending() const;
+		void initBlending() const;
 
 		/** @brief Inits the rendering hints of this GLRenderer */
-		inline void initRenderingOptions() const;
+		void initRenderingOptions() const;
 
 	private :
 

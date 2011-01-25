@@ -66,13 +66,13 @@ namespace SPK
 		* @brief Gets the direction of this StraightEmitter
 		* @return the direction of this StraightEmitter
 		*/
-		inline const Vector3D& getDirection() const;
+		const Vector3D& getDirection() const;
 
 		/**
 		* @brief Gets the transformed direction of this StraightEmitter
 		* @return the transformed direction of this StraightEmitter
 		*/
-		inline const Vector3D& getTransformedDirection() const;
+		const Vector3D& getTransformedDirection() const;
 
 	protected :
 

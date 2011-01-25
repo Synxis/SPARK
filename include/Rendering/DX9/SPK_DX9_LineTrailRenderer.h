@@ -91,7 +91,7 @@ namespace DX9
 		* @brief Gets the number of samples per trail
 		* @return the number of samples per trail
 		*/
-		inline size_t getNbSamples() const;
+		size_t getNbSamples() const;
 
 		//////////////
 		// duration //
@@ -111,7 +111,7 @@ namespace DX9
 		* @brief Gets the duration of a sample
 		* @return the duration of a sample
 		*/
-		inline float getDuration() const;
+		float getDuration() const;
 
 		///////////
 		// width //
@@ -130,13 +130,13 @@ namespace DX9
 		* @brief Gets the width of a trail
 		* @return the width of a trail (in pixels), in our case 1.0f
 		*/
-		inline float getWidth() const;
+		float getWidth() const;
 
 		/**
 		* @brief Sets the color components of degenerated lines
 		* @param color : the color of the degenerated lines
 		*/
-		inline void setDegeneratedLines(Color color);
+		void setDegeneratedLines(Color color);
 
 		virtual void enableBlending(bool blendingEnabled);
 

@@ -53,13 +53,13 @@ namespace SPK
 		*
 		* @param bouncingRatio : the bouncing ratio of this obstacle
 		*/
-		inline void setBouncingRatio(float bouncingRatio);
+		void setBouncingRatio(float bouncingRatio);
 
 			/**
 		* @brief Gets the bouncing ratio of this obstacle
 		* @return the bouncing ratio of this obstacle
 		*/
-		inline float getBouncingRatio() const;
+		float getBouncingRatio() const;
 
 		//////////////
 		// Friction //
@@ -72,13 +72,13 @@ namespace SPK
 		*
 		* @param friction : the friction of this obstacle
 		*/
-		inline void setFriction(float friction);
+		void setFriction(float friction);
 
 		/**
 		* @brief Gets the friction of this obstacle
 		* @return the friction of this obstacle
 		*/
-		inline float getFriction() const;
+		float getFriction() const;
 
 	private :
 

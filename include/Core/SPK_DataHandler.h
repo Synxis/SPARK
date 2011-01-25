@@ -52,7 +52,7 @@ namespace SPK
 		* @brief Tells if the datahandler needs some additional data or not
 		* @return true if the datahandler needs additional data or not
 		*/
-		inline bool needsDataSet() const;
+		bool needsDataSet() const;
 
 	protected :
 
@@ -61,7 +61,7 @@ namespace SPK
 		* Note that if a datahandler is created with its NEEDS_DATASET set to false, it will then behave as if it was not a datahandler.
 		* @param NEEDS_DATASET : true if the datahandler needs additional data, false if not
 		*/
-		inline DataHandler(bool NEEDS_DATASET); // abstract class
+		DataHandler(bool NEEDS_DATASET); // abstract class
 
 		/**
 		* @brief Creates the data within the passed dataset
@@ -90,7 +90,7 @@ namespace SPK
 		*/
 		virtual inline void checkData(DataSet& dataSet,const Group& group) const {}
 
-		inline void prepareData(const Group& group,DataSet* dataSet) const;
+		void prepareData(const Group& group,DataSet* dataSet) const;
 
 	private :
 

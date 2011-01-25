@@ -86,60 +86,60 @@ namespace SPK
 		bool isInitialized() const;
 
 		void setLifeTime(float minLife,float maxLife);
-		inline void setImmortal(bool immortal);
-		inline void setStill(bool still);
+		void setImmortal(bool immortal);
+		void setStill(bool still);
 
 		void setColorInterpolator(const Ref<ColorInterpolator>& interpolator);
-		inline const Ref<ColorInterpolator>& getColorInterpolator() const;
+		const Ref<ColorInterpolator>& getColorInterpolator() const;
 
 		void setParamInterpolator(Param param,const Ref<FloatInterpolator>& interpolator);
-		inline const Ref<FloatInterpolator>& getParamInterpolator(Param param) const;
+		const Ref<FloatInterpolator>& getParamInterpolator(Param param) const;
 
-		inline float getMinLifeTime() const;
-		inline float getMaxLifeTime() const;
-		inline bool isImmortal() const;
-		inline bool isStill() const;
+		float getMinLifeTime() const;
+		float getMaxLifeTime() const;
+		bool isImmortal() const;
+		bool isStill() const;
 
-		inline bool isEnabled(Param param) const;
+		bool isEnabled(Param param) const;
 
-		inline size_t getNbParticles() const;
-		inline size_t getCapacity() const;
+		size_t getNbParticles() const;
+		size_t getCapacity() const;
 
 		Particle getParticle(size_t index);
 		const Particle getParticle(size_t index) const;
 
 		void reallocate(size_t capacity);
-		inline void empty();
+		void empty();
 
 		void addEmitter(const Ref<Emitter>& emitter);
 		void removeEmitter(const Ref<Emitter>& emitter);
-		inline const Ref<Emitter>& getEmitter(size_t index) const;
-		inline size_t getNbEmitters() const;
+		const Ref<Emitter>& getEmitter(size_t index) const;
+		size_t getNbEmitters() const;
 
 		void addModifier(const Ref<Modifier>& modifier);
 		void removeModifier(const Ref<Modifier>& modifier);
-		inline const Ref<Modifier>& getModifier(size_t index) const;
-		inline size_t getNbModifiers() const;
+		const Ref<Modifier>& getModifier(size_t index) const;
+		size_t getNbModifiers() const;
 
 		void setRenderer(const Ref<Renderer>& renderer);
-		inline const Ref<Renderer>& getRenderer() const;
+		const Ref<Renderer>& getRenderer() const;
 
-		inline void enableDistanceComputation(bool distanceComputation);
-		inline bool isDistanceComputationEnabled() const;
+		void enableDistanceComputation(bool distanceComputation);
+		bool isDistanceComputationEnabled() const;
 
-		inline void enableSorting(bool sorting);
-		inline bool isSortingEnabled() const;
+		void enableSorting(bool sorting);
+		bool isSortingEnabled() const;
 
-		inline const void* getColorAddress() const;
-		inline const void* getPositionAddress() const;
-		inline const void* getVelocityAddress() const;
-		inline const void* getParamAddress(Param param) const;
+		const void* getColorAddress() const;
+		const void* getPositionAddress() const;
+		const void* getVelocityAddress() const;
+		const void* getParamAddress(Param param) const;
 
-		inline void setRadius(float radius);
+		void setRadius(float radius);
 		void setGraphicalRadius(float radius);
 		void setPhysicalRadius(float radius);
-		inline float getGraphicalRadius() const;
-		inline float getPhysicalRadius() const;
+		float getGraphicalRadius() const;
+		float getPhysicalRadius() const;
 
 		/**
 		* @brief Gets a Vector3D holding the minimum coordinates of the AABB of the Group.
@@ -148,7 +148,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the minimum coordinates of the AABB of the Group
 		*/
-		inline const Vector3D& getAABBMin() const;
+		const Vector3D& getAABBMin() const;
 
 		/**
 		* @brief Gets a Vector3D holding the maximum coordinates of the AABB of the Group.
@@ -157,7 +157,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the maximum coordinates of the AABB of the Group
 		*/
-		inline const Vector3D& getAABBMax() const;
+		const Vector3D& getAABBMax() const;
 
 		///////////////////
 		// Add Particles //
@@ -185,7 +185,7 @@ namespace SPK
 		* @param position : the position where the Particles will be added
 		* @param velocity : the velocity of the Particles
 		*/
-		inline void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity);
+		void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -301,7 +301,7 @@ namespace SPK
 
 		void flushBufferedParticles();
 
-		inline Ref<System> getSystem() const;
+		Ref<System> getSystem() const;
 
 		/////////////
 		// Actions //
@@ -312,10 +312,10 @@ namespace SPK
 		*
 		*/
 		void setBirthAction(const Ref<Action>& action);
-		inline const Ref<Action>& getBirthAction() const;
+		const Ref<Action>& getBirthAction() const;
 
 		void setDeathAction(const Ref<Action>& action);
-		inline const Ref<Action>& getDeathAction() const;
+		const Ref<Action>& getDeathAction() const;
 
 		//////////////////////
 		// Advanced methods //
@@ -343,25 +343,25 @@ namespace SPK
 		* @brief Gets the data set used by the interpolator of the given parameter
 		* @return the data set or NULL if the interpolator does not use data set or does not exist
 		*/
-		inline DataSet* getParamInterpolatorDataSet(Param param);
+		DataSet* getParamInterpolatorDataSet(Param param);
 
 		/**
 		* @brief Gets the data set used by the color interpolator
 		* @return the data set or NULL if the color interpolator does not use data set or does not exist
 		*/
-		inline DataSet* getColorInterpolatorDataSet();
+		DataSet* getColorInterpolatorDataSet();
 
 		/**
 		* @brief Gets the data set used by the renderer
 		* @return the data set or NULL if the renderer does not use data set or does not exist
 		*/
-		inline DataSet* getRendererDataSet();
+		DataSet* getRendererDataSet();
 
 		/**
 		* @brief Gets the render buffer
 		* @return the render buffer or NULL if the group does not use a render buffer
 		*/
-		inline RenderBuffer* getRenderBuffer();
+		RenderBuffer* getRenderBuffer();
 
 		///////////////////////
 		// Virtual interface //
@@ -498,7 +498,7 @@ namespace SPK
 		// Functor used to sort modifiers by priority
 		struct CompareModifierPriority
 		{
-			inline bool operator()(const WeakModifierDef& modifier0, const WeakModifierDef& modifier1) const
+			bool operator()(const WeakModifierDef& modifier0, const WeakModifierDef& modifier1) const
 			{
 				return modifier0.obj->getPriority() < modifier1.obj->getPriority();
 			}

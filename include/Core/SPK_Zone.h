@@ -57,9 +57,9 @@ namespace SPK
 		// Position //
 		//////////////
 
-		inline void setPosition(const Vector3D& position);
-		inline const Vector3D& getPosition() const;
-		inline const Vector3D& getTransformedPosition() const;
+		void setPosition(const Vector3D& position);
+		const Vector3D& getPosition() const;
+		const Vector3D& getTransformedPosition() const;
 
 		///////////////
 		// Interface //
@@ -76,11 +76,11 @@ namespace SPK
 		* @param zoneTest : the type of test to perform
 		* @return true if the test is fullfilled, false otherwise
 		*/
-		inline bool check(const Particle& particle,ZoneTest zoneTest) const;
+		bool check(const Particle& particle,ZoneTest zoneTest) const;
 
 	protected :
 
-		inline Zone(const Vector3D& position = Vector3D());
+		Zone(const Vector3D& position = Vector3D());
 
 		virtual inline void innerUpdateTransform();
 		static inline void normalizeOrRandomize(Vector3D& v);

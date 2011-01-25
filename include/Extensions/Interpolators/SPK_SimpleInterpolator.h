@@ -33,9 +33,9 @@ namespace SPK
 
 		static inline Ref<SimpleInterpolator<T>> create(const T& birthValue,const T& deathValue);
 
-		inline void setValues(const T& min,const T& max);
-		inline const T& getBirthValue() const;
-		inline const T& getDeathValue() const;
+		void setValues(const T& min,const T& max);
+		const T& getBirthValue() const;
+		const T& getDeathValue() const;
 
 	private :
 		

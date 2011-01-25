@@ -83,20 +83,20 @@ namespace GL
 		*
 		* @param textureIndex : the index of the OpenGL texture of this GLPointRenderer
 		*/
-		inline void setTexture(GLuint textureIndex);
+		void setTexture(GLuint textureIndex);
 
 		/**
 		* @brief Gets the texture of this GLPointRenderer
 		* @return the texture of this GLPointRenderer
 		*/
-		inline GLuint getTexture() const;
+		GLuint getTexture() const;
 
 	private :
 
 		GLuint textureIndex;
 
-		inline GLPointRenderer(float screenSize = 1.0f);
-		inline GLPointRenderer(const GLPointRenderer& renderer);
+		GLPointRenderer(float screenSize = 1.0f);
+		GLPointRenderer(const GLPointRenderer& renderer);
 
 		virtual void render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const;
 		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const;

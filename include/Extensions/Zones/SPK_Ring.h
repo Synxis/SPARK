@@ -84,13 +84,13 @@ namespace SPK
 		* @brief Gets the normal of this ring
 		* @return the normal of this ring
 		*/
-		inline const Vector3D& getNormal() const;
+		const Vector3D& getNormal() const;
 
 		/**
 		* @brief Gets the transformed normal of this ring
 		* @return the transformed normal of this ring
 		*/
-		inline const Vector3D& getTransformedNormal() const;
+		const Vector3D& getTransformedNormal() const;
 
 		////////////
 		// Radius //
@@ -110,13 +110,13 @@ namespace SPK
 		* @brief Gets the minimum radius of this ring
 		* @return the minimum radius of this ring
 		*/
-		inline float getMinRadius() const;
+		float getMinRadius() const;
 
 		/**
 		* @brief Gets the maximum radius of this ring
 		* @return the maximum radius of this ring
 		*/
-		inline float getMaxRadius() const;
+		float getMaxRadius() const;
 
 		///////////////
 		// Interface //

@@ -63,7 +63,7 @@ namespace DX9
 		* @param src : the source blending function of this DX9Renderer
 		* @param dest : the destination blending function of this DX9Renderer
 		*/
-		inline void setBlendingFunctions(D3DBLEND src, D3DBLEND dest);
+		void setBlendingFunctions(D3DBLEND src, D3DBLEND dest);
 		virtual void setBlendMode(BlendMode blendMode);
 
 		/////////////
@@ -74,19 +74,19 @@ namespace DX9
 		* @brief Tells whether blending is enabled for this DX9Renderer
 		* @return true if blending is enabled, false if it is disabled
 		*/
-		inline bool isBlendingEnabled() const;
+		bool isBlendingEnabled() const;
 
 		/**
 		* @brief Gets the source blending function of this DX9Renderer
 		* @return the source blending function of this DX9Renderer
 		*/
-		inline D3DBLEND getSrcBlendingFunction() const;
+		D3DBLEND getSrcBlendingFunction() const;
 
 		/**
 		* @brief Gets the destination blending function of this DX9Renderer
 		* @return the source destination function of this DX9Renderer
 		*/
-		inline D3DBLEND getDestBlendingFunction() const;
+		D3DBLEND getDestBlendingFunction() const;
 
 		///////////////
 		// Interface //
@@ -112,13 +112,13 @@ namespace DX9
 
 	protected :
 
-		inline DX9Renderer(bool NEEDS_DATASET);
+		DX9Renderer(bool NEEDS_DATASET);
 
 		/** @brief Inits the blending of this DX9Renderer */
-		inline void initBlending() const;
+		void initBlending() const;
 
 		/** @brief Inits the rendering hints of this DX9Renderer */
-		inline void initRenderingOptions() const;
+		void initRenderingOptions() const;
 
 	private :
 

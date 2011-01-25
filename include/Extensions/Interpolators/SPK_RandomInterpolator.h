@@ -35,10 +35,10 @@ namespace SPK
 
 		void setDefaultValues(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 		
-		inline const T& getMinBirthValue() const;
-		inline const T& getMaxBirthValue() const;
-		inline const T& getMinDeathValue() const;
-		inline const T& getMaxDeathValue() const;
+		const T& getMinBirthValue() const;
+		const T& getMaxBirthValue() const;
+		const T& getMinDeathValue() const;
+		const T& getMaxDeathValue() const;
 
 	private :
 

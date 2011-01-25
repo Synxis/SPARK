@@ -34,13 +34,13 @@ namespace SPK
 
 		static inline Ref<DefaultInitializer<T>> create(const T& value);
 
-		inline void setDefaultValue(const T& value);
-		inline const T& getDefaultValue() const;
+		void setDefaultValue(const T& value);
+		const T& getDefaultValue() const;
 
 	protected :
 
-		inline virtual void innerImport(const IO::Descriptor& descriptor);
-		inline virtual void innerExport(IO::Descriptor& descriptor) const;
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -53,11 +53,8 @@ namespace SPK
 		virtual inline void init(T& data,Particle& particle,DataSet* dataSet) const;
 	};
 
-	template<> class SPK_PREFIX DefaultInitializer<Color>;
-	template<> class SPK_PREFIX DefaultInitializer<float>;
-
-	//typedef DefaultInitializer<Color> ColorDefaultInitializer;
-	//typedef DefaultInitializer<float> FloatDefaultInitializer;
+	typedef DefaultInitializer<Color> ColorDefaultInitializer;
+	typedef DefaultInitializer<float> FloatDefaultInitializer;
 
 	SPK_START_DESCRIPTION_TEMPLATE(DefaultInitializer<Color>)
 	SPK_PARENT_ATTRIBUTES(ColorInterpolator)

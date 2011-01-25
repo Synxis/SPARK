@@ -30,16 +30,16 @@
 private : \
 SPK::Ref<SPK::System> SPKSystem; \
 public : \
-inline const SPK::Ref<SPK::System>& getSPKSystem() { return SPKSystem; } \
-inline SPK::Ref<SPK::Group> createSPKGroup(size_t capacity) { return SPKSystem->createGroup(capacity); } \
-inline SPK::Ref<SPK::Group> createSPKGroup(SPK::Ref<SPK::Group>& group) { return SPKSystem->createGroup(group); } \
-inline void addSPKGroup(SPK::Ref<SPK::Group>& group) { SPKSystem->addGroup(group); } \
-inline void removeSPKGroup(SPK::Ref<SPK::Group> group) { SPKSystem->removeGroup(group); } \
-inline SPK::Ref<SPK::Group> getSPKGroup(size_t index) const { return SPKSystem->getGroup(index); } \
-inline size_t getNbSPKGroups() const { return SPKSystem->getNbGroups(); } \
-inline size_t getNbParticles() const { return SPKSystem->getNbParticles(); } \
-inline void initializeSPK() { SPKSystem->initialize(); } \
-inline bool isInitializedSPK() const { return SPKSystem->isInitialized(); }
+const SPK::Ref<SPK::System>& getSPKSystem() { return SPKSystem; } \
+SPK::Ref<SPK::Group> createSPKGroup(size_t capacity) { return SPKSystem->createGroup(capacity); } \
+SPK::Ref<SPK::Group> createSPKGroup(SPK::Ref<SPK::Group>& group) { return SPKSystem->createGroup(group); } \
+void addSPKGroup(SPK::Ref<SPK::Group>& group) { SPKSystem->addGroup(group); } \
+void removeSPKGroup(SPK::Ref<SPK::Group> group) { SPKSystem->removeGroup(group); } \
+SPK::Ref<SPK::Group> getSPKGroup(size_t index) const { return SPKSystem->getGroup(index); } \
+size_t getNbSPKGroups() const { return SPKSystem->getNbGroups(); } \
+size_t getNbParticles() const { return SPKSystem->getNbParticles(); } \
+void initializeSPK() { SPKSystem->initialize(); } \
+bool isInitializedSPK() const { return SPKSystem->isInitialized(); }
 
 namespace SPK
 {

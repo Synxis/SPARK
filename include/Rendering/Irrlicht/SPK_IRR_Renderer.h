@@ -48,7 +48,7 @@ namespace IRR
 		////////////////
 
 		/** @brief Destructor of IRRRenderer */
-		inline virtual ~IRRRenderer(){};
+		virtual ~IRRRenderer(){};
 
 		/////////////
 		// Setters //
@@ -85,19 +85,19 @@ namespace IRR
 		* @brief Gets the source blending funtion of this renderer
 		* @return the source blending funtion of this renderer
 		*/
-		inline irr::video::E_BLEND_FACTOR getBlendSrcFunc() const;
+		irr::video::E_BLEND_FACTOR getBlendSrcFunc() const;
 
 		/**
 		* @brief Gets the destination blending funtion of this renderer
 		* @return the destination blending funtion of this renderer
 		*/
-		inline irr::video::E_BLEND_FACTOR getBlendDestFunc() const;
+		irr::video::E_BLEND_FACTOR getBlendDestFunc() const;
 
 		/**
 		* @brief Gets the alpha source of this renderer
 		* @return the alpha source of this renderer
 		*/
-		inline unsigned int getAlphaSource() const;
+		unsigned int getAlphaSource() const;
 
 		/**
 		* @brief Gets the material of this renderer
@@ -106,7 +106,7 @@ namespace IRR
 		*
 		* @return the material of this renderer
 		*/
-		inline const irr::video::SMaterial& getMaterial() const;
+		const irr::video::SMaterial& getMaterial() const;
 
 		virtual bool isRenderingOptionEnabled(RenderingOption renderingHint) const;
 
@@ -123,7 +123,7 @@ namespace IRR
 		irr::video::E_BLEND_FACTOR blendDestFunc;
 		unsigned int alphaSource;
 
-		inline void updateMaterialBlendingMode();
+		void updateMaterialBlendingMode();
 	};
 	
 	inline irr::IrrlichtDevice* IRRRenderer::getDevice() const

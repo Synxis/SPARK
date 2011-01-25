@@ -42,7 +42,7 @@ namespace SPK
 		////////////
 
 		void setRadius(float radius);
-		inline float getRadius() const;
+		float getRadius() const;
 
 		///////////////
 		// Interface //
@@ -62,8 +62,8 @@ namespace SPK
 
 		float radius;
 
-		inline Sphere(const Vector3D& position = Vector3D(),float radius = 1.0f);
-		inline Sphere(const Sphere& sphere);
+		Sphere(const Vector3D& position = Vector3D(),float radius = 1.0f);
+		Sphere(const Sphere& sphere);
 	};
 
 	inline Sphere::Sphere(const Vector3D& position,float radius) :

@@ -44,7 +44,7 @@ namespace SPK
 		void addAction(const Ref<Action>& action);
 		void removeAction(const Ref<Action>& action);
 		const Ref<Action>& getAction(size_t index) const;
-		inline size_t getNbActions() const;
+		size_t getNbActions() const;
 
 		virtual void apply(Particle& particle) const;
 
@@ -57,7 +57,7 @@ namespace SPK
 
 	private :
 
-		inline ActionSet() {}
+		ActionSet() {}
 		ActionSet(const ActionSet& actionSet);
 
 		std::vector<Ref<Action>> actions;

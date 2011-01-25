@@ -78,13 +78,13 @@ namespace SPK
 		* @brief Gets the normal of this Plane
 		* @return the normal of this Plane
 		*/
-		inline const Vector3D& getNormal() const;
+		const Vector3D& getNormal() const;
 
 		/**
 		* @brief Gets the transformed normal of this Plane
 		* @return the transformed normal of this Plane
 		*/
-		inline const Vector3D& getTransformedNormal() const;
+		const Vector3D& getTransformedNormal() const;
 
 		///////////////
 		// Interface //
@@ -107,8 +107,8 @@ namespace SPK
 		Vector3D normal;	// normal
 		Vector3D tNormal;	// transformed normal
 
-		inline Plane(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));
-		inline Plane(const Plane& plane);
+		Plane(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));
+		Plane(const Plane& plane);
 	};
 
 	inline Plane::Plane(const Vector3D& position,const Vector3D& normal) :

@@ -144,13 +144,13 @@ namespace SPK
 		* @param type : the type of value used to interpolate
 		* @param param : the parameter used to interpolate when the type is INTERPOLATOR_PARAM.
 		*/
-		inline void setType(InterpolationType type,Param param = PARAM_SCALE);
+		void setType(InterpolationType type,Param param = PARAM_SCALE);
 
 		/**
 		* @brief Gets the type of value used to interpolate
 		* @return the type of value used to interpolate
 		*/
-		inline InterpolationType getType() const;
+		InterpolationType getType() const;
 
 		/**
 		* @brief Gets the parameter used to interpolate
@@ -159,7 +159,7 @@ namespace SPK
 		*
 		* @return the parameter used to interpolate
 		*/
-		inline Param getInterpolatorParam() const;
+		Param getInterpolatorParam() const;
 
 		/**
 		* @brief Enables or disables the looping of the graph
@@ -171,13 +171,13 @@ namespace SPK
 		*
 		* @param loop : true to enabled the looping, false to disable it
 		*/
-		inline void enableLooping(bool loop);
+		void enableLooping(bool loop);
 
 		/**
 		* @brief Tells whether the looping is enabled or not
 		* @return true if the looping is enabled, false if not
 		*/
-		inline bool isLoopingEnabled() const;
+		bool isLoopingEnabled() const;
 
 		/**
 		* @brief Sets the offset variation in x
@@ -186,13 +186,13 @@ namespace SPK
 		*
 		* @param offsetXVariation : the offset variation in x
 		*/
-		inline void setOffsetXVariation(float offsetXVariation);
+		void setOffsetXVariation(float offsetXVariation);
 
 		/**
 		* @brief Gets the offset variation along x
 		* @return the offset variation along x
 		*/
-		inline float getOffsetXVariation() const;
+		float getOffsetXVariation() const;
 
 		/**
 		* @brief Sets the scale variation in x
@@ -207,7 +207,7 @@ namespace SPK
 		* @brief Gets the scale variation along x
 		* @return the scale variation along x
 		*/
-		inline float getScaleXVariation() const;
+		float getScaleXVariation() const;
 
 		/////////////////////////
 		// Operations on graph //
@@ -217,20 +217,20 @@ namespace SPK
 		* @brief Gets the graph of the interpolator
 		* @return the graph of the interpolator
 		*/
-		inline std::set<InterpolatorEntry<T>>& getGraph();
+		std::set<InterpolatorEntry<T>>& getGraph();
 
 		/**
 		* @brief Gets the graph of the interpolator (constant version)
 		* @return the graph of the interpolator
 		*/
-		inline const std::set<InterpolatorEntry<T>>& getGraph() const;
+		const std::set<InterpolatorEntry<T>>& getGraph() const;
 
 		/**
 		* @brief Adds an entry to the graph
 		* @param entry : the entry to add to the graph
 		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
 		*/
-		inline bool addEntry(const InterpolatorEntry<T>& entry);
+		bool addEntry(const InterpolatorEntry<T>& entry);
 
 		/**
 		* @brief Adds an entry to the graph
@@ -238,7 +238,7 @@ namespace SPK
 		* @param y : the y of the entry to add (y0 and y1 are set to y)
 		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
 		*/
-		inline bool addEntry(float x,T y);
+		bool addEntry(float x,T y);
 
 		/**
 		* @brief Adds an entry to the graph
@@ -247,10 +247,10 @@ namespace SPK
 		* @param y1 : the y1 of the entry to add
 		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
 		*/
-		inline bool addEntry(float x,T y0,T y1);
+		bool addEntry(float x,T y0,T y1);
 
 		/** @brief Clears the graph (removes all the entries) */
-		inline void clearGraph();
+		void clearGraph();
 
 	private :
 
@@ -272,10 +272,10 @@ namespace SPK
 		typedef float (GraphInterpolator<T>::*computeXFn)(const Particle&) const;
 		static computeXFn COMPUTE_X_FN[4];
 
-		inline float computeXLifeTime(const Particle& particle) const;
-		inline float computeXAge(const Particle& particle) const;
-		inline float computeXParam(const Particle& particle) const;
-		inline float computeXVelocity(const Particle& particle) const;
+		float computeXLifeTime(const Particle& particle) const;
+		float computeXAge(const Particle& particle) const;
+		float computeXParam(const Particle& particle) const;
+		float computeXVelocity(const Particle& particle) const;
 
 		GraphInterpolator<T>();
 		GraphInterpolator<T>(const GraphInterpolator<T>& interpolator);
@@ -286,7 +286,7 @@ namespace SPK
 		virtual void init(T& data,Particle& particle,DataSet* dataSet) const;
 
 		// Interpolates between the two ys of an entry function of the ratioY
-		inline void interpolateEntry(T& result,const InterpolatorEntry<T>& entry,float ratio) const;
+		void interpolateEntry(T& result,const InterpolatorEntry<T>& entry,float ratio) const;
 		// Interpolates the data of a single particle function of the graph
 		void interpolateParticle(T& data,const Particle& particle,float offsetX,float scaleX,float ratioY) const;
 	};

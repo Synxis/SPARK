@@ -35,18 +35,18 @@ namespace GL
 		GLBuffer(size_t nbVertices,size_t nbTexCoords = 0);
 		~GLBuffer();
 
-		inline void positionAtStart();
+		void positionAtStart();
 
-		inline void setNextVertex(const Vector3D& vertex);
+		void setNextVertex(const Vector3D& vertex);
 
-		inline void setNextColor(const Color& color);
-		inline void skipNextColors(size_t nb);
+		void setNextColor(const Color& color);
+		void skipNextColors(size_t nb);
 
-		inline void setNextTexCoord(float texCoord);
-		inline void skipNextTexCoords(size_t nb);
+		void setNextTexCoord(float texCoord);
+		void skipNextTexCoords(size_t nb);
 
 		void setNbTexCoords(size_t nb);
-		inline size_t getNbTexCoords();
+		size_t getNbTexCoords();
 
 		void render(GLuint primitive,size_t nbVertices);
 

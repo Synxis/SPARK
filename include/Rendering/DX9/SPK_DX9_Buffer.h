@@ -58,21 +58,21 @@ namespace DX9
 		DX9Buffer(BufferInfo &info);
 		~DX9Buffer();
 
-		inline void lock(unsigned int lock);
-		inline void unlock();
+		void lock(unsigned int lock);
+		void unlock();
 
-		inline void copy(unsigned int dst, void *src, size_t size);
+		void copy(unsigned int dst, void *src, size_t size);
 
-		inline void positionAtStart();
+		void positionAtStart();
 
-		inline void setNextVertex(const Vector3D& vertex);
+		void setNextVertex(const Vector3D& vertex);
 
-		inline void setNextColor(const Color& color);
+		void setNextColor(const Color& color);
 
-		inline void setNextTexCoord(float texCoord);
+		void setNextTexCoord(float texCoord);
 
 		void setNbTexCoords(size_t nb);
-		inline size_t getNbTexCoords();
+		size_t getNbTexCoords();
 
 		// WARNING : le draw en dx prend en compte le nombre de primitives
 		// pas le nombre de sommets !!!

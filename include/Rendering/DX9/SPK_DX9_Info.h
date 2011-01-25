@@ -60,26 +60,26 @@ namespace SPK
 			static LPDIRECT3DVERTEXDECLARATION9 decl[4];
 
 		public:
-			inline static LPDIRECT3DDEVICE9 getDevice();
+			static LPDIRECT3DDEVICE9 getDevice();
 
-			inline static LPDIRECT3DVERTEXDECLARATION9 getDecl(unsigned int nbTexCoords);
+			static LPDIRECT3DVERTEXDECLARATION9 getDecl(unsigned int nbTexCoords);
 
-			inline static void setDevice(LPDIRECT3DDEVICE9 device);
+			static void setDevice(LPDIRECT3DDEVICE9 device);
 
-			inline static void ReleaseResourcesOnDeviceFailure();
+			static void ReleaseResourcesOnDeviceFailure();
 		};
 
-		inline LPDIRECT3DDEVICE9 DX9Info::getDevice()
+		LPDIRECT3DDEVICE9 DX9Info::getDevice()
 		{
 			return DX9Info::device;
 		}
 
-		inline LPDIRECT3DVERTEXDECLARATION9 DX9Info::getDecl(unsigned int nbTexCoords)
+		LPDIRECT3DVERTEXDECLARATION9 DX9Info::getDecl(unsigned int nbTexCoords)
 		{
 			return decl[nbTexCoords];
 		}
 
-		inline void DX9Info::setDevice(LPDIRECT3DDEVICE9 device)
+		void DX9Info::setDevice(LPDIRECT3DDEVICE9 device)
 		{
 			DX9Info::device = device;
 
@@ -87,7 +87,7 @@ namespace SPK
 				device->CreateVertexDeclaration(Decl[i], &decl[i]);
 		}
 
-		inline void DX9Info::ReleaseResourcesOnDeviceFailure()
+		void DX9Info::ReleaseResourcesOnDeviceFailure()
 		{
 			for( unsigned int i = 0; i < 4; ++i )
 				SAFE_RELEASE( decl[i] );

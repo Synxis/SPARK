@@ -49,8 +49,8 @@ namespace SPK
 	private :
 
 		/** @brief Constructor of Rotator */
-		inline Rotator();
-		inline Rotator(const Rotator& rotator);
+		Rotator();
+		Rotator(const Rotator& rotator);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};

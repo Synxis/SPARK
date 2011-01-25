@@ -79,25 +79,25 @@ namespace IRR
 		*
 		* @param texture : the texture to set
 		*/
-		inline void setTexture(irr::video::ITexture* texture);
+		void setTexture(irr::video::ITexture* texture);
 
 		/**
 		* @brief Gets the texture of this renderer
 		* @return the texture of this renderer
 		*/
-		inline irr::video::ITexture* getTexture() const;
+		irr::video::ITexture* getTexture() const;
 
 		/**
 		* @brief Gets the material texture layer
 		* @return the material texture layer
 		*/
-		inline irr::video::SMaterialLayer& getMaterialLayer();
+		irr::video::SMaterialLayer& getMaterialLayer();
 
 		/**
 		* @brief Gets the material texture layer in a constant way
 		* @return the material texture layer
 		*/
-		inline const irr::video::SMaterialLayer& getMaterialLayer() const;
+		const irr::video::SMaterialLayer& getMaterialLayer() const;
 
 	private :
 

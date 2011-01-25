@@ -50,17 +50,17 @@ namespace SPK
 		// Constructors/Destructor //
 		/////////////////////////////
 
-		inline Ref() : ptr(NULL) {}
-		inline Ref(NullReferenceValue) : 
+		Ref() : ptr(NULL) {}
+		Ref(NullReferenceValue) : 
 			ptr(NULL) {}
-		inline Ref(const Ref& ref) : 
+		Ref(const Ref& ref) : 
 			ptr(ref.get()) { increment(); }
 		template<typename U> inline Ref(U* ptr) : 
 			ptr(ptr) { increment(); }
 		template<typename U> inline Ref(const Ref<U>& ref) : 
 			ptr(ref.get()) { increment(); }
 		
-		inline ~Ref() { 
+		~Ref() { 
 			decrement(); }
 
 		//////////////////////////
@@ -109,9 +109,9 @@ namespace SPK
 			return *this;
 		}
 
-		inline T& operator*() const { return *ptr; }
-		inline T* operator->() const { return ptr; }
-		inline T* get() const { return ptr; }
+		T& operator*() const { return *ptr; }
+		T* operator->() const { return ptr; }
+		T* get() const { return ptr; }
 
 		operator bool() const { return ptr != 0; }
 
@@ -121,10 +121,10 @@ namespace SPK
 
 	private :
 
-		inline void increment() { if (ptr != NULL) ++(ptr->nbReferences); }
+		void increment() { if (ptr != NULL) ++(ptr->nbReferences); }
 
 		// HACK : The pointer is cast to SPKObject* to allow the Ref class to access the destructor
-		inline void decrement() { if (ptr != NULL && --(ptr->nbReferences) == 0) SPK_DELETE(ptr); }
+		void decrement() { if (ptr != NULL && --(ptr->nbReferences) == 0) SPK_DELETE(ptr); }
 
 		T* ptr;
 	};

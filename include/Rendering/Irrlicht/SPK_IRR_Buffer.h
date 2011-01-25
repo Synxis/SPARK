@@ -37,21 +37,21 @@ namespace IRR
 		IRRBuffer(irr::IrrlichtDevice* device,size_t nbParticles,size_t nbVerticesPerParticle,size_t nbIndicesPerParticle);
 		~IRRBuffer();
 
-		inline irr::video::E_INDEX_TYPE getIndiceType() const;
+		irr::video::E_INDEX_TYPE getIndiceType() const;
 
-		inline void positionAtStart();
+		void positionAtStart();
 
-		inline void setNextIndex(int index);
-		inline void setNextVertex(const Vector3D& vertex);
+		void setNextIndex(int index);
+		void setNextVertex(const Vector3D& vertex);
 
-		inline void setNextColor(const Color& color);
-		inline void skipNextColors(size_t nb);
+		void setNextColor(const Color& color);
+		void skipNextColors(size_t nb);
 
-		inline void setNextTexCoords(float u,float v);
-		inline void skipNextTexCoords(size_t nb);
+		void setNextTexCoords(float u,float v);
+		void skipNextTexCoords(size_t nb);
 
-		inline irr::scene::IDynamicMeshBuffer& getMeshBuffer();
-		inline const irr::scene::IDynamicMeshBuffer& getMeshBuffer() const;
+		irr::scene::IDynamicMeshBuffer& getMeshBuffer();
+		const irr::scene::IDynamicMeshBuffer& getMeshBuffer() const;
 
 		void setUsed(size_t nb);
 

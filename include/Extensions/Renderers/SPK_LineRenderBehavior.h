@@ -50,7 +50,7 @@ namespace SPK
 		*
 		* @param length : the length multiplier of this GLLineRenderer
 		*/
-		inline void setLength(float length);
+		void setLength(float length);
 
 		/**
 		* @brief Sets the width of this LineRenderBehavior
@@ -66,13 +66,13 @@ namespace SPK
 		* @brief Gets the length multiplier of this LineRenderBehavior
 		* @return the length multiplier of this LineRenderBehavior
 		*/
-		inline float getLength() const;
+		float getLength() const;
 
 		/**
 		* @brief Gets the width of this LineRenderBehavior
 		* @return the width of this LineRenderBehavior
 		*/
-		inline float getWidth() const;
+		float getWidth() const;
 
 	protected :
 
@@ -88,7 +88,7 @@ namespace SPK
 		* @param length : the length multiplier of this LineRenderBehavior
 		* @param width : the width of this GLLineRenderer
 		*/
-		inline LineRenderBehavior(float length = 1.0f,float width = 1.0f);
+		LineRenderBehavior(float length = 1.0f,float width = 1.0f);
 	};
 
 

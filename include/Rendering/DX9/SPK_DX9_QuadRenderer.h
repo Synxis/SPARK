@@ -69,7 +69,7 @@ namespace DX9
 
 		virtual bool setTexturingMode(TextureMode mode);
 
-		inline void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
+		void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
 
 		/////////////
 		// Getters //
@@ -79,7 +79,7 @@ namespace DX9
 		* @brief Gets the texture of this DX9QuadRenderer
 		* @return the texture of this DX9QuadRenderer
 		*/
-		inline LPDIRECT3DTEXTURE9 getTexture() const;
+		LPDIRECT3DTEXTURE9 getTexture() const;
 
 	private :
 
@@ -96,9 +96,9 @@ namespace DX9
 		virtual void render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const;
 		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const;
 
-		inline void DX9CallColorAndVertex(const Particle& particle,DX9Buffer& renderBuffer) const;	// DirectX 9.0 calls for color and position
-		inline void DX9CallTexture2DAtlas(const Particle& particle,DX9Buffer& renderBuffer) const;	// DirectX 9.0 calls for 2D atlastexturing 
-		inline void DX9CallTexture3D(const Particle& particle,DX9Buffer& renderBuffer) const;		// DirectX 9.0 calls for 3D texturing
+		void DX9CallColorAndVertex(const Particle& particle,DX9Buffer& renderBuffer) const;	// DirectX 9.0 calls for color and position
+		void DX9CallTexture2DAtlas(const Particle& particle,DX9Buffer& renderBuffer) const;	// DirectX 9.0 calls for 2D atlastexturing 
+		void DX9CallTexture3D(const Particle& particle,DX9Buffer& renderBuffer) const;		// DirectX 9.0 calls for 3D texturing
 
 		static void (DX9QuadRenderer::*renderParticle)(const Particle&,DX9Buffer& renderBuffer)  const;	// pointer to the right render method
 

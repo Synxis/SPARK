@@ -37,9 +37,9 @@ namespace SPK
 
 		static inline Ref<Gravity> create(const Vector3D& value = Vector3D());
 
-		inline void setValue(const Vector3D& value);
-		inline const Vector3D& getValue() const;
-		inline const Vector3D& getTransformedValue() const;
+		void setValue(const Vector3D& value);
+		const Vector3D& getValue() const;
+		const Vector3D& getTransformedValue() const;
 
 	protected :
 
@@ -53,8 +53,8 @@ namespace SPK
 		Vector3D value;
 		Vector3D tValue;
 
-		inline Gravity(const Vector3D& value = Vector3D());
-		inline Gravity(const Gravity& gravity);
+		Gravity(const Vector3D& value = Vector3D());
+		Gravity(const Gravity& gravity);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
@@ -81,8 +81,8 @@ namespace SPK
 
 	private :
 
-		inline Friction(float value = 0.0f);
-		inline Friction(const Friction& friction);
+		Friction(float value = 0.0f);
+		Friction(const Friction& friction);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};

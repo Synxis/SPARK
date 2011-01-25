@@ -87,7 +87,7 @@ namespace SPK
 
 		virtual inline void enableRenderingOption(RenderingOption option,bool enable);
 		virtual inline void setAlphaTestThreshold(float alphaThreshold);
-		inline void setActive(bool active);
+		void setActive(bool active);
 		virtual void setBlendMode(BlendMode blendMode) = 0;
 		
 		/////////////
@@ -108,7 +108,7 @@ namespace SPK
 
 		virtual inline bool isRenderingOptionEnabled(RenderingOption option) const;
 		virtual inline float getAlphaTestThreshold() const;
-		inline bool isActive() const;
+		bool isActive() const;
 
 	protected :
 
@@ -116,7 +116,7 @@ namespace SPK
 		// Constructor //
 		/////////////////
 
-		inline Renderer(bool NEEDS_DATASET);
+		Renderer(bool NEEDS_DATASET);
 
 	private :
 

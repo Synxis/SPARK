@@ -48,7 +48,7 @@ namespace SPK
 
 	private :
 
-		inline RandomEmitter(
+		RandomEmitter(
 			const Ref<Zone>& = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
@@ -56,7 +56,7 @@ namespace SPK
 			float forceMin = 1.0f,
 			float forceMax = 1.0f);
 
-		inline RandomEmitter(const RandomEmitter& emitter);
+		RandomEmitter(const RandomEmitter& emitter);
 
 		virtual void generateVelocity(Particle& particle,float speed) const;
 	};

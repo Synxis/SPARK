@@ -72,13 +72,13 @@ namespace IRR
 		*
 		* @param texture : the texture to set
 		*/
-		inline void setTexture(irr::video::ITexture* texture);
+		void setTexture(irr::video::ITexture* texture);
 
 		/**
 		* @brief Gets the texture of this renderer
 		* @return the texture of this renderer
 		*/
-		inline irr::video::ITexture* getTexture() const;
+		irr::video::ITexture* getTexture() const;
 
 		virtual bool setTexturingMode(TextureMode mode);
 
@@ -89,7 +89,7 @@ namespace IRR
 		*
 		* @param dim : the atlas dimension of the texture
 		*/
-		inline void setAtlasDimensions(irr::core::dimension2du dim);
+		void setAtlasDimensions(irr::core::dimension2du dim);
 		using QuadRenderBehavior::setAtlasDimensions;
 
 		/**
@@ -102,13 +102,13 @@ namespace IRR
 		* @brief Gets the material texture layer
 		* @return the material texture layer
 		*/
-		inline irr::video::SMaterialLayer& getMaterialLayer();
+		irr::video::SMaterialLayer& getMaterialLayer();
 
 		/**
 		* @brief Gets the material texture layer in a constant way
 		* @return the material texture layer
 		*/
-		inline const irr::video::SMaterialLayer& getMaterialLayer() const;
+		const irr::video::SMaterialLayer& getMaterialLayer() const;
 
 	private :
 
@@ -123,8 +123,8 @@ namespace IRR
 		virtual void render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const;
 		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const;
 
-		inline void FillBufferColorAndVertex(const Particle& particle,IRRBuffer& renderBuffer) const;	// Fills Irrlicht buffer with color and position
-		inline void FillBufferTextureAtlas(const Particle& particle,IRRBuffer& renderBuffer) const;		// Fills Irrlicht buffer with atlas texture coordinates
+		void FillBufferColorAndVertex(const Particle& particle,IRRBuffer& renderBuffer) const;	// Fills Irrlicht buffer with color and position
+		void FillBufferTextureAtlas(const Particle& particle,IRRBuffer& renderBuffer) const;		// Fills Irrlicht buffer with atlas texture coordinates
 
 		static void (IRRQuadRenderer::*renderParticle)(const Particle&,IRRBuffer& renderBuffer) const;	// pointer to the right render method
 

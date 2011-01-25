@@ -41,31 +41,31 @@ namespace SPK
 		* @brief Gets the particle on which points by the iterator
 		* @return the particle on which points by the iterator
 		*/
-		inline Particle& operator*() const;
+		Particle& operator*() const;
 
 		/**
 		* @brief Allows access to the interface of the particle on which points by the iterator
 		* @return the particle on which points by the iterator
 		*/
-		inline Particle* operator->() const;
+		Particle* operator->() const;
 
 		/**
 		* @brief pre-increments the position of the iterator
 		* @return the incremented iterator
 		*/
-		inline Iterator& operator++();
+		Iterator& operator++();
 
 		/**
 		* @brief post-increments the position of the iterator
 		* @return the incremented iterator
 		*/
-		inline Iterator operator++(int);
+		Iterator operator++(int);
 
 		/**
 		* @brief Checks whether the iterator has reached the end of the collection
 		* @return true if the iterator has reached the end of the collection, false if not
 		*/
-		inline bool end() const;
+		bool end() const;
 
 	private :
 
@@ -89,31 +89,31 @@ namespace SPK
 		* @brief Gets the particle on which points by the iterator
 		* @return the particle on which points by the iterator
 		*/
-		inline const Particle& operator*() const;
+		const Particle& operator*() const;
 
 		/**
 		* @brief Allows access to the interface of the particle on which points by the iterator
 		* @return the particle on which points by the iterator
 		*/
-		inline const Particle* operator->() const;
+		const Particle* operator->() const;
 
 		/**
 		* @brief pre-increments the position of the iterator
 		* @return the incremented iterator
 		*/
-		inline ConstIterator& operator++();
+		ConstIterator& operator++();
 
 		/**
 		* @brief post-increments the position of the iterator
 		* @return the incremented iterator
 		*/
-		inline ConstIterator operator++(int);
+		ConstIterator operator++(int);
 
 		/**
 		* @brief Checks whether the iterator has reached the end of the collection
 		* @return true if the iterator has reached the end of the collection, false if not
 		*/
-		inline bool end() const;
+		bool end() const;
 
 	private :
 

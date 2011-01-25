@@ -48,7 +48,7 @@ namespace SPK
 		* @brief Constructor of interpolator
 		* @param NEEDS_DATASET : true if the interpolator needs additional data, false otherwise
 		*/
-		inline Interpolator(bool NEEDS_DATASET);
+		Interpolator(bool NEEDS_DATASET);
 
 		/**
 		* @brief A helper method that linearly interpolates a value
@@ -58,7 +58,7 @@ namespace SPK
 		* @param end : the end value used for the interpolation
 		* @param ratio : the ratio of the interpolation (between 0.0f and 1.0f)
 		*/
-		inline void interpolateParam(T& result,const T& start,const T& end,float ratio) const;
+		void interpolateParam(T& result,const T& start,const T& end,float ratio) const;
 		
 	private :
 

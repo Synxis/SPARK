@@ -77,13 +77,13 @@ namespace DX9
 		*
 		* @param textureIndex : the index of the DirectX 9.0 texture of this DX9PointRenderer
 		*/
-		inline void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
+		void setTexture(LPDIRECT3DTEXTURE9 textureIndex);
 
 		/**
 		* @brief Gets the texture of this DX9PointRenderer
 		* @return the texture of this DX9PointRenderer
 		*/
-		inline LPDIRECT3DTEXTURE9 getTexture() const;
+		LPDIRECT3DTEXTURE9 getTexture() const;
 
 		///////////////////
 		// Point Sprites //
@@ -129,8 +129,8 @@ namespace DX9
 
 		LPDIRECT3DTEXTURE9 textureIndex;
 
-		inline DX9PointRenderer(float screenSize = 1.0f);
-		inline DX9PointRenderer(const DX9PointRenderer& renderer);
+		DX9PointRenderer(float screenSize = 1.0f);
+		DX9PointRenderer(const DX9PointRenderer& renderer);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

@@ -142,7 +142,7 @@ namespace IO
 		void computeSignature();
 		void markAttributes();
 
-		inline void setName(const std::string& name);
+		void setName(const std::string& name);
 	};
 
 	inline const Attribute* Descriptor::getAttribute(const std::string& name) const

@@ -86,7 +86,7 @@ namespace SPK
 		* @brief Gets the elasticity of the collisions
 		* @return the elasticity of the collisions
 		*/
-		inline float getElasticity() const;
+		float getElasticity() const;
 
 	protected :
 
@@ -97,19 +97,19 @@ namespace SPK
 
 		float elasticity;
 
-		inline Collider(float elasticity = 1.0f);
-		inline Collider(const Collider& collider);
+		Collider(float elasticity = 1.0f);
+		Collider(const Collider& collider);
 
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
-	Collider::Collider(float elasticity) :
+	inline Collider::Collider(float elasticity) :
 		Modifier(MODIFIER_PRIORITY_COLLISION,false,false)
 	{
 		setElasticity(elasticity);
 	}
 
-	Collider::Collider(const Collider& collider) :
+	inline Collider::Collider(const Collider& collider) :
 		Modifier(collider),
 		elasticity(collider.elasticity)
 	{}

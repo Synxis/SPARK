@@ -59,7 +59,7 @@ namespace SPK
 		* @param y : y coordinate
 		* @param z : z coordinate
 		*/
-		inline Vector3D(float x = 0.0f,float y = 0.0f,float z = 0.0f);
+		Vector3D(float x = 0.0f,float y = 0.0f,float z = 0.0f);
 
 		///////////////
 		// Operators //
@@ -76,7 +76,7 @@ namespace SPK
 		* @param v : the Vector3D to add
 		* @return the result Vector3D
 		*/
-		inline Vector3D& operator+=(const Vector3D& v);
+		Vector3D& operator+=(const Vector3D& v);
 
 		/**
 		* @brief Substracts a Vector3D
@@ -89,7 +89,7 @@ namespace SPK
 		* @param v : the Vector3D to substract
 		* @return the result Vector3D
 		*/
-		inline Vector3D& operator-=(const Vector3D& v);
+		Vector3D& operator-=(const Vector3D& v);
 
 		/**
 		* @brief Multiplies by a Vector3D
@@ -102,7 +102,7 @@ namespace SPK
 		* @param v : the Vector3D to add
 		* @return the result Vector3D
 		*/
-		inline Vector3D& operator*=(const Vector3D& v);
+		Vector3D& operator*=(const Vector3D& v);
 
 		/**
 		* @brief Divides by a Vector3D
@@ -115,7 +115,7 @@ namespace SPK
 		* @param v : the Vector3D to substract
 		* @return the result Vector3D
 		*/
-		inline Vector3D& operator/=(const Vector3D& v);
+		Vector3D& operator/=(const Vector3D& v);
 
 		/**
 		* @brief Adds a floating number
@@ -128,7 +128,7 @@ namespace SPK
 		* @param f : the number to add
 		* @return the result Vector3D
 		*/
-		inline Vector3D& operator+=(float f);
+		Vector3D& operator+=(float f);
 
 		/**
 		* @brief Substracts a floating number
@@ -141,7 +141,7 @@ namespace SPK
 		* @param f : the number to substract
 		* @return the result Vector3D
 		*/
-		inline Vector3D& operator-=(float f);
+		Vector3D& operator-=(float f);
 
 		/**
 		* @brief Multiplies by a floating number
@@ -154,7 +154,7 @@ namespace SPK
 		* @param f : the number to multiply the Vector3D by
 		* @return the result Vector3D
 		*/
-		inline Vector3D& operator*=(float f);
+		Vector3D& operator*=(float f);
 
 		/**
 		* @brief Divides by a floating number
@@ -167,7 +167,7 @@ namespace SPK
 		* @param f : the number to divide the Vector3D by
 		* @return the result Vector3D
 		*/
-		inline Vector3D& operator/=(float f);
+		Vector3D& operator/=(float f);
 
 		/**
 		* @brief Unary - operator of Vector3D
@@ -177,7 +177,7 @@ namespace SPK
 		*
 		* return a Vector3D which is the reverse of this Vector3D
 		*/
-		inline Vector3D operator-() const;
+		Vector3D operator-() const;
 
 		/**
 		* @brief Accesses the Vector3D coordinates in an container like fashion
@@ -192,7 +192,7 @@ namespace SPK
 		* @param index : the index of the coordinate to get (from 0 to 2)
 		* @return : the coordinate value at index
 		*/
-		inline float& operator[](size_t index);
+		float& operator[](size_t index);
 
 		/**
 		* @brief Accesses the Vector3D coordinates in an container like fashion
@@ -202,7 +202,7 @@ namespace SPK
 		* @param index : the index of the coordinate to get (from 0 to 2)
 		* @return : the coordinate value at index
 		*/
-		inline const float& operator[](size_t index) const;
+		const float& operator[](size_t index) const;
 
 		/////////////
 		// Setters //
@@ -214,7 +214,7 @@ namespace SPK
 		* @param y : y coordinate
 		* @param z : z coordinate
 		*/
-		inline void set(float x,float y,float z = 0.0f);
+		void set(float x,float y,float z = 0.0f);
 
 		///////////////
 		// Interface //
@@ -228,7 +228,7 @@ namespace SPK
 		*
 		* @return the square norm of the Vector3D
 		*/
-		inline float getSqrNorm() const;
+		float getSqrNorm() const;
 
 		/**
 		* @brief Gets the norm of the Vector3D
@@ -237,7 +237,7 @@ namespace SPK
 		*
 		* @return the norm of the Vector3D
 		*/
-		inline float getNorm() const;
+		float getNorm() const;
 
 		/**
 		* @brief Normalizes the Vector3D
@@ -250,7 +250,7 @@ namespace SPK
 		*
 		* @return true if this Vector3D can be normalized, false otherwise
 		*/
-		inline bool normalize();
+		bool normalize();
 
 		/**
 		* @brief Reverts the Vector3D
@@ -260,7 +260,7 @@ namespace SPK
 		* y = -y<br>
 		* z = -z</i>
 		*/
-		inline void revert();
+		void revert();
 
 		/**
 		* @brief Sets this Vector3D to its absolute values
@@ -270,13 +270,13 @@ namespace SPK
 		* y = abs(y)<br>
 		* z = abs(z)</i>
 		*/
-		inline void abs();
+		void abs();
 
 		/**
 		* @brief Computes the cross product between v and the vector3D and store the result in the vector3D
 		* @param v : the vector3D used to compute the cross product (*this x v)
 		*/
-		inline void crossProduct(const Vector3D& v);
+		void crossProduct(const Vector3D& v);
 
 		/** 
 		* @brief Sets the max coordinates by comparing them 2 by 2 with another vector
@@ -286,7 +286,7 @@ namespace SPK
 		* z = max(z,v.z)<br></i>
 		* @param v : the other vector
 		*/
-		inline void setMax(const Vector3D& v);
+		void setMax(const Vector3D& v);
 
 		/** 
 		* @brief Sets the minimum coordinates by comparing them 2 by 2 with another vector 
@@ -296,19 +296,19 @@ namespace SPK
 		* z = min(z,v.z)<br></i>
 		* @param v : the other vector
 		*/
-		inline void setMin(const Vector3D& v);
+		void setMin(const Vector3D& v);
 
 		/** 
 		* @brief Returns the maximum coordinate of this vector
 		* @return the maximum coordinate (either x,y or z)
 		*/
-		inline float getMax() const;
+		float getMax() const;
 
 		/** 
 		* @brief Returns the minimum coordinate of this vector
 		* @return the minimum coordinate (either x,y or z)
 		*/
-		inline float getMin() const;
+		float getMin() const;
 	};
 
 	////////////////////////

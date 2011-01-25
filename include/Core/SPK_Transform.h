@@ -81,7 +81,7 @@ namespace SPK
 		*
 		* @param transform : the transform to copy its content from
 		*/
-		inline void set(const float* transform);
+		void set(const float* transform);
 
 		/**
 		* @brief Sets the local transfom of this Transform from a "non contiguous vector coordinates" matrix
@@ -189,79 +189,79 @@ namespace SPK
 		* @brief Gets the local transform of this Transform
 		* @return a pointer to the local transform of this Transform
 		*/
-		inline const float* getLocal() const;
+		const float* getLocal() const;
 
 		/**
 		* @brief Gets the world transform of this Transform
 		* @return a pointer to the world transform of this Transform
 		*/
-		inline const float* getWorld() const;
+		const float* getWorld() const;
 
 		/**
 		* @brief Tells whether the local transform is the identity or not
 		* @return true if the local transform is identity, false if not
 		*/
-		inline bool isLocalIdentity() const;
+		bool isLocalIdentity() const;
 
 		/**
 		* @brief Gets the position of the local transform
 		* @return the position of the local transform
 		*/
-		inline Vector3D getLocalPos() const;
+		Vector3D getLocalPos() const;
 
 		/**
 		* @brief Gets the side vector of the local transform
 		* @return the side vector of the local transform
 		*/
-		inline Vector3D getLocalSide() const;
+		Vector3D getLocalSide() const;
 
 		/**
 		* @brief Gets the up vector of the local transform
 		* @return the up vector of the local transform
 		*/
-		inline Vector3D getLocalUp() const;
+		Vector3D getLocalUp() const;
 
 		/**
 		* @brief Gets the look vector of the local transform in a right-handed system
 		* @return the look vector of the local transform
 		*/
-		inline Vector3D getLocalLookRH() const;
+		Vector3D getLocalLookRH() const;
 
 		/**
 		* @brief Gets the look vector of the local transform in a left-handed system
 		* @return the look vector of the local transform
 		*/
-		inline Vector3D getLocalLookLH() const;
+		Vector3D getLocalLookLH() const;
 
 		/**
 		* @brief Gets the position of the world transform
 		* @return the position of the world transform
 		*/
-		inline Vector3D getWorldPos() const;
+		Vector3D getWorldPos() const;
 
 		/**
 		* @brief Gets the side vector of the world transform
 		* @return the side vector of the world transform
 		*/
-		inline Vector3D getWorldSide() const;
+		Vector3D getWorldSide() const;
 
 		/**
 		* @brief Gets the up vector of the world transform
 		* @return the up vector of the world transform
 		*/
-		inline Vector3D getWorldUp() const;
+		Vector3D getWorldUp() const;
 
 		/**
 		* @brief Gets the look vector of the world transform  in a right-handed system
 		* @return the look vector of the world transform
 		*/
-		inline Vector3D getWorldLookRH() const;
+		Vector3D getWorldLookRH() const;
 
 		/**
 		* @brief Gets the look vector of the world transform  in a left-handed system
 		* @return the look vector of the world transform
 		*/
-		inline Vector3D getWorldLookLH() const;
+		Vector3D getWorldLookLH() const;
 
 		///////////////
 		// Interface //
@@ -278,7 +278,7 @@ namespace SPK
 		* @param up : the up vector of the transform
 		* @param pos : the position of the transform
 		*/
-		inline void lookAtRH(const Vector3D& target,Vector3D up,const Vector3D& pos);
+		void lookAtRH(const Vector3D& target,Vector3D up,const Vector3D& pos);
 
 		/**
 		* @brief lookAt method for a left-handed system
@@ -291,10 +291,10 @@ namespace SPK
 		* @param up : the up vector of the transform
 		* @param pos : the position of the transform
 		*/
-		inline void lookAtLH(const Vector3D& target,Vector3D up,const Vector3D& pos);
+		void lookAtLH(const Vector3D& target,Vector3D up,const Vector3D& pos);
 
 		/** @brief Resets the transform to identity */
-		inline void reset();
+		void reset();
 
 		/**
 		* @brief A helper method to transform a position from local to world coordinates
@@ -325,10 +325,10 @@ namespace SPK
 		Transform();
 		Transform(const Transform& transform);
 
-		inline void notifyForUpdate();
-		inline bool isUpdateNotified() const;
+		void notifyForUpdate();
+		bool isUpdateNotified() const;
 
-		inline Ref<SPKObject> getParent() const;
+		Ref<SPKObject> getParent() const;
 
 		/**
 		* @brief Updates the world transform of this Transform
@@ -342,17 +342,17 @@ namespace SPK
 		*/
 		void update(const Ref<SPKObject>& parent,SPKObject& owner);
 
-		inline static void multiply(
+		static void multiply(
 			float* dest,
 			const float* src0,
 			const float* src1);
 
-		inline static void multiply(
+		static void multiply(
 			Vector3D& dest,
 			const Vector3D& v,
 			const float* m);
 
-		inline static void rotate(
+		static void rotate(
 			Vector3D& dest,
 			const Vector3D& v,
 			const float* m);
@@ -464,7 +464,7 @@ namespace SPK
 		return parent;
 	}
 
-	void Transform::multiply(
+	inline void Transform::multiply(
 		float* dest,
 		const float* src0,
 		const float* src1)
@@ -482,7 +482,7 @@ namespace SPK
 		}
 	}
 
-	void Transform::multiply(
+	inline void Transform::multiply(
 		Vector3D& dest,
 		const Vector3D& v,
 		const float* m)
@@ -494,7 +494,7 @@ namespace SPK
 		dest.z = v.x * m[2] + v.y * m[6] + v.z * m[10] + m[14];
 	}
 
-	void Transform::rotate(
+	inline void Transform::rotate(
 		Vector3D& dest,
 		const Vector3D& v,
 		const float* m)

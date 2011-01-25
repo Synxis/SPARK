@@ -39,8 +39,8 @@ namespace SPK
 
 	private :
 
-		inline Point(const Vector3D& position = Vector3D());
-		inline Point(const Point& point);
+		Point(const Vector3D& position = Vector3D());
+		Point(const Point& point);
 	};
 
 	inline Point::Point(const Vector3D& position) :

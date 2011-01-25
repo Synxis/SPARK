@@ -53,7 +53,7 @@ namespace SPK
 		* @param maxPeriod : the maximum period
 		* @return a new randomForce modifier
 		*/
-		inline static Ref<RandomForce> create(
+		static Ref<RandomForce> create(
 			const Vector3D& minVector = Vector3D(),
 			const Vector3D& maxVector = Vector3D(),
 			float minPeriod = 1.0f,
@@ -78,25 +78,25 @@ namespace SPK
 		* @brief Gets the min vector
 		* @return the min vector
 		*/
-		inline const Vector3D& getMinVector() const;
+		const Vector3D& getMinVector() const;
 
 		/**
 		* @brief Gets the max vector
 		* @return the max vector
 		*/
-		inline const Vector3D& getMaxVector() const;
+		const Vector3D& getMaxVector() const;
 
 		/**
 		* @brief Gets the transformed min vector
 		* @return the transformed min vector
 		*/
-		inline const Vector3D& getTransformedMinVector() const;
+		const Vector3D& getTransformedMinVector() const;
 
 		/**
 		* @brief Gets the transformed max vector
 		* @return the transformed max vector
 		*/
-		inline const Vector3D& getTransformedMaxVector() const;
+		const Vector3D& getTransformedMaxVector() const;
 
 		////////////
 		// Period //
@@ -118,13 +118,13 @@ namespace SPK
 		* @brief Gets the minimal period
 		* @return the minimal period
 		*/
-		inline float getMinPeriod() const;
+		float getMinPeriod() const;
 
 		/**
 		* @brief Gets the maximal period
 		* @return the maximal period
 		*/
-		inline float getMaxPeriod() const;
+		float getMaxPeriod() const;
 
 	protected :
 

@@ -86,13 +86,13 @@ namespace SPK
 		* @brief Gets the direction of this SphericEmitter
 		* @return the direction of this SphericEmitter
 		*/
-		inline const Vector3D& getDirection() const;
+		const Vector3D& getDirection() const;
 
 		/**
 		* @brief Gets the direction of this SphericEmitter
 		* @return the direction of this SphericEmitter
 		*/
-		inline const Vector3D& getTransformedDirection() const;
+		const Vector3D& getTransformedDirection() const;
 
 		/**
 		* @brief Sets the angles of this SphericEmitter
@@ -108,13 +108,13 @@ namespace SPK
 		* @brief Gets the minimum angle of this SphericEmitter
 		* @return the minimum angle of this SphericEmitter
 		*/
-		inline float getAngleMin() const;
+		float getAngleMin() const;
 
 		/**
 		* @brief Gets the maximum angle of this SphericEmitter
 		* @return the maximum angle of this SphericEmitter
 		*/
-		inline float getAngleMax() const;
+		float getAngleMax() const;
 
 	protected :
 

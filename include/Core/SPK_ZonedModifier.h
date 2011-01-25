@@ -59,7 +59,7 @@ namespace SPK
 		* @param zone : the zone
 		* @param zoneTest : the zone test
 		*/
-		inline void setZone(const Ref<Zone>& zone,ZoneTest zoneTest);
+		void setZone(const Ref<Zone>& zone,ZoneTest zoneTest);
 
 		/**
 		* @brief Sets the zone
@@ -74,7 +74,7 @@ namespace SPK
 		* @brief Gets the zone
 		* @return the zone
 		*/
-		inline const Ref<Zone>& getZone() const;
+		const Ref<Zone>& getZone() const;
 
 		/**
 		* @brief Sets the zone test
@@ -90,7 +90,7 @@ namespace SPK
 		* @brief Gets the zone test
 		* @return the zone test
 		*/
-		inline ZoneTest getZoneTest() const;
+		ZoneTest getZoneTest() const;
 
 		///////////////////////
 		// Virtual interface //
@@ -125,7 +125,7 @@ namespace SPK
 		* @brief Check whether the zone test passes for a given particle
 		* @return true is the zone test passes, false if not
 		*/
-		inline bool checkZone(const Particle& particle) const;
+		bool checkZone(const Particle& particle) const;
 
 		virtual void propagateUpdateTransform();
 

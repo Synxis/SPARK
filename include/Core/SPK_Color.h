@@ -49,7 +49,7 @@ namespace SPK
 		* @brief Constructor of Color
 		* @param rgba : a value representing the color in rgba format
 		*/
-		inline Color(unsigned long int rgba = 0xFFFFFFFF);
+		Color(unsigned long int rgba = 0xFFFFFFFF);
 
 		/**
 		* @brief Constructor of Color
@@ -58,7 +58,7 @@ namespace SPK
 		* @param b : blue component (from 0x00 to 0xFF)
 		* @param a : alpha component (from 0x00 to 0xFF)
 		*/
-		inline Color(int r,int g,int b,int a);
+		Color(int r,int g,int b,int a);
 
 		///////////////
 		// Operators //
@@ -68,19 +68,19 @@ namespace SPK
 		* @brief Adds a color
 		* @param c : the color to add
 		*/
-		inline Color& operator+=(const Color& c);
+		Color& operator+=(const Color& c);
 
 		/**
 		* @brief Subtracts a color
 		* @param c : the color to subtract
 		*/
-		inline Color& operator-=(const Color& c);
+		Color& operator-=(const Color& c);
 
 		/**
 		* @brief Cast operator from color to int
 		* @return the resulting integer in rgba format
 		*/
-		inline operator unsigned long int();
+		operator unsigned long int();
 
 		/////////////
 		// Setters //
@@ -90,43 +90,43 @@ namespace SPK
 		* @brief Sets the red component
 		* @param r : the red component
 		*/
-		inline void setR(int r);
+		void setR(int r);
 
 		/**
 		* @brief Sets the green component
 		* @param g : the green component
 		*/
-		inline void setG(int g);
+		void setG(int g);
 
 		/**
 		* @brief Sets the blue component
 		* @param b : the blue component
 		*/
-		inline void setB(int b);
+		void setB(int b);
 
 		/**
 		* @brief Sets the alpha component
 		* @param a : the alpha component
 		*/
-		inline void setA(int a);
+		void setA(int a);
 
 		/**
 		* @brief Sets the color from rgba
 		* @param rgba : value of the rgba
 		*/
-		inline void setRGBA(unsigned long int rgba);
+		void setRGBA(unsigned long int rgba);
 
 		/**
 		* @brief Sets the color from argb
 		* @param argb : value of the argb
 		*/
-		inline void setARGB(unsigned long int argb);
+		void setARGB(unsigned long int argb);
 
 		/**
 		* @brief Sets the color from bgra
 		* @param bgra : value of the bgra
 		*/
-		inline void setBGRA(unsigned long int bgra);
+		void setBGRA(unsigned long int bgra);
 
 		/**
 		* @brief Sets the color
@@ -135,7 +135,7 @@ namespace SPK
 		* @param b : blue component (from 0x00 to 0xFF)
 		* @param a : alpha component (from 0x00 to 0xFF)
 		*/
-		inline void set(int r,int g,int b,int a);
+		void set(int r,int g,int b,int a);
 		
 		/////////////
 		// Getters //
@@ -145,43 +145,43 @@ namespace SPK
 		* @brief Gets the red component
 		* @return the red component
 		*/
-		inline int getR() const;
+		int getR() const;
 
 		/**
 		* @brief Gets the green component
 		* @return the green component
 		*/
-		inline int getG() const;
+		int getG() const;
 
 		/**
 		* @brief Gets the blue component
 		* @return the blue component
 		*/
-		inline int getB() const;
+		int getB() const;
 
 		/**
 		* @brief Gets the alpha component
 		* @return the alpha component
 		*/
-		inline int getA() const;
+		int getA() const;
 
 		/**
 		* @brief Gets the color in rgba format
 		* @return a value representing the color in rgba format
 		*/
-		inline unsigned long int getRGBA() const;
+		unsigned long int getRGBA() const;
 
 		/**
 		* @brief Gets the color in argb format
 		* @return a value representing the color in argb format
 		*/
-		inline unsigned long int getARGB() const;
+		unsigned long int getARGB() const;
 
 		/**
 		* @brief Gets the color in bgra format
 		* @return a value representing the color in bgra format
 		*/
-		inline unsigned long int getBGRA() const;
+		unsigned long int getBGRA() const;
 
 		///////////////
 		// Interface //
@@ -194,7 +194,7 @@ namespace SPK
 		* @param c1 : the second color used for interpolation
 		* @param ratio : the ratio used to interpolate between the 2 colors
 		*/
-		inline void interpolate(const Color& c0,const Color& c1,float ratio);
+		void interpolate(const Color& c0,const Color& c1,float ratio);
 	};
 
 	////////////////////////

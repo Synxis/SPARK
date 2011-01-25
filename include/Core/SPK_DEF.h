@@ -128,7 +128,7 @@ namespace SPK
 		* @return a random number within [min,max[
 		*/
 		template<typename T>
-		inline T generateRandom(const T& min,const T& max);
+		T generateRandom(const T& min,const T& max);
 
 	private :
 

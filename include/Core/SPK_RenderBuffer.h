@@ -32,8 +32,8 @@ namespace SPK
 
 	protected :
 
-		inline RenderBuffer() {} // abstract class
-		inline RenderBuffer(const RenderBuffer& renderBuffer) {} // prevents copy of renderbuffers
+		RenderBuffer() {} // abstract class
+		RenderBuffer(const RenderBuffer& renderBuffer) {} // prevents copy of renderbuffers
 	};
 }
 

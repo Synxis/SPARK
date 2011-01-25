@@ -57,33 +57,33 @@ namespace SPK
 
 		virtual inline ~Modifier() {}
 
-		inline void setActive(bool active);
-		inline bool isActive() const;
+		void setActive(bool active);
+		bool isActive() const;
 
 		/**
 		* @brief Sets whether to consider this modifier local to a system or not
 		* A local modifier is transformed when its system is transformed, a non local one will not.
 		* @param local : true to consider the modifier local, false not to
 		*/
-		inline void setLocalToSystem(bool local);
+		void setLocalToSystem(bool local);
 
 		/**
 		* @brief Tells whether this modifier is considered as being local to a system or not
 		* A local modifier is transformed when its system is transformed, a non local one will not.
 		* @return true if it is local, false if not
 		*/
-		inline bool isLocalToSystem() const;
+		bool isLocalToSystem() const;
 
 		/**
 		* @brief Gets the priority
 		* The priority defines the order in which modifiers are applied (the lower, the sooner)
 		* @return the priority
 		*/
-		inline unsigned int getPriority() const;
+		unsigned int getPriority() const;
 
 	protected :
 
-		inline Modifier(unsigned int PRIORITY,bool NEEDS_DATASET,bool CALL_INIT);
+		Modifier(unsigned int PRIORITY,bool NEEDS_DATASET,bool CALL_INIT);
 
 	private :
 
