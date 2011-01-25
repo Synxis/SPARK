@@ -53,15 +53,18 @@ namespace SPK
 		virtual inline void init(T& data,Particle& particle,DataSet* dataSet) const;
 	};
 
-	typedef DefaultInitializer<Color> ColorDefaultInitializer;
-	typedef DefaultInitializer<float> FloatDefaultInitializer;
+	template<> class SPK_PREFIX DefaultInitializer<Color>;
+	template<> class SPK_PREFIX DefaultInitializer<float>;
 
-	SPK_START_DESCRIPTION_TEMPLATE(ColorDefaultInitializer)
+	//typedef DefaultInitializer<Color> ColorDefaultInitializer;
+	//typedef DefaultInitializer<float> FloatDefaultInitializer;
+
+	SPK_START_DESCRIPTION_TEMPLATE(DefaultInitializer<Color>)
 	SPK_PARENT_ATTRIBUTES(ColorInterpolator)
 	SPK_ATTRIBUTE("default value",ATTRIBUTE_TYPE_COLOR)
 	SPK_END_DESCRIPTION
 
-	SPK_START_DESCRIPTION_TEMPLATE(FloatDefaultInitializer)
+	SPK_START_DESCRIPTION_TEMPLATE(DefaultInitializer<float>)
 	SPK_PARENT_ATTRIBUTES(FloatInterpolator)
 	SPK_ATTRIBUTE("default value",ATTRIBUTE_TYPE_FLOAT)
 	SPK_END_DESCRIPTION
@@ -102,39 +105,11 @@ namespace SPK
 		data = defaultValue;
 	}
 
-	template<>
-	inline void DefaultInitializer<float>::innerImport(const IO::Descriptor& descriptor)
-	{
-		Interpolator<float>::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("default value"))
-			setDefaultValue(attrib->getValueFloat());
-	}
-
-	template<>
-	inline void DefaultInitializer<float>::innerExport(IO::Descriptor& descriptor) const
-	{
-		Interpolator<float>::innerExport(descriptor);
-		descriptor.getAttribute("default value")->setValueFloat(getDefaultValue());
-	}
-
-	template<>
-	inline void DefaultInitializer<Color>::innerImport(const IO::Descriptor& descriptor)
-	{
-		Interpolator<Color>::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("default value"))
-			setDefaultValue(attrib->getValueColor());
-	}
-
-	template<>
-	inline void DefaultInitializer<Color>::innerExport(IO::Descriptor& descriptor) const
-	{
-		Interpolator<Color>::innerExport(descriptor);
-		descriptor.getAttribute("default value")->setValueColor(getDefaultValue());
-	}	
+	// Explicit specialization declaration
+	template<> SPK_PREFIX void DefaultInitializer<float>::innerImport(const IO::Descriptor& descriptor);
+	template<> SPK_PREFIX void DefaultInitializer<float>::innerExport(IO::Descriptor& descriptor) const;
+	template<> SPK_PREFIX void DefaultInitializer<Color>::innerImport(const IO::Descriptor& descriptor);
+	template<> SPK_PREFIX void DefaultInitializer<Color>::innerExport(IO::Descriptor& descriptor) const;	
 }
 
 #endif

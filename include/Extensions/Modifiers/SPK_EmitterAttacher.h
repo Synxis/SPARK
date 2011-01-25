@@ -26,7 +26,7 @@ namespace SPK
 {
 	class Emitter;
 
-	class EmitterAttacher : public Modifier
+	class SPK_PREFIX EmitterAttacher : public Modifier
 	{
 	SPK_IMPLEMENT_OBJECT(EmitterAttacher)
 

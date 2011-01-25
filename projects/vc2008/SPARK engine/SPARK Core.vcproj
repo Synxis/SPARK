@@ -489,6 +489,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Interpolators"
+					>
+					<File
+						RelativePath="..\..\..\src\Extensions\Interpolators\SPK_DefaultInitializer.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
