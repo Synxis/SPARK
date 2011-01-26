@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\include"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\..\external\tinyxml-2.6.1\include"
 				PreprocessorDefinitions="_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,9 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="false"
+				AdditionalDependencies="tinyxmld_STL.lib"
 				OutputFile="$(OutDir)\SPARK_debug_s.lib"
+				AdditionalLibraryDirectories="../../../external/tinyxml-2.6.1/lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -111,7 +113,7 @@
 				OmitFramePointers="false"
 				EnableFiberSafeOptimizations="false"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\..\include"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\..\external\tinyxml-2.6.1\include"
 				PreprocessorDefinitions="NDEBUG"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
@@ -132,7 +134,9 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="false"
+				AdditionalDependencies="tinyxml_STL.lib"
 				OutputFile="$(OutDir)\SPARK_s.lib"
+				AdditionalLibraryDirectories="../../../external/tinyxml-2.6.1/lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -175,7 +179,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\include"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\..\external\tinyxml-2.6.1\include"
 				PreprocessorDefinitions="_DEBUG;SPK_CORE_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -196,8 +200,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="true"
+				AdditionalDependencies="tinyxmld_STL.lib"
 				OutputFile="$(OutDir)\SPARK_debug.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../external/tinyxml-2.6.1/lib"
 				GenerateDebugInformation="true"
 				OptimizeReferences="0"
 				TargetMachine="1"
@@ -254,7 +260,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\..\include"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\..\external\tinyxml-2.6.1\include"
 				PreprocessorDefinitions="NDEBUG;SPK_CORE_EXPORT"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -275,8 +281,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="true"
+				AdditionalDependencies="tinyxml_STL.lib"
 				OutputFile="$(OutDir)\SPARK.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../external/tinyxml-2.6.1/lib"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -494,6 +502,22 @@
 					>
 					<File
 						RelativePath="..\..\..\src\Extensions\Interpolators\SPK_DefaultInitializer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Interpolators\SPK_RandomInitializer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\Interpolators\SPK_SimpleInterpolator.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="IOConverters"
+					>
+					<File
+						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_XMLSaver.cpp"
 						>
 					</File>
 				</Filter>
@@ -776,6 +800,14 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\Actions\SPK_SpawnParticlesAction.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="IOConverters"
+					>
+					<File
+						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_XMLSaver.h"
 						>
 					</File>
 				</Filter>

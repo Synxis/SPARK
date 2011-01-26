@@ -64,7 +64,7 @@ namespace SPK
 		/**
 		* @brief Sets the zone
 		*
-		* Note that if the zone is NULL, the default modifier is used.
+		* Note that if the zone is NULL, the default zone is used.
 		*
 		* @param zone : the zone
 		*/
@@ -128,6 +128,9 @@ namespace SPK
 		bool checkZone(const Particle& particle) const;
 
 		virtual void propagateUpdateTransform();
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

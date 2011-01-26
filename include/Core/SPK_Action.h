@@ -98,17 +98,14 @@ namespace SPK
 		SPKObject::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
-		if ((attrib = descriptor.getAttribute("active")) && attrib->hasValue())
+		if (attrib = descriptor.getAttributeWithValue("active"))
 			setActive(attrib->getValueBool());
 	}
 
 	inline void Action::innerExport(IO::Descriptor& descriptor) const
 	{
 		SPKObject::innerExport(descriptor);
-
-		IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttribute("active"))
-			attrib->setValueBool(isActive(),isActive());
+		descriptor.getAttribute("active")->setValueBool(isActive(),isActive());
 	}
 }
 

@@ -27,7 +27,7 @@ namespace SPK
 	template<typename T>
 	class DefaultInitializer : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_OBJECT(DefaultInitializer<T>)
+	SPK_DEFINE_OBJECT_TEMPLATE(DefaultInitializer<T>)
 	SPK_DEFINE_DESCRIPTION_TEMPLATE
 
 	public :
@@ -56,14 +56,17 @@ namespace SPK
 	typedef DefaultInitializer<Color> ColorDefaultInitializer;
 	typedef DefaultInitializer<float> FloatDefaultInitializer;
 
-	SPK_START_DESCRIPTION_TEMPLATE(DefaultInitializer<Color>)
+	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorDefaultInitializer)
+	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatDefaultInitializer)
+
+	SPK_START_DESCRIPTION_TEMPLATE(ColorDefaultInitializer)
 	SPK_PARENT_ATTRIBUTES(ColorInterpolator)
-	SPK_ATTRIBUTE("default value",ATTRIBUTE_TYPE_COLOR)
+	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_COLOR)
 	SPK_END_DESCRIPTION
 
-	SPK_START_DESCRIPTION_TEMPLATE(DefaultInitializer<float>)
+	SPK_START_DESCRIPTION_TEMPLATE(FloatDefaultInitializer)
 	SPK_PARENT_ATTRIBUTES(FloatInterpolator)
-	SPK_ATTRIBUTE("default value",ATTRIBUTE_TYPE_FLOAT)
+	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_FLOAT)
 	SPK_END_DESCRIPTION
 
 	template<typename T>

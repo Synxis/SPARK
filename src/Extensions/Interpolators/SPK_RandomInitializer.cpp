@@ -20,41 +20,55 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #include <SPARK_Core.h>
-#include "Extensions/Interpolators/SPK_DefaultInitializer.h"
+#include "Extensions/Interpolators/SPK_RandomInitializer.h"
 
 namespace SPK
 {
 	template<>
-	void DefaultInitializer<float>::innerImport(const IO::Descriptor& descriptor)
+	void RandomInitializer<float>::innerImport(const IO::Descriptor& descriptor)
 	{
 		Interpolator<float>::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("value"))
-			setDefaultValue(attrib->getValueFloat());
+		if (attrib = descriptor.getAttributeWithValue("values"))
+		{
+			std::vector<float> tmpValues = attrib->getValuesFloat();
+			if (tmpValues.size() == 2)
+				setValues(tmpValues[0],tmpValues[1]);
+			else
+				SPK_LOG_ERROR("RandomInitializer<float>::innerImport(const IO::Descriptor&) - Wrong number of values : "+tmpValues.size());
+		}
 	}
 
 	template<>
-	void DefaultInitializer<float>::innerExport(IO::Descriptor& descriptor) const
+	void RandomInitializer<float>::innerExport(IO::Descriptor& descriptor) const
 	{
 		Interpolator<float>::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValueFloat(getDefaultValue());
+		float tmpValues[2] = {minValue,maxValue};
+		descriptor.getAttribute("values")->setValuesFloat(tmpValues,2);
 	}
 
 	template<>
-	void DefaultInitializer<Color>::innerImport(const IO::Descriptor& descriptor)
+	void RandomInitializer<Color>::innerImport(const IO::Descriptor& descriptor)
 	{
 		Interpolator<Color>::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("value"))
-			setDefaultValue(attrib->getValueColor());
+		if (attrib = descriptor.getAttributeWithValue("values"))
+		{
+			std::vector<Color> tmpValues = attrib->getValuesColor();
+			if (tmpValues.size() == 2)
+				setValues(tmpValues[0],tmpValues[1]);
+			else
+				SPK_LOG_ERROR("RandomInitializer<Color>::innerImport(const IO::Descriptor&) - Wrong number of values : "+tmpValues.size());
+		}
 	}
 
 	template<>
-	void DefaultInitializer<Color>::innerExport(IO::Descriptor& descriptor) const
+	void RandomInitializer<Color>::innerExport(IO::Descriptor& descriptor) const
 	{
 		Interpolator<Color>::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValueColor(getDefaultValue());
+		Color tmpValues[2] = {minValue,maxValue};
+		descriptor.getAttribute("values")->setValuesColor(tmpValues,2);
 	}	
 }

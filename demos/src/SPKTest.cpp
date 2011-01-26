@@ -33,7 +33,6 @@
 #include <SPARK.h>
 #include <SPARK_GL.h>
 
-//#include "TestSaver.h"
 
 float angleX = 0.0f;
 float angleY = 0.0f;
@@ -194,6 +193,7 @@ int main(int argc, char *argv[])
 
 	{
 	SPK::Ref<SPK::System> system = SPK::System::create(true);
+	system->setName("Test System");
 	
 	SPK::Ref<SPK::GL::GLQuadRenderer> renderer = SPK::GL::GLQuadRenderer::create();
 	renderer->setBlendMode(SPK::BLEND_MODE_ADD);
@@ -207,6 +207,7 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::Group> phantomGroup = system->createGroup(40);
 	SPK::Ref<SPK::Group> trailGroup = system->createGroup(1000);
 
+	phantomGroup->setName("Phantom Group");
 	phantomGroup->setLifeTime(5.0f,5.0f);
 	phantomGroup->setRadius(0.06f);
 	phantomGroup->addEmitter(SPK::SphericEmitter::create(SPK::Vector3D(0.0f,1.0f,0.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),true,-1,2.0f,1.2f,2.0f));
@@ -214,6 +215,7 @@ int main(int argc, char *argv[])
 	phantomGroup->addModifier(SPK::Obstacle::create(SPK::Plane::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),0.8f));
 	phantomGroup->addModifier(SPK::EmitterAttacher::create(trailGroup,emitter,true));
 	
+	trailGroup->setName("Trail");
 	trailGroup->setLifeTime(0.5f,1.0f);
 	trailGroup->setRadius(0.06f);
 	trailGroup->setRenderer(renderer);
@@ -284,8 +286,8 @@ int main(int argc, char *argv[])
 			frameFPS.pop_front();
 	};
 
-	//TestSaver saver;
-	//saver.save("test.txt",system);
+	SPK::IO::XMLSaver saver;
+	saver.save("test.xml",system);
 
 	SPK_DUMP_MEMORY
 	//delete system;
@@ -293,7 +295,7 @@ int main(int argc, char *argv[])
 	SPK_DUMP_MEMORY
 
 	SDL_Quit();
-	//std::system("pause");
+	std::system("pause");
 	
 	return 0;
 } 

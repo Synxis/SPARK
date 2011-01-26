@@ -148,9 +148,11 @@ namespace SPK
 			setDirection(attrib->getValueVector());
 		if (attrib = descriptor.getAttributeWithValue("angles"))
 		{
-			std::vector<float> angles = attrib->getValuesFloat();
-			if (angles.size() == 2)
-				setAngles(angles[0],angles[1]);
+			std::vector<float> tmpAngles = attrib->getValuesFloat();
+			if (tmpAngles.size() == 2)
+				setAngles(tmpAngles[0],tmpAngles[1]);
+			else 
+				SPK_LOG_ERROR("SphericEmitter::innerImport(const IO::Descriptor&) - Wrong number of angles : "+tmpAngles.size());
 		}
 	}
 
@@ -159,7 +161,7 @@ namespace SPK
 		Emitter::innerExport(descriptor);
 
 		descriptor.getAttribute("direction")->setValueVector(getDirection());
-		float angles[2] = {angleMin,angleMax};
-		descriptor.getAttribute("angles")->setValuesFloat(angles,2);
+		float tmpAngles[2] = {angleMin,angleMax};
+		descriptor.getAttribute("angles")->setValuesFloat(tmpAngles,2);
 	}
 }

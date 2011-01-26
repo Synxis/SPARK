@@ -112,4 +112,62 @@ namespace SPK
 
 		return zone->findByName(name);
 	}
+
+	void Emitter::innerImport(const IO::Descriptor& descriptor)
+	{
+		SPKObject::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+
+		if (attrib = descriptor.getAttributeWithValue("active"))
+			setActive(attrib->getValueBool());
+
+		if (attrib = descriptor.getAttributeWithValue("tank"))
+		{
+			std::vector<long int> tmpTanks = attrib->getValuesInt32();
+			switch(tmpTanks.size())
+			{
+				case 1 : setTank(tmpTanks[0]); break;
+				case 2 : setTank(tmpTanks[0],tmpTanks[1]); break;
+				default : SPK_LOG_ERROR("Emitter::innerImport(const IO::Descriptor&) - Wrong number of tanks : "+tmpTanks.size());
+			}
+		}
+
+		if (attrib = descriptor.getAttributeWithValue("flow"))
+			setFlow(attrib->getValueFloat());
+
+		if (attrib = descriptor.getAttributeWithValue("force"))
+		{
+			std::vector<float> tmpForces = attrib->getValuesFloat();
+			switch(tmpForces.size())
+			{
+				case 1 : setForce(tmpForces[0],tmpForces[0]); break;
+				case 2 : setForce(tmpForces[0],tmpForces[1]); break;
+				default : SPK_LOG_ERROR("Emitter::innerImport(const IO::Descriptor&) - Wrong number of forces : "+tmpForces.size());
+			}
+		}
+
+		if (attrib = descriptor.getAttributeWithValue("zone"))
+			setZone(attrib->getValueRef().cast<Zone>(),isFullZone());
+		if (attrib = descriptor.getAttributeWithValue("full"))
+			setZone(getZone(),attrib->getValueBool());
+	}
+
+	void Emitter::innerExport(IO::Descriptor& descriptor) const
+	{
+		SPKObject::innerExport(descriptor);
+
+		descriptor.getAttribute("active")->setValueBool(isActive(),isActive());
+
+		long int tmpTanks[2] = {minTank,maxTank};
+		descriptor.getAttribute("tank")->setValuesInt32(tmpTanks,tmpTanks[0] == tmpTanks[1] ? 1 : 2);
+
+		descriptor.getAttribute("flow")->setValueFloat(getFlow());
+
+		float tmpForces[2] = {forceMin,forceMax};
+		descriptor.getAttribute("force")->setValuesFloat(tmpForces,tmpForces[0] == tmpForces[1] ? 1 : 2);
+
+		descriptor.getAttribute("zone")->setValueRef(getZone(),getZone() == SPK_DEFAULT_ZONE);
+		descriptor.getAttribute("full")->setValueBool(isFullZone(),isFullZone());
+	}
 }

@@ -85,6 +85,9 @@ namespace SPK
 		virtual inline void innerUpdateTransform();
 		static inline void normalizeOrRandomize(Vector3D& v);
 
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
+
 	private :
 
 		Vector3D position;
@@ -142,6 +145,22 @@ namespace SPK
 			do v = SPK_RANDOM(Vector3D(-1.0f,-1.0f,-1.0f),Vector3D(1.0f,1.0f,1.0f));
 			while (v.getSqrNorm() > 1.0f);
 		}
+	}
+
+	inline void Zone::innerImport(const IO::Descriptor& descriptor)
+	{
+		SPKObject::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+
+		if (attrib = descriptor.getAttributeWithValue("position"))
+			setPosition(attrib->getValueVector());
+	}
+
+	inline void Zone::innerExport(IO::Descriptor& descriptor) const
+	{
+		SPKObject::innerExport(descriptor);
+		descriptor.getAttribute("position")->setValueVector(getPosition());
 	}
 }
 

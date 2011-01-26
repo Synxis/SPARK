@@ -19,42 +19,57 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#include <SPARK_Core.h>
-#include "Extensions/Interpolators/SPK_DefaultInitializer.h"
+#ifndef H_SPK_IO_XMLSAVER
+#define H_SPK_IO_XMLSAVER
+
+#include <sstream>
+
+class TiXmlElement;
 
 namespace SPK
 {
-	template<>
-	void DefaultInitializer<float>::innerImport(const IO::Descriptor& descriptor)
+namespace IO
+{
+	/** @brief An abstract class to save an entire particle system in a resource */
+	class SPK_PREFIX XMLSaver : public Saver
 	{
-		Interpolator<float>::innerImport(descriptor);
+	public :
 
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("value"))
-			setDefaultValue(attrib->getValueFloat());
+		virtual XMLSaver* clone() const { return new XMLSaver(*this); }
+
+	private :
+
+		std::string author;
+
+		virtual bool innerSave(std::ostream& os,Graph& graph) const;
+		bool writeNode(TiXmlElement& parent,const Node& node,Graph& graph) const;
+
+		template<typename T> static std::string format(const T& value);
+		template<typename T> static std::string formatArray(const std::vector<T>& value);
+	};
+
+	template<typename T>
+	std::string XMLSaver::format(const T& value)
+	{
+		std::ostringstream os;
+		os << std::boolalpha;
+		os << value;
+		return os.str();
 	}
 
-	template<>
-	void DefaultInitializer<float>::innerExport(IO::Descriptor& descriptor) const
+	template<typename T> 
+	std::string XMLSaver::formatArray(const std::vector<T>& values)
 	{
-		Interpolator<float>::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValueFloat(getDefaultValue());
+		std::ostringstream os;
+		os << std::boolalpha;
+		for (size_t i = 0; i < values.size(); ++i)
+		{
+			os << values[i];
+			if (i != values.size() - 1)
+				os << ',';
+		}
+		return os.str();
 	}
+}}
 
-	template<>
-	void DefaultInitializer<Color>::innerImport(const IO::Descriptor& descriptor)
-	{
-		Interpolator<Color>::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("value"))
-			setDefaultValue(attrib->getValueColor());
-	}
-
-	template<>
-	void DefaultInitializer<Color>::innerExport(IO::Descriptor& descriptor) const
-	{
-		Interpolator<Color>::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValueColor(getDefaultValue());
-	}	
-}
+#endif

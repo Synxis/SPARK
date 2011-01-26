@@ -94,7 +94,7 @@ namespace SPK
 	{
 		Emitter::innerExport(descriptor);
 
-		descriptor.getAttribute("normal zone")->setValueRef(getNormalZone());
-		descriptor.getAttribute("inverted normals")->setValueBool(isInverted(),!isInverted());
+		descriptor.getAttribute("normal zone")->setValueRefOptionalOnNull(getNormalZone());
+		descriptor.getAttribute("inverted normals")->setValueBoolOptionalOnFalse(isInverted());
 	}
 }

@@ -38,7 +38,8 @@ namespace IO
 		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::setValueRef(const Ref<SPKObject>&,bool) - The value is not a reference");
 
 		offset = descriptor->buffer.size();
-		const char* refOffset = reinterpret_cast<const char*>(descriptor->refBuffer.size());
+		size_t refBufferSize = descriptor->refBuffer.size();
+		const char* refOffset = reinterpret_cast<const char*>(&refBufferSize);
 		for (size_t i = 0; i < sizeof(size_t); ++i)
 			descriptor->buffer.push_back(refOffset[i]);
 
@@ -54,9 +55,9 @@ namespace IO
 	{ 
 		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::getValueRef() - The desired value is not a reference");
 		SPK_ASSERT(valueSet,"Attribute::getValueRef() - The value is not set and therefore cannot be read");
+		
+		SPK_LOG_DEBUG("Get value for attribute \"" << name << "\" : " << descriptor->refBuffer[*reinterpret_cast<size_t*>(&descriptor->buffer[offset])]);
 
-		SPK_LOG_DEBUG("Get value for attribute \"" << name << "\" : " << descriptor->refBuffer[*reinterpret_cast<size_t*>(descriptor->buffer[offset])]);
-
-		return descriptor->refBuffer[*reinterpret_cast<size_t*>(descriptor->buffer[offset])];
+		return descriptor->refBuffer[*reinterpret_cast<size_t*>(&descriptor->buffer[offset])];
 	}
 }}

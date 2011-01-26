@@ -85,6 +85,9 @@ namespace SPK
 
 		Modifier(unsigned int PRIORITY,bool NEEDS_DATASET,bool CALL_INIT);
 
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
+
 	private :
 
 		const unsigned int PRIORITY;
@@ -128,6 +131,26 @@ namespace SPK
 	inline unsigned int Modifier::getPriority() const
 	{
 		return PRIORITY;
+	}
+
+	inline void Modifier::innerImport(const IO::Descriptor& descriptor)
+	{
+		SPKObject::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+
+		if (attrib = descriptor.getAttributeWithValue("active"))
+			setActive(attrib->getValueBool());
+		if (attrib = descriptor.getAttributeWithValue("local"))
+			setLocalToSystem(attrib->getValueBool());
+	}
+
+	inline void Modifier::innerExport(IO::Descriptor& descriptor) const
+	{
+		SPKObject::innerExport(descriptor);
+
+		descriptor.getAttribute("active")->setValueBool(isActive(),isActive());
+		descriptor.getAttribute("local")->setValueBoolOptionalOnFalse(isLocalToSystem());
 	}
 }
 

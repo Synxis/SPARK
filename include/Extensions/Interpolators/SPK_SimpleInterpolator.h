@@ -27,15 +27,21 @@ namespace SPK
 	template<typename T>
 	class SimpleInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_OBJECT(SimpleInterpolator<T>);
+	SPK_DEFINE_OBJECT_TEMPLATE(SimpleInterpolator)
+	SPK_DEFINE_DESCRIPTION_TEMPLATE
 
 	public :
 
 		static inline Ref<SimpleInterpolator<T>> create(const T& birthValue,const T& deathValue);
 
-		void setValues(const T& min,const T& max);
+		void setValues(const T& birth,const T& death);
 		const T& getBirthValue() const;
 		const T& getDeathValue() const;
+
+	protected :
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 		
@@ -51,6 +57,19 @@ namespace SPK
 
 	typedef SimpleInterpolator<Color> ColorSimpleInterpolator;
 	typedef SimpleInterpolator<float> FloatSimpleInterpolator;
+
+	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorSimpleInterpolator)
+	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatSimpleInterpolator)
+
+	SPK_START_DESCRIPTION_TEMPLATE(ColorSimpleInterpolator)
+	SPK_PARENT_ATTRIBUTES(ColorInterpolator)
+	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_COLORS)
+	SPK_END_DESCRIPTION
+
+	SPK_START_DESCRIPTION_TEMPLATE(FloatSimpleInterpolator)
+	SPK_PARENT_ATTRIBUTES(FloatInterpolator)
+	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_FLOATS)
+	SPK_END_DESCRIPTION
 
 	template<typename T>
 	SimpleInterpolator<T>::SimpleInterpolator(const T& birthValue,const T& deathValue) :
@@ -73,10 +92,10 @@ namespace SPK
 	}
 
 	template<typename T>
-	inline void SimpleInterpolator<T>::setValues(const T& birthValue,const T& deathValue)
+	inline void SimpleInterpolator<T>::setValues(const T& birth,const T& death)
 	{
-		this->birthValue = birthValue;
-		this->deathValue = deathValue;
+		this->birthValue = birth;
+		this->deathValue = death;
 	}
 
 	template<typename T>
@@ -103,6 +122,12 @@ namespace SPK
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 			interpolateParam(data[particleIt->getIndex()],deathValue,birthValue,particleIt->getEnergy());
 	}
+
+	// Explicit specialization declaration
+	template<> SPK_PREFIX void SimpleInterpolator<float>::innerImport(const IO::Descriptor& descriptor);
+	template<> SPK_PREFIX void SimpleInterpolator<float>::innerExport(IO::Descriptor& descriptor) const;
+	template<> SPK_PREFIX void SimpleInterpolator<Color>::innerImport(const IO::Descriptor& descriptor);
+	template<> SPK_PREFIX void SimpleInterpolator<Color>::innerExport(IO::Descriptor& descriptor) const;	
 }
 
 #endif

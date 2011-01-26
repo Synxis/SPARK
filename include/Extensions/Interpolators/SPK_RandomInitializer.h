@@ -27,15 +27,21 @@ namespace SPK
 	template<typename T>
 	class RandomInitializer : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_OBJECT(RandomInitializer<T>);
+	SPK_DEFINE_OBJECT_TEMPLATE(RandomInitializer<T>);
+	SPK_DEFINE_DESCRIPTION_TEMPLATE
 
 	public :
 
-		static inline Ref<RandomInitializer<T>> create(const T& minValue,const T& maxValue);
+		static Ref<RandomInitializer<T>> create(const T& minValue,const T& maxValue);
 
 		void setValues(const T& minValue,const T& maxValue);
 		const T& getMinValue() const;
 		const T& getMaxValue() const;
+
+	protected :
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 		
@@ -45,12 +51,25 @@ namespace SPK
 		RandomInitializer<T>(const T& min,const T& max);
 		RandomInitializer<T>(const RandomInitializer<T>& interpolator);
 
-		virtual inline void interpolate(T* data,Group& group,DataSet* dataSet) const {}
-		virtual inline void init(T& data,Particle& particle,DataSet* dataSet) const;
+		virtual void interpolate(T* data,Group& group,DataSet* dataSet) const {}
+		virtual void init(T& data,Particle& particle,DataSet* dataSet) const;
 	};
 
 	typedef RandomInitializer<Color> ColorRandomInitializer;
 	typedef RandomInitializer<float> FloatRandomInitializer;
+
+	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorRandomInitializer)
+	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatRandomInitializer)
+
+	SPK_START_DESCRIPTION_TEMPLATE(ColorRandomInitializer)
+	SPK_PARENT_ATTRIBUTES(ColorInterpolator)
+	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_COLORS)
+	SPK_END_DESCRIPTION
+
+	SPK_START_DESCRIPTION_TEMPLATE(FloatRandomInitializer)
+	SPK_PARENT_ATTRIBUTES(FloatInterpolator)
+	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_FLOATS)
+	SPK_END_DESCRIPTION
 
 	template<typename T>
 	RandomInitializer<T>::RandomInitializer(const T& minValue,const T& maxValue) :
@@ -96,6 +115,12 @@ namespace SPK
 	{
 		data = SPK_RANDOM(minValue,maxValue);
 	}
+
+	// Explicit specialization declaration
+	template<> SPK_PREFIX void RandomInitializer<float>::innerImport(const IO::Descriptor& descriptor);
+	template<> SPK_PREFIX void RandomInitializer<float>::innerExport(IO::Descriptor& descriptor) const;
+	template<> SPK_PREFIX void RandomInitializer<Color>::innerImport(const IO::Descriptor& descriptor);
+	template<> SPK_PREFIX void RandomInitializer<Color>::innerExport(IO::Descriptor& descriptor) const;	
 }
 
 #endif

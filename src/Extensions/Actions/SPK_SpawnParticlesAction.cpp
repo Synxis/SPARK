@@ -169,7 +169,7 @@ namespace SPK
 		Action::innerExport(descriptor);
 
 		unsigned long int nbs[2] = {minNb,maxNb};
-		descriptor.getAttribute("spawning numbers")->setValuesUint32(nbs,2);
+		descriptor.getAttribute("spawning numbers")->setValuesUint32(nbs,nbs[0] == nbs[1] ? 1 : 2);
 		descriptor.getAttribute("base emitter")->setValueRef(getEmitter());
 		descriptor.getAttribute("target group")->setValueRef(getTargetGroup());
 	}

@@ -47,7 +47,7 @@ namespace SPK
 	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
 	SPK_ATTRIBUTE("tank",ATTRIBUTE_TYPE_INT32S)
 	SPK_ATTRIBUTE("flow",ATTRIBUTE_TYPE_FLOAT)
-	SPK_ATTRIBUTE("force",ATTRIBUTE_TYPE_VECTOR)
+	SPK_ATTRIBUTE("force",ATTRIBUTE_TYPE_FLOATS)
 	SPK_ATTRIBUTE("zone",ATTRIBUTE_TYPE_REF)
 	SPK_ATTRIBUTE("full",ATTRIBUTE_TYPE_BOOL)
 	SPK_END_DESCRIPTION
@@ -221,6 +221,9 @@ namespace SPK
 		Emitter(const Emitter& emitter);
 
 		virtual void propagateUpdateTransform();
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 #include <SPARK_Core.h>
 
@@ -41,9 +42,22 @@ namespace IO
 			return false;			
 		}
 
+		clock_t startTime = std::clock();
+
 		Graph graph;
 		constructGraph(graph,system.get());
-		return innerSave(os,graph);
+		bool result = innerSave(os,graph);
+		
+		if (result)
+		{
+			unsigned int saveTime = static_cast<unsigned int>(((std::clock() - startTime) * 1000) / CLOCKS_PER_SEC);
+			SPK_LOG_INFO("The system has been successfully saved in " << saveTime << "ms");
+		}
+		else
+			SPK_LOG_INFO("An error occurred while saving the System");
+
+		return result;
+
 	}
 
 	bool Saver::save(const std::string& path,const Ref<System>& system) const 
@@ -136,17 +150,20 @@ namespace IO
 			return NULL; 
 	}
 
-	Saver::Node* Saver::Graph::getNextUnprocessedNode() 
+	Saver::Node* Saver::Graph::getNextNode() 
 	{ 
 		if (!posInitialized)
 		{
 			currentPosIt = nodes.begin();
 			posInitialized = true;
 		}
-		if (currentPosIt != nodes.end())
-			return *(currentPosIt++);
-		else
-			return NULL; 
+		while (currentPosIt != nodes.end())
+		{
+			if (!(*currentPosIt)->isProcessed())
+				return *(currentPosIt++);
+			++currentPosIt;
+		}
+		return NULL; 
 	}
 
 	Saver::Node* Saver::Graph::createNode(Descriptor& descriptor)

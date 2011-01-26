@@ -974,7 +974,7 @@ namespace SPK
 		descriptor.getAttribute("renderer")->setValueRefOptionalOnNull(getRenderer());
 
 		float tmpTimes[2] = {minLifeTime,maxLifeTime};
-		descriptor.getAttribute("life time")->setValuesFloat(tmpTimes,2);
+		descriptor.getAttribute("life time")->setValuesFloat(tmpTimes,tmpTimes[0] == tmpTimes[1] ? 1 : 2);
 
 		descriptor.getAttribute("immortal")->setValueBoolOptionalOnFalse(immortal);
 		descriptor.getAttribute("still")->setValueBoolOptionalOnFalse(still);
@@ -982,6 +982,6 @@ namespace SPK
 		descriptor.getAttribute("sorting enabled")->setValueBoolOptionalOnFalse(sortingEnabled);
 	
 		float tmpRadiuses[2] = {graphicalRadius,physicalRadius};
-		descriptor.getAttribute("radius")->setValuesFloat(tmpRadiuses,2);
+		descriptor.getAttribute("radius")->setValuesFloat(tmpRadiuses,tmpRadiuses[0] == tmpRadiuses[1] ? 1 : 2);
 	}
 }

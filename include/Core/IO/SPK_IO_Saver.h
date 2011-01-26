@@ -96,7 +96,7 @@ namespace IO
 			~Graph();
 
 			Node* getNode(const Ref<SPKObject>& ptr);
-			Node* getNextUnprocessedNode();
+			Node* getNextNode();
 
 		private :
 
@@ -104,7 +104,6 @@ namespace IO
 			Graph(const Graph&);
 			
 			std::map<const SPKObject*,Node*> ptr2Nodes;
-			std::map<const SPKObject*,Node*> ref2Nodes;
 			std::list<Node*> nodes;
 
 			mutable std::list<Node*>::iterator currentPosIt;

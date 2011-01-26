@@ -36,6 +36,7 @@ namespace IO
 	Descriptor::Descriptor(const Descriptor& descriptor) :
 		attributes(descriptor.attributes),
 		buffer(descriptor.buffer),
+		refBuffer(descriptor.refBuffer),
 		signature(descriptor.signature),
 		name(descriptor.name)
 	{

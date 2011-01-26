@@ -90,4 +90,24 @@ namespace SPK
 		if (!zone->isShared())
 			zone->updateTransform(this);
 	}
+
+	void ZonedModifier::innerImport(const IO::Descriptor& descriptor)
+	{
+		Modifier::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+
+		if (attrib = descriptor.getAttributeWithValue("zone"))
+			setZone(attrib->getValueRef().cast<Zone>());
+		if (attrib = descriptor.getAttributeWithValue("zone test"))
+			setZoneTest(static_cast<ZoneTest>(attrib->getValueUint32()));
+	}
+
+	void ZonedModifier::innerExport(IO::Descriptor& descriptor) const
+	{
+		Modifier::innerExport(descriptor);
+
+		descriptor.getAttribute("zone")->setValueRef(getZone(),getZone() == SPK_DEFAULT_ZONE);
+		descriptor.getAttribute("zone test")->setValueUint32(getZoneTest(),getZone() == SPK_DEFAULT_ZONE);		
+	}
 }

@@ -47,10 +47,23 @@ public : \
 virtual std::string getClassName() const	{ return ClassName::asName(); }
 
 // For templates
-#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : virtual void fillAttributeList(std::vector<IO::Attribute>& attributes);
+#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : void fillAttributeList(std::vector<IO::Attribute>& attributes) const;
 #define SPK_START_DESCRIPTION_TEMPLATE(ClassName) \
-template<> inline void ClassName::fillAttributeList(std::vector<IO::Attribute>& attributes) \
+template<> inline void ClassName::fillAttributeList(std::vector<IO::Attribute>& attributes) const \
 {
+
+#define SPK_DEFINE_OBJECT_TEMPLATE(ClassName) \
+private : \
+friend class IO::IOManager; \
+template<typename T> friend class Ref; \
+static ClassName* createSerializable()		{ return SPK_NEW(ClassName); } \
+static std::string asName(); \
+virtual Ref<SPKObject> clone() const		{ return SPK_NEW(ClassName,*this); } \
+public : \
+virtual std::string getClassName() const	{ return ClassName::asName(); }
+
+#define SPK_IMPLEMENT_OBJECT_TEMPLATE(ClassName) \
+template<> inline std::string ClassName::asName() { return #ClassName; }
 
 namespace SPK
 {
@@ -62,6 +75,7 @@ namespace SPK
 	template<typename T> friend class Ref;
 
 	SPK_START_DESCRIPTION
+	SPK_ATTRIBUTE("name",ATTRIBUTE_TYPE_STRING)
 	SPK_ATTRIBUTE("transform",ATTRIBUTE_TYPE_FLOATS)
 	SPK_ATTRIBUTE("shared",ATTRIBUTE_TYPE_BOOL)
 	SPK_END_DESCRIPTION
@@ -131,7 +145,7 @@ namespace SPK
 	protected :
 
 		// abstract class
-		SPKObject(bool SHAREABLE = false);
+		SPKObject(bool SHAREABLE = true);
 		SPKObject(const SPKObject& obj);
 
 		/**

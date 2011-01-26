@@ -95,6 +95,9 @@ namespace SPK
 	{
 		const IO::Attribute* attrib = NULL;
 
+		if (attrib = descriptor.getAttributeWithValue("name"))
+			setName(attrib->getValueString());
+
 		if (attrib = descriptor.getAttributeWithValue("transform"))
 		{
 			std::vector<float> t = attrib->getValuesFloat();
@@ -110,7 +113,8 @@ namespace SPK
 	
 	void SPKObject::innerExport(IO::Descriptor& descriptor) const
 	{
+		descriptor.getAttribute("name")->setValueString(name,name.empty());
 		descriptor.getAttribute("transform")->setValuesFloat(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
-		descriptor.getAttribute("shared")->setValueBool(isShared());
+		descriptor.getAttribute("shared")->setValueBoolOptionalOnFalse(isShared());
 	}
 }

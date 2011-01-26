@@ -96,6 +96,6 @@ namespace SPK
 	void ActionSet::innerExport(IO::Descriptor& descriptor) const
 	{
 		Action::innerExport(descriptor);
-		descriptor.getAttribute("actions")->setValuesRef(reinterpret_cast<const Ref<SPKObject>*>(&actions[0]),getNbActions());
+		descriptor.getAttribute("actions")->setValuesRef<Action>(&actions[0],getNbActions());
 	}
 }

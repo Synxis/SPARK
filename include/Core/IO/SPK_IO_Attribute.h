@@ -478,12 +478,13 @@ namespace IO
 	template<typename T>
 	void Attribute::setValuesRef(const Ref<T>* values,size_t nb,bool optional)	
 	{ 
-		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::setValuesRef<T>(const Ref<T>*,size_t,bool) - The array of values is not an array of references");
+		SPK_ASSERT(ATTRIBUTE_TYPE_REFS == type,"Attribute::setValuesRef<T>(const Ref<T>*,size_t,bool) - The array of values is not an array of references");
 		SPK_ASSERT(nb > 0,"Attribute::setValuesRef<T>(const Ref<T>*,size_t,bool) - An array of size 0 cannot be serialized");
 
 		offset = descriptor->buffer.size();
-		const char* nbC = reinterpret_cast<char*>(&nb);
-		const char* refOffset = reinterpret_cast<const char*>(descriptor->refBuffer.size());
+		const char* nbC = reinterpret_cast<const char*>(&nb);
+		size_t refBufferSize = descriptor->refBuffer.size();
+		const char* refOffset = reinterpret_cast<const char*>(&refBufferSize);
 		for (size_t i = 0; i < sizeof(size_t); ++i)			// Writes the number of objects
 			descriptor->buffer.push_back(nbC[i]);
 		for (size_t i = 0; i < sizeof(size_t); ++i)			// Writes the starting offset in the refBuffer
@@ -506,7 +507,7 @@ namespace IO
 	template<typename T>
 	std::vector<Ref<T>> Attribute::getValuesRef() const				
 	{ 
-		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::getValuesRef<T>() - The desired array of values is an array of references");
+		SPK_ASSERT(ATTRIBUTE_TYPE_REFS == type,"Attribute::getValuesRef<T>() - The desired array of values is an array of references");
 		SPK_ASSERT(valueSet,"Attribute::getValuesRef<T>() - The value is not set and therefore cannot be read");
 
 		size_t nb = *reinterpret_cast<size_t*>(&descriptor->buffer[offset]);
