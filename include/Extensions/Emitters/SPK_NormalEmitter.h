@@ -45,7 +45,7 @@ namespace SPK
 	public :
 
 		/** @brief Creates a new normalEmitter */
-		static inline Ref<NormalEmitter> create(
+		static  Ref<NormalEmitter> create(
 			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,

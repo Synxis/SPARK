@@ -59,7 +59,7 @@ namespace IRR
 		* @param scaleY the scale of the height of the quad
 		* @return A new registered IRRQuadRenderer
 		*/
-		static inline Ref<IRRQuadRenderer> create(irr::IrrlichtDevice* d = NULL,float scaleX = 1.0f,float scaleY = 1.0f);
+		static  Ref<IRRQuadRenderer> create(irr::IrrlichtDevice* d = NULL,float scaleX = 1.0f,float scaleY = 1.0f);
 
 		//////////////
 		// Textures //

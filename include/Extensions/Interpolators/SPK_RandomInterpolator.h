@@ -31,7 +31,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<RandomInterpolator<T>> create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
+		static  Ref<RandomInterpolator<T>> create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 
 		void setDefaultValues(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 		

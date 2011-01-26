@@ -66,7 +66,7 @@ namespace GL
 		* @brief Creates a new GLLineTrailRenderer
 		* @return A new GLLineTrailRenderer
 		*/
-		static inline Ref<GLLineTrailRenderer> create(size_t nbSamples = 8,float duration = 1.0f,float width = 1.0f);
+		static  Ref<GLLineTrailRenderer> create(size_t nbSamples = 8,float duration = 1.0f,float width = 1.0f);
 
 		///////////////
 		// nbSamples //

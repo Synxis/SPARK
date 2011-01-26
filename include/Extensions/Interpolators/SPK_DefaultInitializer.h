@@ -32,7 +32,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<DefaultInitializer<T>> create(const T& value);
+		static  Ref<DefaultInitializer<T>> create(const T& value);
 
 		void setDefaultValue(const T& value);
 		const T& getDefaultValue() const;
@@ -49,8 +49,8 @@ namespace SPK
 		DefaultInitializer<T>(const T& value);
 		DefaultInitializer<T>(const DefaultInitializer<T>& interpolator);
 
-		virtual inline void interpolate(T* data,Group& group,DataSet* dataSet) const {}
-		virtual inline void init(T& data,Particle& particle,DataSet* dataSet) const;
+		virtual  void interpolate(T* data,Group& group,DataSet* dataSet) const {}
+		virtual  void init(T& data,Particle& particle,DataSet* dataSet) const;
 	};
 
 	typedef DefaultInitializer<Color> ColorDefaultInitializer;

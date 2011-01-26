@@ -61,11 +61,11 @@ namespace IRR
 		* @param size : the size of the points
 		* @return A new registered IRRPointRenderer
 		*/
-		static inline Ref<IRRPointRenderer> create(irr::IrrlichtDevice* d = NULL,float screenSize = 1.0f);
+		static  Ref<IRRPointRenderer> create(irr::IrrlichtDevice* d = NULL,float screenSize = 1.0f);
 
 		// Reimplemented from PointRenderBehavior
 		virtual bool setType(PointType type);
-		virtual inline void setScreenSize(float screenSize);
+		virtual  void setScreenSize(float screenSize);
 		virtual bool enableWorldSize(bool worldSizeEnabled);
 
 		//////////////

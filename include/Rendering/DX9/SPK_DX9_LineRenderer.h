@@ -57,7 +57,7 @@ namespace DX9
 		* @param width : the width of the lines (in screen space)
 		* @return A new DX9LineRenderer
 		*/
-		static inline DX9LineRenderer* create(float length = 1.0f);
+		static  DX9LineRenderer* create(float length = 1.0f);
 
 	private :
 

@@ -55,9 +55,9 @@ namespace SPK
 			ptr(NULL) {}
 		Ref(const Ref& ref) : 
 			ptr(ref.get()) { increment(); }
-		template<typename U> inline Ref(U* ptr) : 
+		template<typename U> Ref(U* ptr) : 
 			ptr(ptr) { increment(); }
-		template<typename U> inline Ref(const Ref<U>& ref) : 
+		template<typename U> Ref(const Ref<U>& ref) : 
 			ptr(ref.get()) { increment(); }
 		
 		~Ref() { 

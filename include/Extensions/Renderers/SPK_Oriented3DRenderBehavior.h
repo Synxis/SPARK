@@ -116,7 +116,7 @@ namespace SPK
 		////////////////
 
 		/** @brief Destructor of Oriented3DRenderBehavior */
-		virtual inline ~Oriented3DRenderBehavior() {}
+		virtual  ~Oriented3DRenderBehavior() {}
 
 		/////////////
 		// Setters //

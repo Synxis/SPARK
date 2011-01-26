@@ -46,7 +46,7 @@ namespace SPK
 
 	public :
 
-		virtual inline ~DataHandler() {}
+		virtual  ~DataHandler() {}
 
 		/**
 		* @brief Tells if the datahandler needs some additional data or not
@@ -74,7 +74,7 @@ namespace SPK
 		* @param dataSet : the dataset reserved by the passed group for this datahandler
 		* @param group : the group that is passing its dataset
 		*/
-		virtual inline void createData(DataSet& dataSet,const Group& group) const {}
+		virtual  void createData(DataSet& dataSet,const Group& group) const {}
 
 		/**
 		* @brief Checks the integrity of data within the passed dataset
@@ -88,7 +88,7 @@ namespace SPK
 		* @param dataSet : the dataset reserved by the passed group for this datahandler
 		* @param group : the group that is passing its dataset
 		*/
-		virtual inline void checkData(DataSet& dataSet,const Group& group) const {}
+		virtual  void checkData(DataSet& dataSet,const Group& group) const {}
 
 		void prepareData(const Group& group,DataSet* dataSet) const;
 

@@ -57,7 +57,7 @@ namespace GL
 		* @param width : the width of the lines (in screen space)
 		* @return A new GLLineRenderer
 		*/
-		static inline Ref<GLLineRenderer> create(float length = 1.0f,float width = 1.0f);
+		static  Ref<GLLineRenderer> create(float length = 1.0f,float width = 1.0f);
 
 	private :
 

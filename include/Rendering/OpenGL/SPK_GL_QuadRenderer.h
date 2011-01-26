@@ -61,7 +61,7 @@ namespace GL
 		* @param scaleY the scale of the height of the quad
 		* @return A new registered GLQuadRenderer
 		*/
-		static inline Ref<GLQuadRenderer> create(float scaleX = 1.0f,float scaleY = 1.0f);
+		static  Ref<GLQuadRenderer> create(float scaleX = 1.0f,float scaleY = 1.0f);
 
 		/////////////
 		// Setters //

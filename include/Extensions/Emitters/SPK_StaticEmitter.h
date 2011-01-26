@@ -38,7 +38,7 @@ namespace SPK
 		* @brief Creates a new StaticEmitter
 		* @return A new StaticEmitter
 		*/
-		static inline Ref<StaticEmitter> create(
+		static  Ref<StaticEmitter> create(
 			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,
@@ -54,7 +54,7 @@ namespace SPK
 
 		StaticEmitter(const StaticEmitter& emitter);
 
-		virtual inline void generateVelocity(Particle& particle,float speed) const;
+		virtual  void generateVelocity(Particle& particle,float speed) const;
 	};
 
 	inline StaticEmitter::StaticEmitter(const Ref<Zone>& zone,bool full,int tank,float flow) :

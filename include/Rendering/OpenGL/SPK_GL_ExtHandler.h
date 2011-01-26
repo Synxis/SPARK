@@ -101,7 +101,7 @@ namespace GL
 		* @param fovy : the field of view in the y axis in radians
 		* @param screenHeight : the height of the viewport in pixels
 		*/
-		static inline void setPixelPerUnit(float fovy,int screenHeight);
+		static  void setPixelPerUnit(float fovy,int screenHeight);
 
 		////////////////
 		// Texture 3D //
@@ -139,7 +139,7 @@ namespace GL
 		* @param type : check the OpenGL documentation of glTexImage3D
 		* @param pixels : check the OpenGL documentation of glTexImage3D
 		*/
-		static inline void glTexImage3D(GLenum target,
+		static  void glTexImage3D(GLenum target,
 			GLint level,
 			GLenum internalFormat,
 			GLsizei width,
@@ -186,7 +186,7 @@ namespace GL
 		* @param name : the name of the OpenGL function
 		* @return a pointer to the OpenGL function, or NULL if the function is not found
 		*/
-		static inline void* glGetProcAddress(const char* name);
+		static  void* glGetProcAddress(const char* name);
 		
 		///////////////////
 		// Point Sprites //
@@ -196,7 +196,7 @@ namespace GL
 		* @brief Gets the state of the point sprite extension
 		* @return the state of the point sprite extension
 		*/
-		static inline GLExtension getPointSpriteGLExt();
+		static  GLExtension getPointSpriteGLExt();
 
 		/** 
 		* @brief Enables the use of point sprites 
@@ -220,7 +220,7 @@ namespace GL
 		* @brief Gets the state of the point parameters extension
 		* @return the state of the point parameters extension
 		*/
-		static inline GLExtension getPointParameterGLExt();
+		static  GLExtension getPointParameterGLExt();
 
 		/**
 		* @brief Enables the use of point parameters
@@ -244,7 +244,7 @@ namespace GL
 		*
 		* Note that before calling this method, the user must ensure that the point parameters extension is loaded.
 		*/
-		static inline void disablePointParameterGLExt();
+		static  void disablePointParameterGLExt();
 
 		////////////////
 		// Texture 3D //
@@ -254,7 +254,7 @@ namespace GL
 		* @brief Gets the state of the texture 3D extension
 		* @return the state of the texture 3D extension
 		*/
-		static inline GLExtension getTexture3DGLExt();
+		static  GLExtension getTexture3DGLExt();
 
 		/////////////
 		// Shaders //
@@ -264,7 +264,7 @@ namespace GL
 		* @brief Gets the state of the shader support
 		* @return the state of the vertex shader support
 		*/
-		static inline GLExtension getShaderGLExt();
+		static  GLExtension getShaderGLExt();
 
 	private :
 

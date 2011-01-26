@@ -61,7 +61,7 @@ namespace DX9
 		* @param scaleY the scale of the height of the quad
 		* @return A new registered DX9QuadRenderer
 		*/
-		static inline DX9QuadRenderer* create(float scaleX = 1.0f,float scaleY = 1.0f);
+		static  DX9QuadRenderer* create(float scaleX = 1.0f,float scaleY = 1.0f);
 
 		/////////////
 		// Setters //

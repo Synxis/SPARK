@@ -28,7 +28,7 @@ namespace SPK
 	{
 	public :
 
-		virtual inline ~RenderBuffer() {}
+		virtual  ~RenderBuffer() {}
 
 	protected :
 

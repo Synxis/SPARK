@@ -109,7 +109,7 @@ namespace SPK
 		* @brief Gets the singleton instance
 		* @return the instance of the context
 		*/
-		static inline SPKContext& getInstance();
+		static  SPKContext& getInstance();
 
 		/** @brief Releases all dynamic data held by the context */
 		void release();

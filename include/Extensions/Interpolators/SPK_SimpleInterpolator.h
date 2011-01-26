@@ -32,7 +32,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<SimpleInterpolator<T>> create(const T& birthValue,const T& deathValue);
+		static  Ref<SimpleInterpolator<T>> create(const T& birthValue,const T& deathValue);
 
 		void setValues(const T& birth,const T& death);
 		const T& getBirthValue() const;
@@ -52,7 +52,7 @@ namespace SPK
 		SimpleInterpolator<T>(const SimpleInterpolator<T>& interpolator);
 
 		virtual void interpolate(T* data,Group& group,DataSet* dataSet) const;
-		virtual inline void init(T& data,Particle& particle,DataSet* dataSet) const;
+		virtual  void init(T& data,Particle& particle,DataSet* dataSet) const;
 	};
 
 	typedef SimpleInterpolator<Color> ColorSimpleInterpolator;

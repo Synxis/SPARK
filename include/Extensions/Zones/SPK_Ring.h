@@ -61,7 +61,7 @@ namespace SPK
 		* @param maxRadius : the maximum radius of the ring
 		* @return a new ring
 		*/
-		static inline Ref<Ring> create(
+		static  Ref<Ring> create(
 			const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),
 			const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f),
 			float minRadius = 0.0f,
@@ -123,9 +123,9 @@ namespace SPK
 		///////////////
 
 		virtual void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
-		virtual inline bool contains(const Vector3D& v,float radius = 0.0f) const;
+		virtual  bool contains(const Vector3D& v,float radius = 0.0f) const;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f) const;
-		virtual inline Vector3D computeNormal(const Vector3D& v) const;
+		virtual  Vector3D computeNormal(const Vector3D& v) const;
 
 	protected :
 

@@ -35,7 +35,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<Gravity> create(const Vector3D& value = Vector3D());
+		static  Ref<Gravity> create(const Vector3D& value = Vector3D());
 
 		void setValue(const Vector3D& value);
 		const Vector3D& getValue() const;
@@ -43,7 +43,7 @@ namespace SPK
 
 	protected :
 
-		virtual inline void innerUpdateTransform();
+		virtual  void innerUpdateTransform();
 
 		virtual void innerImport(const IO::Descriptor& descriptor);
 		virtual void innerExport(IO::Descriptor& descriptor) const;
@@ -70,7 +70,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<Friction> create(float value = 0.0f);
+		static  Ref<Friction> create(float value = 0.0f);
 
 		float value;
 

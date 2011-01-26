@@ -35,7 +35,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<Sphere> create(const Vector3D& position = Vector3D(),float radius = 1.0f);
+		static  Ref<Sphere> create(const Vector3D& position = Vector3D(),float radius = 1.0f);
 
 		////////////
 		// Radius //

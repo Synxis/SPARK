@@ -38,7 +38,7 @@ namespace SPK
 		* @brief Creates a new RandomEmitter
 		* @return A new RandomEmitter
 		*/
-		static inline Ref<RandomEmitter> create(
+		static  Ref<RandomEmitter> create(
 			const Ref<Zone>& = SPK_NULL_REF,
 			bool full = true,
 			int tank = -1,

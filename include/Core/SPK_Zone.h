@@ -51,7 +51,7 @@ namespace SPK
 		// Destructor //
 		////////////////
 
-		virtual inline ~Zone() {}
+		virtual  ~Zone() {}
 
 		//////////////
 		// Position //
@@ -82,8 +82,8 @@ namespace SPK
 
 		Zone(const Vector3D& position = Vector3D());
 
-		virtual inline void innerUpdateTransform();
-		static inline void normalizeOrRandomize(Vector3D& v);
+		virtual  void innerUpdateTransform();
+		static  void normalizeOrRandomize(Vector3D& v);
 
 		virtual void innerImport(const IO::Descriptor& descriptor);
 		virtual void innerExport(IO::Descriptor& descriptor) const;

@@ -53,7 +53,7 @@ namespace DX9
 		* @param size : the size of the points
 		* @return A new registered DX9PointRenderer
 		*/
-		static inline DX9PointRenderer* create(float screenSize = 1.0f);
+		static  DX9PointRenderer* create(float screenSize = 1.0f);
 
 		virtual bool setType(PointType type);
 
@@ -100,7 +100,7 @@ namespace DX9
 		* @param fovy : the field of view in the y axis in radians
 		* @param screenHeight : the height of the viewport in pixels
 		*/
-		static inline void setPixelPerUnit(float fovy,int screenHeight);
+		static  void setPixelPerUnit(float fovy,int screenHeight);
 
 	protected:
 

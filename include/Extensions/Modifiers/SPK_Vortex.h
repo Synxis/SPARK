@@ -72,7 +72,7 @@ namespace SPK
 		* @param attractionSpeed : the speed of attraction
 		* @return a new vortex
 		*/
-		static inline Ref<Vortex> create(const Vector3D& position = Vector3D(),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float rotationSpeed = 1.0f,float attractionSpeed = 0.0f);
+		static  Ref<Vortex> create(const Vector3D& position = Vector3D(),const Vector3D& direction = Vector3D(0.0f,1.0f,0.0f),float rotationSpeed = 1.0f,float attractionSpeed = 0.0f);
 
 		////////////////////
 		// Eue definition //

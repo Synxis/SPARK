@@ -43,7 +43,7 @@ namespace DX9
 		////////////////
 
 		/** @brief Destructor of DX9Renderer */
-		virtual inline ~DX9Renderer() {}
+		virtual  ~DX9Renderer() {}
 
 		/////////////
 		// Setters //
@@ -53,7 +53,7 @@ namespace DX9
 		* @brief Enables or disables the blending of this DX9Renderer
 		* @param blendingEnabled true to enable the blending, false to disable it
 		*/
-		virtual inline void enableBlending(bool blendingEnabled);
+		virtual  void enableBlending(bool blendingEnabled);
 
 		/**
 		* @brief Sets the blending functions of this DX9Renderer

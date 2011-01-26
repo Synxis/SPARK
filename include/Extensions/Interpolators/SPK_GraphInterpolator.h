@@ -129,7 +129,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<GraphInterpolator<T>> create();
+		static  Ref<GraphInterpolator<T>> create();
 
 		/////////////////////////////
 		// Interpolator parameters //

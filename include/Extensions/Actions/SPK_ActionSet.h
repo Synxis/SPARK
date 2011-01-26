@@ -37,7 +37,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<ActionSet> create();
+		static  Ref<ActionSet> create();
 		
 		virtual ~ActionSet();
 

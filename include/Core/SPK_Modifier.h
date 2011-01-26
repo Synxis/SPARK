@@ -55,7 +55,7 @@ namespace SPK
 
 	public :
 
-		virtual inline ~Modifier() {}
+		virtual  ~Modifier() {}
 
 		void setActive(bool active);
 		bool isActive() const;

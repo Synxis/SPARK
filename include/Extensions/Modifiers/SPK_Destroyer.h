@@ -37,14 +37,14 @@ namespace SPK
 		* @param zoneTest : the zone test
 		* @return A new destroyer
 		*/
-		static inline Ref<Destroyer> create(const Ref<Zone>& zone = SPK_NULL_REF,ZoneTest zoneTest = ZONE_TEST_INSIDE);
+		static  Ref<Destroyer> create(const Ref<Zone>& zone = SPK_NULL_REF,ZoneTest zoneTest = ZONE_TEST_INSIDE);
 
 	private :
 
 		Destroyer(const Ref<Zone>& zone = SPK_NULL_REF,ZoneTest zoneTest = ZONE_TEST_INSIDE);
 		Destroyer(const Destroyer& destroyer);
 
-		virtual inline void modify(Group& group,DataSet* dataSet,float deltaTime) const;
+		virtual  void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
 	inline Ref<Destroyer> Destroyer::create(const Ref<Zone>& zone,ZoneTest zoneTest)

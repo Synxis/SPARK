@@ -44,7 +44,7 @@ namespace SPK
 		* @brief Creates and registers a new Rotator
 		* @return A new registered Rotator
 		*/
-		static inline Ref<Rotator> create();
+		static  Ref<Rotator> create();
 
 	private :
 

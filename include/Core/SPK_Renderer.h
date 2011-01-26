@@ -67,7 +67,7 @@ namespace SPK
 		// Destructor //
 		////////////////
 
-		virtual inline ~Renderer() {}
+		virtual  ~Renderer() {}
 
 		/////////////
 		// Setters //
@@ -77,16 +77,16 @@ namespace SPK
 		* Specifies whether to use shader or not if possible
 		* @param hint : the shader hint
 		*/
-		static inline void useShaderHint(ShaderHint hint);
+		static  void useShaderHint(ShaderHint hint);
 
 		/**
 		* Specifies whether to use vbo to transfer data to GPU if possible
 		* @param hint : the vbo hint
 		*/
-		static inline void useVBOHint(bool hint);
+		static  void useVBOHint(bool hint);
 
-		virtual inline void enableRenderingOption(RenderingOption option,bool enable);
-		virtual inline void setAlphaTestThreshold(float alphaThreshold);
+		virtual  void enableRenderingOption(RenderingOption option,bool enable);
+		virtual  void setAlphaTestThreshold(float alphaThreshold);
 		void setActive(bool active);
 		virtual void setBlendMode(BlendMode blendMode) = 0;
 		
@@ -106,8 +106,8 @@ namespace SPK
 		*/
 		static bool getVBOHint();
 
-		virtual inline bool isRenderingOptionEnabled(RenderingOption option) const;
-		virtual inline float getAlphaTestThreshold() const;
+		virtual  bool isRenderingOptionEnabled(RenderingOption option) const;
+		virtual  float getAlphaTestThreshold() const;
 		bool isActive() const;
 
 	protected :
@@ -129,10 +129,10 @@ namespace SPK
 		int renderingOptionsMask;
 		float alphaThreshold;
 
-		virtual inline RenderBuffer* attachRenderBuffer(const Group& group) const;
+		virtual  RenderBuffer* attachRenderBuffer(const Group& group) const;
 
-		virtual inline void init(const Particle& particle,DataSet* dataSet) const {};
-		virtual inline void update(const Group& group,DataSet* dataSet) const {};
+		virtual  void init(const Particle& particle,DataSet* dataSet) const {};
+		virtual  void update(const Group& group,DataSet* dataSet) const {};
 
 		virtual void render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const = 0;
 		virtual void computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const = 0;

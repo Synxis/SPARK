@@ -59,7 +59,7 @@ namespace GL
 		* @param size : the size of the points
 		* @return A new registered GLPointRenderer
 		*/
-		static inline Ref<GLPointRenderer> create(float screenSize = 1.0f);
+		static  Ref<GLPointRenderer> create(float screenSize = 1.0f);
 
 		virtual bool setType(PointType type);
 

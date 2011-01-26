@@ -64,7 +64,7 @@ namespace SPK
 		* @param zone : the zone where the force applies
 		* @param zoneTest : the zone test that triggers the force application
 		*/
-		static inline Ref<LinearForce> create(
+		static  Ref<LinearForce> create(
 			const Vector3D& value = Vector3D(),
 			const Ref<Zone>& zone = SPK_NULL_REF,
 			ZoneTest zoneTest = ZONE_TEST_INSIDE);
@@ -293,7 +293,7 @@ namespace SPK
 
 	protected :
 
-		virtual inline void innerUpdateTransform();
+		virtual  void innerUpdateTransform();
 
 		virtual void innerImport(const IO::Descriptor& descriptor);
 		virtual void innerExport(IO::Descriptor& descriptor) const;

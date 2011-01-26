@@ -51,7 +51,7 @@ namespace SPK
 		* @param mass : the mass
 		* @param offset : the offset
 		*/
-		static inline Ref<PointMass> create(const Vector3D& pos = Vector3D(),float mass = 1.0f,float offset = 0.01f);
+		static  Ref<PointMass> create(const Vector3D& pos = Vector3D(),float mass = 1.0f,float offset = 0.01f);
 		
 		//////////////
 		// Position //
@@ -120,7 +120,7 @@ namespace SPK
 
 	protected :
 
-		virtual inline void innerUpdateTransform();
+		virtual  void innerUpdateTransform();
 
 	private :
 

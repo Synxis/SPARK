@@ -69,7 +69,7 @@ namespace DX9
 		* @brief Creates a new DX9LineTrailRenderer
 		* @return A new DX9LineTrailRenderer
 		*/
-		static inline DX9LineTrailRenderer* create(size_t nbSamples = 8, float duration = 1.0f);
+		static  DX9LineTrailRenderer* create(size_t nbSamples = 8, float duration = 1.0f);
 
 		virtual RenderBuffer* attachRenderBuffer(const Group& group) const;
 

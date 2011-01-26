@@ -43,7 +43,7 @@ namespace SPK
 		* @brief Creates and registers a new StraightEmitter
 		* @param direction : the direction of the StraighEmitter
 		*/
-		static inline Ref<StraightEmitter> create(
+		static  Ref<StraightEmitter> create(
 			const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),
 			const Ref<Zone>& zone = SPK_NULL_REF,
 			bool full = true,

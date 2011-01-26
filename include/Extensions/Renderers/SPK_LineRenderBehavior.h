@@ -36,7 +36,7 @@ namespace SPK
 		////////////////
 
 		/** @brief Destructor of LineRenderBehavior */
-		virtual inline ~LineRenderBehavior() {}
+		virtual  ~LineRenderBehavior() {}
 
 		/////////////
 		// Setters //
@@ -56,7 +56,7 @@ namespace SPK
 		* @brief Sets the width of this LineRenderBehavior
 		* @param width : the width of this LineRenderBehavior
 		*/
-		virtual inline void setWidth(float width);
+		virtual  void setWidth(float width);
 
 		/////////////
 		// Getters //

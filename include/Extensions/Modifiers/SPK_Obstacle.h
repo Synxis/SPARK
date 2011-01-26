@@ -36,7 +36,7 @@ namespace SPK
 
 	public :
 
-		static inline Ref<Obstacle> create(
+		static  Ref<Obstacle> create(
 			const Ref<Zone>& zone = SPK_NULL_REF,
 			float bouncingRatio = 1.0f,
 			float friction = 1.0f,

@@ -63,7 +63,7 @@ namespace SPK
 	protected :
 
 		Data();
-		virtual inline ~Data() {}
+		virtual  ~Data() {}
 
 	private :
 

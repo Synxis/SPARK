@@ -59,7 +59,7 @@ namespace SPK
 		* @param normal : the normal of the Plane
 		* @return a new plane
 		*/
-		static inline Ref<Plane> create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));	
+		static  Ref<Plane> create(const Vector3D& position = Vector3D(0.0f,0.0f,0.0f),const Vector3D& normal = Vector3D(0.0f,1.0f,0.0f));	
 
 		////////////
 		// Normal //
@@ -90,10 +90,10 @@ namespace SPK
 		// Interface //
 		///////////////
 
-		virtual inline void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
-		virtual inline bool contains(const Vector3D& v,float radius = 0.0f) const;
+		virtual  void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
+		virtual  bool contains(const Vector3D& v,float radius = 0.0f) const;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f) const;
-		virtual inline Vector3D computeNormal(const Vector3D& v) const;
+		virtual  Vector3D computeNormal(const Vector3D& v) const;
 
 	protected :
 

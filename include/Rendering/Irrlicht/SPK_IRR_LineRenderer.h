@@ -53,9 +53,9 @@ namespace IRR
 		* @param width : the width of this IRRLineRenderer in pixels
 		* @return A new registered IRRLineRenderer
 		*/
-		static inline Ref<IRRLineRenderer> create(irr::IrrlichtDevice* d = NULL,float length = 1.0f,float width = 1.0f);
+		static  Ref<IRRLineRenderer> create(irr::IrrlichtDevice* d = NULL,float length = 1.0f,float width = 1.0f);
 
-		virtual inline void setWidth(float width);
+		virtual  void setWidth(float width);
 
 	private :
 

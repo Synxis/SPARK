@@ -40,7 +40,7 @@ namespace SPK
 
 	public :
 
-		virtual inline ~Interpolator() {}
+		virtual  ~Interpolator() {}
 
 	protected :
 

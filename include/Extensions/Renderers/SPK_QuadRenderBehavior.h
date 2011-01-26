@@ -46,7 +46,7 @@ namespace SPK
 		////////////////
 
 		/** @brief Destructor of QuadRenderBehavior */
-		virtual inline ~QuadRenderBehavior() {}
+		virtual  ~QuadRenderBehavior() {}
 
 		/////////////
 		// Setters //
@@ -64,7 +64,7 @@ namespace SPK
 		* @param mode : the texturing mode of this GLQuadRenderer
 		* @return true if the rendering mode can be set, false if it cannot
 		*/
-		virtual inline bool setTexturingMode(TextureMode mode);
+		virtual  bool setTexturingMode(TextureMode mode);
 
 		/**
 		* @brief Sets the cut of the texture

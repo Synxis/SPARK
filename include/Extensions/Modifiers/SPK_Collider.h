@@ -66,7 +66,7 @@ namespace SPK
 		* @brief Creates and registers a new collider
 		* @param elasticity : the elasticity of the collisions
 		*/
-		static inline Ref<Collider> create(float elasticity = 1.0f);
+		static  Ref<Collider> create(float elasticity = 1.0f);
 
 		/////////////////
 		// Elascticity //

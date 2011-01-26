@@ -41,7 +41,7 @@ namespace GL
 		////////////////
 
 		/** @brief Destructor of GLRenderer */
-		virtual inline ~GLRenderer() {}
+		virtual  ~GLRenderer() {}
 
 		/////////////
 		// Setters //
@@ -51,7 +51,7 @@ namespace GL
 		* @brief Enables or disables the blending of this GLRenderer
 		* @param blendingEnabled true to enable the blending, false to disable it
 		*/
-		virtual inline void enableBlending(bool blendingEnabled);
+		virtual  void enableBlending(bool blendingEnabled);
 
 		/**
 		* @brief Sets the blending functions of this GLRenderer

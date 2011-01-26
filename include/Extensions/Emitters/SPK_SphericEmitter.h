@@ -61,7 +61,7 @@ namespace SPK
 		* @param angleA : the first angle in radians of the SphericEmitter
 		* @param angleB : the second angle in radians of the SphericEmitter
 		*/
-		static inline Ref<SphericEmitter> create(
+		static  Ref<SphericEmitter> create(
 			const Vector3D& direction = Vector3D(0.0f,0.0f,-1.0f),
 			float angleA = 0.0f,
 			float angleB = 0.0f,

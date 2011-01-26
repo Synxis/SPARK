@@ -106,7 +106,7 @@ namespace SPK
 
 		~ArrayData<T>();
 
-		virtual inline void swap(size_t index0,size_t index1);
+		virtual  void swap(size_t index0,size_t index1);
 	};
 
 	typedef ArrayData<float>	FloatArrayData;		/**< @brief ArrayData holding floats */
