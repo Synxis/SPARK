@@ -30,8 +30,9 @@ namespace SPK
 #ifdef SPK_TRACE_MEMORY
 	SPKMemoryTracer& SPKMemoryTracer::getInstance() 
 	{
-		static SPKMemoryTracer instance;
-		return instance;
+		static SPKMemoryTracer* instance = NULL;
+		if (instance == NULL) instance = new SPKMemoryTracer; 
+		return *instance;
 	}
 #endif
 
