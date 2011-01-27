@@ -129,14 +129,14 @@ namespace SPK
 		T* ptr;
 	};
 
-	template<typename T,typename U> bool operator==(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() == ref1.get(); }
-	template<typename T,typename U> bool operator==(const Ref<T>& ref,U* ptr) { return ref.get() == ptr; }
-	template<typename T,typename U> bool operator==(T* ptr,const Ref<U>& ref) { return ref.get() == ptr; }
-	template<typename T,typename U> bool operator<(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() < ref1.get(); }
+	template<typename T,typename U> inline bool operator==(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() == ref1.get(); }
+	template<typename T,typename U> inline bool operator==(const Ref<T>& ref,U* ptr) { return ref.get() == ptr; }
+	template<typename T,typename U> inline bool operator==(T* ptr,const Ref<U>& ref) { return ref.get() == ptr; }
+	template<typename T,typename U> inline bool operator<(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() < ref1.get(); }
 
-	template<typename T,typename U> bool operator!=(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() != ref1.get(); }
-	template<typename T,typename U> bool operator!=(const Ref<T>& ref,U* ptr) { return ref.get() != ptr; }
-	template<typename T,typename U> bool operator!=(T* ptr,const Ref<U>& ref) { return ref.get() != ptr; }
+	template<typename T,typename U> inline bool operator!=(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() != ref1.get(); }
+	template<typename T,typename U> inline bool operator!=(const Ref<T>& ref,U* ptr) { return ref.get() != ptr; }
+	template<typename T,typename U> inline bool operator!=(T* ptr,const Ref<U>& ref) { return ref.get() != ptr; }
 }
 
 #endif

@@ -878,6 +878,8 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 
+		if (attrib = descriptor.getAttributeWithValue("capacity"))
+			reallocate(attrib->getValueUint32());
 		if (attrib = descriptor.getAttributeWithValue("color interpolator"))
 			setColorInterpolator(attrib->getValueRef().cast<ColorInterpolator>());
 		if (attrib = descriptor.getAttributeWithValue("scale interpolator"))
@@ -948,6 +950,7 @@ namespace SPK
 	{
 		SPKObject::innerExport(descriptor);
 
+		descriptor.getAttribute("capacity")->setValueUint32(getCapacity());
 		descriptor.getAttribute("color interpolator")->setValueRefOptionalOnNull(getColorInterpolator());
 		descriptor.getAttribute("scale interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_SCALE));
 		descriptor.getAttribute("mass interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_MASS));

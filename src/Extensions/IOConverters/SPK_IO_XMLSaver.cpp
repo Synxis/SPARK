@@ -56,7 +56,7 @@ namespace IO
 
 		TiXmlPrinter printer;
 		printer.SetIndent("\t");
-		doc.Accept( &printer );
+		doc.Accept(&printer);
 		os << printer.Str();
 		return true;
 	}
