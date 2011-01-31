@@ -85,7 +85,11 @@ namespace IO
 	void Saver::constructGraph(Saver::Graph& graph,const System* system)
 	{
 		constructNode(graph,system,0);
-		graph.nodes.sort(compareNodePriority);			 
+		graph.nodes.sort(compareNodePriority);
+		// Reassigns reference ID so that they appear in order
+		size_t refID = 0;
+		for (std::list<Node*>::iterator it = graph.nodes.begin(); it != graph.nodes.end(); ++it)
+			(*it)->refID = (++refID);
 	}
 
 	void Saver::constructNode(Saver::Graph& graph,const SPKObject* object,size_t level)
@@ -105,7 +109,7 @@ namespace IO
 		{
 			Node* node = graph.createNode(object->exportAttributes());
 			node->priority = level;
-			node->refID = graph.nodes.size() + 1;
+			node->refID = graph.nodes.size();
 			node->nbReferences = level > 0 ? 1 : 0;
 			graph.ptr2Nodes.insert(std::make_pair(object,node));
 

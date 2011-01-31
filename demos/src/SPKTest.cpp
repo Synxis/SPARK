@@ -290,7 +290,6 @@ int main(int argc, char *argv[])
 	saver.save("test.xml",system);
 
 	SPK_DUMP_MEMORY
-	//delete system;
 	}
 	SPK_DUMP_MEMORY
 

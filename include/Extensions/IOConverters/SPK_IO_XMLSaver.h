@@ -30,19 +30,59 @@ namespace SPK
 {
 namespace IO
 {
-	/** @brief An abstract class to save an entire particle system in a resource */
+	enum XMLValueLayout
+	{
+		XML_VALUE_LAYOUT_AS_ATTRIBUTE,
+		XML_VALUE_LAYOUT_AS_TEXT,
+	};
+
+	enum XMLReferenceRule
+	{
+		XML_REFERENCE_RULE_WHEN_NEEDED,
+		XML_REFERENCE_RULE_FORCED,
+		XML_REFERENCE_RULE_DESCRIBED_AT_FIRST,
+	};
+
+
+	struct XMLLayout
+	{
+		std::string indent;
+		std::string lineBreak;
+		XMLValueLayout valueLayout;
+		XMLReferenceRule referenceRule;
+
+		XMLLayout() :
+			indent("\t"),
+			lineBreak("\n"),
+			valueLayout(XML_VALUE_LAYOUT_AS_ATTRIBUTE),
+			referenceRule(XML_REFERENCE_RULE_WHEN_NEEDED)
+		{}
+	};
+
+	/** @brief A class to serialize a System in an XML format */
 	class SPK_PREFIX XMLSaver : public Saver
 	{
 	public :
 
-		virtual XMLSaver* clone() const { return new XMLSaver(*this); }
+		virtual XMLSaver* clone() const				{ return new XMLSaver(*this); }
+
+		void setAuthor(const std::string& author)	{ this->author = author; }
+
+		void setLayout(const XMLLayout& layout)		{ this->layout = layout; }
+		XMLLayout& getLayout()						{ return layout; }
+		const XMLLayout& getLayout() const			{ return layout; }
 
 	private :
 
+		XMLLayout layout;
 		std::string author;
 
 		virtual bool innerSave(std::ostream& os,Graph& graph) const;
+		
 		bool writeNode(TiXmlElement& parent,const Node& node,Graph& graph) const;
+		bool writeObject(TiXmlElement& parent,const Ref<SPKObject>& object,Graph& graph,bool refInTag) const;
+		void writeValue(TiXmlElement& attrib,const std::string& value) const;
+		void writeRef(TiXmlElement& attrib,const Node& node) const;
 
 		template<typename T> static std::string format(const T& value);
 		template<typename T> static std::string formatArray(const std::vector<T>& value);
