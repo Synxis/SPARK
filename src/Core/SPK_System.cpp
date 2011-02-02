@@ -261,7 +261,8 @@ namespace SPK
 	void System::innerExport(IO::Descriptor& descriptor) const
 	{
 		SPKObject::innerExport(descriptor);
-		descriptor.getAttribute("groups")->setValuesRef(&groups[0],getNbGroups());
+		if (getNbGroups() > 0)
+			descriptor.getAttribute("groups")->setValuesRef(&groups[0],getNbGroups());
 	}
 
 	void System::setGroupSystem(const Ref<Group>& group,const Ref<System>& system,bool remove)

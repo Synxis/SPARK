@@ -921,7 +921,7 @@ namespace SPK
 			{
 				case 1 : setLifeTime(tmpTimes[0],tmpTimes[0]); break;
 				case 2 : setLifeTime(tmpTimes[0],tmpTimes[1]); break;
-				default : SPK_LOG_ERROR("Group::innerImport(const IO::Descriptor&) - Wrong number of life times : "+tmpTimes.size());
+				default : SPK_LOG_ERROR("Group::innerImport(const IO::Descriptor&) - Wrong number of life times : " << tmpTimes.size());
 			}
 		}
 
@@ -941,7 +941,7 @@ namespace SPK
 			{
 				case 1 : setRadius(tmpRadiuses[0]); break;
 				case 2 : setGraphicalRadius(tmpRadiuses[0]); setPhysicalRadius(tmpRadiuses[1]); break;
-				default : SPK_LOG_ERROR("Group::innerImport(const IO::Descriptor&) - Wrong number of radiuses : "+tmpRadiuses.size());
+				default : SPK_LOG_ERROR("Group::innerImport(const IO::Descriptor&) - Wrong number of radiuses : " << tmpRadiuses.size());
 			}
 		}
 	}

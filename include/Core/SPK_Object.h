@@ -40,8 +40,8 @@ virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) const \
 private : \
 friend class IO::IOManager; \
 template<typename T> friend class Ref; \
-static ClassName* createSerializable()		{ return SPK_NEW(ClassName); } \
 static std::string asName()					{ return #ClassName; } \
+static Ref<SPKObject> createSerializable()	{ return SPK_NEW(ClassName); } \
 virtual Ref<SPKObject> clone() const		{ return SPK_NEW(ClassName,*this); } \
 public : \
 virtual std::string getClassName() const	{ return ClassName::asName(); }
@@ -56,8 +56,8 @@ template<> inline void ClassName::fillAttributeList(std::vector<IO::Attribute>& 
 private : \
 friend class IO::IOManager; \
 template<typename T> friend class Ref; \
-static ClassName* createSerializable()		{ return SPK_NEW(ClassName); } \
 static std::string asName(); \
+static Ref<SPKObject> createSerializable()		{ return SPK_NEW(ClassName); } \
 virtual Ref<SPKObject> clone() const		{ return SPK_NEW(ClassName,*this); } \
 public : \
 virtual std::string getClassName() const	{ return ClassName::asName(); }
@@ -137,6 +137,8 @@ namespace SPK
 		// Serialization //
 		///////////////////
 
+		IO::Descriptor createDescriptor() const;
+
 		void importAttributes(const IO::Descriptor& descriptor);
 		IO::Descriptor exportAttributes() const;
 
@@ -186,8 +188,6 @@ namespace SPK
 		bool shared;
 		
 		virtual Ref<SPKObject> clone() const = 0;
-
-		IO::Descriptor createDescriptor() const;
 	};
 
 	inline unsigned int SPKObject::getNbReferences() const

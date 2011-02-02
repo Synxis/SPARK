@@ -32,7 +32,7 @@ namespace SPK
 
 	public :
 
-		static Ref<RandomInitializer<T>> create(const T& minValue,const T& maxValue);
+		static Ref<RandomInitializer<T>> create(const T& minValue = T(),const T& maxValue = T());
 
 		void setValues(const T& minValue,const T& maxValue);
 		const T& getMinValue() const;
@@ -48,7 +48,7 @@ namespace SPK
 		T minValue;
 		T maxValue;
 
-		RandomInitializer<T>(const T& min,const T& max);
+		RandomInitializer<T>(const T& min = T(),const T& max = T());
 		RandomInitializer<T>(const RandomInitializer<T>& interpolator);
 
 		virtual void interpolate(T* data,Group& group,DataSet* dataSet) const {}

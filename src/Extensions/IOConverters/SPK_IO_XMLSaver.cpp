@@ -142,7 +142,8 @@ namespace IO
 					case ATTRIBUTE_TYPE_FLOAT :		writeValue(*child,format(attrib.getValueFloat())); break;
 					case ATTRIBUTE_TYPE_VECTOR :	writeValue(*child,format(attrib.getValueVector())); break;
 					case ATTRIBUTE_TYPE_COLOR :		writeValue(*child,format(attrib.getValueColor())); break;
-					case ATTRIBUTE_TYPE_STRING :	writeValue(*child,format(attrib.getValueString())); break;								
+					case ATTRIBUTE_TYPE_STRING :	writeValue(*child,format(attrib.getValueString())); break;	
+
 					case ATTRIBUTE_TYPE_CHARS :		writeValue(*child,formatArray(attrib.getValuesChar())); break;
 					case ATTRIBUTE_TYPE_BOOLS :		writeValue(*child,formatArray(attrib.getValuesBool())); break;
 					case ATTRIBUTE_TYPE_INT32S :	writeValue(*child,formatArray(attrib.getValuesInt32())); break;

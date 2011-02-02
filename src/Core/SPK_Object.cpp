@@ -68,7 +68,7 @@ namespace SPK
 		const std::string& descName = descriptor.getName(); 
 		if (descName != getClassName())
 		{
-			SPK_LOG_ERROR("SPKObject::importAttributes(const Descriptor&) - The descriptor does not match the object : \""+descName+"\" for \""+getClassName()+"\"");
+			SPK_LOG_ERROR("SPKObject::importAttributes(const Descriptor&) - The descriptor does not match the object : \"" << descName << "\" for \"" << getClassName() << "\"");
 		}
 		else
 			innerImport(descriptor);

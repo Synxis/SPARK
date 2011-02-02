@@ -59,7 +59,7 @@ namespace IO
 
 	private :
 
-		typedef SPKObject* (*createSerializableFn)();
+		typedef Ref<SPKObject> (*createSerializableFn)();
 		
 		std::map<std::string,createSerializableFn> registeredObjects;
 		std::map<std::string,Loader*> registeredLoaders;

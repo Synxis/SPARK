@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 #include <SPARK_Core.h>
 
@@ -30,16 +31,26 @@ namespace IO
 {
 	Ref<System> Loader::load(std::istream& is) const
 	{
+		clock_t startTime = std::clock();
+
 		Graph graph;
 		if (innerLoad(is,graph))
-			return graph.finalize();
+		{
+			const Ref<System>& system = graph.finalize();
+			unsigned int loadTime = static_cast<unsigned int>(((std::clock() - startTime) * 1000) / CLOCKS_PER_SEC);
+			SPK_LOG_INFO("The system has been successfully loaded in " << loadTime << "ms");
+			return system;
+		}
 		else
+		{
+			SPK_LOG_INFO("An error occurred while loading the System");
 			return SPK_NULL_REF;
+		}
 	}
 
 	Ref<System> Loader::load(const std::string& path) const
 	{
-		std::ifstream is(path.c_str(),std::ios::out | std::ios::binary | std::ios::trunc);
+		std::ifstream is(path.c_str(),std::ios::out | std::ios::binary);
 		if (is)
 		{
 			Ref<System> system = load(is);
@@ -55,8 +66,10 @@ namespace IO
 
 	Loader::Node::Node(const Ref<SPKObject>& object) :
 		object(object),
-		descriptor(object->exportAttributes())
+		descriptor(object->createDescriptor())
 	{}
+
+	Loader::Graph::Graph() : nodesValidated(false) {}
 
 	Loader::Graph::~Graph() 
 	{ 
@@ -123,7 +136,7 @@ namespace IO
 
 	Loader::Node* Loader::Graph::getNode(size_t key,bool withCheck) const
 	{
-		if (!withCheck)
+		if (withCheck)
 			SPK_ASSERT(nodesValidated,"Loader::Graph::getNode(size_t,boolean) - Graph has not been validated, nodes cannot be gotten");
 
 		std::map<size_t,Node*>::const_iterator it = key2Ptr.find(key);

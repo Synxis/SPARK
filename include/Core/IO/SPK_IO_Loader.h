@@ -91,10 +91,11 @@ namespace IO
 			bool addNode(size_t key,const std::string& name);
 			bool validateNodes();
 
-			const Node* getNode(size_t key) const { return getNode(key,true); }
+			Node* getNode(size_t key) const { return getNode(key,true); }
 
 		private :
 
+			Graph();
 			~Graph();
 
 			std::map<size_t,Node*> key2Ptr;

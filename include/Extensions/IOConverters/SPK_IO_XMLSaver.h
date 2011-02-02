@@ -106,7 +106,7 @@ namespace IO
 		{
 			os << values[i];
 			if (i != values.size() - 1)
-				os << ',';
+				os << ';';
 		}
 		return os.str();
 	}

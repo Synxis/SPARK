@@ -48,7 +48,7 @@ namespace SPK
 		T birthValue;
 		T deathValue;
 
-		SimpleInterpolator<T>(const T& birthValue,const T& deathValue);
+		SimpleInterpolator<T>(const T& birthValue = T(),const T& deathValue = T());
 		SimpleInterpolator<T>(const SimpleInterpolator<T>& interpolator);
 
 		virtual void interpolate(T* data,Group& group,DataSet* dataSet) const;

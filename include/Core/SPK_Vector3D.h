@@ -327,7 +327,7 @@ namespace SPK
 	* @param v1 : the second vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator+(const Vector3D& v0,const Vector3D& v1);
+	Vector3D operator+(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Substracts two Vector3D
@@ -341,7 +341,7 @@ namespace SPK
 	* @param v1 : the second vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator-(const Vector3D& v0,const Vector3D& v1);
+	Vector3D operator-(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Multiplies two Vector3D
@@ -355,7 +355,7 @@ namespace SPK
 	* @param v1 : the second vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator*(const Vector3D& v0,const Vector3D& v1);
+	Vector3D operator*(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Divides a Vector3D by another
@@ -369,7 +369,7 @@ namespace SPK
 	* @param v1 : the second vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator/(const Vector3D& v0,const Vector3D& v1);
+	Vector3D operator/(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Adds a Vector3D and a float
@@ -383,7 +383,7 @@ namespace SPK
 	* @param f : the floating number
 	* @return the result vector3D
 	*/
-	inline Vector3D operator+(const Vector3D& v,float f);
+	Vector3D operator+(const Vector3D& v,float f);
 
 	/**
 	* @brief Adds a float and a Vector3D
@@ -397,7 +397,7 @@ namespace SPK
 	* @param v : the vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator+(float f,const Vector3D& v);
+	Vector3D operator+(float f,const Vector3D& v);
 
 	/**
 	* @brief Substracts a float to a Vector3D
@@ -411,7 +411,7 @@ namespace SPK
 	* @param f : the floating number
 	* @return the result vector3D
 	*/
-	inline Vector3D operator-(const Vector3D& v,float f);
+	Vector3D operator-(const Vector3D& v,float f);
 
 	/**
 	* @brief Substracts a Vector3D to a float
@@ -425,7 +425,7 @@ namespace SPK
 	* @param v : the vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator-(float f,const Vector3D& v);
+	Vector3D operator-(float f,const Vector3D& v);
 
 	/**
 	* @brief Multiplies a Vector3D by a float
@@ -439,7 +439,7 @@ namespace SPK
 	* @param f : the floating number
 	* @return the result vector3D
 	*/
-	inline Vector3D operator*(const Vector3D& v,float f);
+	Vector3D operator*(const Vector3D& v,float f);
 
 	/**
 	* @brief Multiplies a float by a Vector3D
@@ -453,7 +453,7 @@ namespace SPK
 	* @param v : the vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator*(float f,const Vector3D& v);
+	Vector3D operator*(float f,const Vector3D& v);
 
 	/**
 	* @brief Divides a Vector3D by a float
@@ -467,7 +467,7 @@ namespace SPK
 	* @param f : the floating number
 	* @return the result vector3D
 	*/
-	inline Vector3D operator/(const Vector3D& v,float f);
+	Vector3D operator/(const Vector3D& v,float f);
 
 	/**
 	* @brief Divides a float by a Vector3D
@@ -481,7 +481,7 @@ namespace SPK
 	* @param v : the vector3D
 	* @return the result vector3D
 	*/
-	inline Vector3D operator/(float f,const Vector3D& v);
+	Vector3D operator/(float f,const Vector3D& v);
 
 	/**
 	* @brief Tests whether 2 Vector3D are equal
@@ -489,7 +489,7 @@ namespace SPK
 	* @param v1 : the second Vector3D to compare
 	* @return true if the Vector3D are equal, false if not
 	*/
-	inline bool operator==(const Vector3D& v0,const Vector3D& v1);
+	bool operator==(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Tests whether 2 Vector3D are different
@@ -497,7 +497,7 @@ namespace SPK
 	* @param v1 : the second Vector3D to compare
 	* @return true if the Vector3D are different, false if not
 	*/
-	inline bool operator!=(const Vector3D& v0,const Vector3D& v1);
+	bool operator!=(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Writes a Vector3D on an output stream
@@ -508,7 +508,18 @@ namespace SPK
 	* @param v : the Vector3D to write to the output stream
 	* @return the output stream
 	*/
-	inline std::ostream& operator<<(std::ostream& s,const Vector3D& v);
+	std::ostream& operator<<(std::ostream& s,const Vector3D& v);
+
+	/**
+	* @brief Reads a Vector3D from an input stream
+	*
+	* See the operator<< for the expected format
+	*
+	* @param s : the input stream where to read from
+	* @param v : the Vector3D to be read
+	* @return the input stream
+	*/
+	std::istream& operator>>(std::istream& s,Vector3D& v);
 
 	////////////////////////
 	// External functions //
@@ -523,7 +534,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @return the square distance between the two Vector3D
 	*/
-	inline float getSqrDist(const Vector3D& v0,const Vector3D& v1);
+	float getSqrDist(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Returns the distance between two Vector3D
@@ -531,7 +542,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @return the distance between the two Vector3D
 	*/
-	inline float getDist(const Vector3D& v0,const Vector3D& v1);
+	float getDist(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Returns the dot product between two Vector3D
@@ -539,7 +550,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @return the dot product (v0 . v1)
 	*/
-	inline float dotProduct(const Vector3D& v0,const Vector3D& v1);
+	float dotProduct(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Returns the cross product between two Vector3D
@@ -547,7 +558,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @return the cross product (v0 x v1)
 	*/
-	inline Vector3D crossProduct(const Vector3D& v0,const Vector3D& v1);
+	Vector3D crossProduct(const Vector3D& v0,const Vector3D& v1);
 
 	/**
 	* @brief Computes the cross product between two Vector3D and stores the result in the Vector3D result
@@ -555,7 +566,7 @@ namespace SPK
 	* @param v1 : the second Vector3D
 	* @param result : the Vector3D where to store the cross product (v0 x v1)
 	*/
-	inline void crossProduct(const Vector3D& v0,const Vector3D& v1,Vector3D& result);
+	void crossProduct(const Vector3D& v0,const Vector3D& v1,Vector3D& result);
 
 	/////////////////
 	// Definitions //
@@ -821,6 +832,27 @@ namespace SPK
 	inline std::ostream& operator<<(std::ostream& s,const Vector3D& v)
 	{
 		return s << '(' << v.x << ',' << v.y << ',' << v.z << ')';
+	}
+
+	inline std::istream& operator>>(std::istream& s,Vector3D& v)
+	{
+		if (!s.good()) return s;
+		
+		Vector3D buffer; // to keep consistent state of the returned Vector3D
+		char c;
+
+		s >> c; if (c != '(')	{ s.setstate(s.rdstate() | std::ios::failbit); return s; }
+		s >> buffer.x;			{ if (!s.good()) return s; }
+		s >> c; if (c != ',')	{ s.setstate(s.rdstate() | std::ios::failbit); return s; }
+		s >> buffer.y;			{ if (!s.good()) return s; }
+		s >> c; if (c != ',')	{ s.setstate(s.rdstate() | std::ios::failbit); return s; }
+		s >> buffer.z;			{ if (!s.good()) return s; }
+		s >> c; if (c != ')')	{ s.setstate(s.rdstate() | std::ios::failbit); return s; }
+
+		s.peek(); // To set the eof accordingly
+
+		v = buffer; // Now we're sure the vector is well set
+		return s;
 	}
 
 	inline float dotProduct(const Vector3D& v0,const Vector3D& v1)

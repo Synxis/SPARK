@@ -129,7 +129,7 @@ namespace SPK
 			{
 				case 1 : setTank(tmpTanks[0]); break;
 				case 2 : setTank(tmpTanks[0],tmpTanks[1]); break;
-				default : SPK_LOG_ERROR("Emitter::innerImport(const IO::Descriptor&) - Wrong number of tanks : "+tmpTanks.size());
+				default : SPK_LOG_ERROR("Emitter::innerImport(const IO::Descriptor&) - Wrong number of tanks : " << tmpTanks.size());
 			}
 		}
 
@@ -143,7 +143,7 @@ namespace SPK
 			{
 				case 1 : setForce(tmpForces[0],tmpForces[0]); break;
 				case 2 : setForce(tmpForces[0],tmpForces[1]); break;
-				default : SPK_LOG_ERROR("Emitter::innerImport(const IO::Descriptor&) - Wrong number of forces : "+tmpForces.size());
+				default : SPK_LOG_ERROR("Emitter::innerImport(const IO::Descriptor&) - Wrong number of forces : " << tmpForces.size());
 			}
 		}
 

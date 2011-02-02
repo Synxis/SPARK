@@ -152,7 +152,7 @@ namespace SPK
 			if (tmpAngles.size() == 2)
 				setAngles(tmpAngles[0],tmpAngles[1]);
 			else 
-				SPK_LOG_ERROR("SphericEmitter::innerImport(const IO::Descriptor&) - Wrong number of angles : "+tmpAngles.size());
+				SPK_LOG_ERROR("SphericEmitter::innerImport(const IO::Descriptor&) - Wrong number of angles : " << tmpAngles.size());
 		}
 	}
 

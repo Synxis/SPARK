@@ -208,7 +208,7 @@ namespace SPK
 	* @param c1 : the second color
 	* @return the resulting color
 	*/
-	inline Color operator+(const Color& c0,const Color& c1);
+	Color operator+(const Color& c0,const Color& c1);
 
 	/**
 	* @brief Subtracts 2 colors
@@ -217,7 +217,7 @@ namespace SPK
 	* @param c1 : the second color
 	* @return the resulting color
 	*/
-	inline Color operator-(const Color& c0,const Color& c1);
+	Color operator-(const Color& c0,const Color& c1);
 
 	/**
 	* @brief Checks if 2 colors are equal
@@ -226,7 +226,7 @@ namespace SPK
 	* @param c1 : the second color
 	* return true if the 2 colors are equal, false if not
 	*/
-	inline bool operator==(const Color& c0,const Color& c1);
+	bool operator==(const Color& c0,const Color& c1);
 
 	/**
 	* @brief Checks if 2 colors are not equal
@@ -234,7 +234,7 @@ namespace SPK
 	* @param c1 : the second color
 	* return true if the 2 colors are not equal, false if they are
 	*/
-	inline bool operator!=(const Color& c0,const Color& c1);
+	bool operator!=(const Color& c0,const Color& c1);
 
 	/**
 	* @brief Writes a color on an output stream
@@ -243,7 +243,16 @@ namespace SPK
 	* @param c : the color to write to the output stream
 	* @return the output stream
 	*/
-	inline std::ostream& operator<<(std::ostream& s,const Color& c);
+	std::ostream& operator<<(std::ostream& s,const Color& c);
+
+	/**
+	* @brief Reads a color from an intput stream
+	* See the operator<< for the expected format
+	* @param s : the input stream where to read from
+	* @param c : the color to be read
+	* @return the output stream
+	*/
+	std::istream& operator>>(std::istream& s,Color& c);
 
 	/////////////////
 	// Definitions //
@@ -391,6 +400,18 @@ namespace SPK
 		s.setf(std::ios_base::hex |std::ios_base::showbase);
 		s.unsetf(std::ios_base::dec | std::ios_base::oct);
 		s << c.getRGBA();
+		s.flags(oldFormat);
+		return s;
+	}
+
+	inline std::istream& operator>>(std::istream& s,Color& c)
+	{
+		std::ios_base::fmtflags oldFormat = s.flags();
+		s.setf(std::ios_base::hex | std::ios_base::showbase);
+		s.unsetf(std::ios_base::dec | std::ios_base::oct);
+		unsigned long int rgba = 0;
+		s >> rgba;
+		c.setRGBA(rgba);
 		s.flags(oldFormat);
 		return s;
 	}

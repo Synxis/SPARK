@@ -517,6 +517,10 @@
 					Name="IOConverters"
 					>
 					<File
+						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_XMLLoader.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_XMLSaver.cpp"
 						>
 					</File>
@@ -806,6 +810,10 @@
 				<Filter
 					Name="IOConverters"
 					>
+					<File
+						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_XMLLoader.h"
+						>
+					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_XMLSaver.h"
 						>

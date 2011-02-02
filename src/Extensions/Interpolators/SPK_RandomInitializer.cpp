@@ -36,7 +36,7 @@ namespace SPK
 			if (tmpValues.size() == 2)
 				setValues(tmpValues[0],tmpValues[1]);
 			else
-				SPK_LOG_ERROR("RandomInitializer<float>::innerImport(const IO::Descriptor&) - Wrong number of values : "+tmpValues.size());
+				SPK_LOG_ERROR("RandomInitializer<float>::innerImport(const IO::Descriptor&) - Wrong number of values : " << tmpValues.size());
 		}
 	}
 
@@ -60,7 +60,7 @@ namespace SPK
 			if (tmpValues.size() == 2)
 				setValues(tmpValues[0],tmpValues[1]);
 			else
-				SPK_LOG_ERROR("RandomInitializer<Color>::innerImport(const IO::Descriptor&) - Wrong number of values : "+tmpValues.size());
+				SPK_LOG_ERROR("RandomInitializer<Color>::innerImport(const IO::Descriptor&) - Wrong number of values : " << tmpValues.size());
 		}
 	}
 
