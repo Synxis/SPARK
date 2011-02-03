@@ -26,8 +26,6 @@ namespace SPK
 {
 namespace GL
 {
-	void (GLQuadRenderer::*GLQuadRenderer::renderParticle)(const Particle&,GLBuffer& renderBuffer) const = NULL;
-
 	GLQuadRenderer::GLQuadRenderer(float scaleX,float scaleY) :
 		GLRenderer(false),
 		QuadRenderBehavior(scaleX,scaleY),

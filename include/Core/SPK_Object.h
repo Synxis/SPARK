@@ -180,7 +180,7 @@ namespace SPK
 		std::string name;
 		Transform transform;
 
-		static std::map<SPKObject*,SPKObject*> copyBuffer;
+		static std::map<SPKObject*,SPKObject*> copyBuffer; // TODO Not thread-safe !
 
 		unsigned int nbReferences;
 		

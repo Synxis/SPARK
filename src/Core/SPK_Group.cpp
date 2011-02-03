@@ -238,7 +238,7 @@ namespace SPK
 		if (distanceComputationEnabled)
 		{
 			for (size_t i = 0; i < particleData.nbParticles; ++i)
-				particleData.sqrDists[i] = getSqrDist(particleData.positions[i],System::getCameraPosition());
+				particleData.sqrDists[i] = getSqrDist(particleData.positions[i],system->getCameraPosition());
 		}
 
 		emptyBufferedParticles();

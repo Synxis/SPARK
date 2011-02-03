@@ -34,8 +34,6 @@ namespace SPK
 	bool System::clampStepEnabled(false);
 	float System::clampStep(1.0f);
 
-	Vector3D System::cameraPosition;
-
 	System::System(bool initialize) :
 		SPKObject(false),
 		groups(),

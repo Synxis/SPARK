@@ -102,7 +102,7 @@ namespace GL
 		void GLCallTexture2DAtlas(const Particle& particle,GLBuffer& renderBuffer) const;	// OpenGL calls for 2D atlastexturing 
 		void GLCallTexture3D(const Particle& particle,GLBuffer& renderBuffer) const;		// OpenGL calls for 3D texturing
 
-		static void (GLQuadRenderer::*renderParticle)(const Particle&,GLBuffer& renderBuffer)  const;	// pointer to the right render method
+		mutable void (GLQuadRenderer::*renderParticle)(const Particle&,GLBuffer& renderBuffer) const;	// pointer to the right render method
 
 		void render2D(const Particle& particle,GLBuffer& renderBuffer) const;			// Rendering for particles with texture 2D or no texture
 		void render2DRot(const Particle& particle,GLBuffer& renderBuffer) const;		// Rendering for particles with texture 2D or no texture and rotation

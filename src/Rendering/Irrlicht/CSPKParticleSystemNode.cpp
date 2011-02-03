@@ -148,7 +148,7 @@ namespace scene
 					AbsoluteTransformation.getInversePrimitive(invTransform);
 					invTransform.transformVect(pos);
 				}
-				SPK::System::setCameraPosition(SPK::IRR::irr2spk(pos));
+				SPKSystem->setCameraPosition(SPK::IRR::irr2spk(pos));
 				break;
 			}
 		}

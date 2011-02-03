@@ -28,8 +28,6 @@ namespace SPK
 {
 namespace IRR
 {
-	void (IRRQuadRenderer::*IRRQuadRenderer::renderParticle)(const Particle&,IRRBuffer& renderBuffer) const = NULL;
-
 	IRRQuadRenderer::IRRQuadRenderer(irr::IrrlichtDevice* d,float scaleX,float scaleY) :
 		IRRRenderer(d),
 		QuadRenderBehavior(scaleX,scaleY),

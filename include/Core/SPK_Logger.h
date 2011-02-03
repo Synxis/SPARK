@@ -101,10 +101,9 @@ namespace SPK
 	enum LogPrefix
 	{
 		LOG_PREFIX_NONE = 0,			/**< No prefix */
-		LOG_PREFIX_COUNT = 1 << 0,		/**< Prefixes log entries with the number of the entry */
-		LOG_PREFIX_TIME = 1 << 1,		/**< Prefixes log entries with the current date and time */
-		LOG_PREFIX_LIB = 1 << 2,		/**< Prefixes log entries with the name of the lib ("SPARK") */
-		LOG_PREFIX_PRIORITY = 1 << 3,	/**< Prefixes log entries with the priority of the entry */
+		LOG_PREFIX_TIME = 1 << 0,		/**< Prefixes log entries with the current date and time */
+		LOG_PREFIX_LIB = 1 << 1,		/**< Prefixes log entries with the name of the lib ("SPARK") */
+		LOG_PREFIX_PRIORITY = 1 << 2,	/**< Prefixes log entries with the priority of the entry */
 	};
 
 	/**

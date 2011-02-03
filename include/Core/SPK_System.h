@@ -186,17 +186,17 @@ namespace SPK
 		*
 		* Note that the camera position is only useful if the distance computation of a group is enabled (when the group must be sorted for instance).<br>
 		* In that case this vector will be used as the camera position to derive the distance between the particle and the camera position.<br>
-		* The camera position has to be updated before an update of the sorted group.
+		* The camera position has to be updated before an update of the sorted group and must be in the local space of the system.
 		*
 		* @param cameraPosition the camera position
 		*/
-		static void setCameraPosition(const Vector3D& cameraPosition);
+		void setCameraPosition(const Vector3D& cameraPosition);
 
 		/**
 		* @brief Gets the camera position
 		* @return the camera position
 		*/
-		static const Vector3D& getCameraPosition();
+		const Vector3D& getCameraPosition();
 
 		///////////////
 		// Step Mode //
@@ -283,7 +283,7 @@ namespace SPK
 
 	private :
 
-		static Vector3D cameraPosition;
+		Vector3D cameraPosition;
 
 		// Step mode
 		static StepMode stepMode;
@@ -346,7 +346,7 @@ namespace SPK
 
 	inline void System::setCameraPosition(const Vector3D& cameraPosition)
 	{
-		System::cameraPosition = cameraPosition;
+		this->cameraPosition = cameraPosition;
 	}
 
 	inline const Vector3D& System::getCameraPosition()

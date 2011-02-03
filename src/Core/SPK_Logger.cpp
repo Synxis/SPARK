@@ -63,12 +63,6 @@ namespace SPK
 
 	void Logger::writePrefix(LogPriority priority)
 	{
-		static size_t count = 0;
-
-		// Writes the number of the message
-		if (prefixFlag & LOG_PREFIX_COUNT)
-			*innerStream << ++count << " - ";
-
 		// Writes date and time
 		if (prefixFlag & LOG_PREFIX_TIME)
 		{

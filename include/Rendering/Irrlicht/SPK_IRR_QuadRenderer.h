@@ -126,7 +126,7 @@ namespace IRR
 		void FillBufferColorAndVertex(const Particle& particle,IRRBuffer& renderBuffer) const;	// Fills Irrlicht buffer with color and position
 		void FillBufferTextureAtlas(const Particle& particle,IRRBuffer& renderBuffer) const;		// Fills Irrlicht buffer with atlas texture coordinates
 
-		static void (IRRQuadRenderer::*renderParticle)(const Particle&,IRRBuffer& renderBuffer) const;	// pointer to the right render method
+		mutable void (IRRQuadRenderer::*renderParticle)(const Particle&,IRRBuffer& renderBuffer) const;	// pointer to the right render method
 
 		void renderBasic(const Particle& particle,IRRBuffer& renderBuffer) const;		// Rendering for particles with texture or no texture
 		void renderRot(const Particle& particle,IRRBuffer& renderBuffer) const;			// Rendering for particles with texture or no texture and rotation
