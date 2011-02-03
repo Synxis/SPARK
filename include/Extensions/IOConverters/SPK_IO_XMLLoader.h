@@ -102,8 +102,12 @@ namespace IO
 		std::vector<T> tmp;
 		const std::string* value = getValue(element);
 		if (value != NULL && convert2Array(*value,tmp)) // Ok because convertArray ensures the vector is not empty 
-			(attribute.*f)(reinterpret_cast<const T*>(&tmp[0]),tmp.size(),false);  // the cast should not be needed but the compiler wont compile with T = bool ?!?
+			(attribute.*f)(&tmp[0],tmp.size(),false);
 	}
+
+	// Specialization for bool as vector<bool> is handled differently in the standard (we cannot cast a vector<bool> to a bool* with &v[0])
+	template<>
+	void SPK_PREFIX XMLLoader::setAttributeValueArray(Attribute& attribute,const TiXmlElement& element,void (Attribute::*f)(const bool*,size_t,bool)) const;
 }}
 
 #endif

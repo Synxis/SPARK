@@ -213,4 +213,19 @@ namespace IO
 				}
 			}
 	}
+
+	template<>
+	void XMLLoader::setAttributeValueArray(Attribute& attribute,const TiXmlElement& element,void (Attribute::*f)(const bool*,size_t,bool)) const
+	{
+		std::vector<bool> tmp;
+		const std::string* value = getValue(element);
+		if (value != NULL && convert2Array(*value,tmp)) // Ok because convertArray ensures the vector is not empty
+		{
+			bool* buffer = SPK_NEW_ARRAY(bool,tmp.size());
+			for (size_t i = 0; i < tmp.size(); ++i)
+				buffer[i] = tmp[i];
+			(attribute.*f)(buffer,tmp.size(),false);
+			SPK_DELETE_ARRAY(buffer);
+		}		
+	}
 }}
