@@ -287,26 +287,11 @@ int main(int argc, char *argv[])
 	};
 
 	// To be registered automatically
-	SPK::IO::IOManager::getInstance().registerObject<SPK::System>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::Group>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::SphericEmitter>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::Point>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::Gravity>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::Obstacle>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::Plane>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::EmitterAttacher>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::ColorSimpleInterpolator>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::FloatRandomInitializer>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::Rotator>();
-	SPK::IO::IOManager::getInstance().registerObject<SPK::GL::GLQuadRenderer>();
+	SPK::IO::IOManager::get().registerObject<SPK::GL::GLQuadRenderer>();
 
-	SPK::IO::XMLSaver saver;
-	saver.save("test.xml",system);
-
-	SPK::IO::XMLLoader loader;
-	SPK::Ref<SPK::System> system2 = loader.load("test.xml");
-
-	saver.save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml
+	SPK::IO::IOManager::get().save("test.xml",system);
+	SPK::Ref<SPK::System> system2 = SPK::IO::IOManager::get().load("test.xml");
+	SPK::IO::IOManager::get().save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml
 
 	SPK_DUMP_MEMORY
 	}

@@ -67,13 +67,13 @@
 #else
 
 #ifdef _DEBUG
-#define SPK_LOG_DEBUG(entry) {SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG) << entry << "\n"; SPK::Logger::getInstance().flush();}
+#define SPK_LOG_DEBUG(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_DEBUG) << entry << "\n"; SPK::Logger::get().flush();}
 #else
 #define SPK_LOG_DEBUG(entry) {}
 #endif
-#define SPK_LOG_INFO(entry) {SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_INFO) << entry << "\n"; SPK::Logger::getInstance().flush();}
-#define SPK_LOG_WARNING(entry) {SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_WARNING) << entry << "\n"; SPK::Logger::getInstance().flush();}
-#define SPK_LOG_ERROR(entry) {SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_ERROR) << entry << "\n"; SPK::Logger::getInstance().flush();}
+#define SPK_LOG_INFO(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_INFO) << entry << "\n"; SPK::Logger::get().flush();}
+#define SPK_LOG_WARNING(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_WARNING) << entry << "\n"; SPK::Logger::get().flush();}
+#define SPK_LOG_ERROR(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_ERROR) << entry << "\n"; SPK::Logger::get().flush();}
 
 #define SPK_ASSERT(condition,text) \
 { \
@@ -135,7 +135,7 @@ namespace SPK
 		* @brief Returns the unique instance of logger
 		* @return the instance of Logger
 		*/
-		static Logger& getInstance();
+		static Logger& get();
 	
 		/////////////
 		// Setters //
@@ -328,7 +328,7 @@ namespace SPK
 	template <typename T> 
 	Logger::Stream& Logger::Stream::operator<<(const T& entry)
 	{
-		if (Logger::getInstance().isEnabled() && priority >= Logger::getInstance().getPriorityLevel())
+		if (Logger::get().isEnabled() && priority >= Logger::get().getPriorityLevel())
 			innerStream << entry;
 		return *this;
 	}

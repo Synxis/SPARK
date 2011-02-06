@@ -51,22 +51,22 @@
 
 /**
 * @brief A macro returning a random value within [min,max[
-* This is a shortcut syntax to <i>SPK::SPKContext::getInstance().generateRandom(min,max)</i>
+* This is a shortcut syntax to <i>SPK::SPKContext::get().generateRandom(min,max)</i>
 * @param min : the minimum bound of the interval (inclusive)
 * @param max : the maximum bound of the interval (exclusive)
 * @return a random number within [min,max[
 */
-#define SPK_RANDOM(min,max) SPK::SPKContext::getInstance().generateRandom(min,max)
+#define SPK_RANDOM(min,max) SPK::SPKContext::get().generateRandom(min,max)
 
 /**
 * @brief A macro returning the zone by default of SPARK
 * When an object needs a zone that must not be NULL, this zone can be used by default.<br>
 * The default zone is a shared point located at position (0.0f,0.0f,0.0f).<br>
 * <br>
-* This is a shortcut syntax to <i>SPK::SPKContext::getInstance().getDefaultZone()</i>
+* This is a shortcut syntax to <i>SPK::SPKContext::get().getDefaultZone()</i>
 * @return the default zone of SPARK
 */
-#define SPK_DEFAULT_ZONE	SPK::SPKContext::getInstance().getDefaultZone()
+#define SPK_DEFAULT_ZONE	SPK::SPKContext::get().getDefaultZone()
 
 /**
 * @namespace SPK::IO
@@ -109,7 +109,7 @@ namespace SPK
 		* @brief Gets the singleton instance
 		* @return the instance of the context
 		*/
-		static  SPKContext& getInstance();
+		static  SPKContext& get();
 
 		/** @brief Releases all dynamic data held by the context */
 		void release();
@@ -144,7 +144,7 @@ namespace SPK
 		SPKContext& operator=(const SPKContext&); // Not used
 	};
 
-	inline SPKContext& SPKContext::getInstance()
+	inline SPKContext& SPKContext::get()
 	{
 		return instance;
 	}
@@ -167,8 +167,6 @@ namespace SPK
 		// find a random number in the interval
         return static_cast<T>(min + ((randomSeed - 1) / 2147483646.0) * (max - min));
     }
-
-	// extern SPK_PREFIX void registerCoreForLoading();
 }
 
 #endif

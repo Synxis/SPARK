@@ -20,13 +20,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 #include <cctype>
-#include <SPARK_Core.h>
+#include <SPARK.h> // not SPARK Core because we need all SPARK to register objects and converters
 
 namespace SPK
 {
 namespace IO
 {	
-	IOManager& IOManager::getInstance()
+	IOManager::IOManager()
+	{
+		registerIOConverters();
+		registerCoreObjects();
+	}
+
+	IOManager& IOManager::get()
 	{
 		static IOManager instance;
 		return instance;
@@ -35,8 +41,8 @@ namespace IO
 	void IOManager::unregisterAll()
 	{
 		registeredObjects.clear();
-		registeredLoaders.clear();
-		registeredSavers.clear();
+		registeredLoaders.clear(); // TODO memory leak here
+		registeredSavers.clear();  // and here
 	}
 
 	Ref<System> IOManager::load(const std::string& path) const
@@ -128,5 +134,61 @@ namespace IO
 	{
 		group.system = &system;
 		group.reallocate(1); // dummy allocation
+	}
+
+	void IOManager::registerIOConverters()
+	{
+		// XML converters
+		registerLoader("xml",SPK_NEW(XMLLoader));
+		registerSaver("xml",SPK_NEW(XMLSaver));
+	}
+
+	void IOManager::registerCoreObjects()
+	{
+		// Core
+		registerObject<System>();	
+		registerObject<Group>();
+		
+		// Interpolators
+		//registerObject<FloatDefaultInitializer>();	
+		//registerObject<ColorDefaultInitializer>();
+		registerObject<FloatRandomInitializer>();
+		registerObject<ColorRandomInitializer>();
+		registerObject<FloatSimpleInterpolator>();
+		registerObject<ColorSimpleInterpolator>();
+		//registerObject<FloatRandomInterpolator>();
+		//registerObject<ColorRandomInterpolator>();
+		//registerObject<FloatGraphInterpolator>();
+		//registerObject<ColorGraphInterpolator>();
+
+		// Zones
+		registerObject<Point>();
+		registerObject<Sphere>();
+		registerObject<Plane>();
+		registerObject<Ring>();
+
+		// Emitters
+		registerObject<StaticEmitter>();
+		registerObject<RandomEmitter>();
+		registerObject<StraightEmitter>();
+		registerObject<SphericEmitter>();
+		registerObject<NormalEmitter>();
+
+		// Modifiers
+		registerObject<Gravity>();
+		registerObject<Friction>();
+		registerObject<Obstacle>();
+		registerObject<Rotator>();
+		registerObject<Collider>();
+		registerObject<Destroyer>();
+		//registerObject<Vortex>();
+		registerObject<EmitterAttacher>();
+		registerObject<PointMass>();
+		registerObject<RandomForce>();
+		//registerObject<LinearForce>();
+
+		// Actions
+		registerObject<ActionSet>();
+		registerObject<SpawnParticlesAction>();
 	}
 }}

@@ -33,11 +33,11 @@
 #define SPK_DELETE_ARRAY(name) delete[] name
 #define SPK_DUMP_MEMORY {}
 #else
-#define SPK_NEW(name,...) (name*)SPK::SPKMemoryTracer::getInstance().registerAllocation(new name(__VA_ARGS__),sizeof(name),#name,__FILE__,__LINE__)
-#define SPK_NEW_ARRAY(name,nb) (name*)SPK::SPKMemoryTracer::getInstance().registerAllocation(new name[nb],sizeof(name) * nb,std::string(#name).append("[]"),__FILE__,__LINE__)
-#define SPK_DELETE(name) { SPK::SPKMemoryTracer::getInstance().unregisterAllocation(name); delete name; }
-#define SPK_DELETE_ARRAY(name) { SPK::SPKMemoryTracer::getInstance().unregisterAllocation(name); delete[] name; }
-#define SPK_DUMP_MEMORY { SPK::SPKMemoryTracer::getInstance().dumpMemory(); }
+#define SPK_NEW(name,...) (name*)SPK::SPKMemoryTracer::get().registerAllocation(new name(__VA_ARGS__),sizeof(name),#name,__FILE__,__LINE__)
+#define SPK_NEW_ARRAY(name,nb) (name*)SPK::SPKMemoryTracer::get().registerAllocation(new name[nb],sizeof(name) * nb,std::string(#name).append("[]"),__FILE__,__LINE__)
+#define SPK_DELETE(name) { SPK::SPKMemoryTracer::get().unregisterAllocation(name); delete name; }
+#define SPK_DELETE_ARRAY(name) { SPK::SPKMemoryTracer::get().unregisterAllocation(name); delete[] name; }
+#define SPK_DUMP_MEMORY { SPK::SPKMemoryTracer::get().dumpMemory(); }
 
 #include <string>
 #include <set>
@@ -60,7 +60,7 @@ namespace SPK
 
 	public :
 
-		static SPKMemoryTracer& getInstance();
+		static SPKMemoryTracer& get();
 
 		void* registerAllocation(void* position,size_t size,const std::string& type,const std::string& file,size_t line)
 		{

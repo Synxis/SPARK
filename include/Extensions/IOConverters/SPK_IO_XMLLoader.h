@@ -32,10 +32,6 @@ namespace IO
 {
 	class SPK_PREFIX XMLLoader : public Loader
 	{
-	public :
-
-		virtual XMLLoader* clone() const			{ return new XMLLoader(*this); }
-
 	private :
 
 		virtual bool innerLoad(std::istream& is,Graph& graph) const;

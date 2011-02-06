@@ -64,8 +64,6 @@ namespace IO
 	{
 	public :
 
-		virtual XMLSaver* clone() const				{ return new XMLSaver(*this); }
-
 		void setAuthor(const std::string& author)	{ this->author = author; }
 
 		void setLayout(const XMLLayout& layout)		{ this->layout = layout; }

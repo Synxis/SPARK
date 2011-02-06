@@ -38,7 +38,6 @@ namespace IO
 		//////////////////////////////
 
 		virtual ~Saver() {}
-		virtual Saver* clone() const = 0;
 
 		////////////////////
 		// Saving methods //

@@ -38,8 +38,7 @@ namespace SPK
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Modifier)
-	SPK_ATTRIBUTE("min value",ATTRIBUTE_TYPE_VECTOR)
-	SPK_ATTRIBUTE("max value",ATTRIBUTE_TYPE_VECTOR)
+	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_VECTORS)
 	SPK_ATTRIBUTE("period",ATTRIBUTE_TYPE_FLOATS)
 	SPK_END_DESCRIPTION
 
@@ -129,6 +128,9 @@ namespace SPK
 	protected :
 
 		virtual void innerUpdateTransform();
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

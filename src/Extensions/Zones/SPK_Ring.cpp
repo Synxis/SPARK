@@ -153,6 +153,7 @@ namespace SPK
 			{
 			case 1 : setRadius(tmpRadius[0],tmpRadius[0]); break;
 			case 2 : setRadius(tmpRadius[0],tmpRadius[1]); break;
+			default : SPK_LOG_ERROR("Ring::innerImport(const IO::Descriptor&) - Wrong number of radiuses : " << tmpRadius.size());
 			}
 		}
 	}

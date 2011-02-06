@@ -80,6 +80,11 @@ namespace SPK
 		*/
 		float getFriction() const;
 
+	protected :
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
+
 	private :
 
 		float bouncingRatio;

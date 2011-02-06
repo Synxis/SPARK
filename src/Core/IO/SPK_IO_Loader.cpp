@@ -81,7 +81,7 @@ namespace IO
 	{
 		SPK_ASSERT(!nodesValidated,"Loader::Graph::addNode(size_t,string) - Graph has been processed. Nodes cannot be added any longer");
 
-		Ref<SPKObject> object = IOManager::getInstance().createObject(name);
+		Ref<SPKObject> object = IOManager::get().createObject(name);
 		
 		if (object == NULL)
 		{

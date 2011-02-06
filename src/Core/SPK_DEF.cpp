@@ -28,7 +28,7 @@
 namespace SPK
 {
 #ifdef SPK_TRACE_MEMORY
-	SPKMemoryTracer& SPKMemoryTracer::getInstance() 
+	SPKMemoryTracer& SPKMemoryTracer::get() 
 	{
 		static SPKMemoryTracer* instance = NULL;
 		if (instance == NULL) instance = new SPKMemoryTracer; 
@@ -74,60 +74,4 @@ namespace SPK
 		}
 		return defaultZone;
 	}
-
-	/*void SPKContext::registerIOConverters()
-	{
-
-	}
-
-	void SPKContext::registerCoreObjects()
-	{
-		IO::IOManager& manager = IO::IOManager::getInstance();
-
-		// Core
-		manager.registerObject<System>();	
-		manager.registerObject<Group>();
-		
-		// Interpolators
-		manager.registerObject<FloatDefaultInitializer>();	
-		manager.registerObject<ColorDefaultInitializer>();
-		manager.registerObject<FloatRandomInitializer>();
-		manager.registerObject<ColorRandomInitializer>();
-		manager.registerObject<FloatSimpleInterpolator>();
-		manager.registerObject<ColorSimpleInterpolator>();
-		manager.registerObject<FloatRandomInterpolator>();
-		manager.registerObject<ColorRandomInterpolator>();
-		manager.registerObject<FloatGraphInterpolator>();
-		manager.registerObject<ColorGraphInterpolator>();
-
-		// Zones
-		manager.registerObject<Point>();
-		manager.registerObject<Sphere>();
-		manager.registerObject<Plane>();
-		manager.registerObject<Ring>();
-
-		// Emitters
-		manager.registerObject<StaticEmitter>();
-		manager.registerObject<RandomEmitter>();
-		manager.registerObject<StraightEmitter>();
-		manager.registerObject<SphericEmitter>();
-		manager.registerObject<NormalEmitter>();
-
-		// Modifiers
-		manager.registerObject<Gravity>();
-		manager.registerObject<Friction>();
-		manager.registerObject<Obstacle>();
-		manager.registerObject<Rotator>();
-		manager.registerObject<Collider>();
-		manager.registerObject<Destroyer>();
-		manager.registerObject<Vortex>();
-		manager.registerObject<EmitterAttacher>();
-		manager.registerObject<PointMass>();
-		manager.registerObject<RandomForce>();
-		manager.registerObject<LinearForce>();
-
-		// Actions
-		manager.registerObject<ActionSet>();
-		manager.registerObject<SpawnParticlesAction>();
-	}*/
 }

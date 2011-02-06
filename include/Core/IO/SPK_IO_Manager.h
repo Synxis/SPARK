@@ -35,19 +35,22 @@ namespace IO
 	{
 	public : 
 
-		static IOManager& getInstance();
+		static IOManager& get();
 		
 		void unregisterAll();
+
+		void registerIOConverters();
+		void registerCoreObjects();
 	
 		template<typename T> void registerObject();
 		template<typename T> void unregisterObject();
 		template<typename T> bool isObjectRegistered() const;
 
-		void registerLoader(const std::string& ext,const Loader& loader);
+		void registerLoader(const std::string& ext,Loader* loader);
 		void unregisterLoader(const std::string& ext);
 		Loader* getLoader(const std::string& ext) const;
 
-		void registerSaver(const std::string& ext,const Saver& saver);
+		void registerSaver(const std::string& ext,Saver* saver);
 		void unregisterSaver(const std::string& ext);
 		Saver* getSaver(const std::string& ext) const;
 
@@ -65,14 +68,14 @@ namespace IO
 		std::map<std::string,Loader*> registeredLoaders;
 		std::map<std::string,Saver*> registeredSavers;
 
-		IOManager() {};
+		IOManager();
 		IOManager(const IOManager&) {}
 		IOManager& operator=(const IOManager&);
 
 		static std::string formatExtension(const std::string& ext);
 		static std::string getExtension(const std::string& path);
 
-		template<typename T> static void registerGeneric(const std::string& ext,const T& t,std::map<std::string,T*>& table);
+		template<typename T> static void registerGeneric(const std::string& ext,T* t,std::map<std::string,T*>& table);
 		template<typename T> static void unregisterGeneric(const std::string& ext,std::map<std::string,T*>& table);
 		template<typename T> static T* getGeneric(const std::string& ext,const std::map<std::string,T*>& table);
 
@@ -111,16 +114,16 @@ namespace IO
 		return registeredObjects.find(T::getSerializableName()) != registeredObjects.end()	
 	}
 
-	inline void IOManager::registerLoader(const std::string& ext,const Loader& loader) { registerGeneric<Loader>(ext,loader,registeredLoaders); }
+	inline void IOManager::registerLoader(const std::string& ext,Loader* loader) { registerGeneric<Loader>(ext,loader,registeredLoaders); }
 	inline void IOManager::unregisterLoader(const std::string& ext) { unregisterGeneric<Loader>(ext,registeredLoaders); }
 	inline Loader* IOManager::getLoader(const std::string& ext) const { return getGeneric<Loader>(ext,registeredLoaders); }
 
-	inline void IOManager::registerSaver(const std::string& ext,const Saver& saver) { registerGeneric<Saver>(ext,saver,registeredSavers); }
+	inline void IOManager::registerSaver(const std::string& ext,Saver* saver) { registerGeneric<Saver>(ext,saver,registeredSavers); }
 	inline void IOManager::unregisterSaver(const std::string& ext) { unregisterGeneric<Saver>(ext,registeredSavers); }
 	inline Saver* IOManager::getSaver(const std::string& ext) const { return getGeneric<Saver>(ext,registeredSavers); }
 
 	template<typename T>
-	void IOManager::registerGeneric(const std::string& ext,const T& t,std::map<std::string,T*>& table)
+	void IOManager::registerGeneric(const std::string& ext,T* t,std::map<std::string,T*>& table)
 	{
 		const std::string name = formatExtension(ext);
 		std::map<std::string,T*>::iterator it = table.find(name);
@@ -131,7 +134,7 @@ namespace IO
 			table.erase(it);
 		}
 
-		table.insert(std::make_pair(name,t.clone()));
+		table.insert(std::make_pair(name,t));
 	}
 
 	template<typename T>

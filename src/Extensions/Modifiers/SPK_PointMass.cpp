@@ -64,4 +64,25 @@ namespace SPK
 			particle.velocity() += force;
 		}
 	}
+
+	void PointMass::innerImport(const IO::Descriptor& descriptor)
+	{
+		Modifier::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("position"))
+			setPosition(attrib->getValueVector());
+		if (attrib = descriptor.getAttributeWithValue("mass"))
+			setMass(attrib->getValueFloat());
+		if (attrib = descriptor.getAttributeWithValue("offset"))
+			setOffset(attrib->getValueFloat());
+	}
+
+	void PointMass::innerExport(IO::Descriptor& descriptor) const
+	{
+		Modifier::innerExport(descriptor);
+		descriptor.getAttribute("position")->setValueVector(getPosition());
+		descriptor.getAttribute("mass")->setValueFloat(getMass());
+		descriptor.getAttribute("offset")->setValueFloat(getOffset());
+	}
 }

@@ -59,4 +59,22 @@ namespace SPK
 			}
 		}
 	}
+
+	void Obstacle::innerImport(const IO::Descriptor& descriptor)
+	{
+		ZonedModifier::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("bouncing ratio"))
+			setBouncingRatio(attrib->getValueFloat());
+		if (attrib = descriptor.getAttributeWithValue("friction"))
+			setFriction(attrib->getValueFloat());
+	}
+
+	void Obstacle::innerExport(IO::Descriptor& descriptor) const
+	{
+		ZonedModifier::innerExport(descriptor);
+		descriptor.getAttribute("bouncing ratio")->setValueFloat(getBouncingRatio());
+		descriptor.getAttribute("friction")->setValueFloat(getFriction());
+	}
 }

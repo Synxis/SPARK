@@ -47,7 +47,7 @@ namespace SPK
 		prefixFlag(LOG_PREFIX_TIME | LOG_PREFIX_LIB | LOG_PREFIX_PRIORITY)
 	{}
 
-	Logger& Logger::getInstance()
+	Logger& Logger::get()
 	{
 		static Logger instance;
 		return instance;

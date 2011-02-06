@@ -40,7 +40,6 @@ namespace IO
 		//////////////////////////////
 
 		virtual ~Loader() {}
-		virtual Loader* clone() const = 0;
 
 		/////////////////////
 		// Loading methods //

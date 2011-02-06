@@ -432,12 +432,12 @@ namespace IO
 		this->optional = optional;
 
 #if !defined(SPK_NO_LOG) && defined(_DEBUG)
-		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);
+		Logger::Stream os = SPK::Logger::get().getStream(SPK::LOG_PRIORITY_DEBUG);
 		os << "Set " << nb << " values for attribute \"" << name << "\" : ";
 		for (size_t i = 0; i < nb; ++i)
 			os << " " << values[i];
 		os << '\n';
-		SPK::Logger::getInstance().flush();
+		SPK::Logger::get().flush();
 #endif
 	}
 
@@ -464,12 +464,12 @@ namespace IO
 			tmpBuffer.push_back(*reinterpret_cast<T*>(&descriptor->buffer[offset + sizeof(size_t) + i * sizeof(T)]));
 
 #if !defined(SPK_NO_LOG) && defined(_DEBUG)
-		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);
+		Logger::Stream os = SPK::Logger::get().getStream(SPK::LOG_PRIORITY_DEBUG);
 		os << "Get " << nb << " values for attribute \"" << name << "\" : ";
 		for (size_t i = 0; i < nb; ++i)
 			os << " " << tmpBuffer[i];
 		os << '\n';
-		SPK::Logger::getInstance().flush();
+		SPK::Logger::get().flush();
 #endif
 
 		return tmpBuffer;
@@ -495,12 +495,12 @@ namespace IO
 		this->optional = optional;
 
 #if !defined(SPK_NO_LOG) && defined(_DEBUG)
-		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);
+		Logger::Stream os = SPK::Logger::get().getStream(SPK::LOG_PRIORITY_DEBUG);
 		os << "Set " << nb << " values for attribute \"" << name << "\" : ";
 		for (size_t i = 0; i < nb; ++i)
 			os << " " << values[i];
 		os << '\n';
-		SPK::Logger::getInstance().flush();
+		SPK::Logger::get().flush();
 #endif
 	}
 
@@ -517,12 +517,12 @@ namespace IO
 			tmpBuffer.push_back(descriptor->refBuffer[refOffset + i].cast<T>());
 
 #if !defined(SPK_NO_LOG) && defined(_DEBUG)
-		Logger::Stream os = SPK::Logger::getInstance().getStream(SPK::LOG_PRIORITY_DEBUG);
+		Logger::Stream os = SPK::Logger::get().getStream(SPK::LOG_PRIORITY_DEBUG);
 		os << "Get " << nb << " values for attribute \"" << name << "\" : ";
 		for (size_t i = 0; i < nb; ++i)
 			os << " " << tmpBuffer[i];
 		os << '\n';
-		SPK::Logger::getInstance().flush();
+		SPK::Logger::get().flush();
 #endif
 
 		return tmpBuffer;
