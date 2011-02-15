@@ -98,12 +98,12 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("radius"))
-			setRadius(attrib->getValueFloat());
+			setRadius(attrib->getValue<float>());
 	}
 
 	void Sphere::innerExport(IO::Descriptor& descriptor) const
 	{
 		Zone::innerExport(descriptor);
-		descriptor.getAttribute("radius")->setValueFloat(getRadius());
+		descriptor.getAttribute("radius")->setValue(getRadius());
 	}
 }

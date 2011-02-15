@@ -150,7 +150,7 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("spawning numbers"))
 		{
-			std::vector<unsigned long int> nbs = attrib->getValuesUint32();
+			std::vector<unsigned long> nbs = attrib->getValues<unsigned long>();
 			switch (nbs.size())
 			{
 			case 1 : setNb(nbs[0]); break;
@@ -159,17 +159,17 @@ namespace SPK
 			}
 		}
 		if (attrib = descriptor.getAttributeWithValue("base emitter"))
-			setEmitter(attrib->getValueRef().cast<Emitter>());
+			setEmitter(attrib->getValueRef<Emitter>());
 		if (attrib = descriptor.getAttributeWithValue("target group"))
-			setTargetGroup(attrib->getValueRef().cast<Group>());
+			setTargetGroup(attrib->getValueRef<Group>());
 	}
 
 	void SpawnParticlesAction::innerExport(IO::Descriptor& descriptor) const
 	{
 		Action::innerExport(descriptor);
 
-		unsigned long int nbs[2] = {minNb,maxNb};
-		descriptor.getAttribute("spawning numbers")->setValuesUint32(nbs,nbs[0] == nbs[1] ? 1 : 2);
+		unsigned long nbs[2] = {minNb,maxNb};
+		descriptor.getAttribute("spawning numbers")->setValues(nbs,nbs[0] == nbs[1] ? 1 : 2);
 		descriptor.getAttribute("base emitter")->setValueRef(getEmitter());
 		descriptor.getAttribute("target group")->setValueRef(getTargetGroup());
 	}

@@ -373,10 +373,6 @@
 					Name="IO"
 					>
 					<File
-						RelativePath="..\..\..\src\Core\IO\SPK_IO_Attribute.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\..\..\src\Core\IO\SPK_IO_Descriptor.cpp"
 						>
 					</File>
@@ -494,22 +490,6 @@
 					</File>
 					<File
 						RelativePath="..\..\..\src\Extensions\Renderers\SPK_QuadRenderBehavior.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Interpolators"
-					>
-					<File
-						RelativePath="..\..\..\src\Extensions\Interpolators\SPK_DefaultInitializer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\src\Extensions\Interpolators\SPK_RandomInitializer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\src\Extensions\Interpolators\SPK_SimpleInterpolator.cpp"
 						>
 					</File>
 				</Filter>

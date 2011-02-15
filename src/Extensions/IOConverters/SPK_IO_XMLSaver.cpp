@@ -126,7 +126,7 @@ namespace IO
 			if (attrib.hasValue() && !attrib.isValueOptional())
 			{
 				if (attrib.getName() == "name")
-					element->SetAttribute("name",attrib.getValueString());
+					element->SetAttribute("name",attrib.getValue<std::string>());
 				else
 				{
 					TiXmlElement* child = new TiXmlElement("attrib");
@@ -135,26 +135,26 @@ namespace IO
 					
 					switch (attrib.getType())
 					{
-					case ATTRIBUTE_TYPE_CHAR :		writeValue(*child,format(attrib.getValueChar())); break;
-					case ATTRIBUTE_TYPE_BOOL :		writeValue(*child,format(attrib.getValueBool())); break;
-					case ATTRIBUTE_TYPE_INT32 :		writeValue(*child,format(attrib.getValueInt32())); break;
-					case ATTRIBUTE_TYPE_UINT32 :	writeValue(*child,format(attrib.getValueUint32())); break;
-					case ATTRIBUTE_TYPE_FLOAT :		writeValue(*child,format(attrib.getValueFloat())); break;
-					case ATTRIBUTE_TYPE_VECTOR :	writeValue(*child,format(attrib.getValueVector())); break;
-					case ATTRIBUTE_TYPE_COLOR :		writeValue(*child,format(attrib.getValueColor())); break;
-					case ATTRIBUTE_TYPE_STRING :	writeValue(*child,format(attrib.getValueString())); break;	
+					case ATTRIBUTE_TYPE_CHAR :		writeValue(*child,format(attrib.getValue<char>())); break;
+					case ATTRIBUTE_TYPE_BOOL :		writeValue(*child,format(attrib.getValue<bool>())); break;
+					case ATTRIBUTE_TYPE_INT32 :		writeValue(*child,format(attrib.getValue<long>())); break;
+					case ATTRIBUTE_TYPE_UINT32 :	writeValue(*child,format(attrib.getValue<unsigned long>())); break;
+					case ATTRIBUTE_TYPE_FLOAT :		writeValue(*child,format(attrib.getValue<float>())); break;
+					case ATTRIBUTE_TYPE_VECTOR :	writeValue(*child,format(attrib.getValue<Vector3D>())); break;
+					case ATTRIBUTE_TYPE_COLOR :		writeValue(*child,format(attrib.getValue<Color>())); break;
+					case ATTRIBUTE_TYPE_STRING :	writeValue(*child,format(attrib.getValue<std::string>())); break;	
 
-					case ATTRIBUTE_TYPE_CHARS :		writeValue(*child,formatArray(attrib.getValuesChar())); break;
-					case ATTRIBUTE_TYPE_BOOLS :		writeValue(*child,formatArray(attrib.getValuesBool())); break;
-					case ATTRIBUTE_TYPE_INT32S :	writeValue(*child,formatArray(attrib.getValuesInt32())); break;
-					case ATTRIBUTE_TYPE_UINT32S :	writeValue(*child,formatArray(attrib.getValuesUint32())); break;
-					case ATTRIBUTE_TYPE_FLOATS :	writeValue(*child,formatArray(attrib.getValuesFloat())); break;
-					case ATTRIBUTE_TYPE_VECTORS :	writeValue(*child,formatArray(attrib.getValuesVector())); break;
-					case ATTRIBUTE_TYPE_COLORS :	writeValue(*child,formatArray(attrib.getValuesColor())); break;
-					case ATTRIBUTE_TYPE_STRINGS :	writeValue(*child,formatArray(attrib.getValuesString())); break;
+					case ATTRIBUTE_TYPE_CHARS :		writeValue(*child,formatArray(attrib.getValues<char>())); break;
+					case ATTRIBUTE_TYPE_BOOLS :		writeValue(*child,formatArray(attrib.getValues<bool>())); break;
+					case ATTRIBUTE_TYPE_INT32S :	writeValue(*child,formatArray(attrib.getValues<long>())); break;
+					case ATTRIBUTE_TYPE_UINT32S :	writeValue(*child,formatArray(attrib.getValues<unsigned long>())); break;
+					case ATTRIBUTE_TYPE_FLOATS :	writeValue(*child,formatArray(attrib.getValues<float>())); break;
+					case ATTRIBUTE_TYPE_VECTORS :	writeValue(*child,formatArray(attrib.getValues<Vector3D>())); break;
+					case ATTRIBUTE_TYPE_COLORS :	writeValue(*child,formatArray(attrib.getValues<Color>())); break;
+					case ATTRIBUTE_TYPE_STRINGS :	writeValue(*child,formatArray(attrib.getValues<std::string>())); break;
 
 					case ATTRIBUTE_TYPE_REF :		
-						if (!writeObject(*child,attrib.getValueRef(),graph,false)) 
+						if (!writeObject(*child,attrib.getValueRef<SPKObject>(),graph,false)) 
 							return false; 
 						break;
 

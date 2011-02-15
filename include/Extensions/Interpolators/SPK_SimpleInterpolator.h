@@ -61,14 +61,9 @@ namespace SPK
 	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorSimpleInterpolator)
 	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatSimpleInterpolator)
 
-	SPK_START_DESCRIPTION_TEMPLATE(ColorSimpleInterpolator)
-	SPK_PARENT_ATTRIBUTES(ColorInterpolator)
-	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_COLORS)
-	SPK_END_DESCRIPTION
-
-	SPK_START_DESCRIPTION_TEMPLATE(FloatSimpleInterpolator)
-	SPK_PARENT_ATTRIBUTES(FloatInterpolator)
-	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_FLOATS)
+	SPK_START_DESCRIPTION_TEMPLATE(SimpleInterpolator<T>)
+	SPK_PARENT_ATTRIBUTES(Interpolator<T>)
+	SPK_ATTRIBUTE_ARRAY_GENERIC("values",T)
 	SPK_END_DESCRIPTION
 
 	template<typename T>
@@ -123,11 +118,29 @@ namespace SPK
 			interpolateParam(data[particleIt->getIndex()],deathValue,birthValue,particleIt->getEnergy());
 	}
 
-	// Explicit specialization declaration
-	template<> SPK_PREFIX void SimpleInterpolator<float>::innerImport(const IO::Descriptor& descriptor);
-	template<> SPK_PREFIX void SimpleInterpolator<float>::innerExport(IO::Descriptor& descriptor) const;
-	template<> SPK_PREFIX void SimpleInterpolator<Color>::innerImport(const IO::Descriptor& descriptor);
-	template<> SPK_PREFIX void SimpleInterpolator<Color>::innerExport(IO::Descriptor& descriptor) const;	
+	template<typename T>
+	void SimpleInterpolator<T>::innerImport(const IO::Descriptor& descriptor)
+	{
+		Interpolator<T>::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("values"))
+		{
+			std::vector<T> tmpValues = attrib->getValues<T>();
+			if (tmpValues.size() == 2)
+				setValues(tmpValues[0],tmpValues[1]);
+			else
+				SPK_LOG_ERROR("SimpleInterpolator<T>::innerImport(const IO::Descriptor&) - Wrong number of values : " << tmpValues.size());
+		}
+	}
+
+	template<typename T>
+	void SimpleInterpolator<T>::innerExport(IO::Descriptor& descriptor) const
+	{
+		Interpolator<T>::innerExport(descriptor);
+		T tmpValues[2] = {birthValue,deathValue};
+		descriptor.getAttribute("values")->setValues(tmpValues,2);
+	}
 }
 
 #endif

@@ -154,13 +154,13 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;
 
 		if (attrib = descriptor.getAttributeWithValue("position"))
-			setPosition(attrib->getValueVector());
+			setPosition(attrib->getValue<Vector3D>());
 	}
 
 	inline void Zone::innerExport(IO::Descriptor& descriptor) const
 	{
 		SPKObject::innerExport(descriptor);
-		descriptor.getAttribute("position")->setValueVector(getPosition());
+		descriptor.getAttribute("position")->setValue(getPosition());
 	}
 }
 

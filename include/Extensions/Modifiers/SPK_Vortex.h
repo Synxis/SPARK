@@ -216,6 +216,9 @@ namespace SPK
 
 		virtual void innerUpdateTransform();
 
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
+
 	private :
 
 		Vector3D position;

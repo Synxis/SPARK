@@ -46,7 +46,7 @@ namespace SPK
 
 		T defaultValue;
 
-		DefaultInitializer<T>(const T& value);
+		DefaultInitializer<T>(const T& value = T());
 		DefaultInitializer<T>(const DefaultInitializer<T>& interpolator);
 
 		virtual  void interpolate(T* data,Group& group,DataSet* dataSet) const {}
@@ -59,14 +59,9 @@ namespace SPK
 	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorDefaultInitializer)
 	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatDefaultInitializer)
 
-	SPK_START_DESCRIPTION_TEMPLATE(ColorDefaultInitializer)
-	SPK_PARENT_ATTRIBUTES(ColorInterpolator)
-	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_COLOR)
-	SPK_END_DESCRIPTION
-
-	SPK_START_DESCRIPTION_TEMPLATE(FloatDefaultInitializer)
-	SPK_PARENT_ATTRIBUTES(FloatInterpolator)
-	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_FLOAT)
+	SPK_START_DESCRIPTION_TEMPLATE(DefaultInitializer<T>)
+	SPK_PARENT_ATTRIBUTES(Interpolator<T>)
+	SPK_ATTRIBUTE_GENERIC("value",T)
 	SPK_END_DESCRIPTION
 
 	template<typename T>
@@ -105,11 +100,22 @@ namespace SPK
 		data = defaultValue;
 	}
 
-	// Explicit specialization declaration
-	template<> SPK_PREFIX void DefaultInitializer<float>::innerImport(const IO::Descriptor& descriptor);
-	template<> SPK_PREFIX void DefaultInitializer<float>::innerExport(IO::Descriptor& descriptor) const;
-	template<> SPK_PREFIX void DefaultInitializer<Color>::innerImport(const IO::Descriptor& descriptor);
-	template<> SPK_PREFIX void DefaultInitializer<Color>::innerExport(IO::Descriptor& descriptor) const;	
+	template<typename T>
+	void DefaultInitializer<T>::innerImport(const IO::Descriptor& descriptor)
+	{
+		Interpolator<T>::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("value"))
+			setDefaultValue(attrib->getValue<T>());
+	}
+
+	template<typename T>
+	void DefaultInitializer<T>::innerExport(IO::Descriptor& descriptor) const
+	{
+		Interpolator<T>::innerExport(descriptor);
+		descriptor.getAttribute("value")->setValue(getDefaultValue());
+	}
 }
 
 #endif

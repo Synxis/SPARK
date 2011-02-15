@@ -96,11 +96,11 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;
 
 		if (attrib = descriptor.getAttributeWithValue("name"))
-			setName(attrib->getValueString());
+			setName(attrib->getValue<std::string>());
 
 		if (attrib = descriptor.getAttributeWithValue("transform"))
 		{
-			std::vector<float> t = attrib->getValuesFloat();
+			std::vector<float> t = attrib->getValues<float>();
 			if (t.size() == 16)
 				transform.set(&t[0]);
 			else
@@ -108,13 +108,13 @@ namespace SPK
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("shared"))
-			setShared(attrib->getValueBool());
+			setShared(attrib->getValue<bool>());
 	}
 	
 	void SPKObject::innerExport(IO::Descriptor& descriptor) const
 	{
-		descriptor.getAttribute("name")->setValueString(name,name.empty());
-		descriptor.getAttribute("transform")->setValuesFloat(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
-		descriptor.getAttribute("shared")->setValueBoolOptionalOnFalse(isShared());
+		descriptor.getAttribute("name")->setValue(name,name.empty());
+		descriptor.getAttribute("transform")->setValues(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
+		descriptor.getAttribute("shared")->setValueOptionalOnFalse(isShared());
 	}
 }

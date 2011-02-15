@@ -145,10 +145,10 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("direction"))
-			setDirection(attrib->getValueVector());
+			setDirection(attrib->getValue<Vector3D>());
 		if (attrib = descriptor.getAttributeWithValue("angles"))
 		{
-			std::vector<float> tmpAngles = attrib->getValuesFloat();
+			std::vector<float> tmpAngles = attrib->getValues<float>();
 			if (tmpAngles.size() == 2)
 				setAngles(tmpAngles[0],tmpAngles[1]);
 			else 
@@ -160,8 +160,8 @@ namespace SPK
 	{
 		Emitter::innerExport(descriptor);
 
-		descriptor.getAttribute("direction")->setValueVector(getDirection());
+		descriptor.getAttribute("direction")->setValue(getDirection());
 		float tmpAngles[2] = {angleMin,angleMax};
-		descriptor.getAttribute("angles")->setValuesFloat(tmpAngles,2);
+		descriptor.getAttribute("angles")->setValues(tmpAngles,2);
 	}
 }

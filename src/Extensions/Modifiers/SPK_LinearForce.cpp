@@ -207,38 +207,38 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("value"))
-			setValue(attrib->getValueVector());
+			setValue(attrib->getValue<Vector3D>());
 		
 		if (attrib = descriptor.getAttributeWithValue("relative value"))
 		{
 			bool tmpSquaredSpeed = false;
-			bool tmpRelative = attrib->getValueBool();
+			bool tmpRelative = attrib->getValue<bool>();
 			if (attrib = descriptor.getAttributeWithValue("squared speed"))
-				tmpSquaredSpeed = attrib->getValueBool();
+				tmpSquaredSpeed = attrib->getValue<bool>();
 			setRelative(tmpRelative,tmpSquaredSpeed);
 		}
 			
 		if (attrib = descriptor.getAttributeWithValue("parameter"))
 		{
 			Factor tmpFactor = FACTOR_LINEAR;
-			Param tmpParam = static_cast<Param>(attrib->getValueUint32());
+			Param tmpParam = static_cast<Param>(attrib->getValue<unsigned long>());
 			if (attrib = descriptor.getAttributeWithValue("factor type"))
-				tmpFactor = static_cast<Factor>(attrib->getValueUint32());
+				tmpFactor = static_cast<Factor>(attrib->getValue<unsigned long>());
 			setParam(tmpParam,tmpFactor);
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("coefficient"))
-			setCoef(attrib->getValueFloat());
+			setCoef(attrib->getValue<float>());
 	}
 
 	void LinearForce::innerExport(IO::Descriptor& descriptor) const
 	{
 		ZonedModifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValueVector(getValue());
-		descriptor.getAttribute("relative value")->setValueBool(isRelative());
-		descriptor.getAttribute("squared speed")->setValueBool(isSquaredSpeedUsed());
-		descriptor.getAttribute("parameter")->setValueUint32(getParam());
-		descriptor.getAttribute("factor type")->setValueUint32(getFactor());
-		descriptor.getAttribute("coefficient")->setValueFloat(getCoef());
+		descriptor.getAttribute("value")->setValue(getValue());
+		descriptor.getAttribute("relative value")->setValue(isRelative());
+		descriptor.getAttribute("squared speed")->setValue(isSquaredSpeedUsed());
+		descriptor.getAttribute("parameter")->setValue<unsigned long>(getParam());
+		descriptor.getAttribute("factor type")->setValue<unsigned long>(getFactor());
+		descriptor.getAttribute("coefficient")->setValue(getCoef());
 	}
 }

@@ -43,8 +43,8 @@ namespace IO
 		void findObjects(const TiXmlElement& parent,std::vector<const TiXmlElement*>& objElements,std::map<int,size_t>& ref2Index,bool objectLevel) const;
 		void parseAttributes(const TiXmlElement& element,Descriptor& desc,const Graph& graph,const std::vector<const TiXmlElement*>& objElements,const std::map<int,size_t>& ref2Index) const;
 
-		template<typename T,typename U> void setAttributeValue(Attribute& attribute,const TiXmlElement& element,void (Attribute::*f)(U,bool)) const;
-		template<typename T> void setAttributeValueArray(Attribute& attribute,const TiXmlElement& element,void (Attribute::*f)(const T*,size_t,bool)) const;
+		template<typename T> void setAttributeValue(Attribute& attribute,const TiXmlElement& element) const;
+		template<typename T> void setAttributeValueArray(Attribute& attribute,const TiXmlElement& element) const;
 
 		template<typename T> static bool convert(const std::string& str,T& value);
 		template<typename T> static bool convert2Array(const std::string& str,std::vector<T>& values);
@@ -83,27 +83,27 @@ namespace IO
 		return !values.empty();
 	}
 
-	template<typename T,typename U> // T is the explicit form of U as U can be of type "const type&" and we need a mutable type within the method
-	void XMLLoader::setAttributeValue(Attribute& attribute,const TiXmlElement& element,void (Attribute::*f)(U,bool)) const
+	template<typename T>
+	void XMLLoader::setAttributeValue(Attribute& attribute,const TiXmlElement& element) const
 	{
 		T tmp = T();
 		const std::string* value = getValue(element);
 		if (value != NULL && convert(*value,tmp))
-			(attribute.*f)(tmp,false);
+			attribute.setValue(tmp);
 	}
 
-	template<typename T> // Here we dont need an explicit template param
-	void XMLLoader::setAttributeValueArray(Attribute& attribute,const TiXmlElement& element,void (Attribute::*f)(const T*,size_t,bool)) const
+	template<typename T>
+	void XMLLoader::setAttributeValueArray(Attribute& attribute,const TiXmlElement& element) const
 	{
 		std::vector<T> tmp;
 		const std::string* value = getValue(element);
 		if (value != NULL && convert2Array(*value,tmp)) // Ok because convertArray ensures the vector is not empty 
-			(attribute.*f)(&tmp[0],tmp.size(),false);
+			attribute.setValues(&tmp[0],tmp.size());
 	}
 
 	// Specialization for bool as vector<bool> is handled differently in the standard (we cannot cast a vector<bool> to a bool* with &v[0])
-	template<>
-	void SPK_PREFIX XMLLoader::setAttributeValueArray(Attribute& attribute,const TiXmlElement& element,void (Attribute::*f)(const bool*,size_t,bool)) const;
+	template<> 
+	void SPK_PREFIX XMLLoader::setAttributeValueArray<bool>(Attribute& attribute,const TiXmlElement& element) const;
 }}
 
 #endif

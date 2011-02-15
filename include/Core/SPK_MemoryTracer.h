@@ -147,7 +147,7 @@ namespace SPK
 			std::string fileName;
 			size_t lineNb;
 			float time;
-			unsigned long int index;
+			unsigned long index;
 
 			BlockInfo(void* position) : position(position) {}
 		};
@@ -161,10 +161,10 @@ namespace SPK
 		SPKMemoryTracer(const SPKMemoryTracer&); // Not used
 		SPKMemoryTracer& operator=(const SPKMemoryTracer&); // Not used
 
-		unsigned long int nextIndex;
+		unsigned long nextIndex;
 
-		unsigned long int totalMemorySize;
-		unsigned long int maxMemorySize;
+		unsigned long totalMemorySize;
+		unsigned long maxMemorySize;
 
 		std::set<BlockInfo> blocks;
 	};

@@ -140,17 +140,17 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;
 
 		if (attrib = descriptor.getAttributeWithValue("active"))
-			setActive(attrib->getValueBool());
+			setActive(attrib->getValue<bool>());
 		if (attrib = descriptor.getAttributeWithValue("local"))
-			setLocalToSystem(attrib->getValueBool());
+			setLocalToSystem(attrib->getValue<bool>());
 	}
 
 	inline void Modifier::innerExport(IO::Descriptor& descriptor) const
 	{
 		SPKObject::innerExport(descriptor);
 
-		descriptor.getAttribute("active")->setValueBool(isActive(),isActive());
-		descriptor.getAttribute("local")->setValueBoolOptionalOnFalse(isLocalToSystem());
+		descriptor.getAttribute("active")->setValueOptionalOnTrue(isActive());
+		descriptor.getAttribute("local")->setValueOptionalOnFalse(isLocalToSystem());
 	}
 }
 

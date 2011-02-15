@@ -66,15 +66,15 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("bouncing ratio"))
-			setBouncingRatio(attrib->getValueFloat());
+			setBouncingRatio(attrib->getValue<float>());
 		if (attrib = descriptor.getAttributeWithValue("friction"))
-			setFriction(attrib->getValueFloat());
+			setFriction(attrib->getValue<float>());
 	}
 
 	void Obstacle::innerExport(IO::Descriptor& descriptor) const
 	{
 		ZonedModifier::innerExport(descriptor);
-		descriptor.getAttribute("bouncing ratio")->setValueFloat(getBouncingRatio());
-		descriptor.getAttribute("friction")->setValueFloat(getFriction());
+		descriptor.getAttribute("bouncing ratio")->setValue(getBouncingRatio());
+		descriptor.getAttribute("friction")->setValue(getFriction());
 	}
 }

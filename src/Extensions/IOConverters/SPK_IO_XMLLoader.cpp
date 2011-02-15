@@ -152,7 +152,7 @@ namespace IO
 		// name
 		const std::string* name = element.Attribute(std::string("name"));
 		if (name != NULL && !name->empty())
-			desc.getAttribute("name")->setValueString(*name); // We assume name is not NULL
+			desc.getAttribute("name")->setValue(*name); // We assume name attribute in descriptor exist
 
 		for (const TiXmlElement* attrib = element.FirstChildElement(); attrib != NULL; attrib = attrib->NextSiblingElement())
 			if (attrib->ValueStr() == "attrib")
@@ -165,23 +165,23 @@ namespace IO
 					{
 						switch(attribute->getType())
 						{
-						case ATTRIBUTE_TYPE_CHAR :		setAttributeValue<char>(*attribute,*attrib,&Attribute::setValueChar); break;
-						case ATTRIBUTE_TYPE_BOOL :		setAttributeValue<bool>(*attribute,*attrib,&Attribute::setValueBool); break;
-						case ATTRIBUTE_TYPE_INT32 :		setAttributeValue<long int>(*attribute,*attrib,&Attribute::setValueInt32); break;
-						case ATTRIBUTE_TYPE_UINT32 :	setAttributeValue<unsigned long int>(*attribute,*attrib,&Attribute::setValueUint32); break;
-						case ATTRIBUTE_TYPE_FLOAT :		setAttributeValue<float>(*attribute,*attrib,&Attribute::setValueFloat); break;
-						case ATTRIBUTE_TYPE_VECTOR :	setAttributeValue<Vector3D>(*attribute,*attrib,&Attribute::setValueVector); break;
-						case ATTRIBUTE_TYPE_COLOR :		setAttributeValue<Color>(*attribute,*attrib,&Attribute::setValueColor); break;
-						case ATTRIBUTE_TYPE_STRING :	setAttributeValue<std::string>(*attribute,*attrib,&Attribute::setValueString); break;
+						case ATTRIBUTE_TYPE_CHAR :		setAttributeValue<char>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_BOOL :		setAttributeValue<bool>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_INT32 :		setAttributeValue<long>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_UINT32 :	setAttributeValue<unsigned long>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_FLOAT :		setAttributeValue<float>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_VECTOR :	setAttributeValue<Vector3D>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_COLOR :		setAttributeValue<Color>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_STRING :	setAttributeValue<std::string>(*attribute,*attrib); break;
 						
-						case ATTRIBUTE_TYPE_CHARS :		setAttributeValueArray(*attribute,*attrib,&Attribute::setValuesChar); break;
-						case ATTRIBUTE_TYPE_BOOLS :		setAttributeValueArray(*attribute,*attrib,&Attribute::setValuesBool); break;
-						case ATTRIBUTE_TYPE_INT32S :	setAttributeValueArray(*attribute,*attrib,&Attribute::setValuesInt32); break;
-						case ATTRIBUTE_TYPE_UINT32S :	setAttributeValueArray(*attribute,*attrib,&Attribute::setValuesUint32); break;
-						case ATTRIBUTE_TYPE_FLOATS :	setAttributeValueArray(*attribute,*attrib,&Attribute::setValuesFloat); break;
-						case ATTRIBUTE_TYPE_VECTORS :	setAttributeValueArray(*attribute,*attrib,&Attribute::setValuesVector); break;
-						case ATTRIBUTE_TYPE_COLORS :	setAttributeValueArray(*attribute,*attrib,&Attribute::setValuesColor); break;
-						case ATTRIBUTE_TYPE_STRINGS :	setAttributeValueArray(*attribute,*attrib,&Attribute::setValuesString); break;
+						case ATTRIBUTE_TYPE_CHARS :		setAttributeValueArray<char>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_BOOLS :		setAttributeValueArray<bool>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_INT32S :	setAttributeValueArray<long>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_UINT32S :	setAttributeValueArray<unsigned long>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_FLOATS :	setAttributeValueArray<float>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_VECTORS :	setAttributeValueArray<Vector3D>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_COLORS :	setAttributeValueArray<Color>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_STRINGS :	setAttributeValueArray<std::string>(*attribute,*attrib); break;
 
 						case ATTRIBUTE_TYPE_REF : {
 							Ref<SPKObject> obj = getRef(*attrib,ref2Index,graph);
@@ -215,7 +215,7 @@ namespace IO
 	}
 
 	template<>
-	void XMLLoader::setAttributeValueArray(Attribute& attribute,const TiXmlElement& element,void (Attribute::*f)(const bool*,size_t,bool)) const
+	void XMLLoader::setAttributeValueArray<bool>(Attribute& attribute,const TiXmlElement& element) const
 	{
 		std::vector<bool> tmp;
 		const std::string* value = getValue(element);
@@ -224,7 +224,7 @@ namespace IO
 			bool* buffer = SPK_NEW_ARRAY(bool,tmp.size());
 			for (size_t i = 0; i < tmp.size(); ++i)
 				buffer[i] = tmp[i];
-			(attribute.*f)(buffer,tmp.size(),false);
+			attribute.setValues(buffer,tmp.size());
 			SPK_DELETE_ARRAY(buffer);
 		}		
 	}

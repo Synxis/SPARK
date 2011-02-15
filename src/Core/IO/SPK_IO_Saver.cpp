@@ -118,7 +118,7 @@ namespace IO
 			{
 				Attribute& attribute = descriptor.getAttribute(i);
 				if (attribute.getType() == ATTRIBUTE_TYPE_REF && attribute.hasValue())
-					constructNode(graph,attribute.getValueRef().get(),level + 1);
+					constructNode(graph,attribute.getValueRef<SPKObject>().get(),level + 1);
 				else if (attribute.getType() == ATTRIBUTE_TYPE_REFS && attribute.hasValue())
 				{
 					std::vector<Ref<SPKObject>>& refs = attribute.getValuesRef<SPKObject>();

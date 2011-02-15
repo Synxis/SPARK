@@ -138,7 +138,7 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("values"))
 		{
-			std::vector<Vector3D> tmpValues = attrib->getValuesVector();
+			std::vector<Vector3D> tmpValues = attrib->getValues<Vector3D>();
 			switch (tmpValues.size())
 			{
 			case 1 : setVectors(tmpValues[0],tmpValues[0]); break;
@@ -148,7 +148,7 @@ namespace SPK
 		}
 		if (attrib = descriptor.getAttributeWithValue("period"))
 		{
-			std::vector<float> tmpPeriods = attrib->getValuesFloat();
+			std::vector<float> tmpPeriods = attrib->getValues<float>();
 			switch (tmpPeriods.size())
 			{
 			case 1 : setPeriods(tmpPeriods[0],tmpPeriods[0]); break;
@@ -163,9 +163,9 @@ namespace SPK
 		Modifier::innerExport(descriptor);
 
 		Vector3D tmpValues[2] = {minVector,maxVector};
-		descriptor.getAttribute("values")->setValuesVector(tmpValues,2);
+		descriptor.getAttribute("values")->setValues(tmpValues,2);
 
 		float tmpPeriods[2] = {minPeriod,maxPeriod};
-		descriptor.getAttribute("period")->setValuesFloat(tmpPeriods,minPeriod == maxPeriod ? 1 : 2);
+		descriptor.getAttribute("period")->setValues(tmpPeriods,minPeriod == maxPeriod ? 1 : 2);
 	}
 }

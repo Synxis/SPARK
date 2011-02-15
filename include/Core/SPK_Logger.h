@@ -322,7 +322,7 @@ namespace SPK
 
 	inline void Logger::flush()
 	{
-		innerStream->flush();
+		if (isEnabled()) innerStream->flush();
 	}
 
 	template <typename T> 

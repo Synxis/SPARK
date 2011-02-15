@@ -879,19 +879,19 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;
 
 		if (attrib = descriptor.getAttributeWithValue("capacity"))
-			reallocate(attrib->getValueUint32());
+			reallocate(attrib->getValue<unsigned long>());
 		if (attrib = descriptor.getAttributeWithValue("color interpolator"))
-			setColorInterpolator(attrib->getValueRef().cast<ColorInterpolator>());
+			setColorInterpolator(attrib->getValueRef<ColorInterpolator>());
 		if (attrib = descriptor.getAttributeWithValue("scale interpolator"))
-			setParamInterpolator(PARAM_SCALE,attrib->getValueRef().cast<FloatInterpolator>());
+			setParamInterpolator(PARAM_SCALE,attrib->getValueRef<FloatInterpolator>());
 		if (attrib = descriptor.getAttributeWithValue("mass interpolator"))
-			setParamInterpolator(PARAM_MASS,attrib->getValueRef().cast<FloatInterpolator>());
+			setParamInterpolator(PARAM_MASS,attrib->getValueRef<FloatInterpolator>());
 		if (attrib = descriptor.getAttributeWithValue("angle interpolator"))
-			setParamInterpolator(PARAM_ANGLE,attrib->getValueRef().cast<FloatInterpolator>());
+			setParamInterpolator(PARAM_ANGLE,attrib->getValueRef<FloatInterpolator>());
 		if (attrib = descriptor.getAttributeWithValue("texture index interpolator"))
-			setParamInterpolator(PARAM_TEXTURE_INDEX,attrib->getValueRef().cast<FloatInterpolator>());
+			setParamInterpolator(PARAM_TEXTURE_INDEX,attrib->getValueRef<FloatInterpolator>());
 		if (attrib = descriptor.getAttributeWithValue("rotation speed interpolator"))
-			setParamInterpolator(PARAM_ROTATION_SPEED,attrib->getValueRef().cast<FloatInterpolator>());
+			setParamInterpolator(PARAM_ROTATION_SPEED,attrib->getValueRef<FloatInterpolator>());
 
 		if (attrib = descriptor.getAttributeWithValue("emitters"))
 		{
@@ -908,15 +908,15 @@ namespace SPK
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("birth action"))
-			setBirthAction(attrib->getValueRef().cast<Action>());
+			setBirthAction(attrib->getValueRef<Action>());
 		if (attrib = descriptor.getAttributeWithValue("death action"))
-			setDeathAction(attrib->getValueRef().cast<Action>());
+			setDeathAction(attrib->getValueRef<Action>());
 		if (attrib = descriptor.getAttributeWithValue("renderer"))
-			setRenderer(attrib->getValueRef().cast<Renderer>());
+			setRenderer(attrib->getValueRef<Renderer>());
 
 		if (attrib = descriptor.getAttributeWithValue("life time"))
 		{
-			std::vector<float> tmpTimes = attrib->getValuesFloat();
+			std::vector<float> tmpTimes = attrib->getValues<float>();
 			switch(tmpTimes.size())
 			{
 				case 1 : setLifeTime(tmpTimes[0],tmpTimes[0]); break;
@@ -926,17 +926,17 @@ namespace SPK
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("immortal"))
-			setImmortal(attrib->getValueBool());
+			setImmortal(attrib->getValue<bool>());
 		if (attrib = descriptor.getAttributeWithValue("still"))
-			setStill(attrib->getValueBool());
+			setStill(attrib->getValue<bool>());
 		if (attrib = descriptor.getAttributeWithValue("distance computation enabled"))
-			enableDistanceComputation(attrib->getValueBool());
+			enableDistanceComputation(attrib->getValue<bool>());
 		if (attrib = descriptor.getAttributeWithValue("sorting enabled"))
-			enableSorting(attrib->getValueBool());
+			enableSorting(attrib->getValue<bool>());
 
 		if (attrib = descriptor.getAttributeWithValue("radius"))
 		{
-			std::vector<float> tmpRadiuses = attrib->getValuesFloat();
+			std::vector<float> tmpRadiuses = attrib->getValues<float>();
 			switch(tmpRadiuses.size())
 			{
 				case 1 : setRadius(tmpRadiuses[0]); break;
@@ -950,13 +950,13 @@ namespace SPK
 	{
 		SPKObject::innerExport(descriptor);
 
-		descriptor.getAttribute("capacity")->setValueUint32(getCapacity());
-		descriptor.getAttribute("color interpolator")->setValueRefOptionalOnNull(getColorInterpolator());
-		descriptor.getAttribute("scale interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_SCALE));
-		descriptor.getAttribute("mass interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_MASS));
-		descriptor.getAttribute("angle interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_ANGLE));
-		descriptor.getAttribute("texture index interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_TEXTURE_INDEX));
-		descriptor.getAttribute("rotation speed interpolator")->setValueRefOptionalOnNull(getParamInterpolator(PARAM_ROTATION_SPEED));
+		descriptor.getAttribute("capacity")->setValue<unsigned long>(getCapacity());
+		descriptor.getAttribute("color interpolator")->setValueOptionalOnNull(getColorInterpolator());
+		descriptor.getAttribute("scale interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_SCALE));
+		descriptor.getAttribute("mass interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_MASS));
+		descriptor.getAttribute("angle interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_ANGLE));
+		descriptor.getAttribute("texture index interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_TEXTURE_INDEX));
+		descriptor.getAttribute("rotation speed interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_ROTATION_SPEED));
 
 		size_t nbEmitters = getNbEmitters();
 		if (nbEmitters > 0)
@@ -972,19 +972,19 @@ namespace SPK
 			SPK_DELETE_ARRAY(tmpModifiers);
 		}
 
-		descriptor.getAttribute("birth action")->setValueRefOptionalOnNull(getBirthAction());
-		descriptor.getAttribute("death action")->setValueRefOptionalOnNull(getDeathAction());
-		descriptor.getAttribute("renderer")->setValueRefOptionalOnNull(getRenderer());
+		descriptor.getAttribute("birth action")->setValueOptionalOnNull(getBirthAction());
+		descriptor.getAttribute("death action")->setValueOptionalOnNull(getDeathAction());
+		descriptor.getAttribute("renderer")->setValueOptionalOnNull(getRenderer());
 
 		float tmpTimes[2] = {minLifeTime,maxLifeTime};
-		descriptor.getAttribute("life time")->setValuesFloat(tmpTimes,tmpTimes[0] == tmpTimes[1] ? 1 : 2);
+		descriptor.getAttribute("life time")->setValues(tmpTimes,tmpTimes[0] == tmpTimes[1] ? 1 : 2);
 
-		descriptor.getAttribute("immortal")->setValueBoolOptionalOnFalse(immortal);
-		descriptor.getAttribute("still")->setValueBoolOptionalOnFalse(still);
-		descriptor.getAttribute("distance computation enabled")->setValueBoolOptionalOnFalse(distanceComputationEnabled);
-		descriptor.getAttribute("sorting enabled")->setValueBoolOptionalOnFalse(sortingEnabled);
+		descriptor.getAttribute("immortal")->setValueOptionalOnFalse(immortal);
+		descriptor.getAttribute("still")->setValueOptionalOnFalse(still);
+		descriptor.getAttribute("distance computation enabled")->setValueOptionalOnFalse(distanceComputationEnabled);
+		descriptor.getAttribute("sorting enabled")->setValueOptionalOnFalse(sortingEnabled);
 	
 		float tmpRadiuses[2] = {graphicalRadius,physicalRadius};
-		descriptor.getAttribute("radius")->setValuesFloat(tmpRadiuses,tmpRadiuses[0] == tmpRadiuses[1] ? 1 : 2);
+		descriptor.getAttribute("radius")->setValues(tmpRadiuses,tmpRadiuses[0] == tmpRadiuses[1] ? 1 : 2);
 	}
 }

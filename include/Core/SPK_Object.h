@@ -32,35 +32,38 @@ virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) const \
 {
 
 #define SPK_PARENT_ATTRIBUTES(ParentName)	ParentName::fillAttributeList(attributes);
-#define SPK_ATTRIBUTE(Name,Type)			attributes.push_back(IO::Attribute(Name,IO::Type));
+#define SPK_ATTRIBUTE(Name,Type)			attributes.push_back(SPK::IO::Attribute(Name,SPK::IO::Type));
+#define SPK_ATTRIBUTE_GENERIC(Name,T)		attributes.push_back(SPK::IO::Attribute(Name,SPK::IO::Attribute::getAttributeType<T>()));
+#define SPK_ATTRIBUTE_ARRAY_GENERIC(Name,T)	attributes.push_back(SPK::IO::Attribute(Name,SPK::IO::Attribute::getAttributeTypeArray<T>()));
+
 
 #define SPK_END_DESCRIPTION }
 
 #define SPK_IMPLEMENT_OBJECT(ClassName) \
 private : \
-friend class IO::IOManager; \
-template<typename T> friend class Ref; \
-static std::string asName()					{ return #ClassName; } \
-static Ref<SPKObject> createSerializable()	{ return SPK_NEW(ClassName); } \
-virtual Ref<SPKObject> clone() const		{ return SPK_NEW(ClassName,*this); } \
+friend class SPK::IO::IOManager; \
+template<typename T> friend class SPK::Ref; \
+static std::string asName()								{ return #ClassName; } \
+static SPK::Ref<SPK::SPKObject> createSerializable()	{ return SPK_NEW(ClassName); } \
+virtual SPK::Ref<SPK::SPKObject> clone() const			{ return SPK_NEW(ClassName,*this); } \
 public : \
-virtual std::string getClassName() const	{ return ClassName::asName(); }
+virtual std::string getClassName() const				{ return ClassName::asName(); }
 
 // For templates
-#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : void fillAttributeList(std::vector<IO::Attribute>& attributes) const;
+#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : void fillAttributeList(std::vector<SPK::IO::Attribute>& attributes) const;
 #define SPK_START_DESCRIPTION_TEMPLATE(ClassName) \
-template<> inline void ClassName::fillAttributeList(std::vector<IO::Attribute>& attributes) const \
+template<typename T> inline void ClassName::fillAttributeList(std::vector<SPK::IO::Attribute>& attributes) const \
 {
 
 #define SPK_DEFINE_OBJECT_TEMPLATE(ClassName) \
 private : \
-friend class IO::IOManager; \
-template<typename T> friend class Ref; \
+friend class SPK::IO::IOManager; \
+template<typename T> friend class SPK::Ref; \
 static std::string asName(); \
-static Ref<SPKObject> createSerializable()		{ return SPK_NEW(ClassName); } \
-virtual Ref<SPKObject> clone() const		{ return SPK_NEW(ClassName,*this); } \
+static SPK::Ref<SPK::SPKObject> createSerializable()		{ return SPK_NEW(ClassName); } \
+virtual SPK::Ref<SPK::SPKObject> clone() const				{ return SPK_NEW(ClassName,*this); } \
 public : \
-virtual std::string getClassName() const	{ return ClassName::asName(); }
+virtual std::string getClassName() const					{ return ClassName::asName(); }
 
 #define SPK_IMPLEMENT_OBJECT_TEMPLATE(ClassName) \
 template<> inline std::string ClassName::asName() { return #ClassName; }

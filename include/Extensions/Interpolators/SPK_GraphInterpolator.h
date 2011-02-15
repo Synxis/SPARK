@@ -126,6 +126,7 @@ namespace SPK
 	class GraphInterpolator : public Interpolator<T>
 	{
 	SPK_IMPLEMENT_OBJECT(GraphInterpolator<T>);
+	SPK_DEFINE_DESCRIPTION_TEMPLATE
 
 	public :
 
@@ -252,6 +253,11 @@ namespace SPK
 		/** @brief Clears the graph (removes all the entries) */
 		void clearGraph();
 
+	protected :
+
+		virtual void innerImport(const IO::Descriptor& descriptor);
+		virtual void innerExport(IO::Descriptor& descriptor) const;
+
 	private :
 
 		static const size_t NB_DATA = 3;
@@ -293,6 +299,21 @@ namespace SPK
 
 	typedef GraphInterpolator<Color> ColorGraphInterpolator;
 	typedef GraphInterpolator<float> FloatGraphInterpolator;
+
+	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorGraphInterpolator)
+	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatGraphInterpolator)
+
+	SPK_START_DESCRIPTION_TEMPLATE(GraphInterpolator<T>)
+	SPK_PARENT_ATTRIBUTES(Interpolator<T>)
+	SPK_ATTRIBUTE("graph keys",ATTRIBUTE_TYPE_FLOATS)
+	SPK_ATTRIBUTE_ARRAY_GENERIC("graph values",T)
+	SPK_ATTRIBUTE_ARRAY_GENERIC("graph values 2",T)
+	SPK_ATTRIBUTE("interpolation type",ATTRIBUTE_TYPE_UINT32)
+	SPK_ATTRIBUTE("interpolation param",ATTRIBUTE_TYPE_UINT32)
+	SPK_ATTRIBUTE("looping enabled",ATTRIBUTE_TYPE_BOOL)
+	SPK_ATTRIBUTE("scale variation",ATTRIBUTE_TYPE_FLOAT)
+	SPK_ATTRIBUTE("offset variation",ATTRIBUTE_TYPE_FLOAT)
+	SPK_END_DESCRIPTION
 
 	template<typename T>
 	typename GraphInterpolator<T>::computeXFn GraphInterpolator<T>::COMPUTE_X_FN[4] =
@@ -556,6 +577,116 @@ namespace SPK
 		scaleXData[index] = 1.0f + SPK_RANDOM(-scaleXVariation,scaleXVariation);
 		ratioYData[index] = SPK_RANDOM(0.0f,1.0f);
 		interpolateParticle(data,particle,offsetXData[index],scaleXData[index],ratioYData[index]);
+	}
+
+	template<typename T>
+	void GraphInterpolator<T>::innerImport(const IO::Descriptor& descriptor)
+	{
+		Interpolator<T>::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+
+		InterpolatorEntry<T>* entries = NULL;
+		size_t nbEntries = 0;
+		bool validGraph = true;
+
+		if (attrib = descriptor.getAttributeWithValue("graph keys"))
+		{
+			std::vector<float> keys = attrib->getValues<float>();
+			nbEntries = keys.size();
+
+			if (nbEntries > 0)
+			{
+				entries = SPK_NEW_ARRAY(InterpolatorEntry<T>,nbEntries);
+				for (size_t i = 0; i < nbEntries; ++i) entries[i].x = keys[i];
+			}
+			else 
+				validGraph = false;
+		}
+
+		if (validGraph && (attrib = descriptor.getAttributeWithValue("graph values")))
+		{
+			std::vector<T> values0 = attrib->getValues<T>();
+			if (values0.size() == nbEntries)
+				for (size_t i = 0; i < nbEntries; ++i) entries[i].y0 = entries[i].y1 = values0[i];
+			else
+				validGraph = false;
+		}
+
+		if (validGraph && (attrib = descriptor.getAttributeWithValue("graph values")))
+		{
+			std::vector<T> values1 = attrib->getValues<T>();
+			if (values1.size() == nbEntries)
+				for (size_t i = 0; i < nbEntries; ++i) entries[i].y1 = values1[i];
+			else
+				validGraph = false;
+		}
+
+		if (validGraph)
+			for (size_t i = 0; i < nbEntries; ++i)
+				addEntry(entries[i]);
+		else
+		{
+			clearGraph();
+			SPK_LOG_ERROR("GraphInterpolator<T>::innerImport(const IO::Descriptor&) - The imported graph is not valid (nb of entries are not consistent");
+		}
+
+		if (attrib = descriptor.getAttributeWithValue("interpolation type"))
+			setType(static_cast<InterpolationType>(attrib->getValue<unsigned long>()));
+		if (attrib = descriptor.getAttributeWithValue("interpolation param"))
+			setType(getType(),static_cast<Param>(attrib->getValue<unsigned long>()));
+		if (attrib = descriptor.getAttributeWithValue("looping enabled"))
+			enableLooping(attrib->getValue<bool>());
+		if (attrib = descriptor.getAttributeWithValue("scale variation"))
+			setScaleXVariation(attrib->getValue<float>());
+		if (attrib = descriptor.getAttributeWithValue("offset variation"))
+			setOffsetXVariation(attrib->getValue<float>());
+
+		SPK_DELETE_ARRAY(entries);
+	}
+
+	template<typename T>
+	void GraphInterpolator<T>::innerExport(IO::Descriptor& descriptor) const
+	{
+		Interpolator<T>::innerExport(descriptor);
+
+		float* keys = NULL;
+		T* values0 = NULL;
+		T* values1 = NULL;
+		bool twoChannels = false;
+
+		if (!graph.empty())
+		{
+			keys = SPK_NEW_ARRAY(float,graph.size());
+			values0 = SPK_NEW_ARRAY(T,graph.size());
+			values1 = SPK_NEW_ARRAY(T,graph.size());
+
+			size_t index = 0;
+			for (std::set<InterpolatorEntry<T>>::const_iterator it = graph.begin(); it != graph.end(); ++it)
+			{
+				keys[index] = it->x;
+				values0[index] = it->y0;
+				values1[index] = it->y1;
+				if (values0[index] != values1[index])
+					twoChannels = true;
+				++index;
+			}
+
+			descriptor.getAttribute("graph keys")->setValues(keys,graph.size());
+			descriptor.getAttribute("graph values")->setValues(values0,graph.size());
+			if (twoChannels)
+				descriptor.getAttribute("graph values 2")->setValues(values1,graph.size());
+		}
+
+		descriptor.getAttribute("interpolation type")->setValue<unsigned long>(getType(),getType() == INTERPOLATOR_LIFETIME);
+		descriptor.getAttribute("interpolation param")->setValue<unsigned long>(getInterpolatorParam(),getType() != INTERPOLATOR_PARAM);
+		descriptor.getAttribute("looping enabled")->setValue(isLoopingEnabled());
+		descriptor.getAttribute("scale variation")->setValue(getScaleXVariation(),getScaleXVariation() == 0.0f);
+		descriptor.getAttribute("offset variation")->setValue(getOffsetXVariation(),getOffsetXVariation() == 0.0f);
+	
+		SPK_DELETE_ARRAY(keys);
+		SPK_DELETE_ARRAY(values0);
+		SPK_DELETE_ARRAY(values1);
 	}
 
     /////////////////////////////////////////////////////////////

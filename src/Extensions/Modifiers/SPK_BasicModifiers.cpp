@@ -56,13 +56,13 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("value"))
-			setValue(attrib->getValueVector());
+			setValue(attrib->getValue<Vector3D>());
 	}
 
 	void Gravity::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValueVector(getValue());
+		descriptor.getAttribute("value")->setValue(getValue());
 	}
 
 	void Friction::innerImport(const IO::Descriptor& descriptor)
@@ -71,12 +71,12 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("value"))
-			value = attrib->getValueFloat();
+			value = attrib->getValue<float>();
 	}
 
 	void Friction::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValueFloat(value);
+		descriptor.getAttribute("value")->setValue(value);
 	}
 }

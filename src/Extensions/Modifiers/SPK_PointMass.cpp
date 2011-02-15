@@ -71,18 +71,18 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("position"))
-			setPosition(attrib->getValueVector());
+			setPosition(attrib->getValue<Vector3D>());
 		if (attrib = descriptor.getAttributeWithValue("mass"))
-			setMass(attrib->getValueFloat());
+			setMass(attrib->getValue<float>());
 		if (attrib = descriptor.getAttributeWithValue("offset"))
-			setOffset(attrib->getValueFloat());
+			setOffset(attrib->getValue<float>());
 	}
 
 	void PointMass::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("position")->setValueVector(getPosition());
-		descriptor.getAttribute("mass")->setValueFloat(getMass());
-		descriptor.getAttribute("offset")->setValueFloat(getOffset());
+		descriptor.getAttribute("position")->setValue(getPosition());
+		descriptor.getAttribute("mass")->setValue(getMass());
+		descriptor.getAttribute("offset")->setValue(getOffset());
 	}
 }

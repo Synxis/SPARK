@@ -23,7 +23,7 @@
 #define H_SPK_RANDOMINITIALIZER
 
 namespace SPK
-{	
+{
 	template<typename T>
 	class RandomInitializer : public Interpolator<T>
 	{
@@ -61,14 +61,9 @@ namespace SPK
 	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorRandomInitializer)
 	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatRandomInitializer)
 
-	SPK_START_DESCRIPTION_TEMPLATE(ColorRandomInitializer)
-	SPK_PARENT_ATTRIBUTES(ColorInterpolator)
-	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_COLORS)
-	SPK_END_DESCRIPTION
-
-	SPK_START_DESCRIPTION_TEMPLATE(FloatRandomInitializer)
-	SPK_PARENT_ATTRIBUTES(FloatInterpolator)
-	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_FLOATS)
+	SPK_START_DESCRIPTION_TEMPLATE(RandomInitializer<T>)
+	SPK_PARENT_ATTRIBUTES(Interpolator<T>)
+	SPK_ATTRIBUTE_ARRAY_GENERIC("values",T)
 	SPK_END_DESCRIPTION
 
 	template<typename T>
@@ -116,11 +111,29 @@ namespace SPK
 		data = SPK_RANDOM(minValue,maxValue);
 	}
 
-	// Explicit specialization declaration
-	template<> SPK_PREFIX void RandomInitializer<float>::innerImport(const IO::Descriptor& descriptor);
-	template<> SPK_PREFIX void RandomInitializer<float>::innerExport(IO::Descriptor& descriptor) const;
-	template<> SPK_PREFIX void RandomInitializer<Color>::innerImport(const IO::Descriptor& descriptor);
-	template<> SPK_PREFIX void RandomInitializer<Color>::innerExport(IO::Descriptor& descriptor) const;	
+	template<typename T>
+	void RandomInitializer<T>::innerImport(const IO::Descriptor& descriptor)
+	{
+		Interpolator<T>::innerImport(descriptor);
+
+		const IO::Attribute* attrib = NULL;
+		if (attrib = descriptor.getAttributeWithValue("values"))
+		{
+			std::vector<T> tmpValues = attrib->getValues<T>();
+			if (tmpValues.size() == 2)
+				setValues(tmpValues[0],tmpValues[1]);
+			else
+				SPK_LOG_ERROR("RandomInitializer<T>::innerImport(const IO::Descriptor&) - Wrong number of values : " << tmpValues.size());
+		}
+	}
+
+	template<typename T>
+	void RandomInitializer<T>::innerExport(IO::Descriptor& descriptor) const
+	{
+		Interpolator<T>::innerExport(descriptor);
+		T tmpValues[2] = {minValue,maxValue};
+		descriptor.getAttribute("values")->setValues(tmpValues,2);
+	}
 }
 
 #endif

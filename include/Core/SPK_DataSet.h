@@ -52,13 +52,13 @@ namespace SPK
 		* @brief Sets the flag of the data
 		* @param flag : the flag of the data
 		*/
-		void setFlag(long int flag);
+		void setFlag(long flag);
 
 		/**
 		* @brief Gets the flag of the data
 		* @return the flag of the data
 		*/
-		long int getFlag() const;
+		long getFlag() const;
 
 	protected :
 
@@ -67,7 +67,7 @@ namespace SPK
 
 	private :
 
-		long int flag;
+		long flag;
 
 		/**
 		* @brief Swaps the additional data of 2 particles
@@ -154,12 +154,12 @@ namespace SPK
 		flag(0)
 	{}
 
-	inline void Data::setFlag(long int flag)
+	inline void Data::setFlag(long flag)
 	{
 		this->flag = flag;
 	}
 
-	inline long int Data::getFlag() const
+	inline long Data::getFlag() const
 	{
 		return flag;
 	}

@@ -315,9 +315,9 @@ namespace SPK
 		float local[TRANSFORM_LENGTH];
 		float world[TRANSFORM_LENGTH];
 
-		unsigned long int currentUpdate;
-		unsigned long int lastUpdate;
-		unsigned long int lastParentUpdate;
+		unsigned long currentUpdate;
+		unsigned long lastUpdate;
+		unsigned long lastParentUpdate;
 		bool localIdentity;
 
 		SPKObject* parent;

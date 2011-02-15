@@ -131,12 +131,12 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("elasticity"))
-			setElasticity(attrib->getValueFloat());
+			setElasticity(attrib->getValue<float>());
 	}
 
 	void Collider::innerExport(IO::Descriptor& descriptor) const
 	{
 		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("elasticity")->setValueFloat(getElasticity());
+		descriptor.getAttribute("elasticity")->setValue(getElasticity());
 	}
 }

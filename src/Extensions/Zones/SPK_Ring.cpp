@@ -145,10 +145,10 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("normal"))
-			setNormal(attrib->getValueVector());
+			setNormal(attrib->getValue<Vector3D>());
 		if (attrib = descriptor.getAttributeWithValue("radius"))
 		{
-			std::vector<float> tmpRadius = attrib->getValuesFloat();
+			std::vector<float> tmpRadius = attrib->getValues<float>();
 			switch (tmpRadius.size())
 			{
 			case 1 : setRadius(tmpRadius[0],tmpRadius[0]); break;
@@ -162,8 +162,8 @@ namespace SPK
 	{
 		Zone::innerExport(descriptor);
 
-		descriptor.getAttribute("normal")->setValueVector(getNormal());
+		descriptor.getAttribute("normal")->setValue(getNormal());
 		float tmpRadius[2] = {minRadius,maxRadius};
-		descriptor.getAttribute("radius")->setValuesFloat(tmpRadius,2);
+		descriptor.getAttribute("radius")->setValues(tmpRadius,2);
 	}
 }

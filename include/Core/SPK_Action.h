@@ -99,13 +99,13 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("active"))
-			setActive(attrib->getValueBool());
+			setActive(attrib->getValue<bool>());
 	}
 
 	inline void Action::innerExport(IO::Descriptor& descriptor) const
 	{
 		SPKObject::innerExport(descriptor);
-		descriptor.getAttribute("active")->setValueBool(isActive(),isActive());
+		descriptor.getAttribute("active")->setValueOptionalOnTrue(isActive());
 	}
 }
 
