@@ -22,6 +22,8 @@
 #ifndef H_SPK_IO_XMLLOADER
 #define H_SPK_IO_XMLLOADER
 
+#ifndef SPK_NO_XML
+
 #include <sstream>
 
 class TiXmlElement;
@@ -106,4 +108,5 @@ namespace IO
 	void SPK_PREFIX XMLLoader::setAttributeValueArray<bool>(Attribute& attribute,const TiXmlElement& element) const;
 }}
 
+#endif
 #endif

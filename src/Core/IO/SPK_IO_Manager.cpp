@@ -138,9 +138,11 @@ namespace IO
 
 	void IOManager::registerIOConverters()
 	{
+#ifndef SPK_NO_XML
 		// XML converters
 		registerLoader("xml",SPK_NEW(XMLLoader));
 		registerSaver("xml",SPK_NEW(XMLSaver));
+#endif
 	}
 
 	void IOManager::registerCoreObjects()
