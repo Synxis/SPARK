@@ -152,16 +152,16 @@ namespace IO
 		registerObject<Group>();
 		
 		// Interpolators
-		//registerObject<FloatDefaultInitializer>();	
-		//registerObject<ColorDefaultInitializer>();
+		registerObject<FloatDefaultInitializer>();	
+		registerObject<ColorDefaultInitializer>();
 		registerObject<FloatRandomInitializer>();
 		registerObject<ColorRandomInitializer>();
 		registerObject<FloatSimpleInterpolator>();
 		registerObject<ColorSimpleInterpolator>();
-		//registerObject<FloatRandomInterpolator>();
-		//registerObject<ColorRandomInterpolator>();
-		//registerObject<FloatGraphInterpolator>();
-		//registerObject<ColorGraphInterpolator>();
+		registerObject<FloatRandomInterpolator>();
+		registerObject<ColorRandomInterpolator>();
+		registerObject<FloatGraphInterpolator>();
+		registerObject<ColorGraphInterpolator>();
 
 		// Zones
 		registerObject<Point>();
@@ -183,11 +183,11 @@ namespace IO
 		registerObject<Rotator>();
 		registerObject<Collider>();
 		registerObject<Destroyer>();
-		//registerObject<Vortex>();
+		registerObject<Vortex>();
 		registerObject<EmitterAttacher>();
 		registerObject<PointMass>();
 		registerObject<RandomForce>();
-		//registerObject<LinearForce>();
+		registerObject<LinearForce>();
 
 		// Actions
 		registerObject<ActionSet>();
