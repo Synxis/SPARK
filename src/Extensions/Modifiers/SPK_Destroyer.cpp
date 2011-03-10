@@ -27,7 +27,7 @@
 
 namespace SPK
 {
-	Destroyer::Destroyer(Zone* zone,ModifierTrigger) :
+	Destroyer::Destroyer(Zone* zone,ModifierTrigger trigger) :
 		Modifier(INSIDE_ZONE | OUTSIDE_ZONE | INTERSECT_ZONE | ENTER_ZONE | EXIT_ZONE,INSIDE_ZONE,true,false,zone)
 	{
 		setTrigger(trigger);

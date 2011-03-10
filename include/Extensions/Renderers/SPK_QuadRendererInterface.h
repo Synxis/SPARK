@@ -256,7 +256,7 @@ namespace SPK
 	{
 		int textureIndex = static_cast<int>(particle.getParamCurrentValue(PARAM_TEXTURE_INDEX));
 		atlasU0 = atlasU1 = static_cast<float>(textureIndex % textureAtlasNbX) / textureAtlasNbX;
-		atlasV0 = atlasV1 = static_cast<float>(textureIndex / textureAtlasNbY) / textureAtlasNbY;
+		atlasV0 = atlasV1 = static_cast<float>(textureIndex / textureAtlasNbX) / textureAtlasNbY;
 		atlasU1 += textureAtlasW;
 		atlasV1 += textureAtlasH;
 	}

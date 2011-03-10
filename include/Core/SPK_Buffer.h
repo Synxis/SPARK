@@ -98,6 +98,8 @@ namespace SPK
 	{
 	friend class Group;
 
+		virtual ~BufferCreator() {}
+
 		/**
 		* @brief Creates a new buffer
 		*

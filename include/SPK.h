@@ -77,5 +77,6 @@
 #include "Extensions/Renderers/SPK_PointRendererInterface.h" // 1.04
 #include "Extensions/Renderers/SPK_LineRendererInterface.h" // 1.04
 #include "Extensions/Renderers/SPK_Oriented3DRendererInterface.h" // 1.04
+#include "Extensions/Renderers/SPK_QuadRendererInterface.h"
 
 #endif

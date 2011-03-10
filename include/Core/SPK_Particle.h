@@ -31,6 +31,8 @@
 
 namespace SPK
 {
+	class Group;
+
 	/**
 	* @class Particle
 	* @brief A single particle (a point in space with a velocity and different parameters)

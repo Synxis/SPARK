@@ -563,7 +563,7 @@ namespace SPK
 
 	inline size_t Model::getParameterOffset(ModelParam param) const
 	{
-		return particleEnableIndices[param];
+		return static_cast<size_t>(particleEnableIndices[param]);
 	}
 }
 
