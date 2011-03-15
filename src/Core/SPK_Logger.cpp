@@ -34,6 +34,7 @@ namespace SPK
 		"INFO",
 		"WARNING",
 		"ERROR",
+		"FATAL ERROR",
 	};
 
 	Logger::Logger() :

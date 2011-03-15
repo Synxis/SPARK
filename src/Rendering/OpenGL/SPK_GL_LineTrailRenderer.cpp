@@ -60,7 +60,7 @@ namespace GL
 	void GLLineTrailRenderer::enableBlending(bool blendingEnabled)
 	{
 		if (!blendingEnabled)
-			SPK_LOG_WARNING("GLLineTrailRenderer::enableBlending(bool) - The blending cannot be disables for this renderer");
+			SPK_LOG_WARNING("GLLineTrailRenderer::enableBlending(bool) - The blending cannot be disabled for this renderer");
 		GLRenderer::enableBlending(true);
 	}
 

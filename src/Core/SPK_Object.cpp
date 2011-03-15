@@ -50,7 +50,7 @@ namespace SPK
 	{
 		if (shared && !SHAREABLE)
 		{
-			SPK_LOG_ERROR("SPKObject::setShared(bool) - This object is of a type that is not shareable");
+			SPK_LOG_WARNING("SPKObject::setShared(bool) - This object is of a type that is not shareable. Nothing happens");
 			return;
 		}
 

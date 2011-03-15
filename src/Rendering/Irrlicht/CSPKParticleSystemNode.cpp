@@ -44,7 +44,7 @@ namespace scene
 		SPKSystem->enableAABBComputation(true); // as culling is enabled by default in Irrlicht
 
 		if (parent != NULL && !SPKSystem->isInitialized())
-			SPK_LOG_WARNING("CSPKParticleSystemNode(ISceneNode*,ISceneManager*,bool,bool,s32) - A uninitialized system may have a NULL parent");
+			SPK_LOG_WARNING("CSPKParticleSystemNode(ISceneNode*,ISceneManager*,bool,bool,s32) - A uninitialized system should have a NULL parent");
 	}
 
 	CSPKParticleSystemNode::CSPKParticleSystemNode(
@@ -67,7 +67,7 @@ namespace scene
 		setParent(newParent);
 		
 		if (getParent() != NULL && !SPKSystem->isInitialized())
-			SPK_LOG_WARNING("CSPKParticleSystemNode(const CSPKParticleSystemNode&,ISceneNode*,ISceneManager*) - A uninitialized system may have a NULL parent");
+			SPK_LOG_WARNING("CSPKParticleSystemNode(const CSPKParticleSystemNode&,ISceneNode*,ISceneManager*) - A uninitialized system should have a NULL parent");
 		
 		cloneMembers(const_cast<CSPKParticleSystemNode*>(&system),newManager);
 	}

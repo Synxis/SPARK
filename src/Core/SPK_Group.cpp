@@ -304,7 +304,7 @@ namespace SPK
 			if (paramInterpolators[param].obj == NULL && interpolator != NULL)
 			{
 				if (particleData.parameters[param] != NULL)
-					SPK_LOG_ERROR("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected memory leak happened");
+					SPK_LOG_FATAL("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected memory leak happened");
 
 				// Creates the data for the parameter
 				if (isInitialized())
@@ -314,7 +314,7 @@ namespace SPK
 			{
 				if (particleData.parameters[param] == NULL)
 				{
-					SPK_LOG_ERROR("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected error happened");
+					SPK_LOG_FATAL("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected error happened");
 				}
 
 				// Destroys the data for the parameter
@@ -400,9 +400,10 @@ namespace SPK
 				return;
 			}
 
-		if (isInitialized())
-			SPK_ASSERT(modifiers.size() == sortedModifiers.size(),"Group::addModifier(Modifier*) - Internal Error - Inconsistent storage of modifiers");
-		SPK_LOG_WARNING("The modifier was not found in the group and cannot be removed");
+		if (isInitialized() && modifiers.size() != sortedModifiers.size()) 
+			SPK_LOG_FATAL("Group::addModifier(Modifier*) - Internal Error - Inconsistent storage of modifiers");
+		else
+			SPK_LOG_WARNING("The modifier was not found in the group and cannot be removed");
 	}
 
 	void Group::setRenderer(const Ref<Renderer>& renderer)

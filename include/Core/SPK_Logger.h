@@ -50,6 +50,12 @@
 */
 
 /**
+* @def SPK_LOG_FATAL(entry)
+* @brief Logs an fatal error entry in the logger
+* @param entry : the fatal error entry to log
+*/
+
+/**
 * @def SPK_ASSERT(condition,text)
 * @brief Makes an assertion on the condition and logs an error if it fails
 * @param condition : the condition of the assertion
@@ -62,6 +68,7 @@
 #define SPK_LOG_INFO(entry) {}
 #define SPK_LOG_WARNING(entry) {}
 #define SPK_LOG_ERROR(entry) {}
+#define SPK_LOG_FATAL(entry) {}
 #define SPK_ASSERT(condition,text) {assert(condition)}
 
 #else
@@ -74,6 +81,7 @@
 #define SPK_LOG_INFO(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_INFO) << entry << "\n"; SPK::Logger::get().flush();}
 #define SPK_LOG_WARNING(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_WARNING) << entry << "\n"; SPK::Logger::get().flush();}
 #define SPK_LOG_ERROR(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_ERROR) << entry << "\n"; SPK::Logger::get().flush();}
+#define SPK_LOG_FATAL(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_FATAL) << entry << "\n"; SPK::Logger::get().flush();}
 
 #define SPK_ASSERT(condition,text) \
 { \
@@ -94,7 +102,8 @@ namespace SPK
 		LOG_PRIORITY_DEBUG = 0,		/**< Debug priority (lower) */
 		LOG_PRIORITY_INFO = 1,		/**< Info priority (standard) */
 		LOG_PRIORITY_WARNING = 2,	/**< Warning priority (bad coding style that may not be fatal) */
-		LOG_PRIORITY_ERROR = 3,		/**< Error priority (fatal error that are very likely to cause a crash at some point) */
+		LOG_PRIORITY_ERROR = 3,		/**< Error priority (error that are very likely to cause a crash at some point) */
+		LOG_PRIORITY_FATAL = 4,		/**< Fatal error priority (error due to inconsistency within the engine) */
 	};
 
 	/** @brief Constants defining the format of the prefix of each message */
@@ -115,6 +124,7 @@ namespace SPK
 	* <li>SPK_LOG_INFO(entry) : to log a standard information</li>
 	* <li>SPK_LOG_WARNING(entry) : to log a warning</li>
 	* <li>SPK_LOG_ERROR(entry) : to log an error which will most likely result to an immediate crash</li>
+	* <li>SPK_LOG_FATAL(entry) : to log an fatal error due to an engine inconsistency. This must only be used by the engine</li>
 	* </ul>
 	* Those macros are shortcuts to a call to the logger. Moreover they flush the inner stream so that the entry is logged instantly.<br>
 	* Some access to lower level methods are possible to be able to log message in a more precise way (getStream,flush...).<br>
@@ -261,7 +271,7 @@ namespace SPK
 
 		static Logger* instance; // The unique instance of Logger
 
-		static const size_t NB_PRIORITY_LEVELS = 4; // Number of priority levels
+		static const size_t NB_PRIORITY_LEVELS = 5; // Number of priority levels
 		static const std::string PRIORITY_NAMES[NB_PRIORITY_LEVELS]; // Names of priority levels
 
 		std::ostream* innerStream;

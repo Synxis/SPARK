@@ -83,7 +83,7 @@ namespace SPK
 	{
 		if (group == NULL)
 		{
-			SPK_LOG_ERROR("System::createGroup(const Ref<Group>&) - The group to copy is NULL");
+			SPK_LOG_WARNING("System::createGroup(const Ref<Group>&) - The group to copy is NULL");
 			return SPK_NULL_REF;
 		}
 
@@ -96,7 +96,10 @@ namespace SPK
 	void System::addGroup(const Ref<Group>& group)
 	{
 		if (group == NULL)
-			SPK_LOG_ERROR("System::addGroup(const Ref<Group>&) - The group to add is NULL");
+		{
+			SPK_LOG_WARNING("System::addGroup(const Ref<Group>&) - The group to add is NULL");
+			return;
+		}
 
 		setGroupSystem(group,this);
 		groups.push_back(group);
@@ -268,7 +271,7 @@ namespace SPK
 		if (group->system != system)
 		{
 			if (group == NULL)
-				SPK_LOG_ERROR("System::setGroupSystem(const Ref<Group>&) - Internal Error - The group is NULL");
+				SPK_LOG_FATAL("System::setGroupSystem(const Ref<Group>&) - Internal Error - The group is NULL");
 
 			if (remove && group->system != NULL)
 				group->system->removeGroup(group);

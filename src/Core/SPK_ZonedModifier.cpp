@@ -70,7 +70,7 @@ namespace SPK
 					break;
 				}
 				if (!validTestFound)
-					SPK_LOG_ERROR("ZonedModifier::setZoneTest(ZoneTest) - The ZONE_TEST_FLAG of modifier is empty"); 
+					SPK_LOG_FATAL("ZonedModifier::setZoneTest(ZoneTest) - The ZONE_TEST_FLAG of modifier is empty"); 
 			}
 		}
 	}

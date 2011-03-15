@@ -38,7 +38,7 @@ namespace IO
 	{
 		if (system == NULL)
 		{
-			SPK_LOG_WARNING("Saver::saver(std::ostream&,const Ref<System>&) - Impossible to write a NULL Syste. Nothing is done");
+			SPK_LOG_WARNING("Saver::saver(std::ostream&,const Ref<System>&) - Impossible to write a NULL System. Nothing is done");
 			return false;			
 		}
 
@@ -64,7 +64,7 @@ namespace IO
 	{
 		if (system == NULL)
 		{
-			SPK_LOG_WARNING("Saver::saver(const std::string&,const Ref<System>&) - Impossible to write a NULL Syste. Nothing is done");
+			SPK_LOG_WARNING("Saver::saver(const std::string&,const Ref<System>&) - Impossible to write a NULL System. Nothing is done");
 			return false;			
 		}
 		
