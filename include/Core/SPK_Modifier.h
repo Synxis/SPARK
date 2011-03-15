@@ -210,7 +210,7 @@ namespace SPK
 		const int availableTriggers;
 
 		virtual void registerChildren(bool registerAll);
-		virtual void copyChildren(const Modifier& modifier,bool createBase);
+		virtual void copyChildren(const Registerable& object,bool createBase);
 		virtual void destroyChildren(bool keepChildren);
 
 		virtual void propagateUpdateTransform();

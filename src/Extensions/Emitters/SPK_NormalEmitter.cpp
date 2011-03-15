@@ -37,8 +37,9 @@ namespace SPK
 		registerChild(normalZone,registerAll);
 	}
 
-	void NormalEmitter::copyChildren(const NormalEmitter& emitter,bool createBase)
+	void NormalEmitter::copyChildren(const Registerable& object,bool createBase)
 	{
+		const NormalEmitter& emitter = dynamic_cast<const NormalEmitter&>(object);
 		Emitter::copyChildren(emitter,createBase);
 		normalZone = dynamic_cast<Zone*>(copyChild(emitter.normalZone,createBase));	
 	}

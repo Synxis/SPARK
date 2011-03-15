@@ -57,8 +57,9 @@ namespace SPK
 			registerChild(*it,registerAll);
 	}
 
-	void System::copyChildren(const System& system,bool createBase)
+	void System::copyChildren(const Registerable& object,bool createBase)
 	{
+		const System& system = dynamic_cast<const System&>(object);
 		Registerable::copyChildren(system,createBase);
 
 		// we clear the copies of pointers pushed in the vectors by the copy constructor

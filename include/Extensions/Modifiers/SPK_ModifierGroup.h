@@ -211,7 +211,7 @@ namespace SPK
 	protected :
 
 		virtual void registerChildren(bool registerAll);
-		virtual void copyChildren(const ModifierGroup& modifier,bool createBase);
+		virtual void copyChildren(const Registerable& object,bool createBase);
 		virtual void destroyChildren(bool keepChildren);
 
 		virtual bool checkBuffers(const Group& group);

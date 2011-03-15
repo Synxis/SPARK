@@ -377,7 +377,7 @@ namespace SPK
 		std::vector<Group*> groups;
 
 		virtual void registerChildren(bool registerAll);
-		virtual void copyChildren(const System& system,bool keepChildren);
+		virtual void copyChildren(const Registerable& object,bool keepChildren);
 		virtual void destroyChildren(bool createBase);
 
 		virtual void propagateUpdateTransform();

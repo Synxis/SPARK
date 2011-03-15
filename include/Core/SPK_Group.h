@@ -797,7 +797,7 @@ namespace SPK
 	protected :
 
 		virtual void registerChildren(bool registerAll);
-		virtual void copyChildren(const Group& group,bool createBase);
+		virtual void copyChildren(const Registerable& object,bool createBase);
 		virtual void destroyChildren(bool keepChildren);
 
 		virtual void propagateUpdateTransform();

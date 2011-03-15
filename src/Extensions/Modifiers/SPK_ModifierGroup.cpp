@@ -39,8 +39,9 @@ namespace SPK
 			registerChild(*it,registerAll);	
 	}
 
-	void ModifierGroup::copyChildren(const ModifierGroup& modifier,bool createBase)
+	void ModifierGroup::copyChildren(const Registerable& object,bool createBase)
 	{
+		const ModifierGroup& modifier = dynamic_cast<const ModifierGroup&>(object);
 		Modifier::copyChildren(modifier,createBase);
 
 		// we clear the copies of pointers pushed in the vectors by the copy constructor

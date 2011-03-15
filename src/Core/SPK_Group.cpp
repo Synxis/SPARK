@@ -120,8 +120,9 @@ namespace SPK
 			registerChild(*it,registerAll);
 	}
 
-	void Group::copyChildren(const Group& group,bool createBase)
+	void Group::copyChildren(const Registerable& object,bool createBase)
 	{
+		const Group& group = dynamic_cast<const Group&>(object);
 		Registerable::copyChildren(group,createBase);
 
 		model = dynamic_cast<Model*>(copyChild(group.model,createBase));
