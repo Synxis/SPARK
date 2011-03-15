@@ -362,8 +362,8 @@ namespace SPK
 		float size = particle.getParamCurrentValue(PARAM_SIZE);
 
 		float angleTexture = particle.getParamCurrentValue(PARAM_ANGLE);
-		float cosA = cos(angleTexture);
-		float sinA = sin(angleTexture);
+		float cosA = std::cos(angleTexture);
+		float sinA = std::sin(angleTexture);
 
 		upQuad.x = (look.x * look.x + (1.0f - look.x * look.x) * cosA) * up.x
 			+ (look.x * look.y * (1.0f - cosA) - look.z * sinA) * up.y

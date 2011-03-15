@@ -487,7 +487,7 @@ namespace SPK
 
 	inline float Vector3D::getNorm() const
 	{
-		return sqrt(getSqrNorm());
+		return std::sqrt(getSqrNorm());
 	}
 
 	inline Vector3D Vector3D::operator-() const

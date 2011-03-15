@@ -439,7 +439,7 @@ namespace SPK
 
 	inline void Transformable::setTransform(const float* transform)
 	{
-		memcpy(local,transform,sizeof(float) * TRANSFORM_LENGTH);
+		std::memcpy(local,transform,sizeof(float) * TRANSFORM_LENGTH);
 		localIdentity = false;
 		notifyForUpdate();
 	}

@@ -161,7 +161,7 @@ namespace DX9
 			void *ptr;
 			/*if( */hr = DX9VertexBuffer->Lock(0, 0, &ptr, 0);// == S_OK )
 			{
-				memcpy(ptr, vertexBuffer, group.getNbParticles() * sizeof(PointVertex));
+				std::memcpy(ptr, vertexBuffer, group.getNbParticles() * sizeof(PointVertex));
 				DX9VertexBuffer->Unlock();
 
 				LPDIRECT3DDEVICE9 device = DX9Info::getDevice();

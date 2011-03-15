@@ -283,7 +283,7 @@ namespace DX9
 				case TEXTURE_2D:
 					{
 						DX9TextureBuffer->Lock(0, 0, &ptr, 0);
-						memcpy(ptr, textureBuffer, 4 * group.getNbParticles() * sizeof(D3DXVECTOR2));
+						std::memcpy(ptr, textureBuffer, 4 * group.getNbParticles() * sizeof(D3DXVECTOR2));
 						DX9TextureBuffer->Unlock();
 
 						device->SetStreamSource(2, DX9TextureBuffer, 0, sizeof(D3DXVECTOR2));
@@ -294,7 +294,7 @@ namespace DX9
 				case TEXTURE_3D:
 					{
 						DX9TextureBuffer->Lock(0, 0, &ptr, 0);
-						memcpy(ptr, textureBuffer, 4 * group.getNbParticles() * sizeof(D3DXVECTOR3));
+						std::memcpy(ptr, textureBuffer, 4 * group.getNbParticles() * sizeof(D3DXVECTOR3));
 						DX9TextureBuffer->Unlock();
 
 						device->SetStreamSource(2, DX9TextureBuffer, 0, sizeof(D3DXVECTOR3));
@@ -310,17 +310,17 @@ namespace DX9
 			}
 
 			DX9VertexBuffer->Lock(0, 0, &ptr, 0);
-			memcpy(ptr, vertexBuffer, 4 * group.getNbParticles() * sizeof(D3DXVECTOR3));
+			std::memcpy(ptr, vertexBuffer, 4 * group.getNbParticles() * sizeof(D3DXVECTOR3));
 			DX9VertexBuffer->Unlock();
 			device->SetStreamSource(0, DX9VertexBuffer, 0, sizeof(D3DXVECTOR3));
 
 			DX9ColorBuffer->Lock(0, 0, &ptr, 0);
-			memcpy(ptr, colorBuffer, 4 * group.getNbParticles() * sizeof(DWORD));
+			std::memcpy(ptr, colorBuffer, 4 * group.getNbParticles() * sizeof(DWORD));
 			DX9ColorBuffer->Unlock();
 			device->SetStreamSource(1, DX9ColorBuffer, 0, sizeof(DWORD));
 
 			DX9IndexBuffer->Lock(0, 0, &ptr, 0);
-			memcpy(ptr, indexBuffer, 6 * group.getNbParticles() * sizeof(short));
+			std::memcpy(ptr, indexBuffer, 6 * group.getNbParticles() * sizeof(short));
 			DX9IndexBuffer->Unlock();
 			device->SetIndices(DX9IndexBuffer);
 

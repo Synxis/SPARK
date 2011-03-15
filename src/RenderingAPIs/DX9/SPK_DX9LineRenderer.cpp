@@ -157,7 +157,7 @@ namespace DX9
 
 			if( DX9VertexBuffer->Lock(0, 0, &ptr, 0) == D3D_OK )
 			{
-				memcpy(ptr, gpuBuffer, group.getNbParticles() * 2 * sizeof(LineVertex));
+				std::memcpy(ptr, gpuBuffer, group.getNbParticles() * 2 * sizeof(LineVertex));
 				if( DX9VertexBuffer->Unlock() == D3D_OK )
 				{
 					LPDIRECT3DDEVICE9 device = DX9Info::getDevice();

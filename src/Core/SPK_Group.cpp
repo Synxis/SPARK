@@ -84,9 +84,9 @@ namespace SPK
 		particleCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
 		particleExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
 
-		memcpy(particleData,group.particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
-		memcpy(particleCurrentParams,group.particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
-		memcpy(particleExtendedParams,group.particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
+		std::memcpy(particleData,group.particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
+		std::memcpy(particleCurrentParams,group.particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
+		std::memcpy(particleExtendedParams,group.particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
 
 		for (Pool<Particle>::iterator it = pool.begin(); it != pool.endInactive(); ++it)
 		{
@@ -578,9 +578,9 @@ namespace SPK
 			float* newCurrentParams = new float[pool.getNbReserved() * model->getSizeOfParticleCurrentArray()];
 			float* newExtendedParams = new float[pool.getNbReserved() * model->getSizeOfParticleExtendedArray()];
 
-			memcpy(newData,particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
-			memcpy(newCurrentParams,particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
-			memcpy(newExtendedParams,particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
+			std::memcpy(newData,particleData,pool.getNbTotal() * sizeof(Particle::ParticleData));
+			std::memcpy(newCurrentParams,particleCurrentParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleCurrentArray());
+			std::memcpy(newExtendedParams,particleExtendedParams,pool.getNbTotal() * sizeof(float) * model->getSizeOfParticleExtendedArray());
 
 			delete[] particleData;
 			delete[] particleCurrentParams;

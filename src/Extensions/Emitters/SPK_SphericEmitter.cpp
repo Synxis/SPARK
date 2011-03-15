@@ -53,8 +53,8 @@ namespace SPK
 		angleMin = angleA;
 		angleMax = angleB;
 
-		cosAngleMin = cos(angleMin * 0.5f);
-		cosAngleMax = cos(angleMax * 0.5f);
+		cosAngleMin = std::cos(angleMin * 0.5f);
+		cosAngleMax = std::cos(angleMax * 0.5f);
 	}
 
 	void SphericEmitter::computeMatrix()
@@ -101,13 +101,13 @@ namespace SPK
 	void SphericEmitter::generateVelocity(Particle& particle,float speed) const
 	{
 		float a = random(cosAngleMax,cosAngleMin);
-		float theta = acos(a);
+		float theta = std::acos(a);
 		float phi = random(0.0f,2.0f * PI);
 
-		float sinTheta = sin(theta);
-		float x = sinTheta * cos(phi);
-		float y = sinTheta * sin(phi);
-		float z = cos(theta);
+		float sinTheta = std::sin(theta);
+		float x = sinTheta * std::cos(phi);
+		float y = sinTheta * std::sin(phi);
+		float z = std::cos(theta);
 
 		particle.velocity().x = speed * (matrix[0] * x + matrix[1] * y + matrix[2] * z);
 		particle.velocity().y = speed * (matrix[3] * x + matrix[4] * y + matrix[5] * z);

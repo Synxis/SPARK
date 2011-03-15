@@ -195,17 +195,17 @@ namespace DX9
 
 					if (count > 0) // shifts the data by one
 					{
-						memmove(vertexIterator + vertexDelta - 1, vertexIterator + vertexDelta, (nbSamples - count) * sizeof(D3DXVECTOR3));
-						memmove(colorIterator + colorDelta - 1, colorIterator + colorDelta, (nbSamples - count) * sizeof(D3DCOLOR));
-						memmove(valueIterator + count - 1, valueIterator + count, (nbSamples - count) * sizeof(float));
+						std::memmove(vertexIterator + vertexDelta - 1, vertexIterator + vertexDelta, (nbSamples - count) * sizeof(D3DXVECTOR3));
+						std::memmove(colorIterator + colorDelta - 1, colorIterator + colorDelta, (nbSamples - count) * sizeof(D3DCOLOR));
+						std::memmove(valueIterator + count - 1, valueIterator + count, (nbSamples - count) * sizeof(float));
 
 						--count;
 						if (count > 0) // confounds points (not supposed to happen often)
 							for (size_t i = 0; i < static_cast<size_t>(count); ++i)
 							{
-								memcpy(vertexIterator + i, vertexIterator + count, sizeof(D3DXVECTOR3));
-								memcpy(colorIterator + i, colorIterator + count, sizeof(D3DCOLOR));
-								memcpy(valueIterator + i, valueIterator + count, sizeof(float));
+								std::memcpy(vertexIterator + i, vertexIterator + count, sizeof(D3DXVECTOR3));
+								std::memcpy(colorIterator + i, colorIterator + count, sizeof(D3DCOLOR));
+								std::memcpy(valueIterator + i, valueIterator + count, sizeof(float));
 							}
 					}
 				}
@@ -220,7 +220,7 @@ namespace DX9
 				}
 
 				// pre degenerated vertex
-				memcpy(vertexIterator - 1, vertexIterator, sizeof(D3DXVECTOR3));
+				std::memcpy(vertexIterator - 1, vertexIterator, sizeof(D3DXVECTOR3));
 				
 				// Positions pseudo iterators to the current point
 				vertexIterator += (nbSamples - 1);
@@ -237,18 +237,18 @@ namespace DX9
 				*(valueIterator++) = age;
 
 				// post degenerated vertex
-				memcpy(vertexIterator - 1, vertexIterator - 2, sizeof(D3DXVECTOR3));
+				std::memcpy(vertexIterator - 1, vertexIterator - 2, sizeof(D3DXVECTOR3));
 			}
 		}
 
 		void *ptr;
 
 		DX9VertexBuffer->Lock(0, 0, &ptr, 0);
-		memcpy(ptr, vertexBuffer, group.getNbParticles() * (nbSamples + 2) * sizeof(D3DXVECTOR3));
+		std::memcpy(ptr, vertexBuffer, group.getNbParticles() * (nbSamples + 2) * sizeof(D3DXVECTOR3));
 		DX9VertexBuffer->Unlock();
 
 		DX9ColorBuffer->Lock(0, 0, &ptr, 0);
-		memcpy(ptr, colorBuffer, group.getNbParticles() * (nbSamples + 2) * sizeof(D3DCOLOR));
+		std::memcpy(ptr, colorBuffer, group.getNbParticles() * (nbSamples + 2) * sizeof(D3DCOLOR));
 		DX9ColorBuffer->Unlock();
 
 		LPDIRECT3DDEVICE9 device = DX9Info::getDevice();

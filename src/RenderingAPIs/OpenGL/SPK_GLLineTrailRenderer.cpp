@@ -150,12 +150,12 @@ namespace GL
 			{
 				if (age - *(valueIterator + 1) >= duration / (nbSamples - 1)) // shifts the data by one
 				{
-					memmove(vertexIterator + 6,vertexIterator + 3,(nbSamples - 1) * 3 * sizeof(float));
-					memmove(colorIterator + 8,colorIterator + 4,((nbSamples - 1) << 2) * sizeof(float));
-					memmove(valueIterator + 1,valueIterator,(nbSamples - 1) * sizeof(float));
+					std::memmove(vertexIterator + 6,vertexIterator + 3,(nbSamples - 1) * 3 * sizeof(float));
+					std::memmove(colorIterator + 8,colorIterator + 4,((nbSamples - 1) << 2) * sizeof(float));
+					std::memmove(valueIterator + 1,valueIterator,(nbSamples - 1) * sizeof(float));
 
 					// post degenerated vertex copy
-					memcpy(vertexIterator + (nbSamples + 1) * 3,vertexIterator + nbSamples * 3,3 * sizeof(float));
+					std::memcpy(vertexIterator + (nbSamples + 1) * 3,vertexIterator + nbSamples * 3,3 * sizeof(float));
 				}
 
 				// Updates the current sample
@@ -164,7 +164,7 @@ namespace GL
 				*(vertexIterator++) = pos.y;
 				*(vertexIterator++) = pos.z;
 
-				memcpy(vertexIterator,vertexIterator - 3,3 * sizeof(float));
+				std::memcpy(vertexIterator,vertexIterator - 3,3 * sizeof(float));
 				vertexIterator += (nbSamples + 1) * 3;
 
 				colorIterator += 4; // skips post degenerated vertex color
