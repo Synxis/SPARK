@@ -37,6 +37,6 @@ namespace SPK
 		}
 		while((sqrNorm > 1.0f) || (sqrNorm == 0.0f));
 
-		particle.velocity() *= speed / sqrt(sqrNorm);
+		particle.velocity() *= speed / std::sqrt(sqrNorm);
 	}
 }

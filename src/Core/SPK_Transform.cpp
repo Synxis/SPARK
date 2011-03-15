@@ -38,8 +38,8 @@ namespace SPK
 		parent(NULL),
 		localIdentity(true)
 	{
-		memcpy(local,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
-		memcpy(world,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
+		std::memcpy(local,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
+		std::memcpy(world,IDENTITY,sizeof(float) * TRANSFORM_LENGTH);
 	}
 
 	Transform::Transform(const Transform& transform) :
@@ -49,8 +49,8 @@ namespace SPK
 		parent(NULL),
 		localIdentity(transform.localIdentity)
 	{
-		memcpy(local,transform.local,sizeof(float) * TRANSFORM_LENGTH);
-		memcpy(world,transform.local,sizeof(float) * TRANSFORM_LENGTH); // Sets to local as it is created with no parent
+		std::memcpy(local,transform.local,sizeof(float) * TRANSFORM_LENGTH);
+		std::memcpy(world,transform.local,sizeof(float) * TRANSFORM_LENGTH); // Sets to local as it is created with no parent
 	}
 
 	void Transform::setNC(const float* transform)
@@ -205,10 +205,10 @@ namespace SPK
 			(parent != NULL && lastParentUpdate != parent->transform.currentUpdate))	// the parent transform has been modified
 		{
 			if (parent == NULL)
-				memcpy(world,local,sizeof(float) * TRANSFORM_LENGTH);
+				std::memcpy(world,local,sizeof(float) * TRANSFORM_LENGTH);
 			else if (isLocalIdentity())
 			{
-				memcpy(world,parent->transform.world,sizeof(float) * TRANSFORM_LENGTH);
+				std::memcpy(world,parent->transform.world,sizeof(float) * TRANSFORM_LENGTH);
 				lastParentUpdate = parent->transform.lastUpdate;
 			}
 			else

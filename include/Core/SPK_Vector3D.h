@@ -676,7 +676,7 @@ namespace SPK
 
 	inline float Vector3D::getNorm() const
 	{
-		return sqrt(getSqrNorm());
+		return std::sqrt(getSqrNorm());
 	}
 
 	inline bool Vector3D::normalize()

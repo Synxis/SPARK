@@ -299,7 +299,7 @@ namespace SPK
 
 	inline float Particle::getDistanceFromCamera() const
 	{
-		return sqrt(group.particleData.sqrDists[index]);
+		return std::sqrt(group.particleData.sqrDists[index]);
 	}
 
 	inline float Particle::getSqrDistanceFromCamera() const

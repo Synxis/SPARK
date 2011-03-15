@@ -171,10 +171,10 @@ namespace DX9
 
 	inline void DX9Buffer::copy(unsigned int dst, void *src, size_t size)
 	{
-		if( dst == VERTEX_LOCK )	{ memcpy(ptrVertexBuffer, src, size); return; }
-		if( dst == COLOR_LOCK )		{ memcpy(ptrColorBuffer, src, size); return; }
-		if( dst == TEXCOORD_LOCK )	{ memcpy(ptrTexCoordBuffer, src, size); return; }
-		if( dst == INDEX_LOCK )		{ memcpy(ptrIndexBuffer, src, size); return; }
+		if( dst == VERTEX_LOCK )	{ std::memcpy(ptrVertexBuffer, src, size); return; }
+		if( dst == COLOR_LOCK )		{ std::memcpy(ptrColorBuffer, src, size); return; }
+		if( dst == TEXCOORD_LOCK )	{ std::memcpy(ptrTexCoordBuffer, src, size); return; }
+		if( dst == INDEX_LOCK )		{ std::memcpy(ptrIndexBuffer, src, size); return; }
 
 		SPK_LOG_WARNING("DX9Buffer::copy(unsigned int dst, void *src, size_t size) - no valid destination");
 	}

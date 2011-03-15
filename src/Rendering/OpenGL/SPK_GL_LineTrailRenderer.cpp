@@ -133,18 +133,18 @@ namespace GL
 
 			if (age - *(ageIt + 1) >= duration / (nbSamples - 1)) // shifts the data by one
 			{
-				memmove(vertexIt + 2,vertexIt + 1,(nbSamples - 1) * sizeof(Vector3D));
-				memmove(colorIt + 2,colorIt + 1,(nbSamples - 1) * sizeof(Color));
-				memmove(ageIt + 1,ageIt,(nbSamples - 1) * sizeof(float));
-				memmove(startAlphaIt + 1,startAlphaIt,(nbSamples - 1) * sizeof(unsigned char));
+				std::memmove(vertexIt + 2,vertexIt + 1,(nbSamples - 1) * sizeof(Vector3D));
+				std::memmove(colorIt + 2,colorIt + 1,(nbSamples - 1) * sizeof(Color));
+				std::memmove(ageIt + 1,ageIt,(nbSamples - 1) * sizeof(float));
+				std::memmove(startAlphaIt + 1,startAlphaIt,(nbSamples - 1) * sizeof(unsigned char));
 
 				// post degenerated vertex copy
-				memcpy(vertexIt + (nbSamples + 1),vertexIt + nbSamples,sizeof(Vector3D));
+				std::memcpy(vertexIt + (nbSamples + 1),vertexIt + nbSamples,sizeof(Vector3D));
 			}
 
 			// Updates the current sample
 			*(vertexIt++) = particle.position();
-			memcpy(vertexIt,vertexIt - 1,sizeof(Vector3D));
+			std::memcpy(vertexIt,vertexIt - 1,sizeof(Vector3D));
 			vertexIt += nbSamples + 1;
 
 			++colorIt; // skips post degenerated vertex color

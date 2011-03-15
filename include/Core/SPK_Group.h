@@ -606,7 +606,7 @@ namespace SPK
 		T* oldT = t;
 		t = SPK_NEW_ARRAY(T,newSize);
 		if (oldT != NULL && copySize != 0)
-			memcpy(oldT,t,copySize * sizeof(T));
+			std::memcpy(oldT,t,copySize * sizeof(T));
 		SPK_DELETE_ARRAY(oldT);
 	}
 		

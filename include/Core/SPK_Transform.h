@@ -361,7 +361,7 @@ namespace SPK
 
 	inline void Transform::set(const float* transform)
 	{
-		memcpy(local,transform,sizeof(float) * TRANSFORM_LENGTH);
+		std::memcpy(local,transform,sizeof(float) * TRANSFORM_LENGTH);
 		localIdentity = false;
 		notifyForUpdate();
 	}

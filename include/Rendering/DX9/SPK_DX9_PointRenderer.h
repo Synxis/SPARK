@@ -180,7 +180,7 @@ namespace DX9
 	inline void DX9PointRenderer::setPixelPerUnit(float fovy,int screenHeight)
 	{
 		// the pixel per unit is computed for a distance from the camera of screenHeight
-		pixelPerUnit = screenHeight / (2.0f * tan(fovy * 0.5f));
+		pixelPerUnit = screenHeight / (2.0f * std::tan(fovy * 0.5f));
 	}
 }}
 
