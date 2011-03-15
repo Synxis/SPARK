@@ -260,7 +260,7 @@ namespace GL
 	void GLExtHandler::setPixelPerUnit(float fovy,int screenHeight)
 	{
 		// the pixel per unit is computed for a distance from the camera of screenHeight
-		pixelPerUnit = screenHeight / (2.0f * tan(fovy * 0.5f));
+		pixelPerUnit = screenHeight / (2.0f * std::tan(fovy * 0.5f));
 	}
 
 	void GLExtHandler::glTexImage3D(GLenum target,

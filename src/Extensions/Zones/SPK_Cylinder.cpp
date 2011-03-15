@@ -114,7 +114,7 @@ namespace SPK
 	    {
 	        Vector3D pp = getTransformedPosition() - v0, uv = u;
 	        uv.crossProduct(tDirection);
-	        float dist = fabs(dotProduct(pp,uv))/uv.getNorm();
+			float dist = std::abs(dotProduct(pp,uv))/uv.getNorm();
 
 	        float d = dotProduct(tDirection,v0 - getTransformedPosition());
             Vector3D ext = v0 - (tDirection*d + getTransformedPosition());
