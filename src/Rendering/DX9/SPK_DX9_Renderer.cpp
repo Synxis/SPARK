@@ -22,6 +22,9 @@
 
 //#include "Rendering/DX9/SPK_DX9_Renderer.h"
 
+#include <SPARK_Core.h>
+#include "Rendering/DX9/SPK_DX9_Renderer.h"
+
 namespace SPK
 {
 namespace DX9

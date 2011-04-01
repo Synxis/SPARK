@@ -23,9 +23,8 @@
 #ifndef H_SPK_DX9_POINTRENDERER
 #define H_SPK_DX9_POINTRENDERER
 
-//#include "Rendering/DX9/SPK_DX9_Renderer.h"
-//#include "Extensions/Renderers/SPK_PointRenderBehavior.h"
-//#include "Rendering/DX9/SPK_DX9_Buffer.h"
+#include "Rendering/DX9/SPK_DX9_Renderer.h"
+#include "Extensions/Renderers/SPK_PointRenderBehavior.h"
 
 namespace SPK
 {

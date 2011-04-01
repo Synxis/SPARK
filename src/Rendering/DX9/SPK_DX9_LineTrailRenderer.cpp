@@ -29,6 +29,9 @@
 //#include "Core/SPK_Iterator.h"
 //#include "Core/SPK_Logger.h"
 
+#include <SPARK_Core.h>
+#include "Rendering/DX9/SPK_DX9_LineTrailRenderer.h"
+
 namespace SPK
 {
 namespace DX9

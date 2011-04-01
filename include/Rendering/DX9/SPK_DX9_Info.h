@@ -22,7 +22,7 @@
 #ifndef H_SPK_DX9INFO
 #define H_SPK_DX9INFO
 
-//#include "Rendering/DX9/SPK_DX9_DEF.h"
+#include "Rendering/DX9/SPK_DX9_DEF.h"
 
 namespace SPK
 {
@@ -68,7 +68,7 @@ namespace SPK
 
 			static void ReleaseResourcesOnDeviceFailure();
 		};
-
+/*
 		LPDIRECT3DDEVICE9 DX9Info::getDevice()
 		{
 			return DX9Info::device;
@@ -92,6 +92,7 @@ namespace SPK
 			for( unsigned int i = 0; i < 4; ++i )
 				SAFE_RELEASE( decl[i] );
 		}
+*/
 	}
 }
 

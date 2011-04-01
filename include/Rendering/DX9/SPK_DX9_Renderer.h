@@ -23,8 +23,7 @@
 #ifndef H_SPK_DX9_RENDERER
 #define H_SPK_DX9_RENDERER
 
-//#include "Rendering/DX9/SPK_DX9_DEF.h"
-//#include "Core/SPK_Renderer.h"
+#include "Rendering/DX9/SPK_DX9_Info.h"
 
 namespace SPK
 {

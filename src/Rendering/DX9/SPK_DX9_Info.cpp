@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-//#include "Rendering/DX9/SPK_DX9_Info.h"
+#include "Rendering/DX9/SPK_DX9_Info.h"
 
 namespace SPK
 {
@@ -27,4 +27,28 @@ namespace DX9
 {
 	LPDIRECT3DDEVICE9 DX9Info::device = NULL;
 	LPDIRECT3DVERTEXDECLARATION9 DX9Info::decl[] = {NULL, NULL, NULL, NULL};
+
+	LPDIRECT3DDEVICE9 DX9Info::getDevice()
+	{
+		return DX9Info::device;
+	}
+
+	LPDIRECT3DVERTEXDECLARATION9 DX9Info::getDecl(unsigned int nbTexCoords)
+	{
+		return decl[nbTexCoords];
+	}
+
+	void DX9Info::setDevice(LPDIRECT3DDEVICE9 device)
+	{
+		DX9Info::device = device;
+
+		for( unsigned int i = 0; i < 4; ++i )
+			device->CreateVertexDeclaration(Decl[i], &decl[i]);
+	}
+
+	void DX9Info::ReleaseResourcesOnDeviceFailure()
+	{
+		for( unsigned int i = 0; i < 4; ++i )
+			SAFE_RELEASE( decl[i] );
+	}
 }}

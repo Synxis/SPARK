@@ -23,11 +23,10 @@
 #ifndef H_SPK_DX9_QUADRENDERER
 #define H_SPK_DX9_QUADRENDERER
 
-//#include "Rendering/DX9/SPK_DX9_Renderer.h"
-//#include "Extensions/Renderers/SPK_QuadRenderBehavior.h"
-//#include "Extensions/Renderers/SPK_Oriented3DRenderBehavior.h"
-//#include "Rendering/DX9/SPK_DX9_Buffer.h"
-//#include "Core/SPK_Particle.h"
+#include "Rendering/DX9/SPK_DX9_Renderer.h"
+#include "Extensions/Renderers/SPK_QuadRenderBehavior.h"
+#include "Extensions/Renderers/SPK_Oriented3DRenderBehavior.h"
+#include "Rendering/DX9/SPK_DX9_Buffer.h"
 
 namespace SPK
 {

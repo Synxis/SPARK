@@ -26,6 +26,10 @@
 //#include "Rendering/DX9/SPK_DX9_Renderer.h"
 //#include "Extensions/Renderers/SPK_LineRenderBehavior.h"
 
+#include "Rendering/DX9/SPK_DX9_Renderer.h"
+#include "Extensions/Renderers/SPK_LineRenderBehavior.h"
+#include "Rendering/DX9/SPK_DX9_Buffer.h"
+
 namespace SPK
 {
 namespace DX9

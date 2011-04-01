@@ -23,6 +23,10 @@
 //#include "Rendering/DX9/SPK_DX9_Buffer.h"
 //#include "Core/SPK_Logger.h"
 
+#include <SPARK_Core.h>
+#include "Rendering/DX9/SPK_DX9_Buffer.h"
+#include "Rendering/DX9/SPK_DX9_Info.h"
+
 namespace SPK
 {
 namespace DX9

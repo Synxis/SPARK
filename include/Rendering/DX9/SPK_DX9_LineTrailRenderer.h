@@ -27,6 +27,9 @@
 //#include "Core/SPK_Color.h"
 //#include "Rendering/DX9/SPK_DX9_Buffer.h"
 
+#include "Rendering/DX9/SPK_DX9_Renderer.h"
+#include "Rendering/DX9/SPK_DX9_Buffer.h"
+
 namespace SPK
 {
 namespace DX9

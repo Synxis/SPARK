@@ -43,7 +43,8 @@
 	#include <d3d9.h>
 	#include <d3dx9.h>
 
-	//#include "Core/SPK_Vector3D.h"
+	#include "Core/SPK_DEF.h"
+	#include "Core/SPK_Vector3D.h"
 
 	inline DWORD FtoDW(FLOAT f)		{ return *((DWORD*)&f); }
 	inline FLOAT DWtoF(DWORD dw)	{ return *((FLOAT*)&dw); }

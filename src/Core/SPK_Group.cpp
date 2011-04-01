@@ -386,6 +386,7 @@ namespace SPK
 	void Group::removeModifier(const Ref<Modifier>& modifier)
 	{
 		for (std::vector<ModifierDef>::iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+		{
 			if (it->obj == modifier)
 			{
 				detachDataSet(it->dataSet);
@@ -399,11 +400,16 @@ namespace SPK
 				modifiers.erase(it);
 				return;
 			}
+		}
 
-		if (isInitialized() && modifiers.size() != sortedModifiers.size()) 
+		if (isInitialized() && modifiers.size() != sortedModifiers.size())
+		{
 			SPK_LOG_FATAL("Group::addModifier(Modifier*) - Internal Error - Inconsistent storage of modifiers");
+		}
 		else
+		{
 			SPK_LOG_WARNING("The modifier was not found in the group and cannot be removed");
+		}
 	}
 
 	void Group::setRenderer(const Ref<Renderer>& renderer)
