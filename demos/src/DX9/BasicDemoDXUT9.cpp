@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2009 - foulon matthieu - stardeath@wanadoo.fr					//
+// Copyright (C) 2009-2010 - foulon matthieu - stardeath@wanadoo.fr				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -116,20 +116,20 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 #ifdef USE_SPARK
-SPK::System* g_pSystem = NULL;
+SPK::Ref<SPK::System> g_pSystem;
 
 SPK::DX9::DX9QuadRenderer* g_pQuadRenderer = NULL;
 SPK::DX9::DX9LineTrailRenderer* g_pLineTrailRenderer = NULL;
 SPK::DX9::DX9PointRenderer* g_pPointRenderer = NULL;
 
-SPK::RandomEmitter* g_pEmitter = NULL;
-SPK::Gravity* g_pGravity = NULL;
-SPK::Friction* g_pFriction = NULL;
-SPK::ColorGraphInterpolator* g_pGraphInterpolator = NULL;
-SPK::Obstacle* g_pObstacle = NULL;
+SPK::Ref<SPK::RandomEmitter> g_pEmitter;
+SPK::Ref<SPK::Gravity> g_pGravity;
+SPK::Ref<SPK::Friction> g_pFriction;
+SPK::Ref<SPK::ColorGraphInterpolator> g_pGraphInterpolator;
+SPK::Ref<SPK::Obstacle> g_pObstacle;
 
-SPK::Group* g_pGroup1 = NULL;
-SPK::Group* g_pGroup2 = NULL;
+SPK::Ref<SPK::Group> g_pGroup1;
+SPK::Ref<SPK::Group> g_pGroup2;
 #endif
 
 LPDIRECT3DTEXTURE9	g_pTextureParticle = NULL;
@@ -277,7 +277,7 @@ void InitSpark()
 	SPK::System::setClampStep(true,0.1f);			// clamp the step to 100 ms
 	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
-	g_pSystem = new SPK::System(true);
+	g_pSystem = SPK::System::create(true);
 	g_pSystem->enableAABBComputation(true);
 
 	g_pPointRenderer = SPK::DX9::DX9PointRenderer::create();
@@ -321,7 +321,7 @@ void InitSpark()
 	g_pGroup1->addModifier(g_pObstacle);
 	g_pGroup1->addModifier(SPK::Rotator::create());
 	g_pGroup1->setRenderer(g_pQuadRenderer);
-	g_pGroup1->setDeathAction(SPK::SpawnParticlesAction::create(5,10,1,g_pEmitter));
+	//g_pGroup1->setDeathAction(SPK::SpawnParticlesAction::create(5,10,1,g_pEmitter));
 
 	//*
 	g_pGroup2 = g_pSystem->createGroup(1000);
@@ -344,10 +344,6 @@ void UnInitSpark()
 {
 #ifdef CONSOLE
 	std::cout << "UnInitSpark" << std::endl;
-#endif
-
-#ifdef USE_SPARK
-	SAFE_DELETE( g_pSystem );
 #endif
 }
 
