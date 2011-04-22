@@ -87,28 +87,6 @@ namespace DX9
 		*/
 		D3DBLEND getDestBlendingFunction() const;
 
-		///////////////
-		// Interface //
-		///////////////
-
-		/**
-		* @brief Saves the current DirectX 9.0 states
-		*
-		* This method saves all the states that are likely to be modified by a DX9Renderer.<br>
-		* Use restoreDX9States() to restore the states.<br>
-		* <br>
-		* Note that for one saveDX9States call, a call to restoreDX9States must occur.
-		* In case of several saveDX9States with no restoreDX9States, the restoreDX9States is called priorly in an implicit way.
-		*/
-		static void saveDX9States();
-
-		/**
-		* @brief Restores the DirectX 9.0 states
-		*
-		* This method restores the DirectX 9.0 states at the values they were at the last call of saveDX9States().
-		*/
-		static void restoreDX9States();
-
 	protected :
 
 		DX9Renderer(bool NEEDS_DATASET);
