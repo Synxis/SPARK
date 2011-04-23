@@ -166,6 +166,8 @@ namespace DX9
 		ptrColorBuffer = NULL;
 		ptrTexCoordBuffer = NULL;
 		ptrIndexBuffer = NULL;
+
+		positionAtStart();
 #endif // _DEBUG
 	}
 

@@ -78,9 +78,14 @@ namespace DX9
 
 		DX9Info::getDevice()->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_FLAT);
 
+		unsigned int lockType = VERTEX_AND_COLOR_LOCK;
+
 		switch(texturingMode)
 		{
 		case TEXTURE_MODE_2D :
+			// enable lock on texcoord buffer
+			lockType |= TEXCOORD_LOCK;
+			
 			// Creates and inits the 2D TexCoord buffer if necessary
 			if (buffer.getNbTexCoords() != 2)
 			{
@@ -124,6 +129,9 @@ namespace DX9
 			break;
 
 		case TEXTURE_MODE_3D :
+			// enable lock on texcoord buffer
+			lockType |= TEXCOORD_LOCK;
+
 			// Creates and inits the 3D TexCoord buffer if necessery
 			if (buffer.getNbTexCoords() != 3)
 			{
@@ -178,14 +186,14 @@ namespace DX9
 		{
 			computeGlobalOrientation3D(group);
 
-			buffer.lock(VERTEX_AND_COLOR_LOCK);
+			buffer.lock(lockType);
 			for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 				(this->*renderParticle)(*particleIt,buffer);
 			buffer.unlock();
 		}
 		else
 		{
-			buffer.lock(VERTEX_AND_COLOR_LOCK);
+			buffer.lock(lockType);
 			for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 			{
 				computeSingleOrientation3D(*particleIt);
