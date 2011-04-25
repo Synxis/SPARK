@@ -78,14 +78,9 @@ namespace DX9
 
 		DX9Info::getDevice()->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_FLAT);
 
-		unsigned int lockType = VERTEX_AND_COLOR_LOCK;
-
 		switch(texturingMode)
 		{
 		case TEXTURE_MODE_2D :
-			// enable lock on texcoord buffer
-			lockType |= TEXCOORD_LOCK;
-			
 			// Creates and inits the 2D TexCoord buffer if necessary
 			if (buffer.getNbTexCoords() != 2)
 			{
@@ -129,9 +124,6 @@ namespace DX9
 			break;
 
 		case TEXTURE_MODE_3D :
-			// enable lock on texcoord buffer
-			lockType |= TEXCOORD_LOCK;
-
 			// Creates and inits the 3D TexCoord buffer if necessery
 			if (buffer.getNbTexCoords() != 3)
 			{
@@ -180,6 +172,14 @@ namespace DX9
 			Vector3D(-invModelView[8],-invModelView[9],-invModelView[10]),
 			Vector3D(invModelView[4],invModelView[5],invModelView[6]),
 			Vector3D(invModelView[12],invModelView[13],invModelView[14]));
+
+
+		unsigned int lockType = VERTEX_AND_COLOR_LOCK;
+		if (group.isEnabled(PARAM_TEXTURE_INDEX))
+		{
+			// enable lock on texcoord buffer
+			lockType |= TEXCOORD_LOCK;
+		}
 
 		// Fills the buffers
 		if( GlobalOrientation )
