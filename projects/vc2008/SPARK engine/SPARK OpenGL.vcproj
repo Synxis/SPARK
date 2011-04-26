@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="_DEBUG"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\..\external\glew-1.5.8\include"
+				PreprocessorDefinitions="_DEBUG;GLEW_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,7 +61,9 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="false"
+				AdditionalDependencies="glew32s.lib"
 				OutputFile="$(OutDir)\SPARK_GL_debug_s.lib"
+				AdditionalLibraryDirectories="../../../external/glew-1.5.8/lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -110,8 +112,8 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="false"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="NDEBUG"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\..\external\glew-1.5.8\include"
+				PreprocessorDefinitions="NDEBUG;GLEW_STATIC"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
 				EnableEnhancedInstructionSet="0"
@@ -131,7 +133,9 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="false"
+				AdditionalDependencies="glew32s.lib"
 				OutputFile="$(OutDir)\SPARK_GL_s.lib"
+				AdditionalLibraryDirectories="../../../external/glew-1.5.8/lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -174,8 +178,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="_DEBUG;SPK_GL_EXPORT;SPK_CORE_IMPORT"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\..\external\glew-1.5.8\include"
+				PreprocessorDefinitions="_DEBUG;SPK_GL_EXPORT;SPK_CORE_IMPORT;GLEW_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -195,9 +199,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="true"
-				AdditionalDependencies="opengl32.lib"
+				AdditionalDependencies="opengl32.lib glew32s.lib"
 				OutputFile="$(OutDir)\SPARK_GL_debug.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../external/glew-1.5.8/lib"
 				GenerateDebugInformation="true"
 				OptimizeReferences="0"
 				TargetMachine="1"
@@ -254,8 +259,8 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="NDEBUG;SPK_GL_EXPORT;SPK_CORE_IMPORT"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\..\external\glew-1.5.8\include"
+				PreprocessorDefinitions="NDEBUG;SPK_GL_EXPORT;SPK_CORE_IMPORT;GLEW_STATIC"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				EnableEnhancedInstructionSet="0"
@@ -275,9 +280,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="true"
-				AdditionalDependencies="opengl32.lib"
+				AdditionalDependencies="opengl32.lib glew32s.lib"
 				OutputFile="$(OutDir)\SPARK_GL.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../../external/glew-1.5.8/lib"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -320,10 +326,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\Rendering\OpenGL\SPK_GL_ExtHandler.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\Rendering\OpenGL\SPK_GL_LineRenderer.cpp"
 				>
 			</File>
@@ -359,10 +361,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\Rendering\OpenGL\SPK_GL_DEF.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\Rendering\OpenGL\SPK_GL_ExtHandler.h"
 				>
 			</File>
 			<File

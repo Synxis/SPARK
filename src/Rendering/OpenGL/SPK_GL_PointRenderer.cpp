@@ -19,6 +19,10 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#ifndef SPK_GL_NO_EXT
+#include <GL/glew.h>
+#endif
+
 #include <SPARK_Core.h>
 #include "Rendering/OpenGL/SPK_GL_PointRenderer.h"
 
@@ -26,9 +30,17 @@ namespace SPK
 {
 namespace GL
 {
+	float GLPointRenderer::pixelPerUnit = 1024.0f;
+
+	GLboolean* const GLPointRenderer::SPK_GL_POINT_SPRITE_EXT = &__GLEW_ARB_point_sprite;
+	GLboolean* const GLPointRenderer::SPK_GL_POINT_PARAMETERS_EXT = &__GLEW_EXT_point_parameters;
+
+	bool GLPointRenderer::isPointSpriteSupported()	{ return SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_SPRITE_EXT); }
+	bool GLPointRenderer::isWorldSizeSupported()	{ return SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_PARAMETERS_EXT); }
+
 	bool GLPointRenderer::setType(PointType type)
 	{
-		if ((type == POINT_TYPE_SPRITE)&&(!loadGLExtPointSprite()))
+		if ((type == POINT_TYPE_SPRITE)&&(!SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_SPRITE_EXT)))
 		{
 			SPK_LOG_WARNING("GLPointRenderer::setType(PointType) - POINT_TYPE_SPRITE is not available on the hardware");
 			return false;
@@ -40,7 +52,7 @@ namespace GL
 
 	bool GLPointRenderer::enableWorldSize(bool worldSizeEnabled)
 	{
-		worldSize = (worldSizeEnabled && loadGLExtPointParameter());
+		worldSize = (worldSizeEnabled && SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_PARAMETERS_EXT));
 		if (worldSize != worldSizeEnabled)
 			SPK_LOG_WARNING("GLPointRenderer::enableWorldSize(true) - World size for points is not available on the hardware");
 		return worldSize;
@@ -57,32 +69,56 @@ namespace GL
 		case POINT_TYPE_SQUARE :
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_POINT_SMOOTH);
-			if (getPointSpriteGLExt() == SUPPORTED)
-				disablePointSpriteGLExt();
+#ifndef SPK_GL_NO_EXT
+			if (SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_SPRITE_EXT))
+				glDisable(GL_POINT_SPRITE_ARB);
+#endif
 			break;
 
 		case POINT_TYPE_SPRITE :
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D,textureIndex);
-			enablePointSpriteGLExt();
+#ifndef SPK_GL_NO_EXT
+			glTexEnvf(GL_POINT_SPRITE_ARB,GL_COORD_REPLACE_ARB,GL_TRUE);
+			glEnable(GL_POINT_SPRITE_ARB);
+#endif
 			break;
 
 		case POINT_TYPE_CIRCLE :
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_POINT_SMOOTH);
-			if (getPointSpriteGLExt() == SUPPORTED)
-				disablePointSpriteGLExt();
+#ifndef SPK_GL_NO_EXT
+			if (SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_SPRITE_EXT))
+				glDisable(GL_POINT_SPRITE_ARB);
+#endif
 			break;
 		}
 
-		if (worldSize)
-			enablePointParameterGLExt(group.getGraphicalRadius() * worldScale * 2.0f,true);
+		if (worldSize) 
+		{
+#ifndef SPK_GL_NO_EXT
+			// derived size = size * sqrt(1 / (A + B * distance + C * distance²))
+			const float POINT_SIZE_CURRENT = 32.0f;
+			const float POINT_SIZE_MIN = 1.0f;
+			const float POINT_SIZE_MAX = 1024.0f;
+			const float sqrtC = POINT_SIZE_CURRENT / (group.getGraphicalRadius() * worldScale * 2.0f * pixelPerUnit);
+			const float QUADRATIC_WORLD[3] = {0.0f,0.0f,sqrtC * sqrtC}; // A = 0; B = 0; C = (POINT_SIZE_CURRENT / (size * pixelPerUnit))²
+			glPointParameterfvEXT(GL_DISTANCE_ATTENUATION_EXT,QUADRATIC_WORLD);
+			glPointSize(POINT_SIZE_CURRENT);
+			glPointParameterfEXT(GL_POINT_SIZE_MIN_EXT,POINT_SIZE_MIN);
+			glPointParameterfEXT(GL_POINT_SIZE_MAX_EXT,POINT_SIZE_MAX);
+#endif
+		}
 		else
 		{
 			glPointSize(screenSize);
-
-			if (getPointParameterGLExt() == SUPPORTED)
-				disablePointParameterGLExt();
+#ifndef SPK_GL_NO_EXT
+			if (SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_PARAMETERS_EXT)) 
+			{
+				const float QUADRATIC_SCREEN[3] = {1.0f,0.0f,0.0f};
+				glPointParameterfvEXT(GL_DISTANCE_ATTENUATION_EXT,QUADRATIC_SCREEN);
+			}
+#endif
 		}
 
 		// Sends the data to the GPU

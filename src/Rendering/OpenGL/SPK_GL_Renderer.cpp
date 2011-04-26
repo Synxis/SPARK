@@ -19,6 +19,10 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#ifndef SPK_GL_NO_EXT
+#include <GL/glew.h>
+#endif
+
 #include <SPARK_Core.h>
 #include "Rendering/OpenGL/SPK_GL_Renderer.h"
 
@@ -26,6 +30,10 @@ namespace SPK
 {
 namespace GL
 {
+#ifndef SPK_GL_NO_EXT
+	GLRenderer::GlewStatus GLRenderer::glewStatus = GLRenderer::GLEW_UNLOADED;
+#endif
+
 	void GLRenderer::setBlendMode(BlendMode blendMode)
 	{
 		switch(blendMode)
@@ -71,4 +79,24 @@ namespace GL
 	{
 		glPopAttrib();
 	}
+
+#ifndef SPK_GL_NO_EXT
+	bool GLRenderer::checkExtension(GLboolean* glExt)
+	{
+		if (glewStatus == GLEW_UNLOADED)
+		{
+			int error = glewInit();
+			if (error == GLEW_OK)
+				glewStatus = GLEW_SUPPORTED;
+			else
+			{
+				SPK_LOG_ERROR("GLRenderer::checkExtensions(bool) - Cannot initialize Glew library")
+				glewStatus = GLEW_UNSUPPORTED;
+			}
+		}
+		if (glewStatus == GLEW_SUPPORTED)
+			return *glExt != 0;
+		return false;	
+	}
+#endif
 }}

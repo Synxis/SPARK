@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::GL::GLPointRenderer> basicRenderer = SPK::GL::GLPointRenderer::create();
 	SPK::Ref<SPK::GL::GLRenderer> particleRenderer = SPK_NULL_REF;
 	// We use pointSprites only if it is available and if the GL extension point parameter is available
-	if (SPK::GL::GLPointRenderer::loadGLExtPointSprite() && SPK::GL::GLPointRenderer::loadGLExtPointParameter())
+	if (SPK::GL::GLPointRenderer::isPointSpriteSupported() && SPK::GL::GLPointRenderer::isWorldSizeSupported())
 	{
 		SPK::Ref<SPK::GL::GLPointRenderer> pointRenderer = SPK::GL::GLPointRenderer::create();
 		pointRenderer->setType(SPK::POINT_TYPE_SPRITE);
@@ -360,6 +360,8 @@ int main(int argc, char *argv[])
 	SPK_DUMP_MEMORY
 
 	SDL_Quit();
+
+	system("pause");
 
 	return 0;
 }

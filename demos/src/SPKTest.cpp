@@ -154,10 +154,19 @@ void drawBoundingBox(const SPK::System& system)
 	glEnd();
 }
 
+std::list<SPK::Ref<SPK::System>> systems;
+SPK::Ref<SPK::System>& createSystem()
+{
+	SPK::Ref<SPK::System> system = SPK::System::create(true);
+	systems.push_back(system);
+	std::cout << system->getNbReferences() << std::endl;
+	return system;
+}
+
 int main(int argc, char *argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_WM_SetCaption("SPARK 2 test",NULL);
+	SDL_WM_SetCaption("SPARK 2 test_",NULL);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);	// double buffering
 
 	// vsync
@@ -191,8 +200,13 @@ int main(int argc, char *argv[])
 	SPK::System::setClampStep(true,0.1f);			// clamp the step to 100 ms
 	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
+	
 	{
-	SPK::Ref<SPK::System> system = SPK::System::create(true);
+	//SPK::Ref<SPK::System> system = SPK::System::create(true);
+	
+	SPK::Ref<SPK::System> system = createSystem();
+	std::cout << system->getNbReferences() << std::endl;
+	
 	system->setName("Test System");
 	
 	SPK::Ref<SPK::GL::GLQuadRenderer> renderer = SPK::GL::GLQuadRenderer::create();

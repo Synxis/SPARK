@@ -24,6 +24,12 @@
 
 #include "Rendering/OpenGL/SPK_GL_DEF.h"
 
+#ifndef SPK_GL_NO_EXT
+#define SPK_GL_CHECK_EXTENSION(glExt) GLRenderer::checkExtension(glExt)
+#else
+#define SPK_GL_CHECK_EXTENSION(glExt) false
+#endif
+
 namespace SPK
 {
 namespace GL
@@ -118,7 +124,27 @@ namespace GL
 		/** @brief Inits the rendering hints of this GLRenderer */
 		void initRenderingOptions() const;
 
+		/** 
+		* @brief Checks whether an extension is supported 
+		* Note that this method does not exist if the macro SPK_GL_NO_EXT is defined
+		* @param glExt : the glew extension to check
+		* @return true is the extension is supported, false if not
+		*/
+#ifndef SPK_GL_NO_EXT
+		static bool checkExtension(GLboolean* glExt);
+#endif
+
 	private :
+
+#ifndef SPK_GL_NO_EXT
+		enum GlewStatus
+		{
+			GLEW_UNLOADED,		// Not yet initialize
+			GLEW_SUPPORTED,		// Initialized correctly
+			GLEW_UNSUPPORTED,	// Error during initialization
+		};
+		static GlewStatus glewStatus;
+#endif
 
 		bool blendingEnabled;
 		GLuint srcBlending;

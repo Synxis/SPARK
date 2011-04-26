@@ -23,7 +23,6 @@
 #define H_SPK_GL_POINTRENDERER
 
 #include "Rendering/OpenGL/SPK_GL_Renderer.h"
-#include "Rendering/OpenGL/SPK_GL_ExtHandler.h"
 #include "Extensions/Renderers/SPK_PointRenderBehavior.h"
 
 namespace SPK
@@ -47,8 +46,7 @@ namespace GL
 	* This renderer do not use any parameters of particles.
 	*/
 	class SPK_GL_PREFIX GLPointRenderer :	public GLRenderer,
-											public PointRenderBehavior,
-											public GLExtHandler
+											public PointRenderBehavior
 	{
 	SPK_IMPLEMENT_OBJECT(GLPointRenderer)
 
@@ -91,7 +89,28 @@ namespace GL
 		*/
 		GLuint getTexture() const;
 
+		/**
+		* @brief Computes a conversion ratio between pixels and universe units
+		*
+		* This method must be called when using GLPointRenderer with world size enabled.<br>
+		* It allows to well transpose world size to pixel size by setting the right OpenGL parameters.<br>
+		* <br>
+		* Note that fovy can be replaced by fovx if screenHeight is replaced by screenWidth.
+		*
+		* @param fovy : the field of view in the y axis in radians
+		* @param screenHeight : the height of the viewport in pixels
+		*/
+		static  void setPixelPerUnit(float fovy,int screenHeight);
+
+		static bool isPointSpriteSupported();
+		static bool isWorldSizeSupported();
+
 	private :
+
+		static GLboolean* const SPK_GL_POINT_SPRITE_EXT;
+		static GLboolean* const SPK_GL_POINT_PARAMETERS_EXT;
+
+		static float pixelPerUnit;
 
 		GLuint textureIndex;
 
@@ -105,14 +124,12 @@ namespace GL
 	inline GLPointRenderer::GLPointRenderer(float screenSize) :
 		GLRenderer(false),
 		PointRenderBehavior(POINT_TYPE_SQUARE,screenSize),
-		GLExtHandler(),
 		textureIndex(0)
 	{}
 
 	inline GLPointRenderer::GLPointRenderer(const GLPointRenderer& renderer) :
 		GLRenderer(renderer),
 		PointRenderBehavior(renderer),
-		GLExtHandler(renderer),
 		textureIndex(renderer.textureIndex)
 	{}
 
@@ -129,6 +146,12 @@ namespace GL
 	inline GLuint GLPointRenderer::getTexture() const
 	{
 		return textureIndex;
+	}
+
+	inline void GLPointRenderer::setPixelPerUnit(float fovy,int screenHeight)
+	{
+		// the pixel per unit is computed for a distance from the camera of screenHeight
+		pixelPerUnit = screenHeight / (2.0f * tan(fovy * 0.5f));
 	}
 }}
 

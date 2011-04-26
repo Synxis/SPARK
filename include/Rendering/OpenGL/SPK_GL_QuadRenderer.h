@@ -23,7 +23,6 @@
 #define H_SPK_GLQUADRENDERER
 
 #include "Rendering/OpenGL/SPK_GL_Renderer.h"
-#include "Rendering/OpenGL/SPK_GL_ExtHandler.h"
 #include "Extensions/Renderers/SPK_QuadRenderBehavior.h"
 #include "Extensions/Renderers/SPK_Oriented3DRenderBehavior.h"
 #include "Rendering/OpenGL/SPK_GL_Buffer.h"
@@ -48,8 +47,7 @@ namespace GL
 	*/
 	class SPK_GL_PREFIX GLQuadRenderer :	public GLRenderer,
 											public QuadRenderBehavior,
-											public Oriented3DRenderBehavior,
-											public GLExtHandler
+											public Oriented3DRenderBehavior
 	{
 	SPK_IMPLEMENT_OBJECT(GLQuadRenderer)
 
@@ -82,6 +80,8 @@ namespace GL
 		GLuint getTexture() const;
 
 	private :
+
+		static GLboolean* const SPK_GL_TEXTURE_3D_EXT;
 
 		mutable float modelView[16];
 		mutable float invModelView[16];

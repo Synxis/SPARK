@@ -25,9 +25,6 @@
 // Defines
 #include "Rendering/OpenGL/SPK_GL_DEF.h"
 
-// Extension interface
-#include "Rendering/OpenGL/SPK_GL_ExtHandler.h"
-
 // Buffer
 #include "Rendering/OpenGL/SPK_GL_Buffer.h"
 
