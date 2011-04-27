@@ -59,22 +59,22 @@ namespace DX9
 			// initialisation de l'index buffer
 			for(size_t i = 0; i < nbIndices/6; i++)
 			{
-//#define _DX9QUADRENDERER_CLOCKWISE_
-#ifdef _DX9QUADRENDERER_CLOCKWISE_
+//#ifdef _DX9QUADRENDERER_CLOCKWISE_
 				*(ptrIndexBuffer++) = 0 + offsetIndex;
 				*(ptrIndexBuffer++) = 1 + offsetIndex;
 				*(ptrIndexBuffer++) = 2 + offsetIndex;
 				*(ptrIndexBuffer++) = 0 + offsetIndex;
 				*(ptrIndexBuffer++) = 2 + offsetIndex;
 				*(ptrIndexBuffer++) = 3 + offsetIndex;
-#else
-				*(ptrIndexBuffer++) = 0 + offsetIndex;
-				*(ptrIndexBuffer++) = 2 + offsetIndex;
-				*(ptrIndexBuffer++) = 1 + offsetIndex;
-				*(ptrIndexBuffer++) = 0 + offsetIndex;
-				*(ptrIndexBuffer++) = 3 + offsetIndex;
-				*(ptrIndexBuffer++) = 2 + offsetIndex;
-#endif
+// TODO handle counter clockwise
+//#else
+//				*(ptrIndexBuffer++) = 0 + offsetIndex;
+//				*(ptrIndexBuffer++) = 2 + offsetIndex;
+//				*(ptrIndexBuffer++) = 1 + offsetIndex;
+//				*(ptrIndexBuffer++) = 0 + offsetIndex;
+//				*(ptrIndexBuffer++) = 3 + offsetIndex;
+//				*(ptrIndexBuffer++) = 2 + offsetIndex;
+//#endif
 				offsetIndex += 4;
 			}
 			unlock();

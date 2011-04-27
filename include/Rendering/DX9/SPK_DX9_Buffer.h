@@ -203,6 +203,11 @@ namespace DX9
 		ptrTexCoordBuffer[currentTexCoordIndex++] = texCoord;
 	}
 
+	inline void DX9Buffer::skipNextTexCoords(size_t nb)
+	{
+		currentTexCoordIndex += nb;
+	}
+
 	inline size_t DX9Buffer::getNbTexCoords()
 	{
 		return nbTexCoords;

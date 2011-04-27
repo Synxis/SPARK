@@ -68,15 +68,17 @@ namespace DX9
 		DX9Buffer& buffer = dynamic_cast<DX9Buffer&>(*renderBuffer);
 		buffer.positionAtStart(); // Repositions all the buffers at the start
 
-		D3DXMATRIX oldModelView(modelView);
-		DX9Info::getDevice()->GetTransform(D3DTS_VIEW, &modelView);
-		if( oldModelView != modelView )
-			D3DXMatrixInverse(&invModelView, NULL, &modelView);
+		D3DXMATRIX view,world,modelView;
+		DX9Info::getDevice()->GetTransform(D3DTS_VIEW, &view);
+		DX9Info::getDevice()->GetTransform(D3DTS_WORLD, &world);
+		modelView = world * view;
+		D3DXMatrixInverse((D3DXMATRIX*)&invModelView, NULL, &modelView);
 
 		initBlending();
 		initRenderingOptions();
 
 		DX9Info::getDevice()->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_FLAT);
+		DX9Info::getDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 		switch(texturingMode)
 		{
@@ -87,7 +89,7 @@ namespace DX9
 				buffer.setNbTexCoords(2);
 				if (!group.isEnabled(PARAM_TEXTURE_INDEX))
 				{
-					float t[8] = {1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,1.0f,1.0f};
+					float t[8] = {0.0f,0.0f,1.0f,0.0f,1.0f,1.0f,0.0f,1.0f};
 					buffer.lock(TEXCOORD_LOCK);
 					for (size_t i = 0; i < group.getCapacity() << 3; ++i)
 						buffer.setNextTexCoord(t[i & 7]);
@@ -128,7 +130,7 @@ namespace DX9
 			if (buffer.getNbTexCoords() != 3)
 			{
 				buffer.setNbTexCoords(3);
-				float t[12] =  {1.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,1.0f,1.0f,0.0f};
+				float t[12] =  {0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f};
 				buffer.lock(TEXCOORD_LOCK);
 				for (size_t i = 0; i < group.getCapacity() * 12; ++i)
 					buffer.setNextTexCoord(t[i % 12]);
@@ -169,7 +171,7 @@ namespace DX9
 
 		bool GlobalOrientation = precomputeOrientation3D(
 			group,
-			Vector3D(-invModelView[8],-invModelView[9],-invModelView[10]),
+			Vector3D(invModelView[8],invModelView[9],invModelView[10]),
 			Vector3D(invModelView[4],invModelView[5],invModelView[6]),
 			Vector3D(invModelView[12],invModelView[13],invModelView[14]));
 

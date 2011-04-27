@@ -82,7 +82,6 @@ namespace DX9
 
 	private :
 
-		mutable D3DXMATRIX modelView;
 		mutable D3DXMATRIX invModelView;
 
 		LPDIRECT3DTEXTURE9 textureIndex;
@@ -126,11 +125,11 @@ namespace DX9
 
 	inline void DX9QuadRenderer::DX9CallColorAndVertex(const Particle& particle,DX9Buffer& renderBuffer) const
 	{
-		// quads are drawn in a counter clockwise order :
-		renderBuffer.setNextVertex(particle.position() + quadSide() + quadUp());	// top right vertex
-		renderBuffer.setNextVertex(particle.position() - quadSide() + quadUp());	// top left vertex
-		renderBuffer.setNextVertex(particle.position() - quadSide() - quadUp());	// bottom left vertex
-		renderBuffer.setNextVertex(particle.position() + quadSide() - quadUp());	// bottom right vertex
+		// quads are drawn in a clockwise order :
+		renderBuffer.setNextVertex(particle.position() + quadSide() + quadUp());	// top left vertex
+		renderBuffer.setNextVertex(particle.position() - quadSide() + quadUp());	// top right vertex
+		renderBuffer.setNextVertex(particle.position() - quadSide() - quadUp());	// bottom right vertex
+		renderBuffer.setNextVertex(particle.position() + quadSide() - quadUp());	// bottom left vertex
 		
 		//renderBuffer.skipNextColors(3);
 		renderBuffer.setNextColor(particle.getColor());
@@ -143,16 +142,16 @@ namespace DX9
 	{
 		computeAtlasCoordinates(particle);
 
+		renderBuffer.setNextTexCoord(textureAtlasU0());
+		renderBuffer.setNextTexCoord(textureAtlasV0());
+
 		renderBuffer.setNextTexCoord(textureAtlasU1());
 		renderBuffer.setNextTexCoord(textureAtlasV0());
 
-		renderBuffer.setNextTexCoord(textureAtlasU0());
-		renderBuffer.setNextTexCoord(textureAtlasV0());
-
-		renderBuffer.setNextTexCoord(textureAtlasU0());
+		renderBuffer.setNextTexCoord(textureAtlasU1());
 		renderBuffer.setNextTexCoord(textureAtlasV1());
 
-		renderBuffer.setNextTexCoord(textureAtlasU1());
+		renderBuffer.setNextTexCoord(textureAtlasU0());
 		renderBuffer.setNextTexCoord(textureAtlasV1());	
 	}
 
@@ -160,24 +159,16 @@ namespace DX9
 	{
 		float textureIndex = particle.getParam(PARAM_TEXTURE_INDEX);
 
-		//renderBuffer.skipNextTexCoords(2);
-		renderBuffer.setNextTexCoord(textureIndex);
-		renderBuffer.setNextTexCoord(textureIndex);
+		renderBuffer.skipNextTexCoords(2);
 		renderBuffer.setNextTexCoord(textureIndex);
 		
-		//renderBuffer.skipNextTexCoords(2);
-		renderBuffer.setNextTexCoord(textureIndex);
-		renderBuffer.setNextTexCoord(textureIndex);
+		renderBuffer.skipNextTexCoords(2);
 		renderBuffer.setNextTexCoord(textureIndex);
 
-		//renderBuffer.skipNextTexCoords(2);
-		renderBuffer.setNextTexCoord(textureIndex);
-		renderBuffer.setNextTexCoord(textureIndex);
+		renderBuffer.skipNextTexCoords(2);
 		renderBuffer.setNextTexCoord(textureIndex);
 
-		//renderBuffer.skipNextTexCoords(2);
-		renderBuffer.setNextTexCoord(textureIndex);
-		renderBuffer.setNextTexCoord(textureIndex);
+		renderBuffer.skipNextTexCoords(2);
 		renderBuffer.setNextTexCoord(textureIndex);
 	}
 }}
