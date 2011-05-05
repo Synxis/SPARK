@@ -145,7 +145,7 @@ namespace SPK
 		void importAttributes(const IO::Descriptor& descriptor);
 		IO::Descriptor exportAttributes() const;
 
-		virtual std::string getClassName() const { return std::string(); } // TODO Make pure virtual
+		virtual std::string getClassName() const = 0;
 		
 	protected :
 

@@ -38,11 +38,16 @@ namespace IO
 		return instance;
 	}
 
-	void IOManager::unregisterAll()
+	void IOManager::unregisterAll() // TODO Unregister at IOManager destruction ?
 	{
 		registeredObjects.clear();
-		registeredLoaders.clear(); // TODO memory leak here
-		registeredSavers.clear();  // and here
+		std::map<std::string,Loader*>::const_iterator it = registeredLoaders.begin();
+		for (std::map<std::string,Loader*>::const_iterator it = registeredLoaders.begin(); it != registeredLoaders.end(); ++it)
+			SPK_DELETE(it->second);
+		registeredLoaders.clear();
+		for (std::map<std::string,Saver*>::const_iterator it = registeredSavers.begin(); it != registeredSavers.end(); ++it)
+			SPK_DELETE(it->second);
+		registeredSavers.clear();
 	}
 
 	Ref<System> IOManager::load(const std::string& path) const

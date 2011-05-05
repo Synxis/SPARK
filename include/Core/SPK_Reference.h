@@ -123,7 +123,7 @@ namespace SPK
 
 	private :
 
-		// TODO In order to be thread safe, nbReferences must be volatile and increment and decrement must be atomic
+		// TODO In order to be thread safe, nbReferences must be volatile and increment/decrement must be atomic
 		void increment() { if (ptr != NULL) ++(ptr->nbReferences); }
 		void decrement() { if (ptr != NULL && --(ptr->nbReferences) == 0) SPK_DELETE(ptr); }
 
