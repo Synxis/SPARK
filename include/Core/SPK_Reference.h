@@ -44,6 +44,8 @@ namespace SPK
 	template<typename T>
 	class Ref
 	{
+	template<typename U> friend void swap(Ref<U>&,Ref<U>&);
+
 	public :
 
 		/////////////////////////////
@@ -121,13 +123,21 @@ namespace SPK
 
 	private :
 
+		// TODO In order to be thread safe, nbReferences must be volatile and increment and decrement must be atomic
 		void increment() { if (ptr != NULL) ++(ptr->nbReferences); }
-
-		// HACK : The pointer is cast to SPKObject* to allow the Ref class to access the destructor
 		void decrement() { if (ptr != NULL && --(ptr->nbReferences) == 0) SPK_DELETE(ptr); }
 
 		T* ptr;
 	};
+
+	// This saves the time of increment then decrement of both ref
+	// Will be called in the STL due to Koenig lookup (however will not be called for explicit call to std::swap)
+	template<typename T> inline void swap(Ref<T>& ref0,Ref<T>& ref1)
+	{
+		T* tmp = ref0.ptr;
+		ref0.ptr = ref1.ptr;
+		ref1.ptr = tmp;
+	}
 
 	template<typename T,typename U> inline bool operator==(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() == ref1.get(); }
 	template<typename T,typename U> inline bool operator==(const Ref<T>& ref,U* ptr) { return ref.get() == ptr; }

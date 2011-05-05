@@ -93,7 +93,7 @@ namespace SPK
 
 			~EmitterData();
 
-			virtual  void swap(size_t index0,size_t index1);
+			virtual void swap(size_t index0,size_t index1);
 		};
 
 		Ref<Emitter> baseEmitter;
@@ -180,7 +180,7 @@ namespace SPK
 
 	inline void EmitterAttacher::EmitterData::swap(size_t index0,size_t index1)
 	{
-		std::swap(data[index0],data[index1]);
+		SPK::swap(data[index0],data[index1]); // Calls the optimized swap of Ref instead of the std::swap
 	}
 }
 

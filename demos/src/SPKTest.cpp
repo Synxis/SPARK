@@ -154,15 +154,6 @@ void drawBoundingBox(const SPK::System& system)
 	glEnd();
 }
 
-std::list<SPK::Ref<SPK::System>> systems;
-SPK::Ref<SPK::System>& createSystem()
-{
-	SPK::Ref<SPK::System> system = SPK::System::create(true);
-	systems.push_back(system);
-	std::cout << system->getNbReferences() << std::endl;
-	return system;
-}
-
 int main(int argc, char *argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -202,11 +193,7 @@ int main(int argc, char *argv[])
 
 	
 	{
-	//SPK::Ref<SPK::System> system = SPK::System::create(true);
-	
-	SPK::Ref<SPK::System> system = createSystem();
-	std::cout << system->getNbReferences() << std::endl;
-	
+	SPK::Ref<SPK::System> system = SPK::System::create(true);
 	system->setName("Test System");
 	
 	SPK::Ref<SPK::GL::GLQuadRenderer> renderer = SPK::GL::GLQuadRenderer::create();
