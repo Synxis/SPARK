@@ -45,7 +45,7 @@ namespace SPK
 		forceMax(emitter.forceMax),
 		fraction(SPK_RANDOM(0.0f,1.0f))
 	{
-		zone = copyChild(emitter.zone);
+		zone = copyChild(emitter,emitter.zone);
 		resetTank();
 	}
 

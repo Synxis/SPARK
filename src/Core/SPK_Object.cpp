@@ -23,14 +23,13 @@
 
 namespace SPK
 {
-	std::map<SPKObject*,SPKObject*> SPKObject::copyBuffer;
-
 	SPKObject::SPKObject(bool SHAREABLE) : 
 		name(),
 		transform(),
 		nbReferences(0),
 		SHAREABLE(SHAREABLE),
-		shared(false)	
+		shared(false),
+		copyBuffer(NULL)
 	{}
 	
 	SPKObject::SPKObject(const SPKObject& obj) : 
@@ -38,7 +37,8 @@ namespace SPK
 		transform(obj.transform),
 		nbReferences(0),
 		SHAREABLE(obj.SHAREABLE),
-		shared(obj.shared)
+		shared(obj.shared),
+		copyBuffer(NULL)
 	{}
 
 	SPKObject::~SPKObject()

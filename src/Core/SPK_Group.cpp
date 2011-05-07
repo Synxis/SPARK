@@ -74,19 +74,19 @@ namespace SPK
 	{
 		reallocate(group.getCapacity());
 
-		renderer.obj = SPKObject::copyChild(group.renderer.obj);
+		renderer.obj = copyChild(group,group.renderer.obj);
 		renderer.dataSet = attachDataSet(renderer.obj.get());
 
-		setColorInterpolator(SPKObject::copyChild(group.colorInterpolator.obj));
+		setColorInterpolator(copyChild(group,group.colorInterpolator.obj));
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
-			setParamInterpolator(static_cast<Param>(i),SPKObject::copyChild(group.paramInterpolators[i].obj));
+			setParamInterpolator(static_cast<Param>(i),copyChild(group,group.paramInterpolators[i].obj));
 
 		for (std::vector<Ref<Emitter>>::const_iterator it = group.emitters.begin(); it != group.emitters.end(); ++it)
-			emitters.push_back(SPKObject::copyChild(*it));
+			emitters.push_back(copyChild(group,*it));
 
 		for (std::vector<ModifierDef>::const_iterator it = group.modifiers.begin(); it != group.modifiers.end(); ++it)
 		{
-			Ref<Modifier>& modifier = SPKObject::copyChild(it->obj);
+			Ref<Modifier>& modifier = copyChild(group,it->obj);
 			ModifierDef modifierDef(modifier,attachDataSet(modifier.get()));
 			modifiers.push_back(modifierDef);
 			if (isInitialized())
@@ -94,8 +94,8 @@ namespace SPK
 		}
 		std::sort(sortedModifiers.begin(),sortedModifiers.end(),CompareModifierPriority());
 
-		birthAction = SPKObject::copyChild(group.birthAction);
-		deathAction = SPKObject::copyChild(group.deathAction);
+		birthAction = copyChild(group,group.birthAction);
+		deathAction = copyChild(group,group.deathAction);
 	}
 
 	Group::~Group()

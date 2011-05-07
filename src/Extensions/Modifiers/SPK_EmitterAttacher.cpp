@@ -37,8 +37,8 @@ namespace SPK
 		orientationEnabled(emitterAttacher.orientationEnabled),
 		rotationEnabled(emitterAttacher.rotationEnabled)
 	{
-		baseEmitter = copyChild(emitterAttacher.baseEmitter);
-		targetGroup = copyChild(emitterAttacher.targetGroup);
+		baseEmitter = copyChild(emitterAttacher,emitterAttacher.baseEmitter);
+		targetGroup = copyChild(emitterAttacher,emitterAttacher.targetGroup);
 	}
 
 	EmitterAttacher::~EmitterAttacher(){}

@@ -43,7 +43,7 @@ namespace SPK
 		ZONE_TEST_FLAG(zonedModifier.ZONE_TEST_FLAG),
 		zoneTest(zonedModifier.zoneTest)
 	{
-		zone = copyChild(zonedModifier.zone);
+		zone = copyChild(zonedModifier,zonedModifier.zone);
 	}
 
 	ZonedModifier::~ZonedModifier(){}

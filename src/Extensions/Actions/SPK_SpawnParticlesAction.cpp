@@ -44,8 +44,8 @@ namespace SPK
 		targetGroup(action.targetGroup),
 		emitterPool()
 	{
-		targetGroup = copyChild(action.targetGroup);
-		baseEmitter = copyChild(action.baseEmitter);
+		targetGroup = copyChild(action,action.targetGroup);
+		baseEmitter = copyChild(action,action.baseEmitter);
 	}
 
 	void SpawnParticlesAction::setNb(unsigned int min,unsigned int max)
@@ -121,7 +121,7 @@ namespace SPK
 				return emitterPool.back();
 		}
 
-		// No emitter is available is the pool, a new one must be created
+		// No emitter is available in the pool, a new one must be created
 		emitterPool.push_back(copy(baseEmitter));
 		emitterPool.back()->getTransform().reset();
 		return emitterPool.back();

@@ -54,7 +54,7 @@ namespace SPK
 	{
 		for (std::vector<Ref<Group>>::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
 		{
-			Ref<Group> group = copyChild(*it);
+			Ref<Group> group = copyChild(system,*it);
 			setGroupSystem(group,this);
 			groups.push_back(group);	
 		}

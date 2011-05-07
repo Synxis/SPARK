@@ -176,20 +176,25 @@ namespace SPK
 		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 		template<typename T>
-		static Ref<T> copyChild(const Ref<T>& ref);
+		static Ref<T> copyChild(const SPKObject& parent,const Ref<T>& ref);
 
 	private :
 
 		std::string name;
 		Transform transform;
 
-		static std::map<SPKObject*,SPKObject*> copyBuffer; // TODO Not thread-safe !
-
 		unsigned int nbReferences;
 		
 		const bool SHAREABLE;
 		bool shared;
 		
+		// The copy buffer is used to be able to correctly perform a deep copy of objects. If an object is present more than once is the hierarchy it will be copied only once
+		// The choice to have a field that is used only for the copy was made because the memory overhead is neglictible and the other possible choices were not satisfying :
+		// _ Having a static copyBuffer made the copy not thread safe (As concurrent copy of object would make concurrent read/write on the buffer)
+		// _ Passing the copyBuffer to methods was too dirty and messed up the interface (Impossible to use the copy constructor anymore)
+		// Note thta with this method the copy of the same object remains not thread safe but the copy of different object is
+		std::map<SPKObject*,SPKObject*>* copyBuffer; 
+
 		virtual Ref<SPKObject> clone() const = 0;
 	};
 
@@ -244,12 +249,21 @@ namespace SPK
 		if (ref == NULL)
 			return ref;
 
-		copyBuffer.clear();
-		return ref.cast<SPKObject>()->clone().cast<T>();
+		if (ref->copyBuffer != NULL) 
+		{
+			SPK_LOG_FATAL("The object is already being copied and cannot be copied more than once at the same time");
+			return SPK_NULL_REF;
+		}
+
+		ref->copyBuffer = new std::map<SPKObject*,SPKObject*>(); // Creates the copy buffer to allow correct copy of underlying SPARK objects
+		Ref<T>& clone = ref.cast<SPKObject>()->clone().cast<T>();
+		delete ref->copyBuffer; // Deletes the copy buffer used for the copy
+		ref->copyBuffer = NULL;
+		return clone;
 	}
 
 	template<typename T>
-	Ref<T> SPKObject::copyChild(const Ref<T>& ref)
+	Ref<T> SPKObject::copyChild(const SPKObject& parent,const Ref<T>& ref)
 	{
 		if (ref == NULL)
 			return SPK_NULL_REF;
@@ -257,12 +271,21 @@ namespace SPK
 		if (ref->isShared())
 			return ref;
 
-		std::map<SPKObject*,SPKObject*>::const_iterator it = copyBuffer.find(ref.get());
-		if (it != copyBuffer.end())
+		if (parent.copyBuffer == NULL) 
+		{
+			SPK_LOG_FATAL("The copy buffer of the object is NULL while copying the object");
+			return SPK_NULL_REF;
+		}
+		
+		std::map<SPKObject*,SPKObject*>::const_iterator it = parent.copyBuffer->find(ref.get());
+		if (it != parent.copyBuffer->end())
 			return dynamic_cast<T*>(it->second);
 
+		ref->copyBuffer = parent.copyBuffer; // Sets the copyBuffer of the child to the copyBuffer of the parent
 		Ref<SPKObject> clone = ref.cast<SPKObject>()->clone();
-		copyBuffer.insert(std::make_pair(ref.get(),clone.get()));
+		ref->copyBuffer = NULL; // Removes the reference to the copy buffer (the copy buffer is deleted by the top level copied object)
+
+		parent.copyBuffer->insert(std::make_pair(ref.get(),clone.get()));
 		return clone.cast<T>();
 	}
 }
