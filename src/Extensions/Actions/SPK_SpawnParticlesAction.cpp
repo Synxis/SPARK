@@ -44,8 +44,8 @@ namespace SPK
 		targetGroup(action.targetGroup),
 		emitterPool()
 	{
-		targetGroup = copyChild(action,action.targetGroup);
-		baseEmitter = copyChild(action,action.baseEmitter);
+		targetGroup = action.copyChild(action.targetGroup);
+		baseEmitter = action.copyChild(action.baseEmitter);
 	}
 
 	void SpawnParticlesAction::setNb(unsigned int min,unsigned int max)

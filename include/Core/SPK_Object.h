@@ -176,7 +176,7 @@ namespace SPK
 		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 		template<typename T>
-		static Ref<T> copyChild(const SPKObject& parent,const Ref<T>& ref);
+		Ref<T> copyChild(const Ref<T>& ref) const;
 
 	private :
 
@@ -193,7 +193,7 @@ namespace SPK
 		// _ Having a static copyBuffer made the copy not thread safe (As concurrent copy of object would make concurrent read/write on the buffer)
 		// _ Passing the copyBuffer to methods was too dirty and messed up the interface (Impossible to use the copy constructor anymore)
 		// Note thta with this method the copy of the same object remains not thread safe but the copy of different object is
-		std::map<SPKObject*,SPKObject*>* copyBuffer; 
+		mutable std::map<SPKObject*,SPKObject*>* copyBuffer; 
 
 		virtual Ref<SPKObject> clone() const = 0;
 	};
@@ -263,7 +263,7 @@ namespace SPK
 	}
 
 	template<typename T>
-	Ref<T> SPKObject::copyChild(const SPKObject& parent,const Ref<T>& ref)
+	Ref<T> SPKObject::copyChild(const Ref<T>& ref) const
 	{
 		if (ref == NULL)
 			return SPK_NULL_REF;
@@ -271,21 +271,21 @@ namespace SPK
 		if (ref->isShared())
 			return ref;
 
-		if (parent.copyBuffer == NULL) 
+		if (copyBuffer == NULL) 
 		{
 			SPK_LOG_FATAL("The copy buffer of the object is NULL while copying the object");
 			return SPK_NULL_REF;
 		}
 		
-		std::map<SPKObject*,SPKObject*>::const_iterator it = parent.copyBuffer->find(ref.get());
-		if (it != parent.copyBuffer->end())
+		std::map<SPKObject*,SPKObject*>::const_iterator it = copyBuffer->find(ref.get());
+		if (it != copyBuffer->end())
 			return dynamic_cast<T*>(it->second);
 
-		ref->copyBuffer = parent.copyBuffer; // Sets the copyBuffer of the child to the copyBuffer of the parent
+		ref->copyBuffer = copyBuffer; // Sets the copyBuffer of the child to the copyBuffer of the parent
 		Ref<SPKObject> clone = ref.cast<SPKObject>()->clone();
 		ref->copyBuffer = NULL; // Removes the reference to the copy buffer (the copy buffer is deleted by the top level copied object)
 
-		parent.copyBuffer->insert(std::make_pair(ref.get(),clone.get()));
+		copyBuffer->insert(std::make_pair(ref.get(),clone.get()));
 		return clone.cast<T>();
 	}
 }

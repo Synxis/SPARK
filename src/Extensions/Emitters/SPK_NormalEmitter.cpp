@@ -44,7 +44,7 @@ namespace SPK
 		Emitter(emitter),
 		inverted(emitter.inverted)
 	{
-		normalZone = copyChild(emitter,emitter.normalZone);
+		normalZone = emitter.copyChild(emitter.normalZone);
 	}
 
 	NormalEmitter::~NormalEmitter() {}

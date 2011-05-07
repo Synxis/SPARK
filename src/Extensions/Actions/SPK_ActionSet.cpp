@@ -29,7 +29,7 @@ namespace SPK
 		actions()
 	{
 		for (std::vector<Ref<Action>>::const_iterator it = actionSet.actions.begin(); it != actionSet.actions.end(); ++it)
-			actions.push_back(copyChild(actionSet,*it));
+			actions.push_back(actionSet.copyChild(*it));
 	}
 
 	ActionSet::~ActionSet(){}
