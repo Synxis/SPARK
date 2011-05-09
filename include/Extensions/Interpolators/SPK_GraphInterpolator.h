@@ -514,11 +514,13 @@ namespace SPK
 			}
 
 			// Else finds the current X in the range
-			float newX = (currentKey.x - graph.begin()->x) / (graph.rbegin()->x - graph.begin()->x);
+			const float beginX = graph.begin()->x;
+			const float rangeX = graph.rbegin()->x - beginX;
+			float newX = (currentKey.x - beginX) / rangeX;
 			newX -= static_cast<int>(newX);
 			if (newX < 0.0f)
 				newX = 1.0f + newX;
-			currentKey.x = graph.begin()->x + newX * (graph.rbegin()->x - graph.begin()->x);
+			currentKey.x = beginX + newX * rangeX;
 		}
 
 		// Gets the entry that is immediatly after the current X
