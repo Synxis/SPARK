@@ -70,6 +70,7 @@ namespace DX9
 		void setNextColor(const Color& color);
 
 		void setNextTexCoord(float texCoord);
+		void skipNextTexCoords(size_t nb);
 
 		void setNbTexCoords(size_t nb);
 		size_t getNbTexCoords();
