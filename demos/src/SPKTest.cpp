@@ -193,8 +193,8 @@ int main(int argc, char *argv[])
 
 	
 	{
-	SPK::Ref<SPK::System> system = SPK::System::create(true);
-	system->setName("Test System");
+	SPK::Ref<SPK::System> system_ = SPK::System::create(true);
+	system_->setName("Test System");
 	
 	SPK::Ref<SPK::GL::GLQuadRenderer> renderer = SPK::GL::GLQuadRenderer::create();
 	renderer->setBlendMode(SPK::BLEND_MODE_ADD);
@@ -205,8 +205,8 @@ int main(int argc, char *argv[])
 
 	SPK::Ref<SPK::SphericEmitter> emitter = SPK::SphericEmitter::create(SPK::Vector3D(0.0f,0.0f,-1.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(),true,-1,100.0f,0.2f,0.5f);
 
-	SPK::Ref<SPK::Group> phantomGroup = system->createGroup(40);
-	SPK::Ref<SPK::Group> trailGroup = system->createGroup(1000);
+	SPK::Ref<SPK::Group> phantomGroup = system_->createGroup(40);
+	SPK::Ref<SPK::Group> trailGroup = system_->createGroup(1000);
 
 	phantomGroup->setName("Phantom Group");
 	phantomGroup->setLifeTime(5.0f,5.0f);
@@ -225,6 +225,8 @@ int main(int argc, char *argv[])
 	trailGroup->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-0.1f,1.0f));
 	trailGroup->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2.0f * 3.14159f));
 	trailGroup->addModifier(SPK::Rotator::create());
+
+	SPK::Ref<SPK::System> system = SPK::SPKObject::copy(system_);
 
 	float deltaTime = 0.0f;
 

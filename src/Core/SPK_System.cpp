@@ -110,7 +110,7 @@ namespace SPK
 		std::vector<Ref<Group>>::iterator it = std::find(groups.begin(),groups.end(),group.get());
 		if (it != groups.end())
 		{
-			setGroupSystem(*it,SPK_NULL_REF,false); // false to avoid infinite loop
+			setGroupSystem(*it,NULL,false); // false to avoid infinite loop
 			groups.erase(it);
 		}
 		else
@@ -266,17 +266,17 @@ namespace SPK
 			descriptor.getAttribute("groups")->setValuesRef(&groups[0],getNbGroups());
 	}
 
-	void System::setGroupSystem(const Ref<Group>& group,const Ref<System>& system,bool remove)
+	void System::setGroupSystem(const Ref<Group>& group,System* system,bool remove)
 	{
 		if (group->system != system)
 		{
 			if (group == NULL)
-				SPK_LOG_FATAL("System::setGroupSystem(const Ref<Group>&) - Internal Error - The group is NULL");
+				SPK_LOG_FATAL("System::setGroupSystem(const Ref<Group>&,const System*,bool) - Internal Error - The group is NULL");
 
 			if (remove && group->system != NULL)
 				group->system->removeGroup(group);
 
-			group->system = system.get();
+			group->system = system;
 			group->initData(); // To initialize the group if needed
 		}
 	}	

@@ -30,7 +30,9 @@ namespace SPK
 		SHAREABLE(SHAREABLE),
 		shared(false),
 		copyBuffer(NULL)
-	{}
+	{
+		SPK_LOG_DEBUG("Creation of SPKObject " << this);		
+	}
 	
 	SPKObject::SPKObject(const SPKObject& obj) : 
 		name(obj.name),
@@ -39,10 +41,13 @@ namespace SPK
 		SHAREABLE(obj.SHAREABLE),
 		shared(obj.shared),
 		copyBuffer(NULL)
-	{}
+	{
+		SPK_LOG_DEBUG("Creation of SPKObject " << this << " from " << &obj);	
+	}
 
 	SPKObject::~SPKObject()
 	{
+		SPK_LOG_DEBUG("Destruction of SPKObject " << this);
 		SPK_ASSERT(nbReferences == 0,"SPKObject::~SPKObject() - The number of references of the object is not 0 during destruction");
 	}
 

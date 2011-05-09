@@ -62,8 +62,7 @@ namespace SPK
 		template<typename U> Ref(const Ref<U>& ref) : 
 			ptr(ref.get()) { increment(); }
 		
-		~Ref() { 
-			decrement(); }
+		~Ref() { decrement(); }
 
 		//////////////////////////
 		// Operator overloading //

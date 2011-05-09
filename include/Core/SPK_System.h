@@ -305,7 +305,7 @@ namespace SPK
 
 		bool innerUpdate(float deltaTime);
 
-		static void setGroupSystem(const Ref<Group>& group,const Ref<System>& system,bool remove = true);
+		static void setGroupSystem(const Ref<Group>& group,System* system,bool remove = true);
 	};
 
 	inline Ref<System> System::create(bool initialize) 

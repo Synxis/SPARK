@@ -256,7 +256,7 @@ namespace SPK
 		}
 
 		ref->copyBuffer = new std::map<SPKObject*,SPKObject*>(); // Creates the copy buffer to allow correct copy of underlying SPARK objects
-		Ref<T>& clone = ref.cast<SPKObject>()->clone().cast<T>();
+		Ref<T> clone = ref.cast<SPKObject>()->clone().cast<T>();
 		delete ref->copyBuffer; // Deletes the copy buffer used for the copy
 		ref->copyBuffer = NULL;
 		return clone;
