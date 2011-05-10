@@ -32,6 +32,7 @@ namespace SPK
 {
 namespace IO
 {
+	/** @brief A class to deserialize a System from an XML document */
 	class SPK_PREFIX XMLLoader : public Loader
 	{
 	private :

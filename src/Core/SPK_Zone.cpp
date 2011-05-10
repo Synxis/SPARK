@@ -35,30 +35,30 @@ namespace SPK
 
 	bool Zone::checkInside(const Particle& particle) const
 	{
-		return contains(particle.position());
+		return contains(particle.position(),particle.getRadius());
 	}
 
 	bool Zone::checkOutside(const Particle& particle) const
 	{
-		return !contains(particle.position());
+		return !contains(particle.position(),-particle.getRadius());
 	}
 
 	bool Zone::checkIntersect(const Particle& particle) const
 	{
-		return intersects(particle.oldPosition(),particle.position(),particle.getParam(PARAM_SCALE) * particle.getGroup().getPhysicalRadius());
+		return intersects(particle.oldPosition(),particle.position(),particle.getRadius());
 	}
 
 	bool Zone::checkEnter(const Particle& particle) const
 	{
 		if (contains(particle.position()))
-			return intersects(particle.oldPosition(),particle.position(),particle.getParam(PARAM_SCALE) * particle.getGroup().getPhysicalRadius());
+			return intersects(particle.oldPosition(),particle.position(),particle.getRadius());
 		return false;
 	}
 
 	bool Zone::checkLeave(const Particle& particle) const
 	{
 		if (!contains(particle.position()))
-			return intersects(particle.oldPosition(),particle.position(),particle.getParam(PARAM_SCALE) * particle.getGroup().getPhysicalRadius());
+			return intersects(particle.oldPosition(),particle.position(),particle.getRadius());
 		return false;
 	}
 

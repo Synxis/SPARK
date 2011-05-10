@@ -462,7 +462,7 @@ namespace SPK
 			CreationData& creationData = creationBuffer.front();
 
 			if (creationData.zone != NULL)
-				creationData.zone->generatePosition(particle.position(),creationData.full,physicalRadius * particle.getParam(PARAM_SCALE));
+				creationData.zone->generatePosition(particle.position(),creationData.full,particle.getRadius());
 			else
 				particle.position() = creationData.position;
 

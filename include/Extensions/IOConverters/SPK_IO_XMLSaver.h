@@ -32,27 +32,31 @@ namespace SPK
 {
 namespace IO
 {
+	/** @brief Constants defining the rule to layout values when saving in XML */
 	enum XMLValueLayout
 	{
-		XML_VALUE_LAYOUT_AS_ATTRIBUTE,
-		XML_VALUE_LAYOUT_AS_TEXT,
+		XML_VALUE_LAYOUT_AS_ATTRIBUTE,	/**< @brief <attrib id="..." value="..."> */	
+		XML_VALUE_LAYOUT_AS_TEXT,		/**< @brief <attrib id="...">...</attrib> */
 	};
 
+	/** @brief Constants defining the rule to layout references when saving in XML */
 	enum XMLReferenceRule
 	{
-		XML_REFERENCE_RULE_WHEN_NEEDED,
-		XML_REFERENCE_RULE_FORCED,
-		XML_REFERENCE_RULE_DESCRIBED_AT_FIRST,
+		XML_REFERENCE_RULE_WHEN_NEEDED,			/**< References are only used when the SPKObject is referenced more than once. If so the SPKObject is written at the root of the XML document */
+		XML_REFERENCE_RULE_FORCED,				/**< References are always used. The SPKObject is always written at the root of the XML document */
+		XML_REFERENCE_RULE_DESCRIBED_AT_FIRST,	/**< The SPKObject is written the first time it is referenced and then references are used */
 	};
 
 
+	/** @brief A struct that defines the layout of a XML document to save */
 	struct XMLLayout
 	{
-		std::string indent;
-		std::string lineBreak;
-		XMLValueLayout valueLayout;
-		XMLReferenceRule referenceRule;
+		std::string indent;					/**< @brief the string used for an indent ("\t" by default) */
+		std::string lineBreak;				/**< @brief the string used for an line break ("\n" by default) */
+		XMLValueLayout valueLayout;			/**< @brief defines how to layout values (XML_VALUE_LAYOUT_AS_ATTRIBUTE by default)*/
+		XMLReferenceRule referenceRule;		/**< @brief defines how to layout references (XML_REFERENCE_RULE_WHEN_NEEDED by default)*/
 
+		/** @brief Default constructor */
 		XMLLayout() :
 			indent("\t"),
 			lineBreak("\n"),
@@ -66,10 +70,31 @@ namespace IO
 	{
 	public :
 
+		/**
+		* @brief Sets the author of the systems to save 
+		* The author will be written at the beginning of the XML document as a comment. 
+		* @param author : The author of the systems to save 
+		*/
 		void setAuthor(const std::string& author)	{ this->author = author; }
 
+		/**
+		* @brief Sets the layout of the saver
+		* The layout will be used each time a document is written.
+		* @param layout : the layout rules
+		*/
 		void setLayout(const XMLLayout& layout)		{ this->layout = layout; }
+
+		/**
+		* @brief Gets the layout of the saver
+		* @return the layout rules
+		*/
 		XMLLayout& getLayout()						{ return layout; }
+
+		/**
+		* @brief Gets the layout of the saver
+		* Const version of getLayout()
+		* @return the layout rules
+		*/
 		const XMLLayout& getLayout() const			{ return layout; }
 
 	private :

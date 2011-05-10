@@ -39,19 +39,33 @@ namespace SPK
 	void Sphere::generatePosition(Vector3D& v,bool full,float radius) const
 	{
 		const float relRadius = this->radius - radius;
-			
-		do v = SPK_RANDOM(Vector3D(-relRadius,-relRadius,-relRadius),Vector3D(relRadius,relRadius,relRadius));
-		while (v.getSqrNorm() > relRadius * relRadius);
+		
+		if (!full) 
+		{
+			do v = SPK_RANDOM(Vector3D(-1.0f,-1.0f,-1.0f),Vector3D(1.0f,1.0f,1.0f));
+			while (v.getSqrNorm() > 1.0f);
 
-		if (!full)
 			v *= this->radius / v.getNorm();
+		}
+		else 
+		{
+			const float relRadius = this->radius - radius;
+
+			if (relRadius <= 0.0f) // The particle is larger than the sphere
+				v = getTransformedPosition();
+			else
+			{
+				do v = SPK_RANDOM(Vector3D(-1.0f,-1.0f,-1.0f),Vector3D(1.0f,relRadius,relRadius));
+				while (v.getSqrNorm() > relRadius * relRadius);	
+			}
+		}
 
 		v += getTransformedPosition();
 	}
 
 	bool Sphere::contains(const Vector3D& v,float radius) const
 	{
-		const float relRadius = this->radius - radius;
+		const float relRadius = this->radius + radius;
 		return getSqrDist(getTransformedPosition(),v) <= relRadius * relRadius;
 	}
 

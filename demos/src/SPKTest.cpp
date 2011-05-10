@@ -208,12 +208,14 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::Group> phantomGroup = system_->createGroup(40);
 	SPK::Ref<SPK::Group> trailGroup = system_->createGroup(1000);
 
+	SPK::Ref<SPK::Plane> ground = SPK::Plane::create(SPK::Vector3D(0.0f,-1.0f,0.0f));
+
 	phantomGroup->setName("Phantom Group");
 	phantomGroup->setLifeTime(5.0f,5.0f);
 	phantomGroup->setRadius(0.06f);
 	phantomGroup->addEmitter(SPK::SphericEmitter::create(SPK::Vector3D(0.0f,1.0f,0.0f),0.0f,3.14159f / 4.0f,SPK::Point::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),true,-1,2.0f,1.2f,2.0f));
 	phantomGroup->addModifier(SPK::Gravity::create(SPK::Vector3D(0.0f,-1.0f,0.0f)));
-	phantomGroup->addModifier(SPK::Obstacle::create(SPK::Plane::create(SPK::Vector3D(0.0f,-1.0f,0.0f)),0.8f));
+	phantomGroup->addModifier(SPK::Obstacle::create(ground,0.8f));
 	phantomGroup->addModifier(SPK::EmitterAttacher::create(trailGroup,emitter,true));
 	
 	trailGroup->setName("Trail");
@@ -225,6 +227,7 @@ int main(int argc, char *argv[])
 	trailGroup->setParamInterpolator(SPK::PARAM_ROTATION_SPEED,SPK::FloatRandomInitializer::create(-0.1f,1.0f));
 	trailGroup->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2.0f * 3.14159f));
 	trailGroup->addModifier(SPK::Rotator::create());
+	trailGroup->addModifier(SPK::Destroyer::create(ground));
 
 	SPK::Ref<SPK::System> system = SPK::SPKObject::copy(system_);
 

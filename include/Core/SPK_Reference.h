@@ -22,6 +22,8 @@
 #ifndef H_SPK_REFERENCE
 #define H_SPK_REFERENCE
 
+#include <iostream> // for operator <<
+
 #define SPK_NULL_REF SPK::NullReferenceValue()
 
 namespace SPK
@@ -35,7 +37,7 @@ namespace SPK
 	* This class defines a smart pointer with intrusive reference counting.<br>
 	* Ref objects are responsible for SPKObjects destruction. An SPKObject is destroyed as soon as no more references are pointing to it.<br>
 	* <br>
-	* A Ref offers the same operations (* and ->) and comparison operators as a standard pointers.<br>
+	* A Ref offers the same operations (* and ->) and comparison operators as a standard pointer.<br>
 	* Moreover implicit conversions exists between Ref and standard pointer.<br>
 	* Implicit downcasting is also implemented. Upcasting can be performed with a call to cast<T> (equivalent to dynamic_cast<T>)<br>
 	* <br>
@@ -141,11 +143,13 @@ namespace SPK
 	template<typename T,typename U> inline bool operator==(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() == ref1.get(); }
 	template<typename T,typename U> inline bool operator==(const Ref<T>& ref,U* ptr) { return ref.get() == ptr; }
 	template<typename T,typename U> inline bool operator==(T* ptr,const Ref<U>& ref) { return ref.get() == ptr; }
-	template<typename T,typename U> inline bool operator<(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() < ref1.get(); }
+	template<typename T,typename U> inline bool operator<(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() < ref1.get(); } // For ordering
 
 	template<typename T,typename U> inline bool operator!=(const Ref<T>& ref0,const Ref<U>& ref1) { return ref0.get() != ref1.get(); }
 	template<typename T,typename U> inline bool operator!=(const Ref<T>& ref,U* ptr) { return ref.get() != ptr; }
 	template<typename T,typename U> inline bool operator!=(T* ptr,const Ref<U>& ref) { return ref.get() != ptr; }
+
+	template<typename T> std::ostream& operator<<(std::ostream& s,const Ref<T>& ref) { s << ref.get() }
 }
 
 #endif

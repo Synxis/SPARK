@@ -52,7 +52,7 @@ namespace IO
 		}
 
 		// Iterates in XML to find the objects and fill the graph
-		std::vector<const TiXmlElement*> objElements; // This will allow to find back are objects description once created
+		std::vector<const TiXmlElement*> objElements; // This will allow to find back objects description once created
 		std::map<int,size_t> ref2Index; // This map allows to find back objects index in the vector from their reference id
 		
 		findObjects(*root,objElements,ref2Index,true);

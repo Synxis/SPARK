@@ -155,6 +155,13 @@ namespace SPK
 		float getLifeTime() const;
 
 		/**
+		* @brief Gets the physical radius of the particle in units
+		* The physical radius is defined as : <i>particleScale * groupPhysicalRadius</i>
+		* @return the physical radius of the particle
+		*/
+		float getRadius() const;
+
+		/**
 		* @brief Gets the distance of the particle from the camera
 		* This value is relevant only if the group had the distance computation enabled.
 		* @return the distance of the particle from the camera
@@ -295,6 +302,11 @@ namespace SPK
 	inline float Particle::getLifeTime() const
 	{
 		return group.particleData.lifeTimes[index];
+	}
+
+	inline float Particle::getRadius() const
+	{
+		return group.physicalRadius * getParam(PARAM_SCALE);
 	}
 
 	inline float Particle::getDistanceFromCamera() const

@@ -90,10 +90,10 @@ namespace SPK
 		// Interface //
 		///////////////
 
-		virtual  void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
-		virtual  bool contains(const Vector3D& v,float radius = 0.0f) const;
+		virtual void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
+		virtual bool contains(const Vector3D& v,float radius = 0.0f) const;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f) const;
-		virtual  Vector3D computeNormal(const Vector3D& v) const;
+		virtual Vector3D computeNormal(const Vector3D& v) const;
 
 	protected :
 
@@ -145,7 +145,7 @@ namespace SPK
 
 	inline bool Plane::contains(const Vector3D& v,float radius) const
 	{
-		return dotProduct(tNormal,v - getTransformedPosition()) <= -radius;
+		return dotProduct(tNormal,v - getTransformedPosition()) <= radius;
 	}
 
 	inline Vector3D Plane::computeNormal(const Vector3D& point) const
