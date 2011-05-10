@@ -559,7 +559,7 @@ namespace SPK
 		bool updateParticles(float deltaTime);
 		void renderParticles();
 
-		void initParticle(size_t index,size_t& emitterIndex,size_t& nbManualBorn);
+		bool initParticle(size_t index,size_t& emitterIndex,size_t& nbManualBorn);
 		void swapParticles(size_t index0,size_t index1);
 
 		void recomputeEnabledParamIndices();

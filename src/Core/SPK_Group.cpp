@@ -218,12 +218,15 @@ namespace SPK
 					deathAction->apply(particle);
 				}
 
-				if (nbBorn > 0) // If particles are to be born, reinits a dead one with a new one
+				bool replaceDeadParticle = false;
+				while (!replaceDeadParticle && nbBorn > 0) 
 				{
-					initParticle(i,emitterIndex,nbManualBorn);
+					if (initParticle(i,emitterIndex,nbManualBorn))
+						replaceDeadParticle = true;
 					--nbBorn;
 				}
-				else // Else inactivate the dead one
+
+				if (!replaceDeadParticle)
 				{
 					swapParticles(i,particleData.nbParticles - 1);
 					--particleData.nbParticles;
@@ -231,8 +234,12 @@ namespace SPK
 			}
 
 		// Emits new particles if some left
-		for (size_t i = std::min(nbBorn,particleData.maxParticles - particleData.nbParticles); i > 0; --i)
-			initParticle(particleData.nbParticles++,emitterIndex,nbManualBorn);
+		while (nbBorn > 0 && particleData.maxParticles - particleData.nbParticles > 0)
+		{
+			if (!initParticle(particleData.nbParticles++,emitterIndex,nbManualBorn))
+				--particleData.nbParticles;
+			--nbBorn;
+		}
 
 		// Computes the distance of particles from the camera
 		if (distanceComputationEnabled)
@@ -432,7 +439,7 @@ namespace SPK
 				enabledParamIndices[nbEnabledParameters++] = i;
 	}
 
-	void Group::initParticle(size_t index,size_t& emitterIndex,size_t& nbManualBorn)
+	bool Group::initParticle(size_t index,size_t& emitterIndex,size_t& nbManualBorn)
 	{
 		Particle particle(getParticle(index));
 
@@ -486,12 +493,19 @@ namespace SPK
 		for (std::vector<WeakModifierDef>::iterator it = initModifiers.begin(); it != initModifiers.end(); ++it)
 			it->obj->init(particle,it->dataSet);
 
-		if (renderer.obj != NULL && renderer.obj->isActive())
-			renderer.obj->init(particle,renderer.dataSet);
+		if (particle.isAlive())
+		{
+			if (renderer.obj != NULL && renderer.obj->isActive())
+				renderer.obj->init(particle,renderer.dataSet);
 
-		// birth action
-		if (birthAction != NULL && birthAction->isActive())
-			birthAction->apply(particle);
+			// birth action
+			if (birthAction != NULL && birthAction->isActive())
+				birthAction->apply(particle);
+
+			return true;
+		}
+		else
+			return false; // No birth neither death actions on born-dead particles
 	}
 
 	void Group::swapParticles(size_t index0,size_t index1)
@@ -718,12 +732,11 @@ namespace SPK
 		prepareAdditionnalData();
 
 		unsigned int nbManualBorn = nbBufferedParticles;
-		if (nbManualBorn > getCapacity() - getNbParticles())
-			nbManualBorn = getCapacity() - getNbParticles();
 
 		size_t dummy;
-		while(nbManualBorn > 0)
-			initParticle(particleData.nbParticles++,dummy,nbManualBorn);
+		while (nbManualBorn > 0 && particleData.maxParticles - particleData.nbParticles > 0)
+			if (!initParticle(particleData.nbParticles++,dummy,nbManualBorn))
+				--particleData.nbParticles;
 
 		emptyBufferedParticles();
 	}
