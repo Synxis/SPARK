@@ -149,7 +149,7 @@ namespace SPK
 	template<typename T,typename U> inline bool operator!=(const Ref<T>& ref,U* ptr) { return ref.get() != ptr; }
 	template<typename T,typename U> inline bool operator!=(T* ptr,const Ref<U>& ref) { return ref.get() != ptr; }
 
-	template<typename T> std::ostream& operator<<(std::ostream& s,const Ref<T>& ref) { s << ref.get() }
+	template<typename T> std::ostream& operator<<(std::ostream& s,const Ref<T>& ref) { return s << ref.get(); }
 }
 
 #endif
