@@ -98,6 +98,7 @@ namespace SPK
 
 		Obstacle(const Obstacle& obstacle);
 
+		virtual void init(Particle& particle,DataSet* dataSet) const;
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 

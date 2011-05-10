@@ -505,7 +505,10 @@ namespace SPK
 			return true;
 		}
 		else
+		{
+			SPK_LOG_DEBUG("Particle " << index << " of Group " << this << " is born-dead");
 			return false; // No birth neither death actions on born-dead particles
+		}
 	}
 
 	void Group::swapParticles(size_t index0,size_t index1)

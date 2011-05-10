@@ -44,6 +44,7 @@ namespace SPK
 		Destroyer(const Ref<Zone>& zone = SPK_NULL_REF,ZoneTest zoneTest = ZONE_TEST_INSIDE);
 		Destroyer(const Destroyer& destroyer);
 
+		virtual void init(Particle& particle,DataSet* dataSet) const;
 		virtual  void modify(Group& group,DataSet* dataSet,float deltaTime) const;
 	};
 
@@ -53,12 +54,18 @@ namespace SPK
 	}
 
 	inline Destroyer::Destroyer(const Ref<Zone>& zone,ZoneTest zoneTest) :
-		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,false,ZONE_TEST_FLAG_ALL & ~ZONE_TEST_FLAG_ALWAYS,zoneTest,zone)
+		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,true,ZONE_TEST_FLAG_ALL & ~ZONE_TEST_FLAG_ALWAYS,zoneTest,zone)
 	{}
 
 	inline Destroyer::Destroyer(const Destroyer& destroyer) :
 		ZonedModifier(destroyer)
 	{}
+
+	inline void Destroyer::init(Particle& particle,DataSet* dataSet) const
+	{
+		if (checkZone(particle))
+			particle.kill();
+	}
 
 	inline void Destroyer::modify(Group& group,DataSet* dataSet,float deltaTime) const
 	{
