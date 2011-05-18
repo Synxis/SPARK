@@ -251,6 +251,9 @@ int main(int argc, char *argv[])
 			if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_PAUSE)
 				paused = !paused;
 
+			if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F4)
+				system->enableAABBComputation(!system->isAABBComputationEnabled());
+
 			// Moves the camera with the mouse
 			if (event.type == SDL_MOUSEMOTION)
 			{
@@ -294,7 +297,7 @@ int main(int argc, char *argv[])
 
 	// To be registered automatically
 	SPK::IO::IOManager::get().registerObject<SPK::GL::GLQuadRenderer>();
-
+ 
 	SPK::IO::IOManager::get().save("test.xml",system);
 	SPK::Ref<SPK::System> system2 = SPK::IO::IOManager::get().load("test.xml");
 	SPK::IO::IOManager::get().save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml

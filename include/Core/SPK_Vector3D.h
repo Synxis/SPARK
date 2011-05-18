@@ -309,6 +309,12 @@ namespace SPK
 		* @return the minimum coordinate (either x,y or z)
 		*/
 		float getMin() const;
+
+		/**
+		* @brief Tells if this vector is (0,0,0)
+		* @return true if the vector is null, false otherwise
+		*/
+		bool isNull() const;
 	};
 
 	////////////////////////
@@ -751,6 +757,11 @@ namespace SPK
 		if (y < minCoord) minCoord = y;
 		if (z < minCoord) minCoord = z;
 		return minCoord;
+	}
+
+	inline bool Vector3D::isNull() const
+	{
+		return x == 0.0f && y == 0.0f && z == 0.0f;
 	}
 
 	inline Vector3D Vector3D::operator-() const

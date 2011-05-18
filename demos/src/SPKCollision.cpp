@@ -224,6 +224,7 @@ int main(int argc, char *argv[])
 
 	// Zone
 	SPK::Ref<SPK::Sphere> sphere = SPK::Sphere::create();
+	SPK::Ref<SPK::Box> cube = SPK::Box::create(SPK::Vector3D(),SPK::Vector3D(0.65f,0.65f,0.65f));
 
 	// Gravity
 	SPK::Ref<SPK::Gravity> gravity = SPK::Gravity::create();
@@ -232,6 +233,9 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::System> particleSystem = SPK::System::create(true);
 
 	SPK::Ref<SPK::Collider> collider = SPK::Collider::create(0.9f);
+
+	// Obstacle
+	SPK::Ref<SPK::Obstacle> obstacle = SPK::Obstacle::create(sphere,0.9f,0.9f);
 	
 	// Group
 	SPK::Ref<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES);
@@ -239,7 +243,7 @@ int main(int argc, char *argv[])
 	particleGroup->setRadius(RADIUS);
 	particleGroup->setRenderer(particleRenderer);
 	particleGroup->addModifier(gravity);
-	particleGroup->addModifier(SPK::Obstacle::create(sphere,0.9f,0.9f));
+	particleGroup->addModifier(obstacle);
 	particleGroup->addModifier(collider);
 	particleGroup->addModifier(SPK::Friction::create(0.1f));
 	
@@ -302,6 +306,15 @@ int main(int argc, char *argv[])
 				}
 			}
 
+			if ((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_SPACE))
+			{
+				if (obstacle->getZone() == sphere)
+					obstacle->setZone(cube);
+				else if (obstacle->getZone() == cube)
+					obstacle->setZone(sphere);
+				particleGroup->empty();
+			}
+
 			// if pause is pressed, the system is paused
 			if ((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_PAUSE))
 				paused = !paused;
@@ -327,7 +340,7 @@ int main(int argc, char *argv[])
 
 			// if the particles were deleted, we refill the system
 			if (particleSystem->getNbParticles() == 0)
-				particleGroup->addParticles(NB_PARTICLES,sphere,SPK::Vector3D());
+				particleGroup->addParticles(NB_PARTICLES,obstacle->getZone(),SPK::Vector3D());
 		}
 
 		// Renders scene

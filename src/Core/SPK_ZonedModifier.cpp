@@ -63,15 +63,16 @@ namespace SPK
 			bool validTestFound = false;
 			for (size_t i = 0; i < NB_ZONE_TESTS; ++i)
 			{
-				if ((1 << i) & ZONE_TEST_FLAG)
+				if (((1 << i) & ZONE_TEST_FLAG) != 0)
 				{
-					this->zoneTest = static_cast<ZoneTest>(1 << i);
+					this->zoneTest = static_cast<ZoneTest>(i);
 					validTestFound = true;
 					break;
 				}
-				if (!validTestFound)
-					SPK_LOG_FATAL("ZonedModifier::setZoneTest(ZoneTest) - The ZONE_TEST_FLAG of modifier is empty"); 
 			}
+
+			if (!validTestFound)	{ SPK_LOG_FATAL("ZonedModifier::setZoneTest(ZoneTest) - The ZONE_TEST_FLAG of modifier is empty") }
+			else					{ SPK_LOG_WARNING("ZonedModifier::setZoneTest(ZoneTest) - Sets the zone test to " << this->zoneTest) }
 		}
 	}
 

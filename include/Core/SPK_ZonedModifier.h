@@ -125,7 +125,7 @@ namespace SPK
 		* @brief Check whether the zone test passes for a given particle
 		* @return true is the zone test passes, false if not
 		*/
-		bool checkZone(const Particle& particle) const;
+		bool checkZone(const Particle& particle,Vector3D& normal = Vector3D()) const;
 
 		virtual void propagateUpdateTransform();
 
@@ -157,9 +157,9 @@ namespace SPK
 		return zoneTest;
 	}
 
-	inline bool ZonedModifier::checkZone(const Particle& particle) const
+	inline bool ZonedModifier::checkZone(const Particle& particle,Vector3D& normal) const
 	{
-		return zone->check(particle,zoneTest);
+		return zone->check(particle,zoneTest,normal);
 	}
 }
 

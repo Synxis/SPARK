@@ -19,30 +19,42 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_SPK_SPHERE
-#define H_SPK_SPHERE
+#ifndef H_SPK_BOX
+#define H_SPK_BOX
 
 namespace SPK
 {
-	class SPK_PREFIX Sphere : public Zone
+	class SPK_PREFIX Box : public Zone
 	{
-	SPK_IMPLEMENT_OBJECT(Sphere)
+	SPK_IMPLEMENT_OBJECT(Box)
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Zone)
-	SPK_ATTRIBUTE("radius",ATTRIBUTE_TYPE_FLOAT)
+	SPK_ATTRIBUTE("dimension",ATTRIBUTE_TYPE_VECTOR)
+	SPK_ATTRIBUTE("up",ATTRIBUTE_TYPE_VECTOR)
+	SPK_ATTRIBUTE("front",ATTRIBUTE_TYPE_VECTOR)
 	SPK_END_DESCRIPTION
 
 	public :
+	
+		static Ref<Box> create(
+			const Vector3D& position = Vector3D(),
+			const Vector3D& dimension = Vector3D(1.0f,1.0f,1.0f),
+			const Vector3D& front = Vector3D(0.0f,0.0f,1.0f),
+			const Vector3D& up = Vector3D(0.0f,1.0f,0.0f));
 
-		static Ref<Sphere> create(const Vector3D& position = Vector3D(),float radius = 1.0f);
+		void setAxis(const Vector3D& front,const Vector3D& up = Vector3D(0.0f,1.0f,0.0f));
 
-		////////////
-		// Radius //
-		////////////
+		void setDimension(const Vector3D& dimension = Vector3D());
+		const Vector3D& getDimension() const { return dimension; }
 
-		void setRadius(float radius);
-		float getRadius() const;
+		const Vector3D& getXAxis() const { return axis[0]; }
+		const Vector3D& getYAxis() const { return axis[1]; }
+		const Vector3D& getZAxis() const { return axis[2]; }
+
+		const Vector3D& getTransformedXAxis() const { return tAxis[0]; }
+		const Vector3D& getTransformedYAxis() const { return tAxis[1]; }
+		const Vector3D& getTransformedZAxis() const { return tAxis[2]; }
 
 		///////////////
 		// Interface //
@@ -55,36 +67,34 @@ namespace SPK
 
 	protected :
 
+		virtual void innerUpdateTransform();
+
 		virtual void innerImport(const IO::Descriptor& descriptor);
 		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
-		float radius;
+		Vector3D dimension;
+		Vector3D axis[3];
+		Vector3D tAxis[3];
 
-		Sphere(const Vector3D& position = Vector3D(),float radius = 1.0f);
-		Sphere(const Sphere& sphere);
+		Box(const Vector3D& position = Vector3D(),
+			const Vector3D& dimension = Vector3D(1.0f,1.0f,1.0f),
+			const Vector3D& front = Vector3D(0.0f,0.0f,1.0f),
+			const Vector3D& up = Vector3D(0.0f,1.0f,0.0f));
+		Box(const Box& box);
+
+		bool intersectSlab(float dist0,float dist1,float slab,const Vector3D& axis,float& minRatio,Vector3D& normal) const;
+		Vector3D generateRandomDim(bool full,float radius) const; 
 	};
 
-	inline Sphere::Sphere(const Vector3D& position,float radius) :
-		Zone(position)
+	inline Ref<Box> Box::create(
+		const Vector3D& position,
+		const Vector3D& dimension,
+		const Vector3D& front,
+		const Vector3D& up)
 	{
-		setRadius(radius);
-	}
-
-	inline Sphere::Sphere(const Sphere& sphere) :
-		Zone(sphere),
-		radius(sphere.radius)
-	{}
-
-	inline Ref<Sphere> Sphere::create(const Vector3D& position,float radius)
-	{
-		return SPK_NEW(Sphere,position,radius);
-	}
-
-	inline float Sphere::getRadius() const
-	{
-		return radius;
+		return SPK_NEW(Box,position,dimension,front,up);
 	}
 }
 

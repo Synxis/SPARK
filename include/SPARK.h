@@ -37,6 +37,7 @@
 #include "Extensions/Zones/SPK_Sphere.h"
 #include "Extensions/Zones/SPK_Plane.h"
 #include "Extensions/Zones/SPK_Ring.h"
+#include "Extensions/Zones/SPK_Box.h"
 
 // Emitters
 #include "Extensions/Emitters/SPK_StaticEmitter.h"

@@ -25,7 +25,7 @@
 namespace SPK
 {
 	Obstacle::Obstacle(const Ref<Zone>& zone,float bouncingRatio,float friction,ZoneTest zoneTest) :
-		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,true,ZONE_TEST_FLAG_INTERSECT | ZONE_TEST_FLAG_ENTER | ZONE_TEST_FLAG_LEAVE,zoneTest,zone),
+		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,true,ZONE_TEST_FLAG_ALL & ~ZONE_TEST_FLAG_ALWAYS/*ZONE_TEST_FLAG_INTERSECT | ZONE_TEST_FLAG_ENTER | ZONE_TEST_FLAG_LEAVE*/,zoneTest,zone),
 		bouncingRatio(bouncingRatio),
 		friction(friction)
 	{}
@@ -50,14 +50,14 @@ namespace SPK
 
 	void Obstacle::modify(Group& group,DataSet* dataSet,float deltaTime) const
 	{
+		Vector3D normal;
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
-			if (checkZone(*particleIt))
+			if (checkZone(*particleIt,normal))
 			{ 
 				particleIt->position() = particleIt->oldPosition();
 
 				Vector3D& velocity = particleIt->velocity();
-				Vector3D normal = getZone()->computeNormal(particleIt->position());
 
 				float dist = dotProduct(velocity,normal);
 

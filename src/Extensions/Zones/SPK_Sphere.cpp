@@ -69,7 +69,7 @@ namespace SPK
 		return getSqrDist(getTransformedPosition(),v) <= relRadius * relRadius;
 	}
 
-	bool Sphere::intersects(const Vector3D& v0,const Vector3D& v1,float radius) const
+	bool Sphere::intersects(const Vector3D& v0,const Vector3D& v1,float radius,Vector3D& normal) const
 	{
 		float r2 = this->radius * this->radius + radius * radius;
 		float s2 = 2.0f * this->radius * radius;
@@ -82,6 +82,8 @@ namespace SPK
 			if (dist1 > r2 + s2) // the end sphere is completely out of the sphere
 				return false;
 
+			normal = (v0 - getTransformedPosition());
+			normalizeOrRandomize(normal);
 			return true;
 		}
 
@@ -90,6 +92,8 @@ namespace SPK
 			if (dist1 < r2 - s2) // the end sphere is completely in the sphere
 				return false;
 
+			normal = (getTransformedPosition() - v0);
+			normal.normalize();
 			return true;
 		}
 

@@ -32,7 +32,7 @@ namespace SPK
 		tNormal.normalize();
 	}
 
-	bool Plane::intersects(const Vector3D& v0,const Vector3D& v1,float radius) const
+	bool Plane::intersects(const Vector3D& v0,const Vector3D& v1,float radius,Vector3D& normal) const
 	{
 		float dist0 = dotProduct(tNormal,v0 - getTransformedPosition());
 		
@@ -41,7 +41,10 @@ namespace SPK
 
 		float dist1 = dotProduct(tNormal,v1 - getTransformedPosition());
 		if (std::abs(dist1) < radius)
+		{
+			normal = (dist0 < 0.0f ? -tNormal : tNormal);
 			return true;
+		}
 		
 		if (dist1 > 0.0f)
 			dist1 -= radius;
@@ -51,6 +54,7 @@ namespace SPK
 		if ((dist0 < 0.0f) == (dist1 < 0.0f)) // both particles are on the same side
 			return false;
 
+		normal = (dist0 < 0.0f ? -tNormal : tNormal);
 		return true;
 	}
 
