@@ -126,12 +126,13 @@ namespace GL
 		float* ageIt = SPK_GET_DATA(FloatArrayData,dataSet,AGE_DATA_INDEX).getData();
 		unsigned char* startAlphaIt = SPK_GET_DATA(ArrayData<unsigned char>,dataSet,START_ALPHA_DATA_INDEX).getData();
 
+		float ageStep = duration / (nbSamples - 1);
 		for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
 			const Particle& particle = *particleIt;
 			float age = particle.getAge();
 
-			if (age - *(ageIt + 1) >= duration / (nbSamples - 1)) // shifts the data by one
+			if (age - *(ageIt + 1) >= ageStep) // shifts the data by one
 			{
 				std::memmove(vertexIt + 2,vertexIt + 1,(nbSamples - 1) * sizeof(Vector3D));
 				std::memmove(colorIt + 2,colorIt + 1,(nbSamples - 1) * sizeof(Color));

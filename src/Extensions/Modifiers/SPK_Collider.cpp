@@ -38,6 +38,8 @@ namespace SPK
 	void Collider::modify(Group& group,DataSet* dataSet,float deltaTime) const
 	{
 		float groupSqrRadius = group.getPhysicalRadius() * group.getPhysicalRadius();
+		SPK_ASSERT(group.getOctree() != NULL,"GLQuadRenderer::render(const Group&,const DataSet*,RenderBuffer*) - renderBuffer must not be NULL");
+		const Octree& octree = *group.getOctree();
 
 		for (GroupIterator particleIt0(group); !particleIt0.end(); ++particleIt0)
 		{
@@ -45,79 +47,93 @@ namespace SPK
 			float radius0 = particle0.getParam(PARAM_SCALE);
 			float m0 = particle0.getParam(PARAM_MASS);
 
-			// Tests collisions with all the particles that are stored before in the pool
-			for (GroupIterator particleIt1(group); particleIt1 != particleIt0; ++particleIt1)
+			size_t index0 = particle0.getIndex();
+
+			const Octree::Array<size_t>& neighborCells = octree.getNeighborCells(index0);
+			size_t nbCells = neighborCells.size();
+			
+			for (size_t i = 0; i < nbCells; ++i) // For each neighboring cell in the octree
 			{
-				Particle& particle1 = *particleIt1;
-				float radius1 = particle1.getParam(PARAM_SCALE);
-
-				float sqrRadius = radius0 + radius1;
-				sqrRadius *= sqrRadius * groupSqrRadius;
-
-				// Gets the normal of the collision plane
-				Vector3D normal = particle0.position() - particle1.position();
-				float sqrDist = normal.getSqrNorm();
-
-				if (sqrDist < sqrRadius) // particles are intersecting each other
+				const Octree::Cell& cell = octree.getCell(neighborCells[i]);
+				size_t nbParticleInCells = cell.particles.size();
+				
+				for (size_t j = 0; j < nbParticleInCells; ++j) // for each particles in the cell
 				{
-					Vector3D delta = particle0.velocity() - particle1.velocity();
+					size_t index1 = cell.particles[j];
+					if (index1 >= index0)
+						break; // as particle are ordered
 
-					if (dotProduct(normal,delta) < 0.0f) // particles are moving towards each other
+					Particle& particle1 = group.getParticle(index1);
+					float radius1 = particle1.getParam(PARAM_SCALE);
+
+					float sqrRadius = radius0 + radius1;
+					sqrRadius *= sqrRadius * groupSqrRadius;
+
+					// Gets the normal of the collision plane
+					Vector3D normal = particle0.position() - particle1.position();
+					float sqrDist = normal.getSqrNorm();
+
+					if (sqrDist < sqrRadius) // particles are intersecting each other
 					{
-						float oldSqrDist = getSqrDist(particle0.oldPosition(),particle1.oldPosition());
-						if (oldSqrDist > sqrDist)
+						Vector3D delta = particle0.velocity() - particle1.velocity();
+
+						if (dotProduct(normal,delta) < 0.0f) // particles are moving towards each other
 						{
-							// Disables the move from this frame
-							particle0.position() = particle0.oldPosition();
-							particle1.position() = particle1.oldPosition();
-
-							normal = particle0.position() - particle1.position();
-
-							if (dotProduct(normal,delta) >= 0.0f)
-								continue;
-						}
-
-						normal.normalize();
-
-						// Gets the normal components of the velocities
-						Vector3D normal0 = normal * dotProduct(normal,particle0.velocity());
-						Vector3D normal1 = normal * dotProduct(normal,particle1.velocity());
-
-						// Resolves collision
-						float m1 = particle1.getParam(PARAM_MASS);
-
-						if (oldSqrDist < sqrRadius && sqrDist < sqrRadius)
-						{
-							// Tweak to separate particles that intersects at both t - deltaTime and t
-							// In that case the collision is no more considered as punctual
-							if (dotProduct(normal,normal0) < 0.0f)
+							float oldSqrDist = getSqrDist(particle0.oldPosition(),particle1.oldPosition());
+							if (oldSqrDist > sqrDist)
 							{
-								particle0.velocity() -= normal0;
+								// Disables the move from this frame
+								particle0.position() = particle0.oldPosition();
+								particle1.position() = particle1.oldPosition();
+
+								normal = particle0.position() - particle1.position();
+
+								if (dotProduct(normal,delta) >= 0.0f)
+									continue;
+							}
+
+							normal.normalize();
+
+							// Gets the normal components of the velocities
+							Vector3D normal0 = normal * dotProduct(normal,particle0.velocity());
+							Vector3D normal1 = normal * dotProduct(normal,particle1.velocity());
+
+							// Resolves collision
+							float m1 = particle1.getParam(PARAM_MASS);
+
+							if (oldSqrDist < sqrRadius && sqrDist < sqrRadius)
+							{
+								// Tweak to separate particles that intersects at both t - deltaTime and t
+								// In that case the collision is no more considered as punctual
+								if (dotProduct(normal,normal0) < 0.0f)
+								{
+									particle0.velocity() -= normal0;
+									particle1.velocity() += normal0;
+								}
+
+								if (dotProduct(normal,normal1) > 0.0f)
+								{
+									particle1.velocity() -= normal1;
+									particle0.velocity() += normal1;
+								}
+							}
+							else
+							{
+								// Else classic collision equations are applied
+								// Tangent components of the velocities are left untouched
+								float elasticityM0 = elasticity * m0;
+								float elasticityM1 = elasticity * m1;
+								float invM01 = 1 / (m0 + m1);
+
+								particle0.velocity() -= (1.0f + (elasticityM1 - m0) * invM01) * normal0;
+								particle1.velocity() -= (1.0f + (elasticityM0 - m1) * invM01) * normal1;
+
+								normal0 *= (elasticityM0 + m0) * invM01;
+								normal1 *= (elasticityM1 + m0) * invM01;
+
+								particle0.velocity() += normal1;
 								particle1.velocity() += normal0;
 							}
-
-							if (dotProduct(normal,normal1) > 0.0f)
-							{
-								particle1.velocity() -= normal1;
-								particle0.velocity() += normal1;
-							}
-						}
-						else
-						{
-							// Else classic collision equations are applied
-							// Tangent components of the velocities are left untouched
-							float elasticityM0 = elasticity * m0;
-							float elasticityM1 = elasticity * m1;
-							float invM01 = 1 / (m0 + m1);
-
-							particle0.velocity() -= (1.0f + (elasticityM1 - m0) * invM01) * normal0;
-							particle1.velocity() -= (1.0f + (elasticityM0 - m1) * invM01) * normal1;
-
-							normal0 *= (elasticityM0 + m0) * invM01;
-							normal1 *= (elasticityM1 + m0) * invM01;
-
-							particle0.velocity() += normal1;
-							particle1.velocity() += normal0;
 						}
 					}
 				}

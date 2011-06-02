@@ -144,6 +144,7 @@
 				OutputFile="$(OutDir)\$(ProjectName)_s.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\lib\vc2008\static;..\..\..\demos\external\SDL\lib"
+				GenerateDebugInformation="false"
 				SubSystem="1"
 			/>
 			<Tool

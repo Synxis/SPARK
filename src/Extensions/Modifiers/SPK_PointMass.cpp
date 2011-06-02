@@ -25,7 +25,7 @@
 namespace SPK
 {
 	PointMass::PointMass(const Vector3D& pos,float mass,float offset) :
-		Modifier(MODIFIER_PRIORITY_FORCE,false,false),
+		Modifier(MODIFIER_PRIORITY_FORCE,false,false,false),
 		mass(mass)
 	{
 		setPosition(pos);

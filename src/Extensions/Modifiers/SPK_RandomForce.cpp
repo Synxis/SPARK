@@ -25,7 +25,7 @@
 namespace SPK
 {
 	RandomForce::RandomForce(const Vector3D& minVector,const Vector3D& maxVector,float minPeriod,float maxPeriod) :
-		Modifier(MODIFIER_PRIORITY_FORCE,true,true),
+		Modifier(MODIFIER_PRIORITY_FORCE,true,true,false),
 		minPeriod(1.0f),
 		maxPeriod(1.0f)
 	{

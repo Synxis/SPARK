@@ -88,7 +88,7 @@ namespace SPK
 	};
 
 	inline Gravity::Gravity(const Vector3D& value) :
-		Modifier(MODIFIER_PRIORITY_FORCE,false,false)
+		Modifier(MODIFIER_PRIORITY_FORCE,false,false,false)
 	{
 		setValue(value);	
 	}
@@ -126,7 +126,7 @@ namespace SPK
 	}
 
 	inline Friction::Friction(float value) :
-		Modifier(MODIFIER_PRIORITY_FRICTION,false,false),
+		Modifier(MODIFIER_PRIORITY_FRICTION,false,false,false),
 		value(value)
 	{}
 

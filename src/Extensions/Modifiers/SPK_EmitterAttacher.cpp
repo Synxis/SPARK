@@ -25,7 +25,7 @@
 namespace SPK
 {
 	EmitterAttacher::EmitterAttacher(const Ref<Group>& group,const Ref<Emitter>& emitter,bool orientate,bool rotate) :
-		Modifier(MODIFIER_PRIORITY_CHECK,true,true),
+		Modifier(MODIFIER_PRIORITY_CHECK,true,true,false),
 		baseEmitter(emitter),
 		targetGroup(group),
 		orientationEnabled(orientate),

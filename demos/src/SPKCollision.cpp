@@ -41,8 +41,8 @@ const float CAM_POS_Z = 2.75f;
 
 const float PI = 3.14159265358979323846f;
 
-const size_t NB_PARTICLES = 250;
-const float RADIUS = 0.075f;
+const size_t NB_PARTICLES = 750;
+const float RADIUS = 0.06f;
 
 // Loads a texture
 bool loadTexture(GLuint& index,char* path,GLuint type,GLuint clamp,bool mipmap)
@@ -160,6 +160,69 @@ void drawBoundingBox(const SPK::System& system)
 	glEnd();
 }
 
+void drawBox(float r,float g,float b,const SPK::Vector3D& AABBMin,const SPK::Vector3D& AABBMax)
+{
+	glDisable(GL_TEXTURE_2D);
+	glBegin(GL_LINES);
+	glColor3f(r,g,b);
+
+	glVertex3f(AABBMin.x,AABBMin.y,AABBMin.z);
+	glVertex3f(AABBMax.x,AABBMin.y,AABBMin.z);
+	
+	glVertex3f(AABBMin.x,AABBMin.y,AABBMin.z);
+	glVertex3f(AABBMin.x,AABBMax.y,AABBMin.z);
+
+	glVertex3f(AABBMin.x,AABBMin.y,AABBMin.z);
+	glVertex3f(AABBMin.x,AABBMin.y,AABBMax.z);
+
+	glVertex3f(AABBMax.x,AABBMax.y,AABBMax.z);
+	glVertex3f(AABBMin.x,AABBMax.y,AABBMax.z);
+
+	glVertex3f(AABBMax.x,AABBMax.y,AABBMax.z);
+	glVertex3f(AABBMax.x,AABBMin.y,AABBMax.z);
+
+	glVertex3f(AABBMax.x,AABBMax.y,AABBMax.z);
+	glVertex3f(AABBMax.x,AABBMax.y,AABBMin.z);
+
+	glVertex3f(AABBMin.x,AABBMin.y,AABBMax.z);
+	glVertex3f(AABBMax.x,AABBMin.y,AABBMax.z);
+
+	glVertex3f(AABBMin.x,AABBMin.y,AABBMax.z);
+	glVertex3f(AABBMin.x,AABBMax.y,AABBMax.z);
+
+	glVertex3f(AABBMin.x,AABBMax.y,AABBMin.z);
+	glVertex3f(AABBMax.x,AABBMax.y,AABBMin.z);
+
+	glVertex3f(AABBMin.x,AABBMax.y,AABBMin.z);
+	glVertex3f(AABBMin.x,AABBMax.y,AABBMax.z);
+
+	glVertex3f(AABBMax.x,AABBMin.y,AABBMin.z);
+	glVertex3f(AABBMax.x,AABBMax.y,AABBMin.z);
+
+	glVertex3f(AABBMax.x,AABBMin.y,AABBMin.z);
+	glVertex3f(AABBMax.x,AABBMin.y,AABBMax.z);
+	glEnd();
+}
+
+void drawCell(const SPK::Octree& octree,const SPK::Octree::Cell& cell,const SPK::Vector3D& offset,const SPK::Vector3D& dim)
+{
+	if (!cell.particles.empty())
+	{
+		drawBox(0.0f,1.0f,0.0f,offset,offset + dim);				
+		if (cell.hasChildren)
+			std::cout << "ANORMAL BEHAVIOR" << std::endl;
+	}
+	else if (cell.hasChildren)
+	{
+		SPK::Vector3D childDim = dim * 0.5f;
+		for (size_t i = 0; i < 8; ++i)
+		{
+			SPK::Vector3D childOffset(((i >> 2) & 1) * childDim.x,((i >> 1) & 1) * childDim.y,(i & 1) * childDim.z);
+			drawCell(octree,octree.getCell(cell.children[i]),childOffset + offset,childDim);
+		}
+	}
+}
+
 // Main function
 int main(int argc, char *argv[])
 {
@@ -190,11 +253,11 @@ int main(int argc, char *argv[])
 	// Loads particle texture
 	GLuint textureParticle;
 	if (!loadTexture(textureParticle,"res/ball.bmp",GL_RGBA,GL_CLAMP,false))
-		return 1;
+	{}//return 1;
 
 	// Inits Particle Engine
-	SPK::System::setClampStep(true,0.01f);			// clamp the step to 10 ms
-	SPK::System::useAdaptiveStep(0.001f,0.01f);		// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
+	SPK::System::setClampStep(true,0.005f);			// clamp the step to 10 ms
+	SPK::System::useAdaptiveStep(0.001f,0.005f);	// use an adaptive step from 1ms to 10ms (1000fps to 100fps)
 
 	{
 	// Renderers
@@ -224,7 +287,7 @@ int main(int argc, char *argv[])
 
 	// Zone
 	SPK::Ref<SPK::Sphere> sphere = SPK::Sphere::create();
-	SPK::Ref<SPK::Box> cube = SPK::Box::create(SPK::Vector3D(),SPK::Vector3D(0.65f,0.65f,0.65f));
+	SPK::Ref<SPK::Box> cube = SPK::Box::create(SPK::Vector3D(),SPK::Vector3D(0.2f,0.2f,0.2f));
 
 	// Gravity
 	SPK::Ref<SPK::Gravity> gravity = SPK::Gravity::create();
@@ -232,10 +295,10 @@ int main(int argc, char *argv[])
 	// System
 	SPK::Ref<SPK::System> particleSystem = SPK::System::create(true);
 
-	SPK::Ref<SPK::Collider> collider = SPK::Collider::create(0.9f);
+	SPK::Ref<SPK::Collider> collider = SPK::Collider::create(0.8f);
 
 	// Obstacle
-	SPK::Ref<SPK::Obstacle> obstacle = SPK::Obstacle::create(sphere,0.9f,0.9f);
+	SPK::Ref<SPK::Obstacle> obstacle = SPK::Obstacle::create(sphere,0.8f,0.9f);
 	
 	// Group
 	SPK::Ref<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES);
@@ -245,7 +308,7 @@ int main(int argc, char *argv[])
 	particleGroup->addModifier(gravity);
 	particleGroup->addModifier(obstacle);
 	particleGroup->addModifier(collider);
-	particleGroup->addModifier(SPK::Friction::create(0.1f));
+	particleGroup->addModifier(SPK::Friction::create(0.2f));
 	
 	float deltaTime = 0.0f;
 
@@ -308,11 +371,12 @@ int main(int argc, char *argv[])
 
 			if ((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_SPACE))
 			{
-				if (obstacle->getZone() == sphere)
+				// TODO Fix Box zone
+				/*if (obstacle->getZone() == sphere)
 					obstacle->setZone(cube);
 				else if (obstacle->getZone() == cube)
 					obstacle->setZone(sphere);
-				particleGroup->empty();
+				particleGroup->empty();*/
 			}
 
 			// if pause is pressed, the system is paused
@@ -352,6 +416,12 @@ int main(int argc, char *argv[])
 		glTranslatef(0.0f,0.0f,-CAM_POS_Z);
 		glRotatef(angleX,1.0f,0.0f,0.0f);
 		glRotatef(angleZ,0.0f,0.0f,1.0f);
+
+		if (particleSystem->isAABBComputationEnabled() && particleGroup->getOctree() != NULL)
+		{
+			const SPK::Octree& octree = *particleGroup->getOctree();
+			drawCell(octree,octree.getCell(0),octree.AABBMin,octree.AABBMax - octree.AABBMin);
+		}
 
 		drawBoundingBox(*particleSystem);
 		SPK::GL::GLRenderer::saveGLStates();

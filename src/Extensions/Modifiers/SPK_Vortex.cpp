@@ -25,7 +25,7 @@
 namespace SPK
 {
 	Vortex::Vortex(const Vector3D& position,const Vector3D& direction,float rotationSpeed,float attractionSpeed) :
-		Modifier(MODIFIER_PRIORITY_POSITION,false,false),
+		Modifier(MODIFIER_PRIORITY_POSITION,false,false,false),
 		rotationSpeed(rotationSpeed),
 		attractionSpeed(attractionSpeed),
 		angularSpeedEnabled(false),

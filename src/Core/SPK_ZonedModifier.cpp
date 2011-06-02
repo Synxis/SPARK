@@ -27,10 +27,11 @@ namespace SPK
 		unsigned int PRIORITY,
 		bool NEEDS_DATASET,
 		bool CALL_INIT,
+		bool NEEDS_OCTREE,
 		int ZONE_TEST_FLAG,
 		ZoneTest zoneTest,
 		const Ref<Zone>& zone) :
-		Modifier(PRIORITY,NEEDS_DATASET,CALL_INIT),
+		Modifier(PRIORITY,NEEDS_DATASET,CALL_INIT,NEEDS_OCTREE),
 		ZONE_TEST_FLAG(ZONE_TEST_FLAG),
 		zoneTest(zoneTest),
 		zone()

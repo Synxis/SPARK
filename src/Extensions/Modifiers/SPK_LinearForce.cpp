@@ -25,7 +25,7 @@
 namespace SPK
 {
 	LinearForce::LinearForce(const Vector3D& value,const Ref<Zone>& zone,ZoneTest zoneTest) :
-		ZonedModifier(MODIFIER_PRIORITY_FORCE,false,false,ZONE_TEST_FLAG_ALWAYS | ZONE_TEST_FLAG_INSIDE | ZONE_TEST_FLAG_OUTSIDE,zoneTest,zone),
+		ZonedModifier(MODIFIER_PRIORITY_FORCE,false,false,false,ZONE_TEST_FLAG_ALWAYS | ZONE_TEST_FLAG_INSIDE | ZONE_TEST_FLAG_OUTSIDE,zoneTest,zone),
 		relative(false),
 		squaredSpeed(false),
 		param(PARAM_SCALE),

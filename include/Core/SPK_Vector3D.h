@@ -55,11 +55,17 @@ namespace SPK
 
 		/**
 		* @brief Constructor for the Vector3D
+		* @param f : the value used to set x,y and z coordinates
+		*/
+		Vector3D(float f = 0.0f);
+
+		/**
+		* @brief Constructor for the Vector3D
 		* @param x : x coordinate
 		* @param y : y coordinate
 		* @param z : z coordinate
 		*/
-		Vector3D(float x = 0.0f,float y = 0.0f,float z = 0.0f);
+		Vector3D(float x,float y,float z = 0.0f);
 
 		///////////////
 		// Operators //
@@ -215,6 +221,12 @@ namespace SPK
 		* @param z : z coordinate
 		*/
 		void set(float x,float y,float z = 0.0f);
+
+		/**
+		* @brief Sets the Vector3D with a unique value
+		* @param f : the value used to set the x,y and z coordinates
+		*/
+		void set(float f);
 
 		///////////////
 		// Interface //
@@ -578,6 +590,11 @@ namespace SPK
 	// Definitions //
 	/////////////////
 
+	inline Vector3D::Vector3D(float f) :
+		x(f),
+		y(f),
+		z(f) {}
+
 	inline Vector3D::Vector3D(float x,float y,float z) :
 		x(x),
 		y(y),
@@ -673,6 +690,13 @@ namespace SPK
 		this->x = x;
 		this->y = y;
 		this->z = z;
+	}
+
+	inline void Vector3D::set(float f)
+	{
+		this->x = f;
+		this->y = f;
+		this->z = f;
 	}
 
 	inline float Vector3D::getSqrNorm() const

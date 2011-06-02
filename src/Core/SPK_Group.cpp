@@ -51,7 +51,8 @@ namespace SPK
 		physicalRadius(0.0f),
 		nbBufferedParticles(0),
 		birthAction(),
-		deathAction()
+		deathAction(),
+		octree(NULL)
 	{
 		reallocate(capacity);
 	}
@@ -70,7 +71,8 @@ namespace SPK
 		AABBMax(group.AABBMax),
 		graphicalRadius(group.graphicalRadius),
 		physicalRadius(group.physicalRadius),
-		nbBufferedParticles(0)
+		nbBufferedParticles(0),
+		octree(NULL)
 	{
 		reallocate(group.getCapacity());
 
@@ -113,6 +115,8 @@ namespace SPK
 
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
 			SPK_DELETE_ARRAY(particleData.parameters[i]);
+
+		SPK_DELETE(octree);
 
 		emptyBufferedParticles();
 	}
@@ -198,6 +202,10 @@ namespace SPK
 			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
 			interpolator.obj->interpolate(particleData.parameters[enabledParamIndices[i]],*this,interpolator.dataSet);
 		}
+
+		// Updates the octree if one
+		if (octree != NULL)
+			octree->update();
 
 		// Modifies the particles with specific active modifiers behavior
 		for (std::vector<WeakModifierDef>::const_iterator it = activeModifiers.begin(); it != activeModifiers.end(); ++it)
@@ -758,6 +766,7 @@ namespace SPK
 		activeModifiers.clear();
 		initModifiers.clear();
 
+		bool needsOctree = false;
 		for (std::vector<WeakModifierDef>::const_iterator it = sortedModifiers.begin(); it != sortedModifiers.end(); ++it)
 		{
 			it->obj->prepareData(*this,it->dataSet);	// if it has a data set, it is prepared
@@ -765,6 +774,15 @@ namespace SPK
 				initModifiers.push_back(*it); // if its init method needs to be called it is added to the init vector
 			if (it->obj->isActive())
 				activeModifiers.push_back(*it); // if the modifier is active, it is added to the active vector
+			needsOctree |= it->obj->NEEDS_OCTREE;
+		}
+
+		if (needsOctree && octree == NULL) // creates an octree if needed
+			octree = SPK_NEW(Octree,this);
+		else if (!needsOctree && octree != NULL) // deletes the octree if no more needed
+		{
+			SPK_DELETE(octree);
+			octree = NULL;
 		}
 
 		if (colorInterpolator.obj != NULL)

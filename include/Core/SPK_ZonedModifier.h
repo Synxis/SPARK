@@ -115,6 +115,7 @@ namespace SPK
 			unsigned int PRIORITY,
 			bool NEEDS_DATASET,
 			bool CALL_INIT,
+			bool NEEDS_OCTREE,
 			int ZONE_TEST_FLAG,
 			ZoneTest zoneTest,
 			const Ref<Zone>& zone = SPK_NULL_REF);

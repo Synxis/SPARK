@@ -83,7 +83,7 @@ namespace SPK
 
 	protected :
 
-		Modifier(unsigned int PRIORITY,bool NEEDS_DATASET,bool CALL_INIT);
+		Modifier(unsigned int PRIORITY,bool NEEDS_DATASET,bool CALL_INIT,bool NEEDS_OCTREE);
 
 		virtual void innerImport(const IO::Descriptor& descriptor);
 		virtual void innerExport(IO::Descriptor& descriptor) const;
@@ -92,6 +92,7 @@ namespace SPK
 
 		const unsigned int PRIORITY;
 		const bool CALL_INIT;
+		const bool NEEDS_OCTREE;
 		
 		bool active;
 		bool local;
@@ -100,10 +101,11 @@ namespace SPK
 		virtual void modify(Group& group,DataSet* dataSet,float deltaTime) const = 0;
 	};
 
-	inline Modifier::Modifier(unsigned int PRIORITY,bool NEEDS_DATASET,bool CALL_INIT) :
+	inline Modifier::Modifier(unsigned int PRIORITY,bool NEEDS_DATASET,bool CALL_INIT,bool NEEDS_OCTREE) :
 		DataHandler(NEEDS_DATASET),
 		PRIORITY(PRIORITY),
 		CALL_INIT(CALL_INIT),
+		NEEDS_OCTREE(NEEDS_OCTREE),
 		active(true),
 		local(false)
 	{}

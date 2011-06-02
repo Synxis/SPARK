@@ -56,7 +56,7 @@ namespace SPK
 	};
 
 	inline Rotator::Rotator() :
-		Modifier(MODIFIER_PRIORITY_POSITION,false,false)
+		Modifier(MODIFIER_PRIORITY_POSITION,false,false,false)
 	{}
 
 	inline Rotator::Rotator(const Rotator& rotator) :

@@ -25,7 +25,7 @@
 namespace SPK
 {
 	Obstacle::Obstacle(const Ref<Zone>& zone,float bouncingRatio,float friction,ZoneTest zoneTest) :
-		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,true,ZONE_TEST_FLAG_ALL & ~ZONE_TEST_FLAG_ALWAYS/*ZONE_TEST_FLAG_INTERSECT | ZONE_TEST_FLAG_ENTER | ZONE_TEST_FLAG_LEAVE*/,zoneTest,zone),
+		ZonedModifier(MODIFIER_PRIORITY_COLLISION,false,true,false,ZONE_TEST_FLAG_ALL & ~ZONE_TEST_FLAG_ALWAYS/*ZONE_TEST_FLAG_INTERSECT | ZONE_TEST_FLAG_ENTER | ZONE_TEST_FLAG_LEAVE*/,zoneTest,zone),
 		bouncingRatio(bouncingRatio),
 		friction(friction)
 	{}

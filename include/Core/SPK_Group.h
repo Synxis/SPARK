@@ -31,6 +31,7 @@ namespace SPK
 {
 	class Particle;
 	class System;
+	class Octree;
 
 	/**
 	* @brief Group of particles
@@ -364,6 +365,8 @@ namespace SPK
 		*/
 		RenderBuffer* getRenderBuffer();
 
+		const Octree* getOctree() const	{ return octree; }
+
 		///////////////////////
 		// Virtual interface //
 		///////////////////////
@@ -552,6 +555,8 @@ namespace SPK
 
 		float physicalRadius;
 		float graphicalRadius;
+
+		Octree* octree;
 
 		Group(const Ref<System>& system = SPK_NULL_REF,size_t capacity = 100);
 		Group(const Group& group);

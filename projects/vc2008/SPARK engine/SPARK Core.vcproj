@@ -350,6 +350,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\Core\SPK_Octree.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\Core\SPK_Renderer.cpp"
 					>
 				</File>
@@ -581,6 +585,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\Core\SPK_Object.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\Core\SPK_Octree.h"
 					>
 				</File>
 				<File

@@ -104,7 +104,7 @@ namespace SPK
 	};
 
 	inline Collider::Collider(float elasticity) :
-		Modifier(MODIFIER_PRIORITY_COLLISION,false,false)
+		Modifier(MODIFIER_PRIORITY_COLLISION,false,false,true)
 	{
 		setElasticity(elasticity);
 	}
