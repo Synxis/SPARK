@@ -23,10 +23,6 @@
 #ifndef H_SPK_DX9_LINETRAILRENDERER
 #define H_SPK_DX9_LINETRAILRENDERER
 
-//#include "Rendering/DX9/SPK_DX9_Renderer.h"
-//#include "Core/SPK_Color.h"
-//#include "Rendering/DX9/SPK_DX9_Buffer.h"
-
 #include "Rendering/DX9/SPK_DX9_Renderer.h"
 #include "Rendering/DX9/SPK_DX9_Buffer.h"
 

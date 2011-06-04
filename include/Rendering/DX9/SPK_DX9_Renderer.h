@@ -154,7 +154,7 @@ namespace DX9
 		// alpha test
 		if( isRenderingOptionEnabled(RENDERING_OPTION_ALPHA_TEST) )
 		{
-			// TODO : glAlphaFunc(DX9_GEQUAL,getAlphaTestThreshold());
+			// TODO : glAlphaFunc(GL_GEQUAL,getAlphaTestThreshold());
 			DX9Info::getDevice()->SetRenderState(D3DRS_ALPHATESTENABLE, true);
 		}
 		else

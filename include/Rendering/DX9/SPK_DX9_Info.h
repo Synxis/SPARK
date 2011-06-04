@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2009-2010 - foulon matthieu - stardeath@wanadoo.fr				//
+// Copyright (C) 2009-2011 - foulon matthieu - stardeath@wanadoo.fr				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -53,19 +53,30 @@ namespace SPK
 
 		class DX9Renderer;
 
+		/**
+		* @class DX9Info
+		* @brief Store informations about d3d device and resources used by all renderer
+		*/
 		class SPK_DX9_PREFIX DX9Info
 		{
 		private:
+			// store the device for internal use
 			static LPDIRECT3DDEVICE9 device;
-			static LPDIRECT3DVERTEXDECLARATION9 decl[4];
+
+			// contains vertex declaration for vertex which has no, 2D or 3D texture coordinates
+			static LPDIRECT3DVERTEXDECLARATION9 vertexDeclaration[4];
 
 		public:
 			static LPDIRECT3DDEVICE9 getDevice();
 
+			// return hw vertex declaration corresponding to the number of texture coordinates
 			static LPDIRECT3DVERTEXDECLARATION9 getDecl(unsigned int nbTexCoords);
 
+			// set the device
+			// must be call after a device failure
 			static void setDevice(LPDIRECT3DDEVICE9 device);
 
+			// release all hardware resources on device failure
 			static void ReleaseResourcesOnDeviceFailure();
 		};
 /*
@@ -76,7 +87,7 @@ namespace SPK
 
 		LPDIRECT3DVERTEXDECLARATION9 DX9Info::getDecl(unsigned int nbTexCoords)
 		{
-			return decl[nbTexCoords];
+			return vertexDeclaration[nbTexCoords];
 		}
 
 		void DX9Info::setDevice(LPDIRECT3DDEVICE9 device)
@@ -84,13 +95,13 @@ namespace SPK
 			DX9Info::device = device;
 
 			for( unsigned int i = 0; i < 4; ++i )
-				device->CreateVertexDeclaration(Decl[i], &decl[i]);
+				device->CreateVertexDeclaration(Decl[i], &vertexDeclaration[i]);
 		}
 
 		void DX9Info::ReleaseResourcesOnDeviceFailure()
 		{
 			for( unsigned int i = 0; i < 4; ++i )
-				SAFE_RELEASE( decl[i] );
+				SAFE_RELEASE( vertexDeclaration[i] );
 		}
 */
 	}

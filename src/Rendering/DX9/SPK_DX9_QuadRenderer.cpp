@@ -20,10 +20,6 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-//#include "Rendering/DX9/SPK_DX9_QuadRenderer.h"
-//#include "Core/SPK_Group.h"
-//#include "Core/SPK_Iterator.h"
-
 #include <SPARK_Core.h>
 #include "Rendering/DX9/SPK_DX9_QuadRenderer.h"
 

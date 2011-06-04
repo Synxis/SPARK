@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2009-2010 - foulon matthieu - stardeath@wanadoo.fr				//
+// Copyright (C) 2009-2011 - foulon matthieu - stardeath@wanadoo.fr				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -26,7 +26,7 @@ namespace SPK
 namespace DX9
 {
 	LPDIRECT3DDEVICE9 DX9Info::device = NULL;
-	LPDIRECT3DVERTEXDECLARATION9 DX9Info::decl[] = {NULL, NULL, NULL, NULL};
+	LPDIRECT3DVERTEXDECLARATION9 DX9Info::vertexDeclaration[] = {NULL, NULL, NULL, NULL};
 
 	LPDIRECT3DDEVICE9 DX9Info::getDevice()
 	{
@@ -35,7 +35,7 @@ namespace DX9
 
 	LPDIRECT3DVERTEXDECLARATION9 DX9Info::getDecl(unsigned int nbTexCoords)
 	{
-		return decl[nbTexCoords];
+		return vertexDeclaration[nbTexCoords];
 	}
 
 	void DX9Info::setDevice(LPDIRECT3DDEVICE9 device)
@@ -43,12 +43,12 @@ namespace DX9
 		DX9Info::device = device;
 
 		for( unsigned int i = 0; i < 4; ++i )
-			device->CreateVertexDeclaration(Decl[i], &decl[i]);
+			device->CreateVertexDeclaration(Decl[i], &vertexDeclaration[i]);
 	}
 
 	void DX9Info::ReleaseResourcesOnDeviceFailure()
 	{
 		for( unsigned int i = 0; i < 4; ++i )
-			SAFE_RELEASE( decl[i] );
+			SAFE_RELEASE( vertexDeclaration[i] );
 	}
 }}

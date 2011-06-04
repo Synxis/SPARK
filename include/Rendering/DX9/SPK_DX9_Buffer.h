@@ -24,10 +24,6 @@
 #define H_SPK_DX9_BUFFER
 
 #include "Rendering/DX9/SPK_DX9_DEF.h"
-//#include "Core/SPK_RenderBuffer.h"
-//#include "Core/SPK_Vector3D.h"
-//#include "Core/SPK_Color.h"
-//#include "Core/SPK_Logger.h"
 
 namespace SPK
 {
@@ -75,8 +71,8 @@ namespace DX9
 		void setNbTexCoords(size_t nb);
 		size_t getNbTexCoords();
 
-		// WARNING : le draw en dx prend en compte le nombre de primitives
-		// pas le nombre de sommets !!!
+		// WARNING : le draw en dx prend en compte le nombre de primitives pas le nombre de sommets !!!
+		// WARNING : draw call takes primitive number not vertex number
 		void render(D3DPRIMITIVETYPE primitive, size_t nbPrimitives);
 
 	private :
@@ -90,7 +86,7 @@ namespace DX9
 		LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 		LPDIRECT3DVERTEXBUFFER9 colorBuffer;
 		LPDIRECT3DVERTEXBUFFER9 texCoordBuffer;
-		LPDIRECT3DINDEXBUFFER9 indexBuffer;
+		LPDIRECT3DINDEXBUFFER9  indexBuffer;
 
 		size_t currentVertexIndex;
 		size_t currentColorIndex;
@@ -98,9 +94,9 @@ namespace DX9
 
 		// pointeurs pour les locks
 		D3DXVECTOR3 *ptrVertexBuffer;
-		D3DCOLOR *ptrColorBuffer;
-		float *ptrTexCoordBuffer;
-		short *ptrIndexBuffer;
+		D3DCOLOR    *ptrColorBuffer;
+		float       *ptrTexCoordBuffer;
+		short       *ptrIndexBuffer;
 	};
 
 	inline void DX9Buffer::lock(unsigned int lock)
@@ -163,10 +159,10 @@ namespace DX9
 		currentLock = NO_LOCK;
 
 #ifdef _DEBUG
-		ptrVertexBuffer = NULL;
-		ptrColorBuffer = NULL;
+		ptrVertexBuffer   = NULL;
+		ptrColorBuffer    = NULL;
 		ptrTexCoordBuffer = NULL;
-		ptrIndexBuffer = NULL;
+		ptrIndexBuffer    = NULL;
 
 		positionAtStart();
 #endif // _DEBUG
