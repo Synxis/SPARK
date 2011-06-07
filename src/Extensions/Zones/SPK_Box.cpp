@@ -98,7 +98,6 @@ namespace SPK
 			int dir = ((n & 1) << 1) - 1;	// -1 or 1
 			randomDim[axis] = dir * dimension[axis];
 			return randomDim;
-			//return Vector3D();
 		}
 	}
 

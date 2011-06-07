@@ -365,7 +365,12 @@ namespace SPK
 		*/
 		RenderBuffer* getRenderBuffer();
 
-		const Octree* getOctree() const	{ return octree; }
+		/**
+		* @brief Gets the octree
+		* A group will have an octree only if at least one of its modifiers has requested it.
+		* @return the octree if some or NULL otherwise
+		*/
+		Octree* getOctree();
 
 		///////////////////////
 		// Virtual interface //
@@ -596,6 +601,7 @@ namespace SPK
 		unsigned int nbBufferedParticles;
 
 		void prepareAdditionnalData();
+		void manageOctreeInstance(bool needsOctree);
 
 		void initData();
 	};

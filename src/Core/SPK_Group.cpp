@@ -579,6 +579,27 @@ namespace SPK
 			it->destroyAllData();
 	}
 
+	void Group::manageOctreeInstance(bool needsOctree)
+	{
+		if (needsOctree && octree == NULL) // creates an octree if needed
+			octree = SPK_NEW(Octree,this);
+		else if (!needsOctree && octree != NULL) // deletes the octree if no more needed
+		{
+			SPK_DELETE(octree);
+			octree = NULL;
+		}
+	}
+
+	Octree* Group::getOctree()
+	{
+		bool needsOctree = false;
+		for (std::vector<WeakModifierDef>::const_iterator it = sortedModifiers.begin(); it != sortedModifiers.end(); ++it)
+			needsOctree |= it->obj->NEEDS_OCTREE;
+		manageOctreeInstance(needsOctree);
+
+		return octree;
+	}
+
 	void Group::sortParticles()
 	{
 		if (sortingEnabled)
@@ -777,13 +798,7 @@ namespace SPK
 			needsOctree |= it->obj->NEEDS_OCTREE;
 		}
 
-		if (needsOctree && octree == NULL) // creates an octree if needed
-			octree = SPK_NEW(Octree,this);
-		else if (!needsOctree && octree != NULL) // deletes the octree if no more needed
-		{
-			SPK_DELETE(octree);
-			octree = NULL;
-		}
+		manageOctreeInstance(needsOctree);
 
 		if (colorInterpolator.obj != NULL)
 		{

@@ -420,7 +420,7 @@ int main(int argc, char *argv[])
 		if (particleSystem->isAABBComputationEnabled() && particleGroup->getOctree() != NULL)
 		{
 			const SPK::Octree& octree = *particleGroup->getOctree();
-			drawCell(octree,octree.getCell(0),octree.AABBMin,octree.AABBMax - octree.AABBMin);
+			drawCell(octree,octree.getCell(0),octree.getAABBMin(),octree.getAABBMax() - octree.getAABBMin());
 		}
 
 		drawBoundingBox(*particleSystem);

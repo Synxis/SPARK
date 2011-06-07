@@ -41,6 +41,8 @@ namespace SPK
 	*/
 	class SPK_PREFIX Octree
 	{
+	friend class Group;
+
 	public :
 
 		// A fast and simple self reallocating array (faster than generic std::vectors)
@@ -172,9 +174,6 @@ namespace SPK
 			}	
 		};
 
-		Octree(const Ref<Group>& group);
-		~Octree();
-
 		/**
 		* @brief Gets the array of active cells
 		* Active cells are cells of the octree that contains at least one particle
@@ -200,13 +199,18 @@ namespace SPK
 		const Cell& getCell(size_t index) const								{ return cells[index]; }	
 
 		/**
-		* @brief Updates the octree state
-		* Called internally by the engine
+		* @brief Gets the minimum position of the axis aligned bounding box of the octree
+		* @return the minimum position of the AABB
 		*/
-		void update();
+		const Vector3D& getAABBMin() const { return AABBMin; }
 
-		Vector3D AABBMin;
-		Vector3D AABBMax;
+		/**
+		* @brief Gets the maximum position of the axis aligned bounding box of the octree
+		* @return the maximum position of the AABB
+		*/
+		const Vector3D& getAABBMax() const { return AABBMax; }
+
+		// TODO Allows to tweak the octree param
 
 	private :
 
@@ -239,6 +243,18 @@ namespace SPK
 
 		Triplet* minPos;
 		Triplet* maxPos;
+
+		Vector3D AABBMin;
+		Vector3D AABBMax;
+
+		// Octree life time is managed by Group
+		Octree(const Ref<Group>& group);
+		~Octree();
+
+		Octree(const Octree& octree); // never used
+		Octree& operator=(const Octree& octree); // never used
+
+		void update();  // Used by Group only
 
 		size_t initNextCell(size_t level,size_t offsetX,size_t offsetY,size_t offsetZ);
 		void addToCell(size_t cellIndex,size_t particleIndex,size_t maxLevel);
