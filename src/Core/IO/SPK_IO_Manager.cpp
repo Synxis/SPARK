@@ -173,6 +173,7 @@ namespace IO
 		registerObject<Sphere>();
 		registerObject<Plane>();
 		registerObject<Ring>();
+		registerObject<Box>();
 
 		// Emitters
 		registerObject<StaticEmitter>();

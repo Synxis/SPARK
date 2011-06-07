@@ -26,6 +26,7 @@ namespace SPK
 	Emitter::Emitter(const Ref<Zone>& zone,bool full,int tank,float flow,float forceMin,float forceMax) :
 		SPKObject(),
 		active(true),
+		full(full),
 		zone(zone == NULL ? SPK_DEFAULT_ZONE : zone),
 		flow(1.0f),
 		fraction(SPK_RANDOM(0.0f,1.0f))
@@ -38,6 +39,7 @@ namespace SPK
 	Emitter::Emitter(const Emitter& emitter) :
 		SPKObject(emitter),
 		active(emitter.active),
+		full(emitter.full),
 		flow(emitter.flow),
 		minTank(emitter.minTank),
 		maxTank(emitter.maxTank),

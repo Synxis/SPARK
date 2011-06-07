@@ -93,11 +93,12 @@ namespace SPK
 		else
 		{
 			Vector3D randomDim(SPK_RANDOM(-dimension,dimension));
-			size_t n = SPK_RANDOM(0,6); // a random number from 0 to 5 included
-			size_t axis = n >> 1;		// 1 chance out of 3
-			int dir = (n & 1) - 1;		// -1 or 1
+			size_t n = SPK_RANDOM(0,6);		// a random number from 0 to 5 included
+			size_t axis = n >> 1;			// 1 chance out of 3
+			int dir = ((n & 1) << 1) - 1;	// -1 or 1
 			randomDim[axis] = dir * dimension[axis];
 			return randomDim;
+			//return Vector3D();
 		}
 	}
 
@@ -107,7 +108,7 @@ namespace SPK
 
 		v = getTransformedPosition();
 		for (size_t i = 0; i < 3; ++i)
-			v += randomDim * tAxis[i];
+			v += randomDim[i] * tAxis[i];
 	}
 
 	bool Box::contains(const Vector3D& v,float radius) const
@@ -138,6 +139,8 @@ namespace SPK
 
 	bool Box::intersects(const Vector3D& v0,const Vector3D& v1,float radius,Vector3D& normal) const
 	{
+		SPK_LOG_INFO("The intersection is not working correctly with the Box Zone at the moment");
+
 		Vector3D d0(v0 - getTransformedPosition());
 		Vector3D d1(v1 - getTransformedPosition());
 
