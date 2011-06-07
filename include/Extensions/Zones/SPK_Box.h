@@ -30,7 +30,7 @@ namespace SPK
 
 	SPK_START_DESCRIPTION
 	SPK_PARENT_ATTRIBUTES(Zone)
-	SPK_ATTRIBUTE("dimension",ATTRIBUTE_TYPE_VECTOR)
+	SPK_ATTRIBUTE("dimensions",ATTRIBUTE_TYPE_VECTOR)
 	SPK_ATTRIBUTE("up",ATTRIBUTE_TYPE_VECTOR)
 	SPK_ATTRIBUTE("front",ATTRIBUTE_TYPE_VECTOR)
 	SPK_END_DESCRIPTION
@@ -39,14 +39,14 @@ namespace SPK
 	
 		static Ref<Box> create(
 			const Vector3D& position = Vector3D(),
-			const Vector3D& dimension = Vector3D(1.0f,1.0f,1.0f),
+			const Vector3D& dimensions = Vector3D(1.0f,1.0f,1.0f),
 			const Vector3D& front = Vector3D(0.0f,0.0f,1.0f),
 			const Vector3D& up = Vector3D(0.0f,1.0f,0.0f));
 
 		void setAxis(const Vector3D& front,const Vector3D& up = Vector3D(0.0f,1.0f,0.0f));
 
-		void setDimension(const Vector3D& dimension = Vector3D());
-		const Vector3D& getDimension() const { return dimension; }
+		void setDimensions(const Vector3D& dimensions = Vector3D());
+		const Vector3D& getDimensions() const { return dimensions; }
 
 		const Vector3D& getXAxis() const { return axis[0]; }
 		const Vector3D& getYAxis() const { return axis[1]; }
@@ -74,12 +74,14 @@ namespace SPK
 
 	private :
 
-		Vector3D dimension;
+		Vector3D dimensions;
+		Vector3D halfDimensions; // Stores also the half dimensions to avoid always computing it
+
 		Vector3D axis[3];
 		Vector3D tAxis[3];
 
 		Box(const Vector3D& position = Vector3D(),
-			const Vector3D& dimension = Vector3D(1.0f,1.0f,1.0f),
+			const Vector3D& dimensions = Vector3D(1.0f,1.0f,1.0f),
 			const Vector3D& front = Vector3D(0.0f,0.0f,1.0f),
 			const Vector3D& up = Vector3D(0.0f,1.0f,0.0f));
 		Box(const Box& box);
@@ -90,11 +92,11 @@ namespace SPK
 
 	inline Ref<Box> Box::create(
 		const Vector3D& position,
-		const Vector3D& dimension,
+		const Vector3D& dimensions,
 		const Vector3D& front,
 		const Vector3D& up)
 	{
-		return SPK_NEW(Box,position,dimension,front,up);
+		return SPK_NEW(Box,position,dimensions,front,up);
 	}
 }
 

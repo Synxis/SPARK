@@ -26,16 +26,17 @@
 
 namespace SPK
 {
-	Box::Box(const Vector3D& position,const Vector3D& dimension,const Vector3D& front,const Vector3D& up) :
+	Box::Box(const Vector3D& position,const Vector3D& dimensions,const Vector3D& front,const Vector3D& up) :
 		Zone(position)
 	{
-		setDimension(dimension);
+		setDimensions(dimensions);
 		setAxis(front,up);
 	}
 
 	Box::Box(const Box& box) :
 		Zone(box),
-		dimension(box.dimension)
+		dimensions(box.dimensions),
+		halfDimensions(box.halfDimensions)
 	{
 		for (size_t i = 0; i < 3; ++i)
 		{
@@ -44,15 +45,17 @@ namespace SPK
 		}
 	}
 
-	void Box::setDimension(const Vector3D& dimension)
+	void Box::setDimensions(const Vector3D& dimensions)
 	{
-		this->dimension = dimension;
+		this->dimensions = dimensions;
 
-		if (dimension.x < 0.0f || dimension.y < 0.0f || dimension.z < 0.0f)
+		if (dimensions.x < 0.0f || dimensions.y < 0.0f || dimensions.z < 0.0f)
 		{
 			SPK_LOG_WARNING("");
-			this->dimension.abs();
+			this->dimensions.abs();
 		}
+
+		halfDimensions = this->dimensions * 0.5f;
 	}
 
 	void Box::setAxis(const Vector3D& front,const Vector3D& up)
@@ -86,17 +89,17 @@ namespace SPK
 	{
 		if (full)
 		{
-			Vector3D relDimension;
-			relDimension.setMax(dimension - radius);
-			return SPK_RANDOM(-relDimension,relDimension);
+			Vector3D relDimensions;
+			relDimensions.setMax(halfDimensions - radius);
+			return SPK_RANDOM(-relDimensions,relDimensions);
 		}
 		else
 		{
-			Vector3D randomDim(SPK_RANDOM(-dimension,dimension));
+			Vector3D randomDim(SPK_RANDOM(-halfDimensions,halfDimensions));
 			size_t n = SPK_RANDOM(0,6);		// a random number from 0 to 5 included
 			size_t axis = n >> 1;			// 1 chance out of 3
 			int dir = ((n & 1) << 1) - 1;	// -1 or 1
-			randomDim[axis] = dir * dimension[axis];
+			randomDim[axis] = dir * halfDimensions[axis];
 			return randomDim;
 		}
 	}
@@ -114,7 +117,7 @@ namespace SPK
 	{
 		Vector3D d(v - getTransformedPosition());
 		for (size_t i = 0; i < 3; ++i)
-			if (std::abs(dotProduct(tAxis[i],d)) - radius > dimension[i])
+			if (std::abs(dotProduct(tAxis[i],d)) - radius > halfDimensions[i])
 				return false;
 		return true;
 	}
@@ -162,8 +165,8 @@ namespace SPK
 				dist1 -= radius;
 			}
 
-			intersect |= intersectSlab(dist0,dist1,dimension[i],-tAxis[i],minRatio,normal);
-			intersect |= intersectSlab(dist0,dist1,-dimension[i],tAxis[i],minRatio,normal);
+			intersect |= intersectSlab(dist0,dist1,halfDimensions[i],-tAxis[i],minRatio,normal);
+			intersect |= intersectSlab(dist0,dist1,-halfDimensions[i],tAxis[i],minRatio,normal);
 		}
 
 		return intersect;
@@ -176,8 +179,8 @@ namespace SPK
 		Vector3D d(v - getTransformedPosition());
 		Vector3D ratio(MAX_FLOAT,MAX_FLOAT,MAX_FLOAT);
 		for (size_t i = 0; i < 3; ++i)
-			if (dimension[i] > 0.0f)
-				ratio[i] = dotProduct(tAxis[i],d) / dimension[i];
+			if (halfDimensions[i] > 0.0f)
+				ratio[i] = dotProduct(tAxis[i],d) / halfDimensions[i];
 		
 		Vector3D absRatio(ratio);
 		absRatio.abs();
@@ -205,8 +208,8 @@ namespace SPK
 		Zone::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("dimension"))
-			setDimension(attrib->getValue<Vector3D>());
+		if (attrib = descriptor.getAttributeWithValue("dimensions"))
+			setDimensions(attrib->getValue<Vector3D>());
 		
 		Vector3D front = Vector3D(0.0f,0.0f,1.0f);
 		Vector3D up = Vector3D(0.0f,1.0f,0.0f);
@@ -222,7 +225,7 @@ namespace SPK
 	void Box::innerExport(IO::Descriptor& descriptor) const
 	{
 		Zone::innerExport(descriptor);
-		descriptor.getAttribute("dimension")->setValue(getDimension());
+		descriptor.getAttribute("dimensions")->setValue(getDimensions());
 		descriptor.getAttribute("front")->setValue(getZAxis());
 		descriptor.getAttribute("up")->setValue(getYAxis());
 	}
