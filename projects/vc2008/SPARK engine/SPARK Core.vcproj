@@ -465,6 +465,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\src\Extensions\Zones\SPK_Cylinder.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\Zones\SPK_Plane.cpp"
 						>
 					</File>
@@ -708,6 +712,10 @@
 					>
 					<File
 						RelativePath="..\..\..\include\Extensions\Zones\SPK_Box.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\Zones\SPK_Cylinder.h"
 						>
 					</File>
 					<File

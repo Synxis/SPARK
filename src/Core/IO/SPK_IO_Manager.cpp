@@ -174,6 +174,7 @@ namespace IO
 		registerObject<Plane>();
 		registerObject<Ring>();
 		registerObject<Box>();
+		registerObject<Cylinder>();
 
 		// Emitters
 		registerObject<StaticEmitter>();

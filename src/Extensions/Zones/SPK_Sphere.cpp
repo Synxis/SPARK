@@ -38,12 +38,10 @@ namespace SPK
 
 	void Sphere::generatePosition(Vector3D& v,bool full,float radius) const
 	{
-		const float relRadius = this->radius - radius;
-		
 		if (!full) 
 		{
 			do v = SPK_RANDOM(Vector3D(-1.0f,-1.0f,-1.0f),Vector3D(1.0f,1.0f,1.0f));
-			while (v.getSqrNorm() > 1.0f);
+			while (v.getSqrNorm() > 1.0f || v.isNull());
 
 			v *= this->radius / v.getNorm();
 		}
@@ -55,7 +53,7 @@ namespace SPK
 				v = getTransformedPosition();
 			else
 			{
-				do v = SPK_RANDOM(Vector3D(-1.0f,-1.0f,-1.0f),Vector3D(1.0f,relRadius,relRadius));
+				do v = SPK_RANDOM(Vector3D(-relRadius,-relRadius,-relRadius),Vector3D(relRadius,relRadius,relRadius));
 				while (v.getSqrNorm() > relRadius * relRadius);	
 			}
 		}

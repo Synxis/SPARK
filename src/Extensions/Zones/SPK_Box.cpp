@@ -51,7 +51,7 @@ namespace SPK
 
 		if (dimensions.x < 0.0f || dimensions.y < 0.0f || dimensions.z < 0.0f)
 		{
-			SPK_LOG_WARNING("");
+			SPK_LOG_WARNING("Box::setDimensions(const Vector3D&) - The dimensions cannot be negative. Values are inversed");
 			this->dimensions.abs();
 		}
 
@@ -62,7 +62,7 @@ namespace SPK
 	{
 		if (front == up || front.isNull() || up.isNull())
 		{
-			SPK_LOG_WARNING("");
+			SPK_LOG_WARNING("Box::setAxis(const Vector3D&,const Vector3D&) - The axis cannot be null or equal. Default value is used");
 			axis[1] = Vector3D(0.0f,1.0f,0.0f);
 			axis[2] = Vector3D(0.0f,0.0f,1.0f);	
 		}
