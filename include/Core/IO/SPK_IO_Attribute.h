@@ -36,7 +36,6 @@ namespace IO
 	/** @brief Constants defining attribute's types */
 	enum AttributeType
 	{
-		ATTRIBUTE_TYPE_ERROR,		/**< @brief Defines an error in the attribute value */
 		ATTRIBUTE_TYPE_CHAR,		/**< @brief the value is a char */
 		ATTRIBUTE_TYPE_BOOL,		/**< @brief the value is a boolean */
 		ATTRIBUTE_TYPE_INT32,		/**< @brief the value is an int 32 bits */
@@ -104,8 +103,8 @@ namespace IO
 		*/
 		bool isValueOptional() const;
 
-		template<typename T> static AttributeType getAttributeType()			{ return ATTRIBUTE_TYPE_ERROR; }
-		template<typename T> static AttributeType getAttributeTypeArray()		{ return ATTRIBUTE_TYPE_ERROR; }
+		template<typename T> static AttributeType getAttributeType();
+		template<typename T> static AttributeType getAttributeTypeArray();
 
 		template<typename T> void setValue(const T& value,bool optional = false);
 		template<typename T> void setValues(const T* values,size_t nb,bool optional = false);
@@ -140,9 +139,7 @@ namespace IO
 		offset(0),
 		descriptor(NULL),
 		valueSet(false)
-	{
-		SPK_ASSERT(type != ATTRIBUTE_TYPE_ERROR,"Attribute::Attribute(const std::string&,AttributeType) - The attribute type cannot be error...");	
-	}
+	{}
 
 	inline const std::string& Attribute::getName() const
 	{
