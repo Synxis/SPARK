@@ -150,7 +150,7 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("spawning numbers"))
 		{
-			std::vector<unsigned long> nbs = attrib->getValues<unsigned long>();
+			std::vector<uint32> nbs = attrib->getValues<uint32>();
 			switch (nbs.size())
 			{
 			case 1 : setNb(nbs[0]); break;
@@ -168,7 +168,7 @@ namespace SPK
 	{
 		Action::innerExport(descriptor);
 
-		unsigned long nbs[2] = {minNb,maxNb};
+		uint32 nbs[2] = {minNb,maxNb};
 		descriptor.getAttribute("spawning numbers")->setValues(nbs,nbs[0] == nbs[1] ? 1 : 2);
 		descriptor.getAttribute("base emitter")->setValueRef(getEmitter());
 		descriptor.getAttribute("target group")->setValueRef(getTargetGroup());

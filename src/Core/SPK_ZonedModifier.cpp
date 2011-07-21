@@ -102,7 +102,7 @@ namespace SPK
 		if (attrib = descriptor.getAttributeWithValue("zone"))
 			setZone(attrib->getValueRef<Zone>());
 		if (attrib = descriptor.getAttributeWithValue("zone test"))
-			setZoneTest(static_cast<ZoneTest>(attrib->getValue<unsigned long>()));
+			setZoneTest(static_cast<ZoneTest>(attrib->getValue<uint32>()));
 	}
 
 	void ZonedModifier::innerExport(IO::Descriptor& descriptor) const
@@ -110,6 +110,6 @@ namespace SPK
 		Modifier::innerExport(descriptor);
 
 		descriptor.getAttribute("zone")->setValueRef(getZone(),getZone() == SPK_DEFAULT_ZONE);
-		descriptor.getAttribute("zone test")->setValue<unsigned long>(getZoneTest(),getZone() == SPK_DEFAULT_ZONE);		
+		descriptor.getAttribute("zone test")->setValue<uint32>(getZoneTest(),getZone() == SPK_DEFAULT_ZONE);		
 	}
 }

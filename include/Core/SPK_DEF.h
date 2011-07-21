@@ -79,6 +79,11 @@
 */
 namespace SPK
 {
+	// Constant size type
+	#include "Core/pstdint.h" // for portable defined size types - Included in the namespace to avoir conflict (dirty)
+	typedef int32_t		int32;
+	typedef uint32_t	uint32;
+
 	class Zone;
 
 	/** @brief Constants defining parameters of a particle */

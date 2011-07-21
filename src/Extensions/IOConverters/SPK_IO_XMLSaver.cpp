@@ -139,8 +139,8 @@ namespace IO
 					{
 					case ATTRIBUTE_TYPE_CHAR :		writeValue(*child,format(attrib.getValue<char>())); break;
 					case ATTRIBUTE_TYPE_BOOL :		writeValue(*child,format(attrib.getValue<bool>())); break;
-					case ATTRIBUTE_TYPE_INT32 :		writeValue(*child,format(attrib.getValue<long>())); break;
-					case ATTRIBUTE_TYPE_UINT32 :	writeValue(*child,format(attrib.getValue<unsigned long>())); break;
+					case ATTRIBUTE_TYPE_INT32 :		writeValue(*child,format(attrib.getValue<int32>())); break;
+					case ATTRIBUTE_TYPE_UINT32 :	writeValue(*child,format(attrib.getValue<uint32>())); break;
 					case ATTRIBUTE_TYPE_FLOAT :		writeValue(*child,format(attrib.getValue<float>())); break;
 					case ATTRIBUTE_TYPE_VECTOR :	writeValue(*child,format(attrib.getValue<Vector3D>())); break;
 					case ATTRIBUTE_TYPE_COLOR :		writeValue(*child,format(attrib.getValue<Color>())); break;
@@ -148,8 +148,8 @@ namespace IO
 
 					case ATTRIBUTE_TYPE_CHARS :		writeValue(*child,formatArray(attrib.getValues<char>())); break;
 					case ATTRIBUTE_TYPE_BOOLS :		writeValue(*child,formatArray(attrib.getValues<bool>())); break;
-					case ATTRIBUTE_TYPE_INT32S :	writeValue(*child,formatArray(attrib.getValues<long>())); break;
-					case ATTRIBUTE_TYPE_UINT32S :	writeValue(*child,formatArray(attrib.getValues<unsigned long>())); break;
+					case ATTRIBUTE_TYPE_INT32S :	writeValue(*child,formatArray(attrib.getValues<int32>())); break;
+					case ATTRIBUTE_TYPE_UINT32S :	writeValue(*child,formatArray(attrib.getValues<uint32>())); break;
 					case ATTRIBUTE_TYPE_FLOATS :	writeValue(*child,formatArray(attrib.getValues<float>())); break;
 					case ATTRIBUTE_TYPE_VECTORS :	writeValue(*child,formatArray(attrib.getValues<Vector3D>())); break;
 					case ATTRIBUTE_TYPE_COLORS :	writeValue(*child,formatArray(attrib.getValues<Color>())); break;

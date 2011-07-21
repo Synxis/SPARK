@@ -509,6 +509,18 @@
 					Name="IOConverters"
 					>
 					<File
+						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_SPKFormatHandler.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_SPKLoader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_SPKSaver.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_XMLLoader.cpp"
 						>
 					</File>
@@ -535,6 +547,10 @@
 			<Filter
 				Name="Core"
 				>
+				<File
+					RelativePath="..\..\..\include\Core\pstdint.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\..\include\Core\SPK_Action.h"
 					>
@@ -814,6 +830,18 @@
 				<Filter
 					Name="IOConverters"
 					>
+					<File
+						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_SPKFormatHandler.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_SPKLoader.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_SPKSaver.h"
+						>
+					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_XMLLoader.h"
 						>

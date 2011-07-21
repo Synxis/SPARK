@@ -634,9 +634,9 @@ namespace SPK
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("interpolation type"))
-			setType(static_cast<InterpolationType>(attrib->getValue<unsigned long>()));
+			setType(static_cast<InterpolationType>(attrib->getValue<uint32>()));
 		if (attrib = descriptor.getAttributeWithValue("interpolation param"))
-			setType(getType(),static_cast<Param>(attrib->getValue<unsigned long>()));
+			setType(getType(),static_cast<Param>(attrib->getValue<uint32>()));
 		if (attrib = descriptor.getAttributeWithValue("looping enabled"))
 			enableLooping(attrib->getValue<bool>());
 		if (attrib = descriptor.getAttributeWithValue("scale variation"))
@@ -680,8 +680,8 @@ namespace SPK
 				descriptor.getAttribute("graph values 2")->setValues(values1,graph.size());
 		}
 
-		descriptor.getAttribute("interpolation type")->setValue<unsigned long>(getType(),getType() == INTERPOLATOR_LIFETIME);
-		descriptor.getAttribute("interpolation param")->setValue<unsigned long>(getInterpolatorParam(),getType() != INTERPOLATOR_PARAM);
+		descriptor.getAttribute("interpolation type")->setValue<uint32>(getType(),getType() == INTERPOLATOR_LIFETIME);
+		descriptor.getAttribute("interpolation param")->setValue<uint32>(getInterpolatorParam(),getType() != INTERPOLATOR_PARAM);
 		descriptor.getAttribute("looping enabled")->setValue(isLoopingEnabled());
 		descriptor.getAttribute("scale variation")->setValue(getScaleXVariation(),getScaleXVariation() == 0.0f);
 		descriptor.getAttribute("offset variation")->setValue(getOffsetXVariation(),getOffsetXVariation() == 0.0f);

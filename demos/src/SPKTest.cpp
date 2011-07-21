@@ -298,9 +298,11 @@ int main(int argc, char *argv[])
 	// To be registered automatically
 	SPK::IO::IOManager::get().registerObject<SPK::GL::GLQuadRenderer>();
  
+	SPK::IO::IOManager::get().save("test.spk",system);
 	SPK::IO::IOManager::get().save("test.xml",system);
-	SPK::Ref<SPK::System> system2 = SPK::IO::IOManager::get().load("test.xml");
-	SPK::IO::IOManager::get().save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml
+	SPK::Ref<SPK::System> system2 = SPK::IO::IOManager::get().load("test.spk");
+	SPK::IO::IOManager::get().save("test2.spk",system2); // integrity test. test2.xml must be equivalent to test.xml
+	SPK::IO::IOManager::get().save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml	
 
 	SPK_DUMP_MEMORY
 	}

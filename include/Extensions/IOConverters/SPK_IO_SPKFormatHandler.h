@@ -1,0 +1,205 @@
+//////////////////////////////////////////////////////////////////////////////////
+// SPARK particle engine														//
+// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+//																				//
+// This software is provided 'as-is', without any express or implied			//
+// warranty.  In no event will the authors be held liable for any damages		//
+// arising from the use of this software.										//
+//																				//
+// Permission is granted to anyone to use this software for any purpose,		//
+// including commercial applications, and to alter it and redistribute it		//
+// freely, subject to the following restrictions:								//
+//																				//
+// 1. The origin of this software must not be misrepresented; you must not		//
+//    claim that you wrote the original software. If you use this software		//
+//    in a product, an acknowledgment in the product documentation would be		//
+//    appreciated but is not required.											//
+// 2. Altered source versions must be plainly marked as such, and must not be	//
+//    misrepresented as being the original software.							//
+// 3. This notice may not be removed or altered from any source distribution.	//
+//////////////////////////////////////////////////////////////////////////////////
+
+#ifndef H_SPK_IO_SPKFORMATHANDLER
+#define H_SPK_IO_SPKFORMATHANDLER
+
+namespace SPK
+{
+namespace IO
+{
+	class SPK_PREFIX SPKFormatHandler
+	{
+	protected :
+
+		static const char MAGIC_NUMBER[3];
+		static const char VERSION;
+
+		static const size_t DATA_LENGTH_OFFSET;
+		static const size_t HEADER_LENGTH;
+
+		class Buffer
+		{
+		public :
+
+			Buffer(size_t capacity);
+			Buffer(size_t,std::istream& is);
+			~Buffer();
+
+			const char* getData() const	{ return buf; }
+
+			////////////////////
+			// Size operators //
+			////////////////////
+
+			size_t getSize() const				{ return size; }
+			size_t getCapacity() const			{ return capacity; }
+			size_t getPosition() const			{ return position; }
+
+			void skip(size_t nb) const			{ position += nb; }
+			void setPosition(size_t pos) const	{ position = pos; }
+			void clear()						{ position = size = 0; } 
+
+			bool isAtEnd() const				{ return position >= size; }
+
+			//////////////////////////////
+			// Primitive get operations //
+			//////////////////////////////
+
+			const char* get(size_t length) const
+			{
+				position += length;
+				if (position >= size) position = size;
+				return buf + position - length;
+			}
+
+			int32 get32() const
+			{
+				if (USE_LITTLE_ENDIANS)
+					return *reinterpret_cast<const int32*>(get(4));
+				else
+					return swap32(*reinterpret_cast<const int32*>(get(4)));
+			}
+
+			template<class T> T get() const;
+
+			////////////////////////////
+			// Generic get operations //
+			////////////////////////////
+		
+			template<> char get() const		{ return *get(1); }
+			template<> float get() const 	{ int32 i = get32(); return *reinterpret_cast<float*>(&i); }
+			template<> uint32 get() const 	{ int32 i = get32(); return *reinterpret_cast<uint32*>(&i); }
+			template<> int32 get() const	{ return get32(); }
+			
+			template<> std::string get() const	
+			{ 
+				char c; 
+				std::string str;
+				while ((c = get<char>()) != '\0' && position < size) { str += c; }
+				return str;
+			}
+
+			template<> Vector3D get() const	
+			{ 
+				float x = get<float>();
+				float y = get<float>();
+				float z = get<float>();
+				return Vector3D(x,y,z); 
+			}
+
+			template<> Color get() const	{ int32 i = get32(); return *reinterpret_cast<Color*>(&i); }
+			template<> bool get() const		{ return get<char>() != 0; }
+
+			//////////////////////////////
+			// Primitive put operations //
+			//////////////////////////////
+
+			void put(char c) 
+			{ 
+				updateSize(position + 1); 
+				buf[position++] = c; 
+			}
+
+			void put(const char* c,size_t length) 
+			{ 
+				updateSize(position + length);
+				std::memcpy(buf + position,c,length);
+				position += length;
+			}
+
+			void put32(int32 i)
+			{
+				if (USE_LITTLE_ENDIANS)
+					put(reinterpret_cast<char*>(&i),4);
+				else
+					put(reinterpret_cast<char*>(swap32(i)),4);
+			}
+
+			////////////////////////////
+			// Generic put operations //
+			////////////////////////////
+
+			void put(float f)			{ put32(*reinterpret_cast<int32*>(&f)); }
+			void put(uint32 i)			{ put32(*reinterpret_cast<int32*>(&i)); }
+			void put(int32 i)			{ put32(i); }
+			void put(std::string s)		{ put(s.data(),s.size()); put('\0'); }
+			void put(const Vector3D& v)	{ put(v.x); put(v.y); put(v.z); }
+			void put(const Color& c)	{ put(reinterpret_cast<const char*>(&c),4); }
+			void put(bool b)			{ put(static_cast<char>(b ? 0x01 : 0x00)); }
+
+			template<class T>
+			void putArray(const std::vector<T>& t)
+			{
+				put(static_cast<uint32>(t.size()));
+				for (size_t i = 0; i < t.size(); ++i)
+					put(t[i]);
+			}
+
+			void putBuffer(const Buffer& buffer)
+			{
+				put(buffer.getData(),buffer.getSize());
+			}
+
+		private :
+
+			static const bool USE_LITTLE_ENDIANS;
+
+			char* buf;
+			size_t capacity;
+			size_t size;
+			mutable size_t position;
+
+			static int32 swap32(int32 i)
+			{
+				return ((i & 0xFF000000 >> 24) & 0xFF) |
+						(i & 0x00FF0000 >> 8) |
+						(i & 0x0000FF00 << 8) |
+						(i & 0x000000FF << 24) ;
+			}
+
+			void updateSize(size_t newPosition)
+			{
+				size_t newCapacity = capacity;
+				while (newPosition >= newCapacity)
+					newCapacity <<= 1;	
+				if (newCapacity != capacity)
+				{
+					char* newBuf = SPK_NEW_ARRAY(char,newCapacity);
+					std::memcpy(newBuf,buf,size);
+					SPK_DELETE_ARRAY(buf);
+					buf = newBuf;
+				}
+				if (newPosition > size)
+					size = newPosition;
+			}
+
+			static bool isLittleEndians();
+		};
+
+		
+		SPKFormatHandler() {}
+		SPKFormatHandler(const SPKFormatHandler& handler) {}
+		virtual ~SPKFormatHandler() {}
+	};
+}}
+
+#endif

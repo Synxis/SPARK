@@ -143,6 +143,10 @@ namespace IO
 
 	void IOManager::registerIOConverters()
 	{
+		// SPK Converters
+		registerLoader("spk",SPK_NEW(SPKLoader));
+		registerSaver("spk",SPK_NEW(SPKSaver));
+
 #ifndef SPK_NO_XML
 		// XML converters
 		registerLoader("xml",SPK_NEW(XMLLoader));

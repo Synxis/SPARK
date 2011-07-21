@@ -118,7 +118,7 @@ namespace IO
 		*
 		* @return the signature
 		*/
-		size_t getSignature() const;
+		uint32 getSignature() const;
 
 		/**
 		* @brief Gets the name of this descriptor
@@ -135,7 +135,7 @@ namespace IO
 		std::vector<char> buffer; // An internal buffer is used to limit memory allocation of attribute values
 		std::vector<Ref<SPKObject>> refBuffer; // An internal buffer of reference to keep strong reference
 
-		unsigned long signature;
+		uint32 signature;
 
 		std::string name;
 
@@ -165,7 +165,7 @@ namespace IO
 		return attributes.size();
 	}
 
-	inline size_t Descriptor::getSignature() const
+	inline uint32 Descriptor::getSignature() const
 	{
 		return signature;
 	}

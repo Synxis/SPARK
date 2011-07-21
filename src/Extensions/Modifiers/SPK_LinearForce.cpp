@@ -221,9 +221,9 @@ namespace SPK
 		if (attrib = descriptor.getAttributeWithValue("parameter"))
 		{
 			Factor tmpFactor = FACTOR_LINEAR;
-			Param tmpParam = static_cast<Param>(attrib->getValue<unsigned long>());
+			Param tmpParam = static_cast<Param>(attrib->getValue<uint32>());
 			if (attrib = descriptor.getAttributeWithValue("factor type"))
-				tmpFactor = static_cast<Factor>(attrib->getValue<unsigned long>());
+				tmpFactor = static_cast<Factor>(attrib->getValue<uint32>());
 			setParam(tmpParam,tmpFactor);
 		}
 
@@ -237,8 +237,8 @@ namespace SPK
 		descriptor.getAttribute("value")->setValue(getValue());
 		descriptor.getAttribute("relative value")->setValue(isRelative());
 		descriptor.getAttribute("squared speed")->setValue(isSquaredSpeedUsed());
-		descriptor.getAttribute("parameter")->setValue<unsigned long>(getParam());
-		descriptor.getAttribute("factor type")->setValue<unsigned long>(getFactor());
+		descriptor.getAttribute("parameter")->setValue<uint32>(getParam());
+		descriptor.getAttribute("factor type")->setValue<uint32>(getFactor());
 		descriptor.getAttribute("coefficient")->setValue(getCoef());
 	}
 }

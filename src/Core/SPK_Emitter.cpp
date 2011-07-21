@@ -126,7 +126,7 @@ namespace SPK
 
 		if (attrib = descriptor.getAttributeWithValue("tank"))
 		{
-			std::vector<long> tmpTanks = attrib->getValues<long>();
+			std::vector<int32> tmpTanks = attrib->getValues<int32>();
 			switch(tmpTanks.size())
 			{
 				case 1 : setTank(tmpTanks[0]); break;
@@ -161,7 +161,7 @@ namespace SPK
 
 		descriptor.getAttribute("active")->setValueOptionalOnTrue(isActive());
 
-		long tmpTanks[2] = {minTank,maxTank};
+		int32 tmpTanks[2] = {minTank,maxTank};
 		descriptor.getAttribute("tank")->setValues(tmpTanks,tmpTanks[0] == tmpTanks[1] ? 1 : 2);
 
 		descriptor.getAttribute("flow")->setValue(getFlow());

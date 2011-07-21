@@ -118,7 +118,7 @@ namespace SPK
 	
 	void SPKObject::innerExport(IO::Descriptor& descriptor) const
 	{
-		descriptor.getAttribute("name")->setValue(name,name.empty());
+		descriptor.getAttribute("name")->setValueOptionalOnEmpty(name);
 		descriptor.getAttribute("transform")->setValues(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
 		descriptor.getAttribute("shared")->setValueOptionalOnFalse(isShared());
 	}

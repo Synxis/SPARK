@@ -158,7 +158,7 @@ namespace IO
 	{
 		const std::string name = formatExtension(ext);
 		std::map<std::string,T*>::const_iterator it = table.find(name);
-		return it->second;
+		return it != table.end() ? it->second : NULL;
 	}
 }}
 #endif 

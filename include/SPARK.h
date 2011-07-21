@@ -72,5 +72,7 @@
 // IOConverters
 #include "Extensions/IOConverters/SPK_IO_XMLSaver.h"
 #include "Extensions/IOConverters/SPK_IO_XMLLoader.h"
+#include "Extensions/IOConverters/SPK_IO_SPKSaver.h"
+#include "Extensions/IOConverters/SPK_IO_SPKLoader.h"
 
 #endif

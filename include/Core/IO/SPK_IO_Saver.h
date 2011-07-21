@@ -96,6 +96,7 @@ namespace IO
 
 			Node* getNode(const Ref<SPKObject>& ptr);
 			Node* getNextNode();
+			size_t getNbNodes()	{ return nodes.size(); }
 
 		private :
 

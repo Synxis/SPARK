@@ -169,8 +169,8 @@ namespace IO
 						{
 						case ATTRIBUTE_TYPE_CHAR :		setAttributeValue<char>(*attribute,*attrib); break;
 						case ATTRIBUTE_TYPE_BOOL :		setAttributeValue<bool>(*attribute,*attrib); break;
-						case ATTRIBUTE_TYPE_INT32 :		setAttributeValue<long>(*attribute,*attrib); break;
-						case ATTRIBUTE_TYPE_UINT32 :	setAttributeValue<unsigned long>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_INT32 :		setAttributeValue<int32>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_UINT32 :	setAttributeValue<uint32>(*attribute,*attrib); break;
 						case ATTRIBUTE_TYPE_FLOAT :		setAttributeValue<float>(*attribute,*attrib); break;
 						case ATTRIBUTE_TYPE_VECTOR :	setAttributeValue<Vector3D>(*attribute,*attrib); break;
 						case ATTRIBUTE_TYPE_COLOR :		setAttributeValue<Color>(*attribute,*attrib); break;
@@ -178,8 +178,8 @@ namespace IO
 						
 						case ATTRIBUTE_TYPE_CHARS :		setAttributeValueArray<char>(*attribute,*attrib); break;
 						case ATTRIBUTE_TYPE_BOOLS :		setAttributeValueArray<bool>(*attribute,*attrib); break;
-						case ATTRIBUTE_TYPE_INT32S :	setAttributeValueArray<long>(*attribute,*attrib); break;
-						case ATTRIBUTE_TYPE_UINT32S :	setAttributeValueArray<unsigned long>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_INT32S :	setAttributeValueArray<int32>(*attribute,*attrib); break;
+						case ATTRIBUTE_TYPE_UINT32S :	setAttributeValueArray<uint32>(*attribute,*attrib); break;
 						case ATTRIBUTE_TYPE_FLOATS :	setAttributeValueArray<float>(*attribute,*attrib); break;
 						case ATTRIBUTE_TYPE_VECTORS :	setAttributeValueArray<Vector3D>(*attribute,*attrib); break;
 						case ATTRIBUTE_TYPE_COLORS :	setAttributeValueArray<Color>(*attribute,*attrib); break;
@@ -194,7 +194,7 @@ namespace IO
 							break; }
 
 						case ATTRIBUTE_TYPE_REFS : {
-							std::vector<Ref<SPKObject>> objects;
+							std::vector<Ref<SPKObject> > objects;
 							for (const TiXmlElement* child = attrib->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
 							{
 								Ref<SPKObject> tmp;
@@ -212,6 +212,7 @@ namespace IO
 						default : SPK_LOG_ERROR("XML ERROR 3");
 						}
 					}
+					else SPK_LOG_WARNING("An warning occured while parsing XML : The attribute \"" << *name << "\" does not exist");
 				}
 			}
 	}

@@ -119,7 +119,8 @@ namespace IO
 
 		inline void setValueOptionalOnFalse(bool value)							{ setValue<bool>(value,!value); }
 		inline void setValueOptionalOnTrue(bool value)							{ setValue<bool>(value,value); }
-		inline void setValueOptionalOnNull(const Ref<SPKObject>& value)			{ setValueRef(value,!value); }						
+		inline void setValueOptionalOnNull(const Ref<SPKObject>& value)			{ setValueRef(value,!value); }
+		inline void setValueOptionalOnEmpty(const std::string& value)			{ setValue<std::string>(value,value.empty()); }
 
 	private :
 
@@ -328,8 +329,8 @@ namespace IO
 
 	template<> inline AttributeType Attribute::getAttributeType<char>()						{ return ATTRIBUTE_TYPE_CHAR; }
 	template<> inline AttributeType Attribute::getAttributeType<bool>()						{ return ATTRIBUTE_TYPE_BOOL; }
-	template<> inline AttributeType Attribute::getAttributeType<long>()						{ return ATTRIBUTE_TYPE_INT32; }
-	template<> inline AttributeType Attribute::getAttributeType<unsigned long>()			{ return ATTRIBUTE_TYPE_UINT32; }
+	template<> inline AttributeType Attribute::getAttributeType<int32>()					{ return ATTRIBUTE_TYPE_INT32; }
+	template<> inline AttributeType Attribute::getAttributeType<uint32>()					{ return ATTRIBUTE_TYPE_UINT32; }
 	template<> inline AttributeType Attribute::getAttributeType<float>()					{ return ATTRIBUTE_TYPE_FLOAT; }
 	template<> inline AttributeType Attribute::getAttributeType<Vector3D>()					{ return ATTRIBUTE_TYPE_VECTOR; }
 	template<> inline AttributeType Attribute::getAttributeType<Color>()					{ return ATTRIBUTE_TYPE_COLOR; }
@@ -338,8 +339,8 @@ namespace IO
 
 	template<> inline AttributeType Attribute::getAttributeTypeArray<char>()				{ return ATTRIBUTE_TYPE_CHARS; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<bool>()				{ return ATTRIBUTE_TYPE_BOOLS; }
-	template<> inline AttributeType Attribute::getAttributeTypeArray<long>()				{ return ATTRIBUTE_TYPE_INT32S; }
-	template<> inline AttributeType Attribute::getAttributeTypeArray<unsigned long>()		{ return ATTRIBUTE_TYPE_UINT32S; }
+	template<> inline AttributeType Attribute::getAttributeTypeArray<int32>()				{ return ATTRIBUTE_TYPE_INT32S; }
+	template<> inline AttributeType Attribute::getAttributeTypeArray<uint32>()				{ return ATTRIBUTE_TYPE_UINT32S; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<float>()				{ return ATTRIBUTE_TYPE_FLOATS; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<Vector3D>()			{ return ATTRIBUTE_TYPE_VECTORS; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<Color>()				{ return ATTRIBUTE_TYPE_COLORS; }

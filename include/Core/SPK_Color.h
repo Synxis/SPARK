@@ -49,7 +49,7 @@ namespace SPK
 		* @brief Constructor of Color
 		* @param rgba : a value representing the color in rgba format
 		*/
-		Color(unsigned long rgba = 0xFFFFFFFF);
+		Color(uint32 rgba = 0xFFFFFFFF);
 
 		/**
 		* @brief Constructor of Color
@@ -80,7 +80,7 @@ namespace SPK
 		* @brief Cast operator from color to int
 		* @return the resulting integer in rgba format
 		*/
-		operator unsigned long();
+		operator uint32();
 
 		/////////////
 		// Setters //
@@ -114,19 +114,19 @@ namespace SPK
 		* @brief Sets the color from rgba
 		* @param rgba : value of the rgba
 		*/
-		void setRGBA(unsigned long rgba);
+		void setRGBA(uint32 rgba);
 
 		/**
 		* @brief Sets the color from argb
 		* @param argb : value of the argb
 		*/
-		void setARGB(unsigned long argb);
+		void setARGB(uint32 argb);
 
 		/**
 		* @brief Sets the color from bgra
 		* @param bgra : value of the bgra
 		*/
-		void setBGRA(unsigned long bgra);
+		void setBGRA(uint32 bgra);
 
 		/**
 		* @brief Sets the color
@@ -169,19 +169,19 @@ namespace SPK
 		* @brief Gets the color in rgba format
 		* @return a value representing the color in rgba format
 		*/
-		unsigned long getRGBA() const;
+		uint32 getRGBA() const;
 
 		/**
 		* @brief Gets the color in argb format
 		* @return a value representing the color in argb format
 		*/
-		unsigned long getARGB() const;
+		uint32 getARGB() const;
 
 		/**
 		* @brief Gets the color in bgra format
 		* @return a value representing the color in bgra format
 		*/
-		unsigned long getBGRA() const;
+		uint32 getBGRA() const;
 
 		///////////////
 		// Interface //
@@ -258,7 +258,7 @@ namespace SPK
 	// Definitions //
 	/////////////////
 
-	inline Color::Color(unsigned long rgba) :
+	inline Color::Color(uint32 rgba) :
 		r((unsigned char)(rgba >> 24)),
 		g((unsigned char)(rgba >> 16)),
 		b((unsigned char)(rgba >> 8)),
@@ -300,7 +300,7 @@ namespace SPK
 		return *this;
 	}
 
-	inline Color::operator unsigned long()
+	inline Color::operator uint32()
 	{
 		return getRGBA();
 	}
@@ -310,7 +310,7 @@ namespace SPK
 	inline void Color::setB(int b) { this->b = b; }
 	inline void Color::setA(int a) { this->a = a; }
 
-	inline void Color::setRGBA(unsigned long rgba)
+	inline void Color::setRGBA(uint32 rgba)
 	{
 		r = (unsigned char)(rgba >> 24);
 		g = (unsigned char)(rgba >> 16);
@@ -318,7 +318,7 @@ namespace SPK
 		a = (unsigned char)(rgba);
 	}
 
-	inline void Color::setARGB(unsigned long argb)
+	inline void Color::setARGB(uint32 argb)
 	{
 		a = (unsigned char)(argb >> 24);
 		r = (unsigned char)(argb >> 16);
@@ -326,7 +326,7 @@ namespace SPK
 		b = (unsigned char)(argb);
 	}
 
-	inline void Color::setBGRA(unsigned long bgra)
+	inline void Color::setBGRA(uint32 bgra)
 	{
 		b = (unsigned char)(bgra >> 24);
 		g = (unsigned char)(bgra >> 16);
@@ -347,17 +347,17 @@ namespace SPK
 	inline int Color::getB() const { return b; }
 	inline int Color::getA() const { return a; }
 
-	inline unsigned long Color::getRGBA() const
+	inline uint32 Color::getRGBA() const
 	{
 		return (r << 24) | (g << 16) | (b << 8) | a;
 	}
 
-	inline unsigned long Color::getARGB() const
+	inline uint32 Color::getARGB() const
 	{
 		return (a << 24) | (r << 16) | (g << 8) | b;
 	}
 
-	inline unsigned long Color::getBGRA() const
+	inline uint32 Color::getBGRA() const
 	{
 		return (b << 24) | (g << 16) | (r << 8) | a;
 	}
@@ -409,7 +409,7 @@ namespace SPK
 		std::ios_base::fmtflags oldFormat = s.flags();
 		s.setf(std::ios_base::hex | std::ios_base::showbase);
 		s.unsetf(std::ios_base::dec | std::ios_base::oct);
-		unsigned long rgba = 0;
+		uint32 rgba = 0;
 		s >> rgba;
 		c.setRGBA(rgba);
 		s.flags(oldFormat);
