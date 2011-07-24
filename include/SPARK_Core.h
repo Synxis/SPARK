@@ -52,5 +52,6 @@
 #include "Core/IO/SPK_IO_Loader.h"
 #include "Core/IO/SPK_IO_Saver.h"
 #include "Core/IO/SPK_IO_Manager.h"
+#include "Core/IO/SPK_IO_Buffer.h"
 
 #endif

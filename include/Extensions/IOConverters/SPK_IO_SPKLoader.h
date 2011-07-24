@@ -22,26 +22,33 @@
 #ifndef H_SPK_IO_SPKLOADER
 #define H_SPK_IO_SPKLOADER
 
-#include <sstream>
-#include "Extensions/IOConverters/SPK_IO_SPKFormatHandler.h"
-
 namespace SPK
 {
 namespace IO
 {
 	/** @brief A class to deserialize a System from a spk format stream */
-	class SPK_PREFIX SPKLoader : public Loader, public SPKFormatHandler
+	class SPK_PREFIX SPKLoader : public Loader
 	{
 	private :
 
+		static const char MAGIC_NUMBER[3];
+		static const char VERSION;
+
+		static const size_t DATA_LENGTH_OFFSET;
+		static const size_t HEADER_LENGTH;
+
 		virtual bool innerLoad(std::istream& is,Graph& graph) const;
 
+		bool readObject(Node& node,const Graph& graph,const IOBuffer& data) const;
+		bool readAttribute(Attribute& attrib,const Graph& graph,const IOBuffer& data) const;
+		Ref<SPKObject> readReference(const Graph& graph,const IOBuffer& data) const;
+
 		template<class T>
-		void setAttributeValues(Attribute& attrib,const Buffer& data) const;
+		void setAttributeValues(Attribute& attrib,const IOBuffer& data) const;
 	};
 
 	template<class T>
-	void SPKLoader::setAttributeValues(Attribute& attrib,const Buffer& data) const
+	void SPKLoader::setAttributeValues(Attribute& attrib,const IOBuffer& data) const
 	{
 		size_t nbValues = data.get<uint32>();
 		T* buffer = SPK_NEW_ARRAY(T,nbValues);

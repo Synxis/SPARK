@@ -298,9 +298,29 @@ int main(int argc, char *argv[])
 	// To be registered automatically
 	SPK::IO::IOManager::get().registerObject<SPK::GL::GLQuadRenderer>();
  
-	SPK::IO::IOManager::get().save("test.spk",system);
-	SPK::IO::IOManager::get().save("test.xml",system);
-	SPK::Ref<SPK::System> system2 = SPK::IO::IOManager::get().load("test.spk");
+	SPK::Logger::get().setEnabled(false);
+
+	clock_t startTime = clock();
+	for (size_t i = 0; i < 1000; ++i)
+		SPK::IO::IOManager::get().save("test.spk",system);
+	std::cout << "SAVING SPK BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms" << std::endl;
+	
+	startTime = clock();
+	for (size_t i = 0; i < 1000; ++i)
+		SPK::IO::IOManager::get().save("test.xml",system);
+	std::cout << "SAVING XML BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms" << std::endl;
+	
+	startTime = clock();
+	SPK::Ref<SPK::System> system2;
+	for (size_t i = 0; i < 1000; ++i)
+		system2 = SPK::IO::IOManager::get().load("test.spk");
+	std::cout << "LOADING SPK BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms" << std::endl;
+
+	startTime = clock();
+	for (size_t i = 0; i < 1000; ++i)
+		system2 = SPK::IO::IOManager::get().load("test.xml");
+	std::cout << "LOADING XML BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms" << std::endl;
+
 	SPK::IO::IOManager::get().save("test2.spk",system2); // integrity test. test2.xml must be equivalent to test.xml
 	SPK::IO::IOManager::get().save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml	
 

@@ -22,22 +22,25 @@
 #ifndef H_SPK_IO_SPKSAVER
 #define H_SPK_IO_SPKSAVER
 
-#include <sstream>
-#include "Extensions/IOConverters/SPK_IO_SPKFormatHandler.h"
-
 namespace SPK
 {
 namespace IO
 {
 	/** @brief A class to serialize a System in a spk format stream */
-	class SPK_PREFIX SPKSaver : public Saver, public SPKFormatHandler
+	class SPK_PREFIX SPKSaver : public Saver
 	{
 	private :
 
+		static const char MAGIC_NUMBER[3];
+		static const char VERSION;
+
+		static const size_t DATA_LENGTH_OFFSET;
+		static const size_t HEADER_LENGTH;
+
 		virtual bool innerSave(std::ostream& os,Graph& graph) const;
 
-		bool writeObject(Buffer& buffer,const Descriptor& desc,Graph& graph) const;
-		bool writeAttribute(Buffer& buffer,const Attribute& attrib,Graph& graph) const;
+		bool writeObject(IOBuffer& buffer,const Descriptor& desc,Graph& graph) const;
+		bool writeAttribute(IOBuffer& buffer,const Attribute& attrib,Graph& graph) const;
 	};	
 }}
 

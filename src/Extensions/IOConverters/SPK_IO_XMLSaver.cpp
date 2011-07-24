@@ -93,7 +93,7 @@ namespace IO
 		Node* refNode = graph.getNode(object);
 		if (refNode == NULL)
 		{
-			SPK_LOG_ERROR("XML ERROR 1");
+			SPK_LOG_FATAL("XMLSaver::writeObject(TiXmlElement&,const Ref<SPKObject>&,Graph&,bool) - No Node found for the object");
 			return false;
 		}
 		if ((layout.referenceRule == XML_REFERENCE_RULE_WHEN_NEEDED && refNode->getNbReferences() > 1) 
@@ -168,7 +168,7 @@ namespace IO
 						break; }
 
 					default :
-						SPK_LOG_ERROR("XML ERROR 3");
+						SPK_LOG_FATAL("XMLSaver::writeNode(TiXmlElement&,const Node&,Graph&) - Unknown attribute type");
 					}
 				}
 			}

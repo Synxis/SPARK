@@ -26,10 +26,16 @@ namespace SPK
 {
 namespace IO
 {
+	const char SPKSaver::MAGIC_NUMBER[3] = { 0x53, 0x50, 0x4B }; // "SPK" in ASCII
+	const char SPKSaver::VERSION = 0;
+
+	const size_t SPKSaver::DATA_LENGTH_OFFSET = 4;
+	const size_t SPKSaver::HEADER_LENGTH = 12;
+
 	bool SPKSaver::innerSave(std::ostream& os,Graph& graph) const
 	{
-		Buffer output(2048);	// Output buffer
-		Buffer buffer(256);		// buffer for objects writing
+		IOBuffer output(2048);	// Output buffer
+		IOBuffer buffer(256);	// buffer for objects writing
 
 		// Header
 		output.put(MAGIC_NUMBER,3);
@@ -54,7 +60,7 @@ namespace IO
 		return true;
 	}
 
-	bool SPKSaver::writeObject(Buffer& buffer,const Descriptor& desc,Graph& graph) const
+	bool SPKSaver::writeObject(IOBuffer& buffer,const Descriptor& desc,Graph& graph) const
 	{
 		buffer.put(desc.getName());	
 
@@ -71,7 +77,7 @@ namespace IO
 		return true;
 	}
 
-	bool SPKSaver::writeAttribute(Buffer& buffer,const Attribute& attrib,Graph& graph) const
+	bool SPKSaver::writeAttribute(IOBuffer& buffer,const Attribute& attrib,Graph& graph) const
 	{
 		bool defined = attrib.hasValue() && !attrib.isValueOptional();
 		buffer.put(defined);
@@ -115,7 +121,7 @@ namespace IO
 				break; }
 
 			default :
-				SPK_LOG_ERROR("SPK ERROR");
+				SPK_LOG_FATAL("SPKSaver::writeAttribute(IOBuffer&,const Attribute&,Graph&) - Unknown attribute type");
 			}
 
 		return true;

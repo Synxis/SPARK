@@ -40,14 +40,14 @@ namespace IO
 
 		if (doc.Error())
 		{
-			SPK_LOG_ERROR("An error occured while parsing XML : " << doc.ErrorDesc() << " at line " << doc.ErrorRow() << " and column " << doc.ErrorCol()); 
+			SPK_LOG_ERROR("XMLLoader::innerLoad(std::istream&,Graph&) - Error while parsing XML : " << doc.ErrorDesc() << " at line " << doc.ErrorRow() << " and column " << doc.ErrorCol()); 
 			return false;
 		}
 
 		const TiXmlElement* root = doc.RootElement(); 
 		if (root == NULL || root->ValueStr() != "SPARK")
 		{
-			SPK_LOG_ERROR("An error occured while parsing XML : The root element is not conform (must be <SPARK>)");
+			SPK_LOG_ERROR("XMLLoader::innerLoad(std::istream&,Graph&) - The root element is not conform (must be <SPARK>)");
 			return false;
 		}
 
@@ -109,8 +109,12 @@ namespace IO
 		if (convert(*tmpStr,refID))	// The string value can be converted into a refID
 		{
 			std::map<int,size_t>::const_iterator it = ref2Index.find(refID);
-			if (it != ref2Index.end()) // The refID is found in the list of object	
-				return graph.getNode(it->second)->getObject();
+			if (it != ref2Index.end()) // The refID is found in the list of object
+			{
+				Node* node = graph.getNode(it->second);
+				if (node != NULL)
+					return node->getObject();
+			}
 		}
 
 		return SPK_NULL_REF;
@@ -121,7 +125,12 @@ namespace IO
 		if (element != NULL)
 			for (size_t i = 0; i < objElements.size(); ++i) // This can be optimized in complexity by using a map
 				if (objElements[i] == element)
-					return graph.getNode(i)->getObject();
+				{
+					Node* node = graph.getNode(i);
+					if (node != NULL)
+						return node->getObject();
+
+				}
 
 		return SPK_NULL_REF;
 	}
@@ -137,7 +146,7 @@ namespace IO
 				int referenceID = -1;
 				if (element->Attribute("ref",&referenceID) != NULL)
 					if (!ref2Index.insert(std::make_pair(referenceID,objElements.size() - 1)).second)
-						SPK_LOG_ERROR("An object with an already used reference was found");
+						SPK_LOG_ERROR("XMLLoader::findObjects(const TiXmlElement&,std::vector<const TiXmlElement*>&,std::map<int,size_t>&,bool) - An object with an already used reference was found");
 			}
 
 			findObjects(*element,objElements,ref2Index,!objectLevel);
@@ -209,10 +218,10 @@ namespace IO
 								attribute->setValuesRef(&objects[0],objects.size());	
 							break; }
 
-						default : SPK_LOG_ERROR("XML ERROR 3");
+						default : SPK_LOG_FATAL("XMLLoader::parseAttributes(const TiXmlElement&,Descriptor&,const Graph&,const std::vector<const TiXmlElement*>&,const std::map<int,size_t>&) - Unknown attribute type");
 						}
 					}
-					else SPK_LOG_WARNING("An warning occured while parsing XML : The attribute \"" << *name << "\" does not exist");
+					else SPK_LOG_WARNING("XMLLoader::parseAttributes(const TiXmlElement&,Descriptor&,const Graph&,const std::vector<const TiXmlElement*>&,const std::map<int,size_t>&) - The attribute \"" << *name << "\" does not exist");
 				}
 			}
 	}

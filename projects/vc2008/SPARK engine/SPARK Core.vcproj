@@ -377,6 +377,10 @@
 					Name="IO"
 					>
 					<File
+						RelativePath="..\..\..\src\Core\IO\SPK_IO_Buffer.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\Core\IO\SPK_IO_Descriptor.cpp"
 						>
 					</File>
@@ -508,10 +512,6 @@
 				<Filter
 					Name="IOConverters"
 					>
-					<File
-						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_SPKFormatHandler.cpp"
-						>
-					</File>
 					<File
 						RelativePath="..\..\..\src\Extensions\IOConverters\SPK_IO_SPKLoader.cpp"
 						>
@@ -652,6 +652,10 @@
 					>
 					<File
 						RelativePath="..\..\..\include\Core\IO\SPK_IO_Attribute.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\Core\IO\SPK_IO_Buffer.h"
 						>
 					</File>
 					<File
@@ -830,10 +834,6 @@
 				<Filter
 					Name="IOConverters"
 					>
-					<File
-						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_SPKFormatHandler.h"
-						>
-					</File>
 					<File
 						RelativePath="..\..\..\include\Extensions\IOConverters\SPK_IO_SPKLoader.h"
 						>

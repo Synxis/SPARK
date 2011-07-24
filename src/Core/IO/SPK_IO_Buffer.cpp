@@ -19,22 +19,16 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
+#include <sstream>
 #include <SPARK_Core.h>
-#include "Extensions/IOConverters/SPK_IO_SPKFormatHandler.h"
 
 namespace SPK
 {
 namespace IO
 {
-	const char SPKFormatHandler::MAGIC_NUMBER[3] = { 0x53, 0x50, 0x4B }; // "SPK" in ASCII
-	const char SPKFormatHandler::VERSION = 0;
+	const bool IOBuffer::USE_LITTLE_ENDIANS = IOBuffer::isLittleEndians();
 
-	const size_t SPKFormatHandler::DATA_LENGTH_OFFSET = 4;
-	const size_t SPKFormatHandler::HEADER_LENGTH = 12;
-
-	const bool SPKFormatHandler::Buffer::USE_LITTLE_ENDIANS = SPKFormatHandler::Buffer::isLittleEndians();
-
-	SPKFormatHandler::Buffer::Buffer(size_t capacity) :
+	IOBuffer::IOBuffer(size_t capacity) :
 		capacity(capacity),
 		size(0),
 		position(0)
@@ -42,7 +36,7 @@ namespace IO
 		buf = SPK_NEW_ARRAY(char,capacity);
 	}
 
-	SPKFormatHandler::Buffer::Buffer(size_t capacity,std::istream& is) :
+	IOBuffer::IOBuffer(size_t capacity,std::istream& is) :
 		capacity(capacity),
 		size(0),
 		position(0)
@@ -52,12 +46,64 @@ namespace IO
 		size = capacity;
 	}
 
-	SPKFormatHandler::Buffer::~Buffer()
+	IOBuffer::~IOBuffer()
 	{
 		SPK_DELETE_ARRAY(buf);
 	}
 
-	bool SPKFormatHandler::Buffer::isLittleEndians()
+	const char* IOBuffer::get(size_t length) const
+	{
+		position += length;
+		if (position >= size) position = size;
+		return buf + position - length;
+	}
+
+	template<> std::string IOBuffer::get<std::string>() const	
+	{ 
+		char c; 
+		std::string str;
+		while ((c = get<char>()) != '\0' && position < size) { str += c; }
+		return str;
+	}
+
+	template<> Vector3D IOBuffer::get<Vector3D>() const	
+	{ 
+		float x = get<float>();
+		float y = get<float>();
+		float z = get<float>();
+		return Vector3D(x,y,z); 
+	}
+
+	void IOBuffer::put(char c) 
+	{ 
+		updateSize(position + 1); 
+		buf[position++] = c; 
+	}
+
+	void IOBuffer::put(const char* c,size_t length) 
+	{ 
+		updateSize(position + length);
+		std::memcpy(buf + position,c,length);
+		position += length;
+	}
+
+	void IOBuffer::updateSize(size_t newPosition)
+	{
+		size_t newCapacity = capacity;
+		while (newPosition >= newCapacity)
+			newCapacity <<= 1;	
+		if (newCapacity != capacity)
+		{
+			char* newBuf = SPK_NEW_ARRAY(char,newCapacity);
+			std::memcpy(newBuf,buf,size);
+			SPK_DELETE_ARRAY(buf);
+			buf = newBuf;
+		}
+		if (newPosition > size)
+			size = newPosition;
+	}
+
+	bool IOBuffer::isLittleEndians()
 	{
 		uint32 test = 0x01;
 		return (reinterpret_cast<char*>(&test)[0]) == 0x01;
