@@ -72,6 +72,7 @@ namespace SPK
 {
 	namespace IO { class IOManager; }
 
+	/** @brief The base class of all SPARK objects */
 	class SPK_PREFIX SPKObject
 	{
 	friend class Transform;
@@ -85,6 +86,11 @@ namespace SPK
 
 	public :
 
+		/**
+		* @brief Copies a SPK Object
+		* @param : ref : The SPK object to copy
+		* @return a SPK object which is a copy of ref
+		*/
 		template<typename T>
 		static Ref<T> copy(const Ref<T>& ref);
 
@@ -94,18 +100,48 @@ namespace SPK
 		// Reference //
 		///////////////
 
+		/**
+		* @brief Gets the number of references of this object
+		* When the number of references reaches 0, the object is destroyed.
+		* @return the number of references
+		*/
 		unsigned int getNbReferences() const;
 		
+		/**
+		* Tells whether this object is shared or not
+		* During a deep copy, a referenced shared object will not be copied but only its reference will.
+		* @return true if the object is shared, false otherwise
+		*/
 		bool isShared() const;
+
+		/**
+		* Sets whether tjis object os shareable or not
+		* Note that some type of objects are not shareable
+		* @param shared : true to make this obkect shared, false not to
+		*/
 		void setShared(bool shared);
 		
 		///////////////
 		// Transform //
 		///////////////
 
+		/**
+		* @brief Gets the transform of this object
+		* @return the transform of this object
+		*/
 		Transform& getTransform();
+
+		/**
+		* @brief Gets the transform of this object
+		* This is the const version of getTransform()
+		* @return the transform of this object
+		*/
 		const Transform& getTransform() const;
 
+		/**
+		* @brief Updates the transform of this object
+		* @param parent : the parent object of this object, NULL if it has no parent
+		*/
 		void updateTransform(const Ref<SPKObject>& parent = SPK_NULL_REF);
 
 		//////////
@@ -113,26 +149,26 @@ namespace SPK
 		//////////
 
 		/**
-		* @brief Sets the name of this nameable
+		* @brief Sets the name of this object
 		* @param name : the name
 		*/
 		void setName(const std::string& name);
 
 		/**
-		* @brief Gets the name of this nameable
+		* @brief Gets the name of this object
 		* @return the name
 		*/
 		const std::string& getName() const;
 		
 		/**
-		* @brief Traverses this nameable to find a nameable with the given name
+		* @brief Traverses this object to find an object with the given name
 		*
-		* The first nameable found with the given name is returned.<br>
-		* This nameable is always checked first.<br>
-		* If no nameable with the given name is found, null is returned.<br>
+		* The first object found with the given name is returned.<br>
+		* This object is always checked first.<br>
+		* If no object with the given name is found, NULL is returned.<br>
 		*
-		* @param name : the name of the nameable to find
-		* @return : the nameable with the given name or null
+		* @param name : the name of the object to find
+		* @return : the object with the given name or null
 		*/
 		virtual Ref<SPKObject> findByName(const std::string& name);
 
@@ -140,11 +176,30 @@ namespace SPK
 		// Serialization //
 		///////////////////
 
+		/**
+		* @brief Create a descriptor for this object
+		* The descriptor created has no attribute values set.<br>
+		* Use exportAttributes, if you need a descriptor with set attributes.
+		* @return a descriptor with empty attributes of this type of object
+		*/
 		IO::Descriptor createDescriptor() const;
 
+		/**
+		* @brief Imports the attributes of a descriptor and use it to set up this object
+		* @param descriptor : The descriptor used to set up this object 
+		*/
 		void importAttributes(const IO::Descriptor& descriptor);
+
+		/**
+		* @brief Exports the attribute of this object in a descriptor
+		* @return A descriptor representing the object
+		*/
 		IO::Descriptor exportAttributes() const;
 
+		/**
+		* @brief Gets the class name of this object
+		* @return the class name
+		*/
 		virtual std::string getClassName() const = 0;
 		
 	protected :
@@ -169,7 +224,18 @@ namespace SPK
 		*/
 		virtual void propagateUpdateTransform() {}
 
+		/**
+		* @brief Transforms a position in this object's space
+		* @param tPos : the transformed position
+		* @param pos : the position to transform
+		*/
 		void transformPos(Vector3D& tPos,const Vector3D& pos);
+
+		/**
+		* @brief Transforms a direction in this object's space
+		* @param tPos : the transformed direction
+		* @param pos : the direction to transform
+		*/
 		void transformDir(Vector3D& tDir,const Vector3D& dir);
 
 		virtual void innerImport(const IO::Descriptor& descriptor);
@@ -190,9 +256,9 @@ namespace SPK
 		
 		// The copy buffer is used to be able to correctly perform a deep copy of objects. If an object is present more than once is the hierarchy it will be copied only once
 		// The choice to have a field that is used only for the copy was made because the memory overhead is neglictible and the other possible choices were not satisfying :
-		// _ Having a static copyBuffer made the copy not thread safe (As concurrent copy of object would make concurrent read/write on the buffer)
-		// _ Passing the copyBuffer to methods was too dirty and messed up the interface (Impossible to use the copy constructor anymore)
-		// Note thta with this method the copy of the same object remains not thread safe but the copy of different object is
+		// * Having a static copyBuffer made the copy not thread safe (As concurrent copy of object would make concurrent read/write on the buffer)
+		// * Passing the copyBuffer to methods was too dirty and messed up the interface (Impossible to use the copy constructor anymore)
+		// Note that with this method the copy of the same object remains not thread safe but the copy of different object is
 		mutable std::map<SPKObject*,SPKObject*>* copyBuffer; 
 
 		virtual Ref<SPKObject> clone() const = 0;
