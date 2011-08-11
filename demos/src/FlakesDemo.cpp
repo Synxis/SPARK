@@ -414,6 +414,7 @@ int main(int argc, char *argv[])
 					if (nbParticlesIndex < NB_PARTICLES_SIZE - 1)
 					{
 						++nbParticlesIndex;
+						particleGroup->reallocate(NB_PARTICLES[nbParticlesIndex]);
 						particleGroup->addParticles(NB_PARTICLES[nbParticlesIndex] - NB_PARTICLES[nbParticlesIndex - 1],sphere,Vector3D());
 					}
 				}
@@ -424,8 +425,9 @@ int main(int argc, char *argv[])
 					if (nbParticlesIndex > 0)
 					{
 						--nbParticlesIndex;
-						for (unsigned int i = 0; i < NB_PARTICLES[nbParticlesIndex + 1] - NB_PARTICLES[nbParticlesIndex]; ++i)
-							particleGroup->getParticle(i).kill();
+						particleGroup->reallocate(NB_PARTICLES[nbParticlesIndex]);
+						//for (unsigned int i = 0; i < NB_PARTICLES[nbParticlesIndex + 1] - NB_PARTICLES[nbParticlesIndex]; ++i)
+						//	particleGroup->getParticle(i).kill();
 					}
 				}
 			}

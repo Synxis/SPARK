@@ -43,6 +43,7 @@ namespace SPK
 
 		return dist <= length*0.5f && dist >= -length*0.5f && r <= radius;
     }
+
     Vector3D Cylinder::computeNormal(const Vector3D& point) const
     {
         float dist = dotProduct(tDirection,point - getTransformedPosition());

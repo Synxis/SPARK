@@ -570,7 +570,7 @@ namespace SPK
 
 	void Group::reallocate(size_t capacity)
 	{
-		if (capacity > pool.getNbReserved())
+		if (capacity != pool.getNbReserved())
 		{
 			pool.reallocate(capacity);
 

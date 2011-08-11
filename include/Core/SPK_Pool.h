@@ -604,6 +604,7 @@ namespace SPK
 	private :
 
 		std::vector<T> container;
+		size_t capacity;
 
 		size_t nbActive;
 		size_t maxTotal;
@@ -617,7 +618,7 @@ namespace SPK
 		nbActive(0),
 		maxTotal(0)
 	{
-		container.reserve(capacity);
+		reallocate(capacity);
 	}
 
 	template<class T>
@@ -627,7 +628,7 @@ namespace SPK
 		container()
 	{
 		// the copy constructor of vector does not copy the capacity !
-		container.reserve(pool.container.capacity());
+		reallocate(pool.capacity);
 		container = pool.container;
 	}
 
@@ -636,9 +637,9 @@ namespace SPK
 	{
 		if (this != &pool)
 		{
-			nbActive = pool.nbActive();
+			nbActive = pool.nbActive;
 			maxTotal = 0;
-			container.reserve(pool.container.capacity());
+			reallocate(pool.capacity);
 			container = pool.container;
 		}
 		return *this;
@@ -683,13 +684,13 @@ namespace SPK
 	template<class T>
 	inline size_t Pool<T>::getNbReserved() const
 	{
-		return container.capacity();
+		return capacity;
 	}
 
 	template<class T>
 	inline size_t Pool<T>::getNbEmpty() const
 	{
-		return container.capacity() - container.size();
+		return capacity - container.size();
 	}
 
 	template<class T>
@@ -929,7 +930,7 @@ namespace SPK
 	template<class T>
 	bool Pool<T>::pushActive(T& element)
 	{
-		if (container.size() == container.capacity())
+		if (container.size() == capacity)
 			return false;
 
 		container.push_back(element);
@@ -945,7 +946,7 @@ namespace SPK
 	template<class T>
 	bool Pool<T>::pushInactive(T& element)
 	{
-		if (container.size() == container.capacity())
+		if (container.size() == capacity)
 			return false;
 
 		container.push_back(element);
@@ -1020,7 +1021,12 @@ namespace SPK
 	template<class T>
 	inline void Pool<T>::reallocate(size_t capacity)
 	{
-		container.reserve(capacity);
+		container.reserve(capacity); // if the new capacity is lower, memory may not be freed
+		while (container.size() > capacity)
+			container.pop_back();
+		if (nbActive > container.size())
+			nbActive = container.size();	
+		this->capacity = capacity;
 	}
 }
 
