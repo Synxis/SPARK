@@ -151,27 +151,27 @@ namespace IRR
 	
 	inline void IRRPointRenderer::setTexture(irr::video::ITexture* texture)
 	{
-		materialProxy.textureLayer().Texture = texture;
+		material.TextureLayer[0].Texture = texture;
 	}
 
 	inline void IRRPointRenderer::setSize(float size)
 	{
-		this->size = size;
+		material.Thickness = this->size = size;
 	}
 
 	inline irr::video::ITexture* IRRPointRenderer::getTexture() const
 	{
-		return materialProxy.textureLayer().Texture;
+		return material.TextureLayer[0].Texture;
 	}
 
 	inline irr::video::SMaterialLayer& IRRPointRenderer::getMaterialLayer()
 	{
-		return materialProxy.textureLayer();
+		return material.TextureLayer[0];
 	}
 		
 	inline const irr::video::SMaterialLayer& IRRPointRenderer::getMaterialLayer() const
 	{
-		return materialProxy.textureLayer();
+		return material.TextureLayer[0];
 	}
 
 	inline const std::string& IRRPointRenderer::getBufferName() const

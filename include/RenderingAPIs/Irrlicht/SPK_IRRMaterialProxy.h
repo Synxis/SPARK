@@ -39,7 +39,7 @@ namespace IRR
 	{
 	public :
 
-		IRRMaterialProxy();
+		IRRMaterialProxy(irr::video::SMaterial& material) : material(material) {}
 
 		const irr::video::SMaterial& getMaterial() const { return material; }
 
@@ -52,58 +52,13 @@ namespace IRR
 		void setPointCloud(bool enable)			{ material.PointCloud = enable; }
 		bool getPointCloud() const				{ return material.PointCloud; }
 
-		void setThickness(irr::f32 thickness)	{ material.Thickness = thickness; }
-		irr::f32 getThickness() const			{ return material.Thickness; }
-
 		void setWireframe(bool enable)			{ material.Wireframe = enable; }
 		bool getWireframe() const				{ return material.Wireframe; }
 
-		void setZBuffer(irr::u8 z)				{ material.ZBuffer = z; }
-		irr::u8 getZBuffer() const				{ return material.ZBuffer; }
-
-		void setZWriteEnable(bool enable)		{ material.ZWriteEnable = enable; }
-		bool getZWriteEnable() const			{ return material.ZWriteEnable; }
-
-		irr::video::SMaterialLayer& textureLayer()				{ return material.TextureLayer[0]; }
-		const irr::video::SMaterialLayer& textureLayer() const	{ return material.TextureLayer[0]; }
-
-		void setBlending(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc);
-		
-		irr::video::E_BLEND_FACTOR getBlendSrcFunc() const	{ return blendSrcFunc; }
-		irr::video::E_BLEND_FACTOR getBlendDestFunc() const	{ return blendDestFunc; }
-		unsigned int getAlphaSource() const					{ return alphaSource; }
-
-
 	private :
 
-		irr::video::SMaterial material;
-
-		// Stored here to avoid the non convenient unpack function on material
-		irr::video::E_BLEND_FACTOR blendSrcFunc;
-		irr::video::E_BLEND_FACTOR blendDestFunc;
-		unsigned int alphaSource;
+		irr::video::SMaterial& material;
 	};
-
-	inline IRRMaterialProxy::IRRMaterialProxy()
-	{
-		material.GouraudShading = true;												// fix 1.05.00 for ATI cards
-		material.Lighting = false;													// No lights per default
-		material.BackfaceCulling = false;											// Deactivates backface culling
-		material.MaterialType = irr::video::EMT_ONETEXTURE_BLEND;					// To allow complex blending functions
-		setBlending(irr::video::EBF_ONE,irr::video::EBF_ZERO,irr::video::EAS_NONE);	// No blending
-	}
-
-	inline void IRRMaterialProxy::setBlending(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc)
-	{
-		blendSrcFunc = srcFunc;
-		blendDestFunc = destFunc;
-		alphaSource = alphaSrc;
-		material.MaterialTypeParam = irr::video::pack_texureBlendFunc(
-			blendSrcFunc,
-			blendDestFunc,
-			irr::video::EMFN_MODULATE_1X,
-			alphaSource);
-	}
 }}
 
 #endif

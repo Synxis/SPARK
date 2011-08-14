@@ -114,9 +114,9 @@ namespace IRR
 		}
 
 		// Saves the renderer texture
-		irr::video::ITexture* savedTexture = materialProxy.textureLayer().Texture;
+		irr::video::ITexture* savedTexture = material.TextureLayer[0].Texture;
 		if (texturingMode == TEXTURE_NONE)
-			materialProxy.textureLayer().Texture = NULL;
+			material.TextureLayer[0].Texture = NULL;
 
 		if ((texturingMode == TEXTURE_2D)&&(group.getModel()->isEnabled(PARAM_TEXTURE_INDEX)))
 		{
@@ -164,11 +164,11 @@ namespace IRR
 		}
 		currentBuffer->getMeshBuffer().setDirty(irr::scene::EBT_VERTEX);
 
-		driver->setMaterial(materialProxy.getMaterial());
+		driver->setMaterial(material);
 		driver->drawMeshBuffer(&currentBuffer->getMeshBuffer()); // this draw call is used in order to be able to use VBOs
 
 		currentBuffer->setVBOInitialized(true);
-		materialProxy.textureLayer().Texture = savedTexture; // Restores the texture
+		material.TextureLayer[0].Texture = savedTexture; // Restores the texture
 	}
 
 	void IRRQuadRenderer::renderBasic(const Particle& particle) const

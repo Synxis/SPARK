@@ -33,7 +33,9 @@ namespace IRR
 	IRRLineRenderer::IRRLineRenderer(irr::IrrlichtDevice* d,float length,float width) :
 		IRRRenderer(d),
 		LineRendererInterface(length,width)
-	{}
+	{
+		material.Thickness = width;
+	}
 
 	void IRRLineRenderer::createBuffers(const Group& group)
 	{
@@ -69,8 +71,6 @@ namespace IRR
 		if (!prepareBuffers(group))
 			return;
 
-		materialProxy.setThickness(getWidth()); // To ensure thickness <-> width integrity
-
 		for (size_t t = 0; t < group.getNbParticles() << 1; t += 2)
 		{
 			const Particle& particle = group.getParticle(t >> 1);
@@ -90,7 +90,7 @@ namespace IRR
 		currentBuffer->getMeshBuffer().setDirty(irr::scene::EBT_VERTEX);
 
 		irr::video::IVideoDriver* driver = device->getVideoDriver();
-        driver->setMaterial(materialProxy.getMaterial());
+        driver->setMaterial(material);
         driver->drawVertexPrimitiveList(
 			currentBuffer->getVertexBuffer().pointer(),
 			group.getNbParticles() * NB_VERTICES_PER_QUAD,

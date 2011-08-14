@@ -171,7 +171,7 @@ namespace IRR
 
 	inline void IRRQuadRenderer::setTexture(irr::video::ITexture* texture)
 	{
-		materialProxy.textureLayer().Texture = texture;
+		material.TextureLayer[0].Texture = texture;
 	}
 
 	inline void IRRQuadRenderer::setAtlasDimensions(irr::core::dimension2du dim)
@@ -181,17 +181,17 @@ namespace IRR
 
 	inline irr::video::ITexture* IRRQuadRenderer::getTexture() const
 	{
-		return materialProxy.textureLayer().Texture;
+		return material.TextureLayer[0].Texture;
 	}
 
 	inline irr::video::SMaterialLayer& IRRQuadRenderer::getMaterialLayer()
 	{
-		return materialProxy.textureLayer();
+		return material.TextureLayer[0];
 	}
 		
 	inline const irr::video::SMaterialLayer& IRRQuadRenderer::getMaterialLayer() const
 	{
-		return materialProxy.textureLayer();
+		return material.TextureLayer[0];
 	}
 
 	inline irr::core::dimension2du IRRQuadRenderer::getAtlasDimensions() const
