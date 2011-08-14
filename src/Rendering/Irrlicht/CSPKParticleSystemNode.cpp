@@ -48,6 +48,29 @@ namespace scene
 	}
 
 	CSPKParticleSystemNode::CSPKParticleSystemNode(
+		const SPK::Ref<SPK::System>& system,
+		ISceneNode* parent,
+		ISceneManager* mgr,
+		bool worldTransformed,
+		s32 id) :
+			irr::scene::ISceneNode(parent,mgr,id),
+			SPKSystem(system),
+			worldTransformed(worldTransformed),
+			onlyWhenVisible(false),
+			alive(true),
+			lastUpdatedTime(0)
+    {
+		if (SPKSystem == NULL)
+		{
+			SPK_LOG_ERROR("CSPKParticleSystemNode(const Ref<System>&,ISceneNode*,ISceneManager*,bool,s32) - The underlying system must not be NULL");
+		}
+		else if (parent != NULL && !SPKSystem->isInitialized())
+		{
+			SPK_LOG_WARNING("CSPKParticleSystemNode(const Ref<System>&,ISceneNode*,ISceneManager*,bool,s32) - A uninitialized system should have a NULL parent");
+		}
+	}
+
+	CSPKParticleSystemNode::CSPKParticleSystemNode(
 		const CSPKParticleSystemNode& system,
 		ISceneNode* newParent,
 		ISceneManager* newManager) :

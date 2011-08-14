@@ -59,9 +59,21 @@ namespace scene
 		* @param parent : the parent node of the particle system
 		* @param mgr : the Irrlicht scene manager
 		* @param worldTransformed : true to emit particles in world, false to emit them localy
+		* @param initialized : tru to initialize the system, false not to
 		* @param id : the ID of the node
 		*/
 		CSPKParticleSystemNode(ISceneNode* parent,ISceneManager* mgr,bool worldTransformed = true,bool initialize = true,s32 id=-1);
+
+		/**
+		* @brief Constructor of CSPKParticleSystemNode from a System
+		* This should be used with care. The system must not be null and not already wrapped
+		* @param system : The system to wrap for a use in Irrlicht
+		* @param parent : the parent node of the particle system
+		* @param mgr : the Irrlicht scene manager
+		* @param worldTransformed : true to emit particles in world, false to emit them localy
+		* @param id : the ID of the node
+		*/
+		CSPKParticleSystemNode(const SPK::Ref<SPK::System>& system,ISceneNode* parent,ISceneManager* mgr,bool worldTransformed = true,s32 id=-1);
 
 		/**
 		* @brief Copy constructor of CSPKParticleSystemNode
