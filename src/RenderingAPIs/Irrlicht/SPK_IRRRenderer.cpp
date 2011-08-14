@@ -30,45 +30,30 @@ namespace IRR
 	IRRRenderer::IRRRenderer(irr::IrrlichtDevice* d) :
 		device(d),
 		currentBuffer(NULL)
-	{
-		material.GouraudShading = true;									// fix 1.05.00 for ATI cards
-		material.Lighting = false;										// No lights per default
-		material.BackfaceCulling = false;								// Deactivates backface culling
-		material.MaterialType = irr::video::EMT_ONETEXTURE_BLEND;		// To allow complex blending functions
-		setBlending(BLENDING_NONE);										// Blending is disabled per default
-	}
-
-	void IRRRenderer::setBlending(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc)
-	{
-		blendSrcFunc = srcFunc;
-		blendDestFunc = destFunc;
-		alphaSource = alphaSrc;
-		updateMaterialBlendingMode();
-	}
+	{}
 
 	void IRRRenderer::setBlending(BlendingMode blendMode)
 	{
 		switch(blendMode)
 		{
-		case BLENDING_NONE :
-			blendSrcFunc = irr::video::EBF_ONE;
-			blendDestFunc = irr::video::EBF_ZERO;
-			alphaSource = irr::video::EAS_NONE;
+		case BLENDING_NONE : materialProxy.setBlending(
+			irr::video::EBF_ONE,
+			irr::video::EBF_ZERO,
+			irr::video::EAS_NONE);
 			break;
 
-		case BLENDING_ADD :
-			blendSrcFunc = irr::video::EBF_SRC_ALPHA;
-			blendDestFunc = irr::video::EBF_ONE;
-			alphaSource = irr::video::EAS_VERTEX_COLOR | irr::video::EAS_TEXTURE;
+		case BLENDING_ADD : materialProxy.setBlending(
+			irr::video::EBF_SRC_ALPHA,
+			irr::video::EBF_ONE,
+			irr::video::EAS_VERTEX_COLOR | irr::video::EAS_TEXTURE);
 			break;
 
-		case BLENDING_ALPHA :
-			blendSrcFunc = irr::video::EBF_SRC_ALPHA;
-			blendDestFunc = irr::video::EBF_ONE_MINUS_SRC_ALPHA;
-			alphaSource = irr::video::EAS_VERTEX_COLOR | irr::video::EAS_TEXTURE;
+		case BLENDING_ALPHA : materialProxy.setBlending(
+			irr::video::EBF_SRC_ALPHA,
+			irr::video::EBF_ONE_MINUS_SRC_ALPHA,
+			irr::video::EAS_VERTEX_COLOR | irr::video::EAS_TEXTURE);
 			break;
 		}
-		updateMaterialBlendingMode();
 	}
 
 	void IRRRenderer::enableRenderingHint(RenderingHint renderingHint,bool enable)
@@ -76,11 +61,11 @@ namespace IRR
 		switch(renderingHint)
 		{
 		case DEPTH_TEST :
-			material.ZBuffer = (enable ? 1 : 0);
+			materialProxy.setZBuffer(enable ? irr::video::ECFN_LESSEQUAL : irr::video::ECFN_NEVER);
 			break;
 
 		case DEPTH_WRITE :
-			material.ZWriteEnable = enable;
+			materialProxy.setZWriteEnable(enable);
 			break;
 		}
 	}
@@ -90,10 +75,10 @@ namespace IRR
 		switch(renderingHint)
 		{
 		case DEPTH_TEST :
-			return material.ZBuffer != 0;
+			return materialProxy.getZBuffer() != irr::video::ECFN_NEVER;
 
 		case DEPTH_WRITE :
-			return material.ZWriteEnable;
+			return materialProxy.getZWriteEnable();
 
 		case ALPHA_TEST :
 			return true; // always enabled in the irrlicht material

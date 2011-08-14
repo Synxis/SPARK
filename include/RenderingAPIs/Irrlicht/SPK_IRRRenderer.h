@@ -26,6 +26,7 @@
 
 #include "RenderingAPIs/Irrlicht/SPK_IRR_DEF.h"
 #include "RenderingAPIs/Irrlicht/SPK_IRRBuffer.h"
+#include "RenderingAPIs/Irrlicht/SPK_IRRMaterialProxy.h"
 #include "Core/SPK_Renderer.h"
 #include "Core/SPK_Group.h"
 
@@ -79,8 +80,9 @@ namespace IRR
 		* @param srcFunc : the blending source function
 		* @param destFunc : the blending destination function
 		* @param alphaSrc : the alpha source
+		* @deprecated 1.5.6 Use getMaterialProxy().setBlending(irr::video::E_BLEND_FACTOR,irr::video::E_BLEND_FACTOR,unsigned int) instead
 		*/
-		void setBlending(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc);
+		void setBlending(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc) { materialProxy.setBlending(srcFunc,destFunc,alphaSrc); }
 		virtual void setBlending(BlendingMode blendMode);
 
 		virtual void enableRenderingHint(RenderingHint renderingHint,bool enable);
@@ -99,18 +101,21 @@ namespace IRR
 		/**
 		* @brief Gets the source blending funtion of this renderer
 		* @return the source blending funtion of this renderer
+		* @deprecated 1.5.6 Use getMaterialProxy().getBlendSrcFunc() instead
 		*/
 		irr::video::E_BLEND_FACTOR getBlendSrcFunc() const;
 
 		/**
 		* @brief Gets the destination blending funtion of this renderer
 		* @return the destination blending funtion of this renderer
+		* @deprecated 1.5.6 Use getMaterialProxy().getBlendDestFunc() instead
 		*/
 		irr::video::E_BLEND_FACTOR getBlendDestFunc() const;
 
 		/**
 		* @brief Gets the alpha source of this renderer
 		* @return the alpha source of this renderer
+		* @deprecated 1.5.6 Use getMaterialProxy().getAlphaSource() instead
 		*/
 		unsigned int getAlphaSource() const;
 
@@ -120,8 +125,23 @@ namespace IRR
 		* Note that the renderer is constant and therefore cannot be modified directly
 		*
 		* @return the material of this renderer
+		* @deprecated 1.5.6 Use getMaterialProxy().getMaterial() instead
 		*/
 		const irr::video::SMaterial& getMaterial() const;
+
+		/**
+		* @brief Gets the material proxy of this renderer
+		* @return the material proxy
+		* @since 1.5.6
+		*/
+		IRRMaterialProxy& getMaterialProxy()				{ return materialProxy; }
+
+		/**
+		* @brief Gets the material proxy of this renderer (const version)
+		* @return the material proxy
+		* @since 1.5.6
+		*/
+		const IRRMaterialProxy& getMaterialProxy() const	{ return materialProxy; }
 
 		virtual bool isRenderingHintEnabled(RenderingHint renderingHint) const;
 
@@ -134,7 +154,7 @@ namespace IRR
 	protected :
 
 		irr::IrrlichtDevice* device;	// the device
-		irr::video::SMaterial material;	// the material
+		IRRMaterialProxy materialProxy;	// the material proxy (encapsulated the Irrlicht material)
 
 		mutable IRRBuffer* currentBuffer;
 
@@ -142,10 +162,6 @@ namespace IRR
 		static unsigned int getVBOFlag();
 
 	private :
-
-		irr::video::E_BLEND_FACTOR blendSrcFunc;
-		irr::video::E_BLEND_FACTOR blendDestFunc;
-		unsigned int alphaSource;
 
 		/**
 		* @brief Gets the name of the IRRBuffer used by the renderer
@@ -155,8 +171,6 @@ namespace IRR
 		* @return the name of the IRRBuffer
 		*/
 		virtual const std::string& getBufferName() const = 0;
-
-		void updateMaterialBlendingMode();
 	};
 
 	
@@ -172,22 +186,22 @@ namespace IRR
 
 	inline irr::video::E_BLEND_FACTOR IRRRenderer::getBlendSrcFunc() const
 	{
-		return blendSrcFunc;
+		return materialProxy.getBlendSrcFunc();
 	}
 
 	inline irr::video::E_BLEND_FACTOR IRRRenderer::getBlendDestFunc() const
 	{
-		return blendDestFunc;
+		return materialProxy.getBlendDestFunc();
 	}
 
 	inline unsigned int IRRRenderer::getAlphaSource() const
 	{
-		return alphaSource;
+		return materialProxy.getAlphaSource();
 	}
 
 	inline const irr::video::SMaterial& IRRRenderer::getMaterial() const
 	{
-		return material;
+		return materialProxy.getMaterial();
 	}
 
 	inline void IRRRenderer::destroyBuffers(const Group& group)
@@ -204,15 +218,6 @@ namespace IRR
 	inline unsigned int IRRRenderer::getVBOFlag()
 	{
 		return IRRBuffer::isVBOHintActivated() ? 1 : 0;	
-	}
-
-	inline void IRRRenderer::updateMaterialBlendingMode()
-	{
-		material.MaterialTypeParam = irr::video::pack_texureBlendFunc(
-			blendSrcFunc,
-			blendDestFunc,
-			irr::video::EMFN_MODULATE_1X,
-			alphaSource);
 	}
 }}
 

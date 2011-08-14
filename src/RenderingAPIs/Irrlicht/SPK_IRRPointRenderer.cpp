@@ -33,9 +33,7 @@ namespace IRR
 	IRRPointRenderer::IRRPointRenderer(irr::IrrlichtDevice* d,float size) :
 		IRRRenderer(d),
 		PointRendererInterface(POINT_SQUARE,size)
-	{
-		material.Thickness = size;
-	}
+	{}
 
 	bool IRRPointRenderer::setType(PointType type)
 	{
@@ -80,6 +78,8 @@ namespace IRR
 		if (!prepareBuffers(group))
 			return;
 
+		materialProxy.setThickness(getSize()); // To ensure thickness <-> size integrity
+
 		for (size_t t = 0; t < group.getNbParticles(); ++t)
 		{
 			const Particle& p = group.getParticle(t);
@@ -89,7 +89,7 @@ namespace IRR
 		currentBuffer->getMeshBuffer().setDirty(irr::scene::EBT_VERTEX);
 
 		irr::video::IVideoDriver* driver = device->getVideoDriver();
-        driver->setMaterial(material);
+        driver->setMaterial(materialProxy.getMaterial());
         driver->drawVertexPrimitiveList(
 			currentBuffer->getVertexBuffer().pointer(),
 			group.getNbParticles(),

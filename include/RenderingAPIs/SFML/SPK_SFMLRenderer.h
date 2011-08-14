@@ -179,7 +179,7 @@ namespace SFML
 		*
 		* @param system : The SFMLSystem that is currently being rendered
 		* @since 1.03.01
-		* @deprecated 1.05.05 Does nothing
+		* @deprecated 1.5.5 Does nothing
 		*/
 		static void bindCurrentSystem(const SFMLSystem& system) {}
 
@@ -189,7 +189,7 @@ namespace SFML
 		* This method sets internally the SFMLSystem being rendered to NULL
 		*
 		* @since 1.03.01
-		* @deprecated 1.05.05 Does nothing
+		* @deprecated 1.5.5 Does nothing
 		*/
 		static void releaseCurrentSystem() {}
 

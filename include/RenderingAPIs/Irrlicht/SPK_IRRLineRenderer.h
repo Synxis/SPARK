@@ -110,7 +110,7 @@ namespace IRR
 
 	inline void IRRLineRenderer::setWidth(float width)
 	{
-		material.Thickness = this->width = width;
+		this->width = width;
 	}
 
 	inline const std::string& IRRLineRenderer::getBufferName() const

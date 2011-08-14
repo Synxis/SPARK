@@ -28,6 +28,7 @@
 #include "RenderingAPIs/Irrlicht/SPK_IRR_DEF.h"
 #include "RenderingAPIs/Irrlicht/SPK_IRRSystem.h"
 #include "RenderingAPIs/Irrlicht/SPK_IRRBuffer.h"
+#include "RenderingAPIs/Irrlicht/SPK_IRRMaterialProxy.h"
 #include "RenderingAPIs/Irrlicht/SPK_IRRRenderer.h"
 #include "RenderingAPIs/Irrlicht/SPK_IRRPointRenderer.h"
 #include "RenderingAPIs/Irrlicht/SPK_IRRLineRenderer.h"

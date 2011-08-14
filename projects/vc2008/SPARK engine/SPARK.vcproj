@@ -779,6 +779,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\include\RenderingAPIs\Irrlicht\SPK_IRRMaterialProxy.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\RenderingAPIs\Irrlicht\SPK_IRRPointRenderer.h"
 						>
 					</File>
