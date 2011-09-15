@@ -68,6 +68,9 @@ namespace IRR
 		void setBlendMode(irr::video::E_BLEND_FACTOR srcFunc,irr::video::E_BLEND_FACTOR destFunc,unsigned int alphaSrc);
 		virtual void setBlendMode(BlendMode blendMode);
 
+		/** @brief Changes the Irrlicht device */
+		virtual void setDevice(irr::IrrlichtDevice* d);
+
 		virtual void enableRenderingOption(RenderingOption renderingHint,bool enable);
 		virtual void setAlphaTestThreshold(float alphaThreshold);
 
@@ -134,6 +137,11 @@ namespace IRR
 	inline irr::video::E_BLEND_FACTOR IRRRenderer::getBlendSrcFunc() const
 	{
 		return blendSrcFunc;
+	}
+
+	inline void IRRRenderer::setDevice(irr::IrrlichtDevice* d)
+	{
+		device = d;
 	}
 
 	inline irr::video::E_BLEND_FACTOR IRRRenderer::getBlendDestFunc() const
