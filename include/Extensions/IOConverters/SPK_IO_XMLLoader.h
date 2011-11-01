@@ -76,7 +76,7 @@ namespace IO
 		do
 		{
 			pos = str.find(';',oldPos);
-			std::string subStr = str.substr(oldPos,pos);
+			std::string subStr = str.substr(oldPos,pos - oldPos);
 			if (convert(subStr,tmp))
 				values.push_back(tmp);
 			oldPos = pos + 1;
