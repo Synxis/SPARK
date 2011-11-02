@@ -74,8 +74,8 @@ namespace SPK
 	void RandomForce::createData(DataSet& dataSet,const Group& group) const
 	{
 		dataSet.init(NB_DATA);
-		dataSet.setData(FORCE_VECTOR_INDEX,new Vector3DArrayData(group.getCapacity(),1));
-		dataSet.setData(REMAINING_TIME_INDEX,new FloatArrayData(group.getCapacity(),1));
+		dataSet.setData(FORCE_VECTOR_INDEX,SPK_NEW(Vector3DArrayData,group.getCapacity(),1));
+		dataSet.setData(REMAINING_TIME_INDEX,SPK_NEW(FloatArrayData,group.getCapacity(),1));
 
 		// Inits the data
 		for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)

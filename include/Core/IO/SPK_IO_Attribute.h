@@ -66,7 +66,7 @@ namespace IO
 	* <li>a value (which can be set or not</li>
 	* </ul>
 	*/
-	class SPK_PREFIX Attribute
+	class Attribute
 	{
 	friend class Descriptor;
 
@@ -116,10 +116,10 @@ namespace IO
 		template<typename T> Ref<T> getValueRef() const;
 		template<typename T> std::vector<Ref<T>> getValuesRef() const;
 
-		inline void setValueOptionalOnFalse(bool value)							{ setValue<bool>(value,!value); }
-		inline void setValueOptionalOnTrue(bool value)							{ setValue<bool>(value,value); }
-		inline void setValueOptionalOnNull(const Ref<SPKObject>& value)			{ setValueRef(value,!value); }
-		inline void setValueOptionalOnEmpty(const std::string& value)			{ setValue<std::string>(value,value.empty()); }
+		void setValueOptionalOnFalse(bool value);
+		void setValueOptionalOnTrue(bool value);
+		void setValueOptionalOnNull(const Ref<SPKObject>& value);
+		void setValueOptionalOnEmpty(const std::string& value);
 
 	private :
 
@@ -319,8 +319,49 @@ namespace IO
 		return tmpBuffer;
 	}
 
-	template<> inline void Attribute::setValue(const Ref<SPKObject>& value,bool optional)					{ return setValueRef(value,optional); }
-	template<> inline void Attribute::setValues(const Ref<SPKObject>* values,size_t nb,bool optional)		{ return setValuesRef(values,nb,optional); }
+	// Specialization for string (TODO : Factorize that)
+	template<>
+	inline void Attribute::setValue(const std::string& value,bool optional)
+	{
+		SPK_ASSERT(ATTRIBUTE_TYPE_STRING == type,"Attribute::setValue<T>(AttributeType,const T&,bool) - The value is not of the right type");
+
+		offset = descriptor->buffer.size();
+		const char* valueC = value.c_str();
+		for (size_t i = 0; i < value.size() + 1; ++i)
+			descriptor->buffer.push_back(valueC[i]);
+		valueSet = true;
+		this->optional = optional;
+
+		SPK_LOG_DEBUG("Set value for attribute \"" << name << "\" : " << value);
+	}
+
+	template<>
+	inline void Attribute::setValues(const std::string* values,size_t nb,bool optional)
+	{
+		SPK_LOG_INFO("Serialization of array of strings is not implemented yet");
+	}
+
+	template<>
+	inline std::string Attribute::getValue() const
+	{
+		SPK_ASSERT(ATTRIBUTE_TYPE_STRING == type,"Attribute::getValue<T>(AttributeType) - The desired value is not of the right type");
+		SPK_ASSERT(valueSet,"Attribute::getValue<T>(AttributeType) - The value is not set and therefore cannot be read");
+
+		SPK_LOG_DEBUG("Get value for attribute \"" << name << "\" : " << &descriptor->buffer[offset]);
+
+		return std::string(&descriptor->buffer[offset]);
+	}
+
+	template<>
+	inline std::vector<std::string> Attribute::getValues() const
+	{
+		SPK_LOG_INFO("Deserialization of array of strings is not implemented yet");
+		return std::vector<std::string>();
+	}
+
+	// Specialization for refs
+	template<> inline void Attribute::setValue(const Ref<SPKObject>& value,bool optional)					{ setValueRef(value,optional); }
+	template<> inline void Attribute::setValues(const Ref<SPKObject>* values,size_t nb,bool optional)		{ setValuesRef(values,nb,optional); }
 	template<> inline Ref<SPKObject> Attribute::getValue() const											{ return getValueRef<SPKObject>(); }
 	template<> inline std::vector<Ref<SPKObject>> Attribute::getValues() const								{ return getValuesRef<SPKObject>(); }
 
@@ -343,6 +384,12 @@ namespace IO
 	template<> inline AttributeType Attribute::getAttributeTypeArray<Color>()				{ return ATTRIBUTE_TYPE_COLORS; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<std::string>()			{ return ATTRIBUTE_TYPE_STRINGS; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<Ref<SPKObject>>()		{ return ATTRIBUTE_TYPE_REFS; }
+
+	// Helper methods (after specilization as they instantiate some template methods)
+	inline void Attribute::setValueOptionalOnFalse(bool value)							{ setValue<bool>(value,!value); }
+	inline void Attribute::setValueOptionalOnTrue(bool value)							{ setValue<bool>(value,value); }
+	inline void Attribute::setValueOptionalOnNull(const Ref<SPKObject>& value)			{ setValueRef(value,!value); }
+	inline void Attribute::setValueOptionalOnEmpty(const std::string& value)			{ setValue<std::string>(value,value.empty()); }
 }}
 
 #endif
