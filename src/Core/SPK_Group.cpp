@@ -238,6 +238,7 @@ namespace SPK
 				{
 					swapParticles(i,particleData.nbParticles - 1);
 					--particleData.nbParticles;
+					--i; // As we need to test the swapped particle
 				}
 			}
 
