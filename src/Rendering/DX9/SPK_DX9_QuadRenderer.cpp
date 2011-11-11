@@ -126,7 +126,7 @@ namespace DX9
 			if (buffer.getNbTexCoords() != 3)
 			{
 				buffer.setNbTexCoords(3);
-				float t[12] =  {0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f};
+				float t[12] = {0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f};
 				buffer.lock(TEXCOORD_LOCK);
 				for (size_t i = 0; i < group.getCapacity() * 12; ++i)
 					buffer.setNextTexCoord(t[i % 12]);
@@ -201,6 +201,9 @@ namespace DX9
 		}
 
 		buffer.render(D3DPT_TRIANGLELIST, group.getNbParticles());
+
+		// reset texture at stage 0
+		if( texturingMode != TEXTURE_MODE_NONE ) DX9Info::getDevice()->SetTexture( 0, NULL );
 	}
 
 	void DX9QuadRenderer::computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const

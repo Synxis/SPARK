@@ -185,7 +185,7 @@ namespace DX9
 		initRenderingOptions();
 
 		// Inits lines' parameters
-		DX9Info::getDevice()->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
+		DX9Info::getDevice()->SetRenderState( D3DRS_SHADEMODE, D3DSHADE_GOURAUD );
 
 		buffer.lock(VERTEX_AND_COLOR_LOCK);
 

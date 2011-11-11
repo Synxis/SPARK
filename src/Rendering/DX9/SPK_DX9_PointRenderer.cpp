@@ -99,6 +99,9 @@ namespace DX9
 
 		// Sends the data to the GPU
 		buffer.render(D3DPT_POINTLIST, group.getNbParticles());
+
+		// reset texture at stage 0
+		DX9Info::getDevice()->SetTexture( 0, NULL );
 	}
 
 	void DX9PointRenderer::computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const
