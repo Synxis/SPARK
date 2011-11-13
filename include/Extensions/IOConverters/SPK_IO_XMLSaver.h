@@ -26,7 +26,11 @@
 
 #include <sstream>
 
-class TiXmlElement;
+namespace pugi
+{
+	class xml_node;
+	class xml_attribute;
+}
 
 namespace SPK
 {
@@ -52,7 +56,7 @@ namespace IO
 	struct XMLLayout
 	{
 		std::string indent;					/**< @brief the string used for an indent ("\t" by default) */
-		std::string lineBreak;				/**< @brief the string used for an line break ("\n" by default) */
+		bool lineBreak;						/**< @brief true to include line breaks in the output */
 		XMLValueLayout valueLayout;			/**< @brief defines how to layout values (XML_VALUE_LAYOUT_AS_ATTRIBUTE by default)*/
 		XMLReferenceRule referenceRule;		/**< @brief defines how to layout references (XML_REFERENCE_RULE_WHEN_NEEDED by default)*/
 
@@ -104,11 +108,12 @@ namespace IO
 
 		virtual bool innerSave(std::ostream& os,Graph& graph) const;
 		
-		bool writeNode(TiXmlElement& parent,const Node& node,Graph& graph) const;
-		bool writeObject(TiXmlElement& parent,const Ref<SPKObject>& object,Graph& graph,bool refInTag) const;
-		void writeValue(TiXmlElement& attrib,const std::string& value) const;
-		void writeRef(TiXmlElement& attrib,const Node& node) const;
+		bool writeNode(pugi::xml_node& parent,const Node& node,Graph& graph) const;
+		bool writeObject(pugi::xml_node& parent,const Ref<SPKObject>& object,Graph& graph,bool refInTag) const;
+		void writeValue(pugi::xml_node& attrib,const std::string& value) const;
+		void writeRef(pugi::xml_node& attrib,const Node& node) const;
 
+		static pugi::xml_attribute getAttribute(pugi::xml_node& n, const std::string& name);
 		template<typename T> static std::string format(const T& value);
 		template<typename T> static std::string formatArray(const std::vector<T>& value);
 	};

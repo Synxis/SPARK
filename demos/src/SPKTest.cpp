@@ -303,25 +303,26 @@ int main(int argc, char *argv[])
 	clock_t startTime = clock();
 	for (size_t i = 0; i < 1000; ++i)
 		SPK::IO::IOManager::get().save("test.spk",system);
-	std::cout << "SAVING SPK BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms" << std::endl;
+	std::cout << "SAVING SPK BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms for 1000 operations" << std::endl;
 	
 	startTime = clock();
 	for (size_t i = 0; i < 1000; ++i)
 		SPK::IO::IOManager::get().save("test.xml",system);
-	std::cout << "SAVING XML BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms" << std::endl;
+	std::cout << "SAVING XML BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms for 1000 operations" << std::endl;
 	
 	startTime = clock();
 	SPK::Ref<SPK::System> system2;
 	for (size_t i = 0; i < 1000; ++i)
 		system2 = SPK::IO::IOManager::get().load("test.spk");
-	std::cout << "LOADING SPK BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms" << std::endl;
+	std::cout << "LOADING SPK BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms for 1000 operations" << std::endl;
+
+	SPK::IO::IOManager::get().save("test2.spk",system2); // integrity test. test2.spk must be equivalent to test.spk
 
 	startTime = clock();
 	for (size_t i = 0; i < 1000; ++i)
 		system2 = SPK::IO::IOManager::get().load("test.xml");
-	std::cout << "LOADING XML BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms" << std::endl;
+	std::cout << "LOADING XML BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms for 1000 operations" << std::endl;
 
-	SPK::IO::IOManager::get().save("test2.spk",system2); // integrity test. test2.xml must be equivalent to test.xml
 	SPK::IO::IOManager::get().save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml	
 
 	SPK_DUMP_MEMORY

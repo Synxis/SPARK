@@ -26,7 +26,11 @@
 
 #include <sstream>
 
-class TiXmlElement;
+namespace pugi
+{
+	class xml_node;
+	class xml_attribute;
+}
 
 namespace SPK
 {
@@ -39,15 +43,15 @@ namespace IO
 
 		virtual bool innerLoad(std::istream& is,Graph& graph) const;
 
-		const std::string* getValue(const TiXmlElement& element) const;
-		Ref<SPKObject> getRef(const TiXmlElement& element,const std::map<int,size_t>& ref2Index,const Graph& graph) const;
-		Ref<SPKObject> getObject(const TiXmlElement* element,const std::vector<const TiXmlElement*>& objElements,const Graph& graph) const;
+		const std::string getValue(const pugi::xml_node& element) const;
+		Ref<SPKObject> getRef(const pugi::xml_node& element,const std::map<int,size_t>& ref2Index,const Graph& graph) const;
+		Ref<SPKObject> getObject(const pugi::xml_node& element,const std::vector<const pugi::xml_node>& objElements,const Graph& graph) const;
 
-		void findObjects(const TiXmlElement& parent,std::vector<const TiXmlElement*>& objElements,std::map<int,size_t>& ref2Index,bool objectLevel) const;
-		void parseAttributes(const TiXmlElement& element,Descriptor& desc,const Graph& graph,const std::vector<const TiXmlElement*>& objElements,const std::map<int,size_t>& ref2Index) const;
+		void findObjects(const pugi::xml_node& parent,std::vector<const pugi::xml_node>& objElements,std::map<int,size_t>& ref2Index,bool objectLevel) const;
+		void parseAttributes(const pugi::xml_node& element,Descriptor& desc,const Graph& graph,const std::vector<const pugi::xml_node>& objElements,const std::map<int,size_t>& ref2Index) const;
 
-		template<typename T> void setAttributeValue(Attribute& attribute,const TiXmlElement& element) const;
-		template<typename T> void setAttributeValueArray(Attribute& attribute,const TiXmlElement& element) const;
+		template<typename T> void setAttributeValue(Attribute& attribute,const pugi::xml_node& element) const;
+		template<typename T> void setAttributeValueArray(Attribute& attribute,const pugi::xml_node& element) const;
 
 		template<typename T> static bool convert(const std::string& str,T& value);
 		template<typename T> static bool convert2Array(const std::string& str,std::vector<T>& values);
@@ -87,26 +91,26 @@ namespace IO
 	}
 
 	template<typename T>
-	void XMLLoader::setAttributeValue(Attribute& attribute,const TiXmlElement& element) const
+	void XMLLoader::setAttributeValue(Attribute& attribute,const pugi::xml_node& element) const
 	{
 		T tmp = T();
-		const std::string* value = getValue(element);
-		if (value != NULL && convert(*value,tmp))
+		const std::string value = getValue(element);
+		if (value != "" && convert(value,tmp))
 			attribute.setValue(tmp);
 	}
 
 	template<typename T>
-	void XMLLoader::setAttributeValueArray(Attribute& attribute,const TiXmlElement& element) const
+	void XMLLoader::setAttributeValueArray(Attribute& attribute,const pugi::xml_node& element) const
 	{
 		std::vector<T> tmp;
-		const std::string* value = getValue(element);
-		if (value != NULL && convert2Array(*value,tmp)) // Ok because convertArray ensures the vector is not empty 
+		const std::string value = getValue(element);
+		if (value != "" && convert2Array(value,tmp)) // Ok because convertArray ensures the vector is not empty 
 			attribute.setValues(&tmp[0],tmp.size());
 	}
 
 	// Specialization for bool as vector<bool> is handled differently in the standard (we cannot cast a vector<bool> to a bool* with &v[0])
 	template<> 
-	void SPK_PREFIX XMLLoader::setAttributeValueArray<bool>(Attribute& attribute,const TiXmlElement& element) const;
+	void SPK_PREFIX XMLLoader::setAttributeValueArray<bool>(Attribute& attribute,const pugi::xml_node& element) const;
 }}
 
 #endif
