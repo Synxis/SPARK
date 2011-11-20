@@ -17,6 +17,8 @@ project(GLEW)
 # Sources
 # ###############################################
 set(SPARK_DIR ../../../..)
+get_filename_component(SPARK_DIR ${SPARK_DIR}/void REALPATH)
+get_filename_component(SPARK_DIR ${SPARK_DIR} PATH)
 file(GLOB_RECURSE SRC_FILES
 	${SPARK_DIR}/external/glew/src/*.c
 	${SPARK_DIR}/external/glew/src/*.cpp
