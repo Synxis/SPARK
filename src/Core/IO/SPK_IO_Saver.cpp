@@ -121,8 +121,8 @@ namespace IO
 					constructNode(graph,attribute.getValueRef<SPKObject>().get(),level + 1);
 				else if (attribute.getType() == ATTRIBUTE_TYPE_REFS && attribute.hasValue())
 				{
-					std::vector<Ref<SPKObject>>& refs = attribute.getValuesRef<SPKObject>();
-					for (std::vector<Ref<SPKObject>>::iterator it = refs.begin(); it != refs.end(); ++it)
+					std::vector<Ref<SPKObject> >& refs = attribute.getValuesRef<SPKObject>();
+					for (std::vector<Ref<SPKObject> >::iterator it = refs.begin(); it != refs.end(); ++it)
 						constructNode(graph,(*it).get(),level + 1);
 				}
 			}

@@ -83,7 +83,7 @@ namespace SPK
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
 			setParamInterpolator(static_cast<Param>(i),group.copyChild(group.paramInterpolators[i].obj));
 
-		for (std::vector<Ref<Emitter>>::const_iterator it = group.emitters.begin(); it != group.emitters.end(); ++it)
+		for (std::vector<Ref<Emitter> >::const_iterator it = group.emitters.begin(); it != group.emitters.end(); ++it)
 			emitters.push_back(group.copyChild(*it));
 
 		for (std::vector<ModifierDef>::const_iterator it = group.modifiers.begin(); it != group.modifiers.end(); ++it)
@@ -161,7 +161,7 @@ namespace SPK
 		bool hasAliveEmitters = false;
 		activeEmitters.clear();
 
-		for (std::vector<Ref<Emitter>>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+		for (std::vector<Ref<Emitter> >::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 			if ((*it)->isActive())
 			{
 				int nb = (*it)->updateTankFromTime(deltaTime);
@@ -355,7 +355,7 @@ namespace SPK
 			return;
 		}
 
-		std::vector<Ref<Emitter>>::const_iterator it = std::find(emitters.begin(),emitters.end(),emitter);
+		std::vector<Ref<Emitter> >::const_iterator it = std::find(emitters.begin(),emitters.end(),emitter);
 		if (it != emitters.end())
 		{
 			SPK_LOG_WARNING("Group::addEmitter(const Ref<Emitter>&) - The emitter is already in the group and cannot be added");
@@ -367,7 +367,7 @@ namespace SPK
 
 	void Group::removeEmitter(const Ref<Emitter>& emitter)
 	{
-		std::vector<Ref<Emitter>>::iterator it = emitters.begin();
+		std::vector<Ref<Emitter> >::iterator it = emitters.begin();
 		if (it != emitters.end())
 			emitters.erase(it);
 		else
@@ -652,7 +652,7 @@ namespace SPK
 
 	void Group::propagateUpdateTransform()
 	{
-		for (std::vector<Ref<Emitter>>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+		for (std::vector<Ref<Emitter> >::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 			if (!(*it)->isShared())
 				(*it)->updateTransform(system);
 
@@ -902,7 +902,7 @@ namespace SPK
 				if (object != NULL) return object;
 			}
 
-		for (std::vector<Ref<Emitter>>::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
+		for (std::vector<Ref<Emitter> >::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 		{
 			object = (*it)->findByName(name);
 			if (object != NULL) return object;
@@ -952,14 +952,14 @@ namespace SPK
 
 		if (attrib = descriptor.getAttributeWithValue("emitters"))
 		{
-			std::vector<Ref<Emitter>>& tmpEmitters = attrib->getValuesRef<Emitter>();
+			std::vector<Ref<Emitter> >& tmpEmitters = attrib->getValuesRef<Emitter>();
 			for (size_t i = 0; i < tmpEmitters.size(); ++i)
 				addEmitter(tmpEmitters[i]);
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("modifiers"))
 		{
-			std::vector<Ref<Modifier>>& tmpModifiers = attrib->getValuesRef<Modifier>();
+			std::vector<Ref<Modifier> >& tmpModifiers = attrib->getValuesRef<Modifier>();
 			for (size_t i = 0; i < tmpModifiers.size(); ++i)
 				addModifier(tmpModifiers[i].cast<Modifier>());
 		}

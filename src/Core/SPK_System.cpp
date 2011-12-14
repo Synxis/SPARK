@@ -52,7 +52,7 @@ namespace SPK
 		AABBMax(system.AABBMax),
 		initialized(system.initialized)
 	{
-		for (std::vector<Ref<Group>>::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
+		for (std::vector<Ref<Group> >::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
 		{
 			Ref<Group> group = system.copyChild(*it);
 			setGroupSystem(group,this);
@@ -107,7 +107,7 @@ namespace SPK
 
 	void System::removeGroup(const Ref<Group>& group)
 	{
-		std::vector<Ref<Group>>::iterator it = std::find(groups.begin(),groups.end(),group.get());
+		std::vector<Ref<Group> >::iterator it = std::find(groups.begin(),groups.end(),group.get());
 		if (it != groups.end())
 		{
 			setGroupSystem(*it,NULL,false); // false to avoid infinite loop
@@ -122,7 +122,7 @@ namespace SPK
 	size_t System::getNbParticles() const
 	{
 		size_t nbParticles = 0;
-		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			nbParticles += (*it)->getNbParticles();
 		return nbParticles;
 	}
@@ -168,7 +168,7 @@ namespace SPK
 		else
 			alive = innerUpdate(deltaTime);
 
-		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->sortParticles();
 
 		if (isAABBComputationEnabled())
@@ -177,7 +177,7 @@ namespace SPK
 			AABBMin.set(maxFloat,maxFloat,maxFloat);
 			AABBMax.set(-maxFloat,-maxFloat,-maxFloat);
 
-			for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+			for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			{
 				(*it)->computeAABB();
 
@@ -202,7 +202,7 @@ namespace SPK
 			return;
 		}
 
-		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->renderParticles();
 	}
 
@@ -212,7 +212,7 @@ namespace SPK
 			return; // the system is already initialized
 
 		initialized = true;
-		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->initData();
 	}
 
@@ -221,7 +221,7 @@ namespace SPK
 		Ref<SPKObject>& object = SPKObject::findByName(name);
 		if (object != NULL) return object;
 
-		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 		{
 			object = (*it)->findByName(name);
 			if (object != NULL) return object;
@@ -235,14 +235,14 @@ namespace SPK
 		updateTransform();
 
 		bool alive = false;
-		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			alive |= (*it)->updateParticles(deltaTime);
 		return alive;
 	}
 
 	void System::propagateUpdateTransform()
 	{
-		for (std::vector<Ref<Group>>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->propagateUpdateTransform();
 	}
 
@@ -253,7 +253,7 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("groups"))
 		{
-			std::vector<Ref<Group>>& tmpGroups = attrib->getValuesRef<Group>();
+			std::vector<Ref<Group> >& tmpGroups = attrib->getValuesRef<Group>();
 			for (size_t i = 0; i < tmpGroups.size(); ++i)
 				groups.push_back(tmpGroups[i]);
 		}

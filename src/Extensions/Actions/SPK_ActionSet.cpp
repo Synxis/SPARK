@@ -28,7 +28,7 @@ namespace SPK
         Action(actionSet),
 		actions()
 	{
-		for (std::vector<Ref<Action>>::const_iterator it = actionSet.actions.begin(); it != actionSet.actions.end(); ++it)
+		for (std::vector<Ref<Action> >::const_iterator it = actionSet.actions.begin(); it != actionSet.actions.end(); ++it)
 			actions.push_back(actionSet.copyChild(*it));
 	}
 
@@ -44,7 +44,7 @@ namespace SPK
 
 	void ActionSet::removeAction(const Ref<Action>& action)
 	{
-		for (std::vector<Ref<Action>>::iterator it = actions.begin(); it != actions.end(); ++it)
+		for (std::vector<Ref<Action> >::iterator it = actions.begin(); it != actions.end(); ++it)
 			if (*it == action)
 			{
 				actions.erase(it);
@@ -62,7 +62,7 @@ namespace SPK
 
 	void ActionSet::apply(Particle& particle) const
 	{
-		for (std::vector<Ref<Action>>::const_iterator it = actions.begin(); it != actions.end(); ++it)
+		for (std::vector<Ref<Action> >::const_iterator it = actions.begin(); it != actions.end(); ++it)
 			(*it)->apply(particle);
 	}
 
@@ -71,7 +71,7 @@ namespace SPK
 		Ref<SPKObject>& object = Action::findByName(name);
 		if (object != NULL) return object;
 
-		for (std::vector<Ref<Action>>::const_iterator it = actions.begin(); it != actions.end(); ++it)
+		for (std::vector<Ref<Action> >::const_iterator it = actions.begin(); it != actions.end(); ++it)
 		{
 			object = (*it)->findByName(name);
 			if (object != NULL) return object;
@@ -87,7 +87,7 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;	
 		if (attrib = descriptor.getAttributeWithValue("actions"))
 		{
-			std::vector<Ref<Action>> tmpActions = attrib->getValuesRef<Action>();
+			std::vector<Ref<Action> > tmpActions = attrib->getValuesRef<Action>();
 			for (size_t i = 0; i < tmpActions.size(); ++i)
 				addAction(tmpActions[i]);
 		}

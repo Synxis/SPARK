@@ -162,7 +162,7 @@
 //						break;
 //
 //					case ATTRIBUTE_TYPE_REFS : {
-//						const std::vector<Ref<SPKObject>>& refs = attrib.getValuesRef<SPKObject>();
+//						const std::vector<Ref<SPKObject> >& refs = attrib.getValuesRef<SPKObject>();
 //						for (size_t i = 0; i < refs.size(); ++i)
 //							if (!writeObject(*child,refs[i],graph,true)) 
 //								return false; 
@@ -303,7 +303,7 @@ namespace IO
 						break;
 
 					case ATTRIBUTE_TYPE_REFS : {
-						const std::vector<Ref<SPKObject>>& refs = attrib.getValuesRef<SPKObject>();
+						const std::vector<Ref<SPKObject> >& refs = attrib.getValuesRef<SPKObject>();
 						for (size_t i = 0; i < refs.size(); ++i)
 							if (!writeObject(child,refs[i],graph,true)) 
 								return false; 

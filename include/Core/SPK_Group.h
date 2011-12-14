@@ -472,12 +472,12 @@ namespace SPK
 				dataSet(dataSet)
 			{}
 
-			WeakDataHandlerDef(const DataHandlerDef<Ref<T>>& def) :
+			WeakDataHandlerDef(const DataHandlerDef<Ref<T> >& def) :
 				obj(def.obj.get()),
 				dataSet(def.dataSet)
 			{}
 
-			WeakDataHandlerDef& operator=(const DataHandlerDef<Ref<T>>& def)	
+			WeakDataHandlerDef& operator=(const DataHandlerDef<Ref<T> >& def)	
 			{
 				obj = def.obj.get();
 				dataSet = def.dataSet;
@@ -498,11 +498,11 @@ namespace SPK
 			{}
 		};
 
-		typedef DataHandlerDef<Ref<Modifier>> ModifierDef;
+		typedef DataHandlerDef<Ref<Modifier> > ModifierDef;
 		typedef WeakDataHandlerDef<Modifier> WeakModifierDef;
 
-		typedef DataHandlerDef<Ref<ColorInterpolator>> ColorInterpolatorDef;
-		typedef DataHandlerDef<Ref<FloatInterpolator>> FloatInterpolatorDef;
+		typedef DataHandlerDef<Ref<ColorInterpolator> > ColorInterpolatorDef;
+		typedef DataHandlerDef<Ref<FloatInterpolator> > FloatInterpolatorDef;
 
 		// Functor used to sort modifiers by priority
 		struct CompareModifierPriority
@@ -532,7 +532,7 @@ namespace SPK
 		ColorInterpolatorDef colorInterpolator;
 		FloatInterpolatorDef paramInterpolators[NB_PARAMETERS];
 
-		std::vector<Ref<Emitter>> emitters;
+		std::vector<Ref<Emitter> > emitters;
 		mutable std::vector<WeakEmitterPair> activeEmitters;
 
 		std::vector<ModifierDef> modifiers;

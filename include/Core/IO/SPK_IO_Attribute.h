@@ -114,7 +114,7 @@ namespace IO
 		template<typename T> void setValueRef(const Ref<T>& value,bool optional = false);
 		template<typename T> void setValuesRef(const Ref<T>* values,size_t nb,bool optional = false);
 		template<typename T> Ref<T> getValueRef() const;
-		template<typename T> std::vector<Ref<T>> getValuesRef() const;
+		template<typename T> std::vector<Ref<T> > getValuesRef() const;
 
 		void setValueOptionalOnFalse(bool value);
 		void setValueOptionalOnTrue(bool value);
@@ -296,14 +296,14 @@ namespace IO
 	}
 
 	template<typename T>
-	std::vector<Ref<T>> Attribute::getValuesRef() const				
+	std::vector<Ref<T> > Attribute::getValuesRef() const				
 	{ 
 		SPK_ASSERT(ATTRIBUTE_TYPE_REFS == type,"Attribute::getValuesRef<T>() - The desired array of values is an array of references");
 		SPK_ASSERT(valueSet,"Attribute::getValuesRef<T>() - The value is not set and therefore cannot be read");
 
 		size_t nb = *reinterpret_cast<size_t*>(&descriptor->buffer[offset]);
 		size_t refOffset = *reinterpret_cast<size_t*>(&descriptor->buffer[offset + sizeof(size_t)]);
-		std::vector<Ref<T>> tmpBuffer;
+		std::vector<Ref<T> > tmpBuffer;
 		for (size_t i = 0; i < nb; ++i)
 			tmpBuffer.push_back(descriptor->refBuffer[refOffset + i].cast<T>());
 
@@ -363,7 +363,7 @@ namespace IO
 	template<> inline void Attribute::setValue(const Ref<SPKObject>& value,bool optional)					{ setValueRef(value,optional); }
 	template<> inline void Attribute::setValues(const Ref<SPKObject>* values,size_t nb,bool optional)		{ setValuesRef(values,nb,optional); }
 	template<> inline Ref<SPKObject> Attribute::getValue() const											{ return getValueRef<SPKObject>(); }
-	template<> inline std::vector<Ref<SPKObject>> Attribute::getValues() const								{ return getValuesRef<SPKObject>(); }
+	template<> inline std::vector<Ref<SPKObject> > Attribute::getValues() const								{ return getValuesRef<SPKObject>(); }
 
 	template<> inline AttributeType Attribute::getAttributeType<char>()						{ return ATTRIBUTE_TYPE_CHAR; }
 	template<> inline AttributeType Attribute::getAttributeType<bool>()						{ return ATTRIBUTE_TYPE_BOOL; }
@@ -373,7 +373,7 @@ namespace IO
 	template<> inline AttributeType Attribute::getAttributeType<Vector3D>()					{ return ATTRIBUTE_TYPE_VECTOR; }
 	template<> inline AttributeType Attribute::getAttributeType<Color>()					{ return ATTRIBUTE_TYPE_COLOR; }
 	template<> inline AttributeType Attribute::getAttributeType<std::string>()				{ return ATTRIBUTE_TYPE_STRING; }
-	template<> inline AttributeType Attribute::getAttributeType<Ref<SPKObject>>()			{ return ATTRIBUTE_TYPE_REF; }
+	template<> inline AttributeType Attribute::getAttributeType<Ref<SPKObject> >()			{ return ATTRIBUTE_TYPE_REF; }
 
 	template<> inline AttributeType Attribute::getAttributeTypeArray<char>()				{ return ATTRIBUTE_TYPE_CHARS; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<bool>()				{ return ATTRIBUTE_TYPE_BOOLS; }
@@ -383,7 +383,7 @@ namespace IO
 	template<> inline AttributeType Attribute::getAttributeTypeArray<Vector3D>()			{ return ATTRIBUTE_TYPE_VECTORS; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<Color>()				{ return ATTRIBUTE_TYPE_COLORS; }
 	template<> inline AttributeType Attribute::getAttributeTypeArray<std::string>()			{ return ATTRIBUTE_TYPE_STRINGS; }
-	template<> inline AttributeType Attribute::getAttributeTypeArray<Ref<SPKObject>>()		{ return ATTRIBUTE_TYPE_REFS; }
+	template<> inline AttributeType Attribute::getAttributeTypeArray<Ref<SPKObject> >()		{ return ATTRIBUTE_TYPE_REFS; }
 
 	// Helper methods (after specilization as they instantiate some template methods)
 	inline void Attribute::setValueOptionalOnFalse(bool value)							{ setValue<bool>(value,!value); }

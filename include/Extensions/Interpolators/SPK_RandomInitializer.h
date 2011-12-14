@@ -32,7 +32,7 @@ namespace SPK
 
 	public :
 
-		static Ref<RandomInitializer<T>> create(const T& minValue = T(),const T& maxValue = T());
+		static Ref<RandomInitializer<T> > create(const T& minValue = T(),const T& maxValue = T());
 
 		void setValues(const T& minValue,const T& maxValue);
 		const T& getMinValue() const;
@@ -81,7 +81,7 @@ namespace SPK
 	{}
 
 	template<typename T>
-	inline Ref<RandomInitializer<T>> RandomInitializer<T>::create(const T& min,const T& max)
+	inline Ref<RandomInitializer<T> > RandomInitializer<T>::create(const T& min,const T& max)
 	{
 		return SPK_NEW(RandomInitializer<T>,min,max);
 	}

@@ -130,7 +130,7 @@ namespace SPK
 
 	public :
 
-		static  Ref<GraphInterpolator<T>> create();
+		static  Ref<GraphInterpolator<T> > create();
 
 		/////////////////////////////
 		// Interpolator parameters //
@@ -218,13 +218,13 @@ namespace SPK
 		* @brief Gets the graph of the interpolator
 		* @return the graph of the interpolator
 		*/
-		std::set<InterpolatorEntry<T>>& getGraph();
+		std::set<InterpolatorEntry<T> >& getGraph();
 
 		/**
 		* @brief Gets the graph of the interpolator (constant version)
 		* @return the graph of the interpolator
 		*/
-		const std::set<InterpolatorEntry<T>>& getGraph() const;
+		const std::set<InterpolatorEntry<T> >& getGraph() const;
 
 		/**
 		* @brief Adds an entry to the graph
@@ -265,7 +265,7 @@ namespace SPK
 		static const size_t SCALE_X_DATA_INDEX = 1;
 		static const size_t RATIO_Y_DATA_INDEX = 2;
 
-		std::set<InterpolatorEntry<T>> graph;
+		std::set<InterpolatorEntry<T> > graph;
 
 		InterpolationType type;
 		Param param;
@@ -325,7 +325,7 @@ namespace SPK
 	};
 
 	template<typename T>
-	inline Ref<GraphInterpolator<T>> GraphInterpolator<T>::create()
+	inline Ref<GraphInterpolator<T> > GraphInterpolator<T>::create()
 	{
 		return SPK_NEW(GraphInterpolator<T>);
 	}
@@ -410,13 +410,13 @@ namespace SPK
 	}
 
 	template<typename T>
-	inline std::set<InterpolatorEntry<T>>& GraphInterpolator<T>::getGraph()
+	inline std::set<InterpolatorEntry<T> >& GraphInterpolator<T>::getGraph()
 	{
 		return graph;
 	}
 
 	template<typename T>
-	inline const std::set<InterpolatorEntry<T>>& GraphInterpolator<T>::getGraph() const
+	inline const std::set<InterpolatorEntry<T> >& GraphInterpolator<T>::getGraph() const
 	{
 		return graph;
 	}
@@ -524,7 +524,7 @@ namespace SPK
 		}
 
 		// Gets the entry that is immediatly after the current X
-		std::set<InterpolatorEntry<T>>::const_iterator nextIt = graph.upper_bound(currentKey);
+		std::set<InterpolatorEntry<T> >::const_iterator nextIt = graph.upper_bound(currentKey);
 
 		// If the current X is higher than the one of the last entry
 		if (nextIt == graph.end())
@@ -664,7 +664,7 @@ namespace SPK
 			values1 = SPK_NEW_ARRAY(T,graph.size());
 
 			size_t index = 0;
-			for (std::set<InterpolatorEntry<T>>::const_iterator it = graph.begin(); it != graph.end(); ++it)
+			for (std::set<InterpolatorEntry<T> >::const_iterator it = graph.begin(); it != graph.end(); ++it)
 			{
 				keys[index] = it->x;
 				values0[index] = it->y0;

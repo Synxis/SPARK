@@ -271,7 +271,7 @@ namespace SPK
 
 	protected :
 
-		std::vector<Ref<Group>> groups; // vector containing all the groups of the system
+		std::vector<Ref<Group> > groups; // vector containing all the groups of the system
 
 		System(bool initialize = true);
 		System(const System& system);

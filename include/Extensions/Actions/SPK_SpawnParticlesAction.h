@@ -158,7 +158,7 @@ namespace SPK
 		Ref<Emitter> baseEmitter;
 		Ref<Group> targetGroup;
 
-		mutable std::deque<Ref<Emitter>> emitterPool;
+		mutable std::deque<Ref<Emitter> > emitterPool;
 		
 		SpawnParticlesAction(
 			unsigned int minNb = 1,

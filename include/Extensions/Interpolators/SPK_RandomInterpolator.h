@@ -32,7 +32,7 @@ namespace SPK
 
 	public :
 
-		static  Ref<RandomInterpolator<T>> create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
+		static  Ref<RandomInterpolator<T> > create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 
 		void setValues(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 		
@@ -83,7 +83,7 @@ namespace SPK
 	SPK_END_DESCRIPTION
 
 	template<typename T>
-	inline Ref<RandomInterpolator<T>> RandomInterpolator<T>::create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue)
+	inline Ref<RandomInterpolator<T> > RandomInterpolator<T>::create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue)
 	{
 		return SPK_NEW(RandomInterpolator<T>,minBirthValue,maxBirthValue,minDeathValue,maxDeathValue);
 	}

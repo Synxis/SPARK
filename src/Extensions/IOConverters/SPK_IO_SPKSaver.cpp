@@ -110,7 +110,7 @@ namespace IO
 				break; }
 
 			case ATTRIBUTE_TYPE_REFS : {
-				const std::vector<Ref<SPKObject>>& refs = attrib.getValuesRef<SPKObject>();
+				const std::vector<Ref<SPKObject> >& refs = attrib.getValuesRef<SPKObject>();
 				buffer.put(static_cast<uint32>(refs.size()));
 				for (size_t i = 0; i < refs.size(); ++i)
 				{

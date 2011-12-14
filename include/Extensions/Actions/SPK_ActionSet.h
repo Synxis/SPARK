@@ -60,7 +60,7 @@ namespace SPK
 		ActionSet() {}
 		ActionSet(const ActionSet& actionSet);
 
-		std::vector<Ref<Action>> actions;
+		std::vector<Ref<Action> > actions;
 	};
 
 	inline Ref<ActionSet> ActionSet::create()

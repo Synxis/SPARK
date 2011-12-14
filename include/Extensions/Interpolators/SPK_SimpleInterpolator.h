@@ -32,7 +32,7 @@ namespace SPK
 
 	public :
 
-		static  Ref<SimpleInterpolator<T>> create(const T& birthValue,const T& deathValue);
+		static  Ref<SimpleInterpolator<T> > create(const T& birthValue,const T& deathValue);
 
 		void setValues(const T& birth,const T& death);
 		const T& getBirthValue() const;
@@ -81,7 +81,7 @@ namespace SPK
 	{}
 
 	template<typename T>
-	inline Ref<SimpleInterpolator<T>> SimpleInterpolator<T>::create(const T& birthValue,const T& deathValue)
+	inline Ref<SimpleInterpolator<T> > SimpleInterpolator<T>::create(const T& birthValue,const T& deathValue)
 	{
 		return SPK_NEW(SimpleInterpolator<T>,birthValue,deathValue);
 	}

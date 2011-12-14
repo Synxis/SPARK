@@ -32,7 +32,7 @@ namespace SPK
 
 	public :
 
-		static  Ref<DefaultInitializer<T>> create(const T& value);
+		static  Ref<DefaultInitializer<T> > create(const T& value);
 
 		void setDefaultValue(const T& value);
 		const T& getDefaultValue() const;
@@ -77,7 +77,7 @@ namespace SPK
 	{}
 
 	template<typename T>
-	inline Ref<DefaultInitializer<T>> DefaultInitializer<T>::create(const T& value)
+	inline Ref<DefaultInitializer<T> > DefaultInitializer<T>::create(const T& value)
 	{
 		return SPK_NEW(DefaultInitializer<T>,value);
 	}
