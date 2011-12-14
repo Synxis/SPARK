@@ -211,7 +211,7 @@ namespace SPK
 
 		/**
 		* @brief Kills the particle
-		* This sets the energy of the particle to 0
+		* This sets the energy of the particle to 0 and its age at its lifetime
 		*/
 		void kill();
 
@@ -345,6 +345,7 @@ namespace SPK
 	inline void Particle::kill()
 	{
 		group.particleData.energies[index] = 0.0f;
+		group.particleData.ages[index] = group.particleData.lifeTimes[index];
 	}
 }
 
