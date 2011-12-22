@@ -56,10 +56,10 @@ namespace SPK
 		{
 			Ref<Group> group = system.copyChild(*it);
 			setGroupSystem(group,this);
-			groups.push_back(group);	
+			groups.push_back(group);
 		}
 	}
-	
+
 	System::~System()
 	{
 		while (groups.size() > 0)
@@ -81,7 +81,7 @@ namespace SPK
 
 	Ref<Group> System::createGroup(const Ref<Group>& group)
 	{
-		if (group == NULL)
+		if (!group)
 		{
 			SPK_LOG_WARNING("System::createGroup(const Ref<Group>&) - The group to copy is NULL");
 			return SPK_NULL_REF;
@@ -95,7 +95,7 @@ namespace SPK
 
 	void System::addGroup(const Ref<Group>& group)
 	{
-		if (group == NULL)
+		if (!group)
 		{
 			SPK_LOG_WARNING("System::addGroup(const Ref<Group>&) - The group to add is NULL");
 			return;
@@ -156,7 +156,7 @@ namespace SPK
 			}
 			else
 				updateStep = constantStep;
-	
+
 			while(deltaTime >= updateStep)
 			{
 				if ((alive)&&(!innerUpdate(updateStep)))
@@ -164,7 +164,7 @@ namespace SPK
 				deltaTime -= updateStep;
 			}
 			deltaStep = deltaTime;
-		}	
+		}
 		else
 			alive = innerUpdate(deltaTime);
 
@@ -218,13 +218,13 @@ namespace SPK
 
 	Ref<SPKObject> System::findByName(const std::string& name)
 	{
-		Ref<SPKObject>& object = SPKObject::findByName(name);
-		if (object != NULL) return object;
+		Ref<SPKObject> object = SPKObject::findByName(name);
+		if (object) return object;
 
 		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 		{
 			object = (*it)->findByName(name);
-			if (object != NULL) return object;
+			if (object) return object;
 		}
 
 		return SPK_NULL_REF;
@@ -250,10 +250,10 @@ namespace SPK
 	{
 		SPKObject::innerImport(descriptor);
 
-		const IO::Attribute* attrib = NULL;	
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("groups"))
 		{
-			std::vector<Ref<Group> >& tmpGroups = attrib->getValuesRef<Group>();
+			const std::vector<Ref<Group> >& tmpGroups = attrib->getValuesRef<Group>();
 			for (size_t i = 0; i < tmpGroups.size(); ++i)
 				groups.push_back(tmpGroups[i]);
 		}
@@ -270,7 +270,7 @@ namespace SPK
 	{
 		if (group->system != system)
 		{
-			if (group == NULL)
+			if (!group)
 				SPK_LOG_FATAL("System::setGroupSystem(const Ref<Group>&,const System*,bool) - Internal Error - The group is NULL");
 
 			if (remove && group->system != NULL)
@@ -279,5 +279,5 @@ namespace SPK
 			group->system = system;
 			group->initData(); // To initialize the group if needed
 		}
-	}	
+	}
 }

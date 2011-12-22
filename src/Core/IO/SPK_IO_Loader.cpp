@@ -71,10 +71,10 @@ namespace IO
 
 	Loader::Graph::Graph() : nodesValidated(false) {}
 
-	Loader::Graph::~Graph() 
-	{ 
+	Loader::Graph::~Graph()
+	{
 		for (std::list<Node*>::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
-			SPK_DELETE(*it);			
+			SPK_DELETE(*it);
 	}
 
 	bool Loader::Graph::addNode(size_t key,const std::string& name)
@@ -82,8 +82,8 @@ namespace IO
 		SPK_ASSERT(!nodesValidated,"Loader::Graph::addNode(size_t,string) - Graph has been processed. Nodes cannot be added any longer");
 
 		Ref<SPKObject> object = IOManager::get().createObject(name);
-		
-		if (object == NULL)
+
+		if (!object)
 		{
 			SPK_LOG_ERROR("Loader::Graph::addNode(size_t,string) - The type \"" << name << "\" is not registered");
 			return false;
@@ -94,7 +94,7 @@ namespace IO
 			SPK_LOG_ERROR("Loader::Graph::addNode(size_t,string) - duplicate key for nodes : " << key);
 			return false;
 		}
-		
+
 		Node* node = SPK_NEW(Node,object);
 		nodes.push_back(node);
 		key2Ptr.insert(std::make_pair(key,node));
@@ -106,8 +106,8 @@ namespace IO
 		size_t nbSystems = 0;
 		for (std::list<Node*>::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
-			Ref<System> systemRef = (*it)->object.cast<System>();
-			if (systemRef != NULL) 
+			Ref<System> systemRef = dynamicCast<System>((*it)->object);
+			if (systemRef)
 			{
 				system = systemRef;
 				++nbSystems;

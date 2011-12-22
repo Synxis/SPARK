@@ -69,24 +69,24 @@ namespace SPK
 		if (currentDataGroup != targetGroup)
 		{
 			data.setGroup(targetGroup.get());
-			initData(data,group);	
+			initData(data,group);
 		}
 	}
 
 	bool EmitterAttacher::checkValidity() const
 	{
-		if (targetGroup == NULL)
+		if (!targetGroup)
 		{
 			SPK_LOG_ERROR("EmitterAttacher::checkValidity() - The target group is NULL and cannot be used");
 			return false;
 		}
-		else if (targetGroup->getSystem() == NULL)
+		else if (!targetGroup->getSystem())
 		{
 			SPK_LOG_ERROR("EmitterAttacher::checkValidity() - The target group is invalid (it is not bound to a system) and cannot be used");
 			return false;
 		}
 
-		if (baseEmitter == NULL)
+		if (!baseEmitter)
 		{
 			SPK_LOG_ERROR("EmitterAttacher::checkValidity() - The base emitter is NULL and cannot be used");
 			return false;
@@ -151,7 +151,7 @@ namespace SPK
 					up.y = look.y * look.y + (1.0f - look.y * look.y) * c;
 					up.z = look.y * look.z * a + look.x * s;
 				}
-				
+
 				emitter->getTransform().setOrientationRH(look,up); // TODO What about LH ?
 			}
 
@@ -174,8 +174,8 @@ namespace SPK
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("base emitter"))
-			setEmitter(attrib->getValueRef<Emitter>());	
-		
+			setEmitter(attrib->getValueRef<Emitter>());
+
 		if (attrib = descriptor.getAttributeWithValue("orientation enabled"))
 		{
 			bool tmpRotationEnabled = false;

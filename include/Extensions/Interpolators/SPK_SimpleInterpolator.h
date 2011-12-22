@@ -23,7 +23,7 @@
 #define H_SPK_SIMPLEINTERPOLATOR
 
 namespace SPK
-{	
+{
 	template<typename T>
 	class SimpleInterpolator : public Interpolator<T>
 	{
@@ -44,7 +44,7 @@ namespace SPK
 		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
-		
+
 		T birthValue;
 		T deathValue;
 
@@ -68,14 +68,14 @@ namespace SPK
 
 	template<typename T>
 	SimpleInterpolator<T>::SimpleInterpolator(const T& birthValue,const T& deathValue) :
-		Interpolator(false),
+		Interpolator<T>(false),
 		birthValue(birthValue),
 		deathValue(deathValue)
 	{}
 
 	template<typename T>
 	SimpleInterpolator<T>::SimpleInterpolator(const SimpleInterpolator<T>& interpolator) :
-		Interpolator(interpolator),
+		Interpolator<T>(interpolator),
 		birthValue(interpolator.birthValue),
 		deathValue(interpolator.deathValue)
 	{}

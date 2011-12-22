@@ -23,6 +23,8 @@
 
 namespace SPK
 {
+    Vector3D ZonedModifier::dummyVector = Vector3D();
+
 	ZonedModifier::ZonedModifier(
 		unsigned int PRIORITY,
 		bool NEEDS_DATASET,
@@ -51,7 +53,7 @@ namespace SPK
 
 	void ZonedModifier::setZone(const Ref<Zone>& zone)
 	{
-		this->zone = zone == NULL ? SPK_DEFAULT_ZONE : zone;
+		this->zone = !zone ? SPK_DEFAULT_ZONE : zone;
 	}
 
 	void ZonedModifier::setZoneTest(ZoneTest zoneTest)
@@ -79,8 +81,8 @@ namespace SPK
 
 	Ref<SPKObject> ZonedModifier::findByName(const std::string& name)
 	{
-		Ref<SPKObject>& object = SPKObject::findByName(name);
-		if (object != NULL) return object;
+		Ref<SPKObject> object = SPKObject::findByName(name);
+		if (object) return object;
 
 		object = zone->findByName(name);
 
@@ -110,6 +112,6 @@ namespace SPK
 		Modifier::innerExport(descriptor);
 
 		descriptor.getAttribute("zone")->setValueRef(getZone(),getZone() == SPK_DEFAULT_ZONE);
-		descriptor.getAttribute("zone test")->setValue<uint32>(getZoneTest(),getZone() == SPK_DEFAULT_ZONE);		
+		descriptor.getAttribute("zone test")->setValue<uint32>(getZoneTest(),getZone() == SPK_DEFAULT_ZONE);
 	}
 }

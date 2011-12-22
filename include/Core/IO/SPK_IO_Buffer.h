@@ -46,7 +46,7 @@ namespace IO
 
 		void skip(size_t nb) const			{ position += nb; }
 		void setPosition(size_t pos) const	{ position = pos; }
-		void clear()						{ position = size = 0; } 
+		void clear()						{ position = size = 0; }
 
 		bool isAtEnd() const				{ return position >= size; }
 
@@ -65,17 +65,6 @@ namespace IO
 		}
 
 		template<class T> T get() const;
-
-		////////////////////////////
-		// Generic get operations //
-		////////////////////////////
-	
-		template<> char get() const		{ return *get(1); }
-		template<> float get() const 	{ int32 i = get32(); return *reinterpret_cast<float*>(&i); }
-		template<> uint32 get() const 	{ int32 i = get32(); return *reinterpret_cast<uint32*>(&i); }
-		template<> int32 get() const	{ return get32(); }
-		template<> Color get() const	{ int32 i = get32(); return *reinterpret_cast<Color*>(&i); }
-		template<> bool get() const		{ return get<char>() != 0; }
 
 		//////////////////////////////
 		// Primitive put operations //
@@ -141,7 +130,18 @@ namespace IO
 		static bool isLittleEndians();
 	};
 
-	template<> SPK_PREFIX std::string IOBuffer::get<std::string>() const;	
+    ////////////////////////////
+	// Generic get operations //
+	////////////////////////////
+
+    template<> inline char IOBuffer::get() const	{ return *get(1); }
+    template<> inline float IOBuffer::get() const 	{ int32 i = get32(); return *reinterpret_cast<float*>(&i); }
+	template<> inline uint32 IOBuffer::get() const 	{ int32 i = get32(); return *reinterpret_cast<uint32*>(&i); }
+	template<> inline int32 IOBuffer::get() const	{ return get32(); }
+	template<> inline Color IOBuffer::get() const	{ int32 i = get32(); return *reinterpret_cast<Color*>(&i); }
+	template<> inline bool IOBuffer::get() const	{ return get<char>() != 0; }
+
+	template<> SPK_PREFIX std::string IOBuffer::get<std::string>() const;
 	template<> SPK_PREFIX Vector3D IOBuffer::get<Vector3D>() const;
 }}
 

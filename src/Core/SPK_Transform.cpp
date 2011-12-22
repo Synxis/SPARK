@@ -23,7 +23,7 @@
 
 namespace SPK
 {
-	const float Transform::IDENTITY[] = 
+	const float Transform::IDENTITY[] =
 	{
 		1.0f,	0.0f,	0.0f,	0.0f,
 		0.0f,	1.0f,	0.0f,	0.0f,
@@ -57,7 +57,7 @@ namespace SPK
 	{
 		for (size_t i = 0; i < TRANSFORM_LENGTH; ++i)
 			local[i] = transform[(i >> 2) + ((i & 3) << 2)];	// conversion
-		
+
 		localIdentity = false;
 		notifyForUpdate();
 	}
@@ -202,9 +202,9 @@ namespace SPK
 	{
 		if (isUpdateNotified() ||														// the local transform or instance param have been updated
 			parent != this->parent ||													// the parent has changed
-			(parent != NULL && lastParentUpdate != parent->transform.currentUpdate))	// the parent transform has been modified
+			(parent && lastParentUpdate != parent->transform.currentUpdate))	// the parent transform has been modified
 		{
-			if (parent == NULL)
+			if (!parent)
 				std::memcpy(world,local,sizeof(float) * TRANSFORM_LENGTH);
 			else if (isLocalIdentity())
 			{

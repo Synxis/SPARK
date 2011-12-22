@@ -51,19 +51,19 @@ namespace SPK
 
 			const Octree::Array<size_t>& neighborCells = octree.getNeighborCells(index0);
 			size_t nbCells = neighborCells.size();
-			
+
 			for (size_t i = 0; i < nbCells; ++i) // For each neighboring cell in the octree
 			{
 				const Octree::Cell& cell = octree.getCell(neighborCells[i]);
 				size_t nbParticleInCells = cell.particles.size();
-				
+
 				for (size_t j = 0; j < nbParticleInCells; ++j) // for each particles in the cell
 				{
 					size_t index1 = cell.particles[j];
 					if (index1 >= index0)
 						break; // as particle are ordered
 
-					Particle& particle1 = group.getParticle(index1);
+					Particle particle1 = group.getParticle(index1);
 					float radius1 = particle1.getParam(PARAM_SCALE);
 
 					float sqrRadius = radius0 + radius1;

@@ -32,7 +32,7 @@ namespace SPK
 namespace IO
 {
 	class Descriptor;
-	
+
 	/** @brief Constants defining attribute's types */
 	enum AttributeType
 	{
@@ -46,7 +46,7 @@ namespace IO
 		ATTRIBUTE_TYPE_STRING,		/**< @brief the value is a std::string */
 		ATTRIBUTE_TYPE_REF,			/**< @brief the value is a Ref<SPKObject> */
 		ATTRIBUTE_TYPE_CHARS,		/**< @brief the value is an array of char */
-		ATTRIBUTE_TYPE_BOOLS,		/**< @brief the value is an array of boolean */		
+		ATTRIBUTE_TYPE_BOOLS,		/**< @brief the value is an array of boolean */
 		ATTRIBUTE_TYPE_INT32S,		/**< @brief the value is an array of int 32 bits */
 		ATTRIBUTE_TYPE_UINT32S,		/**< @brief the value is an array of unsigned int 32 bits */
 		ATTRIBUTE_TYPE_FLOATS,		/**< @brief the value is an array of float */
@@ -70,7 +70,7 @@ namespace IO
 	{
 	friend class Descriptor;
 
-	public : 
+	public :
 
 		Attribute(const std::string& name,AttributeType type);
 
@@ -94,7 +94,7 @@ namespace IO
 
 		/**
 		* @brief Tells whether the value of this attribute is optional
-		* 
+		*
 		* An optional value will not necessarily be exported when serializing because it is not needed to deserialize the object
 		* (Typically it is the default value of the attribute).
 		* Optional value are useful when serializing in human readable format (xml for instance) to keep the information clear.
@@ -128,7 +128,7 @@ namespace IO
 		size_t offset;
 
 		Descriptor* descriptor;
-		
+
 		bool valueSet;
 		bool optional;
 	};
@@ -237,8 +237,8 @@ namespace IO
 	}
 
 	template<typename T>
-	void Attribute::setValueRef(const Ref<T>& value,bool optional)				
-	{ 
+	void Attribute::setValueRef(const Ref<T>& value,bool optional)
+	{
 		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::setValueRef(const Ref<SPKObject>&,bool) - The value is not a reference");
 
 		offset = descriptor->buffer.size();
@@ -248,29 +248,29 @@ namespace IO
 			descriptor->buffer.push_back(refOffset[i]);
 
 		descriptor->refBuffer.push_back(value);
-		
+
 		valueSet = true;
 		this->optional = optional;
 
 		SPK_LOG_DEBUG("Set value for attribute \"" << name << "\" : " << value);
 	}
-	
+
 	template<typename T>
-	Ref<T> Attribute::getValueRef() const												
-	{ 
+	Ref<T> Attribute::getValueRef() const
+	{
 		SPK_ASSERT(ATTRIBUTE_TYPE_REF == type,"Attribute::getValueRef() - The desired value is not a reference");
 		SPK_ASSERT(valueSet,"Attribute::getValueRef() - The value is not set and therefore cannot be read");
-		
+
 		SPK_LOG_DEBUG("Get value for attribute \"" << name << "\" : " << descriptor->refBuffer[*reinterpret_cast<size_t*>(&descriptor->buffer[offset])]);
 
-		return descriptor->refBuffer[*reinterpret_cast<size_t*>(&descriptor->buffer[offset])].cast<T>();
+		return dynamicCast<T>(descriptor->refBuffer[*reinterpret_cast<size_t*>(&descriptor->buffer[offset])]);
 	}
 
 	template<typename T>
-	void Attribute::setValuesRef(const Ref<T>* values,size_t nb,bool optional)	
-	{ 
+	void Attribute::setValuesRef(const Ref<T>* values,size_t nb,bool optional)
+	{
 		SPK_ASSERT(ATTRIBUTE_TYPE_REFS == type,"Attribute::setValuesRef<T>(const Ref<T>*,size_t,bool) - The array of values is not an array of references");
-		if (nb == 0) return; // the value is not set if the array is empty		
+		if (nb == 0) return; // the value is not set if the array is empty
 
 		offset = descriptor->buffer.size();
 		const char* nbC = reinterpret_cast<const char*>(&nb);
@@ -296,8 +296,8 @@ namespace IO
 	}
 
 	template<typename T>
-	std::vector<Ref<T> > Attribute::getValuesRef() const				
-	{ 
+	std::vector<Ref<T> > Attribute::getValuesRef() const
+	{
 		SPK_ASSERT(ATTRIBUTE_TYPE_REFS == type,"Attribute::getValuesRef<T>() - The desired array of values is an array of references");
 		SPK_ASSERT(valueSet,"Attribute::getValuesRef<T>() - The value is not set and therefore cannot be read");
 
@@ -305,7 +305,7 @@ namespace IO
 		size_t refOffset = *reinterpret_cast<size_t*>(&descriptor->buffer[offset + sizeof(size_t)]);
 		std::vector<Ref<T> > tmpBuffer;
 		for (size_t i = 0; i < nb; ++i)
-			tmpBuffer.push_back(descriptor->refBuffer[refOffset + i].cast<T>());
+			tmpBuffer.push_back(dynamicCast<T>(descriptor->refBuffer[refOffset + i]));
 
 #if !defined(SPK_NO_LOG) && defined(_DEBUG)
 		Logger::Stream os = SPK::Logger::get().getStream(SPK::LOG_PRIORITY_DEBUG);

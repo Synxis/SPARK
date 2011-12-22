@@ -58,7 +58,7 @@ template<typename T> inline void ClassName::fillAttributeList(std::vector<SPK::I
 #define SPK_DEFINE_OBJECT_TEMPLATE(ClassName) \
 private : \
 friend class SPK::IO::IOManager; \
-template<typename T> friend class SPK::Ref; \
+template<typename U> friend class SPK::Ref; \
 static std::string asName(); \
 static SPK::Ref<SPK::SPKObject> createSerializable()		{ return SPK_NEW(ClassName); } \
 virtual SPK::Ref<SPK::SPKObject> clone() const				{ return SPK_NEW(ClassName,*this); } \
@@ -106,7 +106,7 @@ namespace SPK
 		* @return the number of references
 		*/
 		unsigned int getNbReferences() const;
-		
+
 		/**
 		* Tells whether this object is shared or not
 		* During a deep copy, a referenced shared object will not be copied but only its reference will.
@@ -120,7 +120,7 @@ namespace SPK
 		* @param shared : true to make this obkect shared, false not to
 		*/
 		void setShared(bool shared);
-		
+
 		///////////////
 		// Transform //
 		///////////////
@@ -159,7 +159,7 @@ namespace SPK
 		* @return the name
 		*/
 		const std::string& getName() const;
-		
+
 		/**
 		* @brief Traverses this object to find an object with the given name
 		*
@@ -186,7 +186,7 @@ namespace SPK
 
 		/**
 		* @brief Imports the attributes of a descriptor and use it to set up this object
-		* @param descriptor : The descriptor used to set up this object 
+		* @param descriptor : The descriptor used to set up this object
 		*/
 		void importAttributes(const IO::Descriptor& descriptor);
 
@@ -201,7 +201,7 @@ namespace SPK
 		* @return the class name
 		*/
 		virtual std::string getClassName() const = 0;
-		
+
 	protected :
 
 		// abstract class
@@ -250,16 +250,16 @@ namespace SPK
 		Transform transform;
 
 		unsigned int nbReferences;
-		
+
 		const bool SHAREABLE;
 		bool shared;
-		
+
 		// The copy buffer is used to be able to correctly perform a deep copy of objects. If an object is present more than once is the hierarchy it will be copied only once
 		// The choice to have a field that is used only for the copy was made because the memory overhead is neglictible and the other possible choices were not satisfying :
 		// * Having a static copyBuffer made the copy not thread safe (As concurrent copy of object would make concurrent read/write on the buffer)
 		// * Passing the copyBuffer to methods was too dirty and messed up the interface (Impossible to use the copy constructor anymore)
 		// Note that with this method the copy of the same object remains not thread safe but the copy of different object is
-		mutable std::map<SPKObject*,SPKObject*>* copyBuffer; 
+		mutable std::map<SPKObject*,SPKObject*>* copyBuffer;
 
 		virtual Ref<SPKObject> clone() const = 0;
 	};
@@ -312,17 +312,17 @@ namespace SPK
 	template<typename T>
 	Ref<T> SPKObject::copy(const Ref<T>& ref)
 	{
-		if (ref == NULL)
+		if (!ref)
 			return ref;
 
-		if (ref->copyBuffer != NULL) 
+		if (ref->copyBuffer != NULL)
 		{
 			SPK_LOG_FATAL("The object is already being copied and cannot be copied more than once at the same time");
 			return SPK_NULL_REF;
 		}
 
 		ref->copyBuffer = new std::map<SPKObject*,SPKObject*>(); // Creates the copy buffer to allow correct copy of underlying SPARK objects
-		Ref<T> clone = ref.cast<SPKObject>()->clone().cast<T>();
+		Ref<T> clone = dynamicCast<T>(dynamicCast<SPKObject>(ref)->clone());
 		delete ref->copyBuffer; // Deletes the copy buffer used for the copy
 		ref->copyBuffer = NULL;
 		return clone;
@@ -331,28 +331,28 @@ namespace SPK
 	template<typename T>
 	Ref<T> SPKObject::copyChild(const Ref<T>& ref) const
 	{
-		if (ref == NULL)
+		if (!ref)
 			return SPK_NULL_REF;
 
 		if (ref->isShared())
 			return ref;
 
-		if (copyBuffer == NULL) 
+		if (copyBuffer == NULL)
 		{
 			SPK_LOG_FATAL("The copy buffer of the object is NULL while copying the object");
 			return SPK_NULL_REF;
 		}
-		
+
 		std::map<SPKObject*,SPKObject*>::const_iterator it = copyBuffer->find(ref.get());
 		if (it != copyBuffer->end())
 			return dynamic_cast<T*>(it->second);
 
 		ref->copyBuffer = copyBuffer; // Sets the copyBuffer of the child to the copyBuffer of the parent
-		Ref<SPKObject> clone = ref.cast<SPKObject>()->clone();
+		Ref<SPKObject> clone = dynamicCast<SPKObject>(ref)->clone();
 		ref->copyBuffer = NULL; // Removes the reference to the copy buffer (the copy buffer is deleted by the top level copied object)
 
 		copyBuffer->insert(std::make_pair(ref.get(),clone.get()));
-		return clone.cast<T>();
+		return dynamicCast<T>(clone);
 	}
 }
 

@@ -63,6 +63,8 @@ namespace IO
 		// nested classes //
 		////////////////////
 
+		class Graph; // Forward declaration for friendship
+
 		class Node
 		{
 		friend class Graph;

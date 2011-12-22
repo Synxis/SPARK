@@ -32,7 +32,7 @@ namespace SPK
 		ZONE_TEST_FLAG_INTERSECT = 1 << ZONE_TEST_INTERSECT,	/**< Enables the zone test intersect */
 		ZONE_TEST_FLAG_ENTER = 1 << ZONE_TEST_ENTER,			/**< Enables the zone test enter */
 		ZONE_TEST_FLAG_LEAVE = 1 << ZONE_TEST_LEAVE,			/**< Enables the zone test leave */
-		ZONE_TEST_FLAG_ALWAYS = 1 << ZONE_TEST_ALWAYS			/**< The zone is ignored and the test is always passed */						
+		ZONE_TEST_FLAG_ALWAYS = 1 << ZONE_TEST_ALWAYS			/**< The zone is ignored and the test is always passed */
 	};
 
 	/** @brief An abstract modifier with a zone attached to it */
@@ -79,13 +79,13 @@ namespace SPK
 		/**
 		* @brief Sets the zone test
 		*
-		* If the zone test is not valid for this zonedModifier, 
+		* If the zone test is not valid for this zonedModifier,
 		* the first valid zone test is used.
 		*
 		* @param zoneTest : the zone test
 		*/
 		void setZoneTest(ZoneTest zoneTest);
-		
+
 		/**
 		* @brief Gets the zone test
 		* @return the zone test
@@ -126,7 +126,7 @@ namespace SPK
 		* @brief Check whether the zone test passes for a given particle
 		* @return true is the zone test passes, false if not
 		*/
-		bool checkZone(const Particle& particle,Vector3D& normal = Vector3D()) const;
+		bool checkZone(const Particle& particle,Vector3D& normal = dummyVector) const;
 
 		virtual void propagateUpdateTransform();
 
@@ -134,6 +134,8 @@ namespace SPK
 		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
+
+        static Vector3D dummyVector; // Hack to avoid rvalue to be bound to references to non-const
 
 		static const size_t NB_ZONE_TESTS = 6;
 		const int ZONE_TEST_FLAG;

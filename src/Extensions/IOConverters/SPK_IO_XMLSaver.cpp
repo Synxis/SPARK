@@ -48,7 +48,7 @@
 //		doc.LinkEndChild(new TiXmlComment(headerComment.c_str()));
 //		if (!author.empty())
 //		{
-//			std::string authorStr(" Author : " + author + " "); 
+//			std::string authorStr(" Author : " + author + " ");
 //			doc.LinkEndChild(new TiXmlComment(authorStr.c_str()));
 //		}
 //
@@ -97,7 +97,7 @@
 //			SPK_LOG_FATAL("XMLSaver::writeObject(TiXmlElement&,const Ref<SPKObject>&,Graph&,bool) - No Node found for the object");
 //			return false;
 //		}
-//		if ((layout.referenceRule == XML_REFERENCE_RULE_WHEN_NEEDED && refNode->getNbReferences() > 1) 
+//		if ((layout.referenceRule == XML_REFERENCE_RULE_WHEN_NEEDED && refNode->getNbReferences() > 1)
 //			|| layout.referenceRule == XML_REFERENCE_RULE_FORCED
 //			|| (layout.referenceRule == XML_REFERENCE_RULE_DESCRIBED_AT_FIRST && refNode->isProcessed()))
 //		{
@@ -112,7 +112,7 @@
 //				writeRef(parent,*refNode);
 //			return true;
 //		}
-//		else 
+//		else
 //			return writeNode(parent,*refNode,graph);
 //	}
 //
@@ -133,9 +133,9 @@
 //				else
 //				{
 //					TiXmlElement* child = new TiXmlElement("attrib");
-//					element->LinkEndChild(child);					
+//					element->LinkEndChild(child);
 //					child->SetAttribute("id",attrib.getName());
-//					
+//
 //					switch (attrib.getType())
 //					{
 //					case ATTRIBUTE_TYPE_CHAR :		writeValue(*child,format(attrib.getValue<char>())); break;
@@ -145,7 +145,7 @@
 //					case ATTRIBUTE_TYPE_FLOAT :		writeValue(*child,format(attrib.getValue<float>())); break;
 //					case ATTRIBUTE_TYPE_VECTOR :	writeValue(*child,format(attrib.getValue<Vector3D>())); break;
 //					case ATTRIBUTE_TYPE_COLOR :		writeValue(*child,format(attrib.getValue<Color>())); break;
-//					case ATTRIBUTE_TYPE_STRING :	writeValue(*child,format(attrib.getValue<std::string>())); break;	
+//					case ATTRIBUTE_TYPE_STRING :	writeValue(*child,format(attrib.getValue<std::string>())); break;
 //
 //					case ATTRIBUTE_TYPE_CHARS :		writeValue(*child,formatArray(attrib.getValues<char>())); break;
 //					case ATTRIBUTE_TYPE_BOOLS :		writeValue(*child,formatArray(attrib.getValues<bool>())); break;
@@ -156,16 +156,16 @@
 //					case ATTRIBUTE_TYPE_COLORS :	writeValue(*child,formatArray(attrib.getValues<Color>())); break;
 //					case ATTRIBUTE_TYPE_STRINGS :	writeValue(*child,formatArray(attrib.getValues<std::string>())); break;
 //
-//					case ATTRIBUTE_TYPE_REF :		
-//						if (!writeObject(*child,attrib.getValueRef<SPKObject>(),graph,false)) 
-//							return false; 
+//					case ATTRIBUTE_TYPE_REF :
+//						if (!writeObject(*child,attrib.getValueRef<SPKObject>(),graph,false))
+//							return false;
 //						break;
 //
 //					case ATTRIBUTE_TYPE_REFS : {
 //						const std::vector<Ref<SPKObject> >& refs = attrib.getValuesRef<SPKObject>();
 //						for (size_t i = 0; i < refs.size(); ++i)
-//							if (!writeObject(*child,refs[i],graph,true)) 
-//								return false; 
+//							if (!writeObject(*child,refs[i],graph,true))
+//								return false;
 //						break; }
 //
 //					default :
@@ -176,7 +176,7 @@
 //		}
 //
 //		if (node.getNbReferences() > 1 || layout.referenceRule == XML_REFERENCE_RULE_FORCED)
-//			element->SetAttribute("ref",format(node.getReferenceID()));	
+//			element->SetAttribute("ref",format(node.getReferenceID()));
 //		node.markAsProcessed();
 //		return true;
 //	}
@@ -245,17 +245,19 @@ namespace IO
 			SPK_LOG_FATAL("XMLSaver::writeObject(pugi::xml_node&,const Ref<SPKObject>&,Graph&,bool) - No Node found for the object");
 			return false;
 		}
-		if ((layout.referenceRule == XML_REFERENCE_RULE_WHEN_NEEDED && refNode->getNbReferences() > 1) 
+		if ((layout.referenceRule == XML_REFERENCE_RULE_WHEN_NEEDED && refNode->getNbReferences() > 1)
 			|| layout.referenceRule == XML_REFERENCE_RULE_FORCED
 			|| (layout.referenceRule == XML_REFERENCE_RULE_DESCRIBED_AT_FIRST && refNode->isProcessed()))
 		{
-			if (refInTag)
-				writeRef(parent.append_child("Ref"),*refNode);
+			if (refInTag) {
+			    pugi::xml_node xmlNode = parent.append_child("Ref");
+				writeRef(xmlNode,*refNode);
+			}
 			else
 				writeRef(parent,*refNode);
 			return true;
 		}
-		else 
+		else
 			return writeNode(parent,*refNode,graph);
 	}
 
@@ -274,9 +276,9 @@ namespace IO
 					getAttribute(element,"name").set_value(attrib.getValue<std::string>().c_str());
 				else
 				{
-					pugi::xml_node& child = element.append_child("attrib");
+					pugi::xml_node child = element.append_child("attrib");
 					child.append_attribute("id").set_value(attrib.getName().c_str());
-					
+
 					switch (attrib.getType())
 					{
 					case ATTRIBUTE_TYPE_CHAR :		writeValue(child,format(attrib.getValue<char>())); break;
@@ -286,7 +288,7 @@ namespace IO
 					case ATTRIBUTE_TYPE_FLOAT :		writeValue(child,format(attrib.getValue<float>())); break;
 					case ATTRIBUTE_TYPE_VECTOR :	writeValue(child,format(attrib.getValue<Vector3D>())); break;
 					case ATTRIBUTE_TYPE_COLOR :		writeValue(child,format(attrib.getValue<Color>())); break;
-					case ATTRIBUTE_TYPE_STRING :	writeValue(child,format(attrib.getValue<std::string>())); break;	
+					case ATTRIBUTE_TYPE_STRING :	writeValue(child,format(attrib.getValue<std::string>())); break;
 
 					case ATTRIBUTE_TYPE_CHARS :		writeValue(child,formatArray(attrib.getValues<char>())); break;
 					case ATTRIBUTE_TYPE_BOOLS :		writeValue(child,formatArray(attrib.getValues<bool>())); break;
@@ -297,16 +299,16 @@ namespace IO
 					case ATTRIBUTE_TYPE_COLORS :	writeValue(child,formatArray(attrib.getValues<Color>())); break;
 					case ATTRIBUTE_TYPE_STRINGS :	writeValue(child,formatArray(attrib.getValues<std::string>())); break;
 
-					case ATTRIBUTE_TYPE_REF :		
-						if (!writeObject(child,attrib.getValueRef<SPKObject>(),graph,false)) 
-							return false; 
+					case ATTRIBUTE_TYPE_REF :
+						if (!writeObject(child,attrib.getValueRef<SPKObject>(),graph,false))
+							return false;
 						break;
 
 					case ATTRIBUTE_TYPE_REFS : {
 						const std::vector<Ref<SPKObject> >& refs = attrib.getValuesRef<SPKObject>();
 						for (size_t i = 0; i < refs.size(); ++i)
-							if (!writeObject(child,refs[i],graph,true)) 
-								return false; 
+							if (!writeObject(child,refs[i],graph,true))
+								return false;
 						break; }
 
 					default :

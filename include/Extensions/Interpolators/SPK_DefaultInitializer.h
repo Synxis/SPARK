@@ -66,13 +66,13 @@ namespace SPK
 
 	template<typename T>
 	DefaultInitializer<T>::DefaultInitializer(const T& value) :
-		Interpolator(false),
+		Interpolator<T>(false),
 		defaultValue(value)
 	{}
 
 	template<typename T>
 	DefaultInitializer<T>::DefaultInitializer(const DefaultInitializer<T>& interpolator) :
-		Interpolator(interpolator),
+		Interpolator<T>(interpolator),
 		defaultValue(interpolator.defaultValue)
 	{}
 

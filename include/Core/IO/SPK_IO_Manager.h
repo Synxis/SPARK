@@ -33,15 +33,15 @@ namespace IO
 {
 	class SPK_PREFIX IOManager
 	{
-	public : 
+	public :
 
 		static IOManager& get();
-		
+
 		void unregisterAll();
 
 		void registerIOConverters();
 		void registerCoreObjects();
-	
+
 		template<typename T> void registerObject();
 		template<typename T> void unregisterObject();
 		template<typename T> bool isObjectRegistered() const;
@@ -63,7 +63,7 @@ namespace IO
 	private :
 
 		typedef Ref<SPKObject> (*createSerializableFn)();
-		
+
 		std::map<std::string,createSerializableFn> registeredObjects;
 		std::map<std::string,Loader*> registeredLoaders;
 		std::map<std::string,Saver*> registeredSavers;
@@ -106,12 +106,12 @@ namespace IO
 			SPK_LOG_WARNING("IOConverter::unregisterSerializable<T> - " << name << " is not registered and therefore cannot be unregistered");
 		}
 		else
-			registeredObjects.erase(it)
+			registeredObjects.erase(it);
 	}
 
 	template<typename T> inline bool IOManager::isObjectRegistered() const
 	{
-		return registeredObjects.find(T::getSerializableName()) != registeredObjects.end()	
+		return registeredObjects.find(T::getSerializableName()) != registeredObjects.end();
 	}
 
 	inline void IOManager::registerLoader(const std::string& ext,Loader* loader) { registerGeneric<Loader>(ext,loader,registeredLoaders); }
@@ -126,7 +126,7 @@ namespace IO
 	void IOManager::registerGeneric(const std::string& ext,T* t,std::map<std::string,T*>& table)
 	{
 		const std::string name = formatExtension(ext);
-		std::map<std::string,T*>::iterator it = table.find(name);
+		typename std::map<std::string,T*>::iterator it = table.find(name);
 		if (it != table.end())
 		{
 			SPK_LOG_WARNING("IOManager::registerGeneric<T> - " << name << " is already registered. Previous one is overriden");
@@ -141,7 +141,7 @@ namespace IO
 	void IOManager::unregisterGeneric(const std::string& ext,std::map<std::string,T*>& table)
 	{
 		const std::string name = formatExtension(ext);
-		std::map<std::string,T*>::iterator it = table.find(name);
+		typename std::map<std::string,T*>::iterator it = table.find(name);
 		if (it == table.end())
 		{
 			SPK_LOG_WARNING("IOManager::registerGeneric<T> - " << name << " is not registered and therefore cannot be unregistered")
@@ -157,8 +157,8 @@ namespace IO
 	T* IOManager::getGeneric(const std::string& ext,const std::map<std::string,T*>& table)
 	{
 		const std::string name = formatExtension(ext);
-		std::map<std::string,T*>::const_iterator it = table.find(name);
+		typename std::map<std::string,T*>::const_iterator it = table.find(name);
 		return it != table.end() ? it->second : NULL;
 	}
 }}
-#endif 
+#endif

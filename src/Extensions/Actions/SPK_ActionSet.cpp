@@ -36,7 +36,7 @@ namespace SPK
 
 	void ActionSet::addAction(const Ref<Action>& action)
 	{
-		if (action != NULL && action != this)
+		if (action && action != this)
 			actions.push_back(action);
 		else
 			SPK_LOG_WARNING("ActionSet::addAction(const Ref<Action>&) - Cannot add this action to the action set (Either NULL or the action set itself)");
@@ -68,13 +68,13 @@ namespace SPK
 
 	Ref<SPKObject> ActionSet::findByName(const std::string& name)
 	{
-		Ref<SPKObject>& object = Action::findByName(name);
-		if (object != NULL) return object;
+		Ref<SPKObject> object = Action::findByName(name);
+		if (object) return object;
 
 		for (std::vector<Ref<Action> >::const_iterator it = actions.begin(); it != actions.end(); ++it)
 		{
 			object = (*it)->findByName(name);
-			if (object != NULL) return object;
+			if (object) return object;
 		}
 
 		return SPK_NULL_REF;
@@ -84,7 +84,7 @@ namespace SPK
 	{
 		Action::innerImport(descriptor);
 
-		const IO::Attribute* attrib = NULL;	
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("actions"))
 		{
 			std::vector<Ref<Action> > tmpActions = attrib->getValuesRef<Action>();

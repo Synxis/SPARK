@@ -27,7 +27,7 @@ namespace SPK
 	template<typename T>
 	class RandomInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_OBJECT(RandomInterpolator<T>);
+	SPK_DEFINE_OBJECT_TEMPLATE(RandomInterpolator<T>);
 	SPK_DEFINE_DESCRIPTION_TEMPLATE
 
 	public :
@@ -35,7 +35,7 @@ namespace SPK
 		static  Ref<RandomInterpolator<T> > create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 
 		void setValues(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
-		
+
 		const T& getMinBirthValue() const;
 		const T& getMaxBirthValue() const;
 		const T& getMinDeathValue() const;
@@ -90,7 +90,7 @@ namespace SPK
 
 	template<typename T>
 	RandomInterpolator<T>::RandomInterpolator(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue) :
-		Interpolator(true),
+		Interpolator<T>(true),
 		minBirthValue(minBirthValue),
 		maxBirthValue(maxBirthValue),
 		minDeathValue(minDeathValue),
@@ -99,7 +99,7 @@ namespace SPK
 
 	template<typename T>
 	RandomInterpolator<T>::RandomInterpolator(const RandomInterpolator<T>& interpolator) :
-		Interpolator(interpolator),
+		Interpolator<T>(interpolator),
 		minBirthValue(interpolator.minBirthValue),
 		maxBirthValue(interpolator.maxBirthValue),
 		minDeathValue(interpolator.minDeathValue),
@@ -114,7 +114,7 @@ namespace SPK
 		this->minDeathValue = minDeathValue;
 		this->maxDeathValue = maxDeathValue;
 	}
-		
+
 	template<typename T>
 	inline const T& RandomInterpolator<T>::getMinBirthValue() const
 	{
@@ -162,14 +162,14 @@ namespace SPK
 	{
 		const ArrayData<T>& birthValuesData = SPK_GET_DATA(ArrayData<T>,dataSet,BIRTH_VALUE_DATA_INDEX);
 		const ArrayData<T>& deathValuesData = SPK_GET_DATA(ArrayData<T>,dataSet,DEATH_VALUE_DATA_INDEX);
-		
+
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
 			size_t index = particleIt->getIndex();
 			interpolateParam(data[index],deathValuesData[index],birthValuesData[index],particleIt->getEnergy());
 		}
 	}
-	
+
 	template<typename T>
 	void RandomInterpolator<T>::init(T& data,Particle& particle,DataSet* dataSet) const
 	{

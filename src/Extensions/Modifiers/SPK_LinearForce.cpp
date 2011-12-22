@@ -48,7 +48,7 @@ namespace SPK
 
 	Ref<LinearForce> LinearForce::createAsWind(const Vector3D& value,Factor surfaceFactor,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
-		Ref<LinearForce>& force = create();
+		Ref<LinearForce> force = create();
 		force->setZone(zone,zoneTest);
 		force->useAsWind(value,surfaceFactor);
 		return force;
@@ -56,7 +56,7 @@ namespace SPK
 
 	Ref<LinearForce> LinearForce::createAsFriction(float value,Factor surfaceFactor,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
-		Ref<LinearForce>& force = create();
+		Ref<LinearForce> force = create();
 		force->setZone(zone,zoneTest);
 		force->useAsFriction(value,surfaceFactor);
 		return force;
@@ -64,17 +64,17 @@ namespace SPK
 
 	Ref<LinearForce> LinearForce::createAsGravity(const Vector3D& value,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
-		Ref<LinearForce>& force = create();
+		Ref<LinearForce> force = create();
 		force->setZone(zone,zoneTest);
-		force->useAsGravity(value);	
+		force->useAsGravity(value);
 		return force;
 	}
 
 	Ref<LinearForce> LinearForce::createAsSimpleForce(const Vector3D& value,const Ref<Zone>& zone,ZoneTest zoneTest)
 	{
-		Ref<LinearForce>& force = create();
+		Ref<LinearForce> force = create();
 		force->setZone(zone,zoneTest);
-		force->useAsSimpleForce(value);	
+		force->useAsSimpleForce(value);
 		return force;
 	}
 
@@ -135,7 +135,7 @@ namespace SPK
 		}
 		if (particle.getGroup().isEnabled(PARAM_MASS))
 			discreteFactor /= particle.getParamNC(PARAM_MASS);
-		return discreteFactor;	
+		return discreteFactor;
 	}
 
 	void LinearForce::modify(Group& group,DataSet* dataSet,float deltaTime) const
@@ -146,7 +146,7 @@ namespace SPK
 			factorByParticle = false;
 		if (param == PARAM_MASS && factor == FACTOR_LINEAR) // gravity type force
 			factorByParticle = false;
-		
+
 		// if the param is scale, it is assumed that it is the size that matters, therefore the coef is multiplied by the physical radius
 		float realCoef = coef;
 		if (param == PARAM_SCALE)
@@ -161,13 +161,13 @@ namespace SPK
 			{
 				for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 					if (checkZone(*particleIt))
-						particleIt->velocity() += discreteForce; 
+						particleIt->velocity() += discreteForce;
 			}
 			else
 			{
 				for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 					if (checkZone(*particleIt))
-						particleIt->velocity() += discreteForce * getDiscreteFactor(*particleIt); 
+						particleIt->velocity() += discreteForce * getDiscreteFactor(*particleIt);
 			}
 		}
 		else
@@ -177,14 +177,14 @@ namespace SPK
 				{
 					Particle& particle = *particleIt;
 					Vector3D relativeForce = tValue - particle.velocity();
-					
+
 					float clamp = 1.0f;
 					if (squaredSpeed)
 					{
 						Vector3D absForce(relativeForce);
 						absForce.abs();
 						clamp = 1.0f / absForce.getMax();
-						relativeForce *= relativeForce;		
+						relativeForce *= relativeForce;
 					}
 
 					float discreteFactor = deltaTime * realCoef;
@@ -196,7 +196,7 @@ namespace SPK
 					if (discreteFactor > clamp)
 						discreteFactor = clamp;
 
-					particle.velocity() += relativeForce * discreteFactor;	
+					particle.velocity() += relativeForce * discreteFactor;
 				}
 		}
 	}
@@ -208,7 +208,7 @@ namespace SPK
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("value"))
 			setValue(attrib->getValue<Vector3D>());
-		
+
 		if (attrib = descriptor.getAttributeWithValue("relative value"))
 		{
 			bool tmpSquaredSpeed = false;
@@ -217,7 +217,7 @@ namespace SPK
 				tmpSquaredSpeed = attrib->getValue<bool>();
 			setRelative(tmpRelative,tmpSquaredSpeed);
 		}
-			
+
 		if (attrib = descriptor.getAttributeWithValue("parameter"))
 		{
 			Factor tmpFactor = FACTOR_LINEAR;

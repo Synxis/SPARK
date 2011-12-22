@@ -23,7 +23,7 @@
 
 namespace SPK
 {
-	SPKObject::SPKObject(bool SHAREABLE) : 
+	SPKObject::SPKObject(bool SHAREABLE) :
 		name(),
 		transform(),
 		nbReferences(0),
@@ -31,10 +31,10 @@ namespace SPK
 		shared(false),
 		copyBuffer(NULL)
 	{
-		SPK_LOG_DEBUG("Creation of SPKObject " << this);		
+		SPK_LOG_DEBUG("Creation of SPKObject " << this);
 	}
-	
-	SPKObject::SPKObject(const SPKObject& obj) : 
+
+	SPKObject::SPKObject(const SPKObject& obj) :
 		name(obj.name),
 		transform(obj.transform),
 		nbReferences(0),
@@ -42,7 +42,7 @@ namespace SPK
 		shared(obj.shared),
 		copyBuffer(NULL)
 	{
-		SPK_LOG_DEBUG("Creation of SPKObject " << this << " from " << &obj);	
+		SPK_LOG_DEBUG("Creation of SPKObject " << this << " from " << &obj);
 	}
 
 	SPKObject::~SPKObject()
@@ -70,7 +70,7 @@ namespace SPK
 
 	void SPKObject::importAttributes(const IO::Descriptor& descriptor)
 	{
-		const std::string& descName = descriptor.getName(); 
+		const std::string& descName = descriptor.getName();
 		if (descName != getClassName())
 		{
 			SPK_LOG_ERROR("SPKObject::importAttributes(const Descriptor&) - The descriptor does not match the object : \"" << descName << "\" for \"" << getClassName() << "\"");
@@ -81,7 +81,7 @@ namespace SPK
 
 	IO::Descriptor SPKObject::exportAttributes() const
 	{
-		IO::Descriptor& descriptor = createDescriptor();
+		IO::Descriptor descriptor = createDescriptor();
 		innerExport(descriptor);
 		return descriptor;
 	}
@@ -115,7 +115,7 @@ namespace SPK
 		if (attrib = descriptor.getAttributeWithValue("shared"))
 			setShared(attrib->getValue<bool>());
 	}
-	
+
 	void SPKObject::innerExport(IO::Descriptor& descriptor) const
 	{
 		descriptor.getAttribute("name")->setValueOptionalOnEmpty(name);

@@ -29,17 +29,17 @@ namespace SPK
 {
 namespace IO
 {
-	static bool compareNodePriority(const Saver::Node* node0,const Saver::Node* node1)
+	bool compareNodePriority(const Saver::Node* node0,const Saver::Node* node1)
 	{
 		return node0->priority < node1->priority || (node0->priority == node1->priority && node0->refID < node1->refID);
 	}
 
 	bool Saver::save(std::ostream& os,const Ref<System>& system) const
 	{
-		if (system == NULL)
+		if (!system)
 		{
 			SPK_LOG_WARNING("Saver::saver(std::ostream&,const Ref<System>&) - Impossible to write a NULL System. Nothing is done");
-			return false;			
+			return false;
 		}
 
 		clock_t startTime = std::clock();
@@ -47,7 +47,7 @@ namespace IO
 		Graph graph;
 		constructGraph(graph,system.get());
 		bool result = innerSave(os,graph);
-		
+
 		if (result)
 		{
 			unsigned int saveTime = static_cast<unsigned int>(((std::clock() - startTime) * 1000) / CLOCKS_PER_SEC);
@@ -60,14 +60,14 @@ namespace IO
 
 	}
 
-	bool Saver::save(const std::string& path,const Ref<System>& system) const 
+	bool Saver::save(const std::string& path,const Ref<System>& system) const
 	{
-		if (system == NULL)
+		if (!system)
 		{
 			SPK_LOG_WARNING("Saver::saver(const std::string&,const Ref<System>&) - Impossible to write a NULL System. Nothing is done");
-			return false;			
+			return false;
 		}
-		
+
 		std::ofstream os(path.c_str(),std::ios::out | std::ios::binary | std::ios::trunc);
 		if (os)
 		{
@@ -113,16 +113,16 @@ namespace IO
 			node->nbReferences = level > 0 ? 1 : 0;
 			graph.ptr2Nodes.insert(std::make_pair(object,node));
 
-			Descriptor& descriptor = node->descriptor;
+			const Descriptor& descriptor = node->descriptor;
 			for (size_t i = 0; i < descriptor.getNbAttributes(); ++i)
 			{
-				Attribute& attribute = descriptor.getAttribute(i);
+				const Attribute& attribute = descriptor.getAttribute(i);
 				if (attribute.getType() == ATTRIBUTE_TYPE_REF && attribute.hasValue())
 					constructNode(graph,attribute.getValueRef<SPKObject>().get(),level + 1);
 				else if (attribute.getType() == ATTRIBUTE_TYPE_REFS && attribute.hasValue())
 				{
-					std::vector<Ref<SPKObject> >& refs = attribute.getValuesRef<SPKObject>();
-					for (std::vector<Ref<SPKObject> >::iterator it = refs.begin(); it != refs.end(); ++it)
+					const std::vector<Ref<SPKObject> >& refs = attribute.getValuesRef<SPKObject>();
+					for (std::vector<Ref<SPKObject> >::const_iterator it = refs.begin(); it != refs.end(); ++it)
 						constructNode(graph,(*it).get(),level + 1);
 				}
 			}
@@ -130,7 +130,7 @@ namespace IO
 	}
 
 	Saver::Node::Node(const Descriptor& descriptor) :
-		refID(-1),
+		refID((size_t)-1),
 		processed(false),
 		nbReferences(0),
 		descriptor(descriptor),
@@ -139,23 +139,23 @@ namespace IO
 
 	Saver::Graph::Graph() : posInitialized(false) {}
 
-	Saver::Graph::~Graph() 
+	Saver::Graph::~Graph()
 	{
 		for (std::list<Node*>::iterator it = nodes.begin(); it != nodes.end(); ++it)
 			SPK_DELETE(*it);
 	}
 
-	Saver::Node* Saver::Graph::getNode(const Ref<SPKObject>& ptr) 
-	{ 
+	Saver::Node* Saver::Graph::getNode(const Ref<SPKObject>& ptr)
+	{
 		std::map<const SPKObject*,Node*>::iterator it = ptr2Nodes.find(ptr.get());
 		if (it != ptr2Nodes.end())
 			return it->second;
 		else
-			return NULL; 
+			return NULL;
 	}
 
-	Saver::Node* Saver::Graph::getNextNode() 
-	{ 
+	Saver::Node* Saver::Graph::getNextNode()
+	{
 		if (!posInitialized)
 		{
 			currentPosIt = nodes.begin();
@@ -167,10 +167,10 @@ namespace IO
 				return *(currentPosIt++);
 			++currentPosIt;
 		}
-		return NULL; 
+		return NULL;
 	}
 
-	Saver::Node* Saver::Graph::createNode(Descriptor& descriptor)
+	Saver::Node* Saver::Graph::createNode(const Descriptor& descriptor)
 	{
 		Node* node = SPK_NEW(Node,descriptor);
 		nodes.push_back(node);

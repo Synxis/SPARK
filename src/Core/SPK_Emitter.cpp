@@ -27,7 +27,7 @@ namespace SPK
 		SPKObject(),
 		active(true),
 		full(full),
-		zone(zone == NULL ? SPK_DEFAULT_ZONE : zone),
+		zone(!zone ? SPK_DEFAULT_ZONE : zone),
 		flow(1.0f),
 		fraction(SPK_RANDOM(0.0f,1.0f))
 	{
@@ -91,7 +91,7 @@ namespace SPK
 
 	void Emitter::setZone(const Ref<Zone>& zone,bool full)
 	{
-		this->zone = (zone == NULL ? SPK_DEFAULT_ZONE : zone);
+		this->zone = (!zone ? SPK_DEFAULT_ZONE : zone);
 		this->full = full;
 	}
 
@@ -109,8 +109,8 @@ namespace SPK
 
 	Ref<SPKObject> Emitter::findByName(const std::string& name)
 	{
-		Ref<SPKObject>& object = SPKObject::findByName(name);
-		if (object != NULL) return object;
+		const Ref<SPKObject>& object = SPKObject::findByName(name);
+		if (object) return object;
 
 		return zone->findByName(name);
 	}

@@ -88,7 +88,7 @@ namespace SPK
 
 		for (std::vector<ModifierDef>::const_iterator it = group.modifiers.begin(); it != group.modifiers.end(); ++it)
 		{
-			Ref<Modifier>& modifier = group.copyChild(it->obj);
+			const Ref<Modifier>& modifier = group.copyChild(it->obj);
 			ModifierDef modifierDef(modifier,attachDataSet(modifier.get()));
 			modifiers.push_back(modifierDef);
 			if (isInitialized())
@@ -195,7 +195,7 @@ namespace SPK
 			}
 
 		// Interpolates the parameters
-		if (colorInterpolator.obj != NULL)
+		if (colorInterpolator.obj)
 			colorInterpolator.obj->interpolate(particleData.colors,*this,colorInterpolator.dataSet);
 		for (size_t i = 0; i < nbEnabledParameters; ++i)
 		{
@@ -212,7 +212,7 @@ namespace SPK
 			it->obj->modify(*this,it->dataSet,deltaTime);
 
 		// Updates the renderer data
-		if (renderer.obj != NULL)
+		if (renderer.obj)
 			renderer.obj->update(*this,renderer.dataSet);
 
 		// Checks dead particles and reinits or swaps
@@ -220,14 +220,14 @@ namespace SPK
 			if (particleData.energies[i] <= 0.0f)
 			{
 				// Death action
-				if (deathAction	!= NULL && deathAction->isActive())
+				if (deathAction && deathAction->isActive())
 				{
 				    Particle particle = getParticle(i); // fix for gcc
 					deathAction->apply(particle);
 				}
 
 				bool replaceDeadParticle = false;
-				while (!replaceDeadParticle && nbBorn > 0) 
+				while (!replaceDeadParticle && nbBorn > 0)
 				{
 					if (initParticle(i,emitterIndex,nbManualBorn))
 						replaceDeadParticle = true;
@@ -264,7 +264,7 @@ namespace SPK
 
 	void Group::renderParticles()
 	{
-		if (renderer.obj != NULL && renderer.obj->isActive())
+		if (renderer.obj && renderer.obj->isActive())
 		{
 			renderer.obj->prepareData(*this,renderer.dataSet);
 			if (renderer.renderBuffer == NULL)
@@ -317,7 +317,7 @@ namespace SPK
 	{
 		if (paramInterpolators[param].obj != interpolator)
 		{
-			if (paramInterpolators[param].obj == NULL && interpolator != NULL)
+			if (!paramInterpolators[param].obj && interpolator)
 			{
 				if (particleData.parameters[param] != NULL)
 					SPK_LOG_FATAL("Group::setParamInterpolator(Param,FloatInterpolator*) - Unexpected memory leak happened");
@@ -326,7 +326,7 @@ namespace SPK
 				if (isInitialized())
 					particleData.parameters[param] = SPK_NEW_ARRAY(float,particleData.maxParticles);
 			}
-			else if (paramInterpolators[param].obj != NULL && interpolator == NULL)
+			else if (paramInterpolators[param].obj && !interpolator)
 			{
 				if (particleData.parameters[param] == NULL)
 				{
@@ -349,7 +349,7 @@ namespace SPK
 
 	void Group::addEmitter(const Ref<Emitter>& emitter)
 	{
-		if (emitter == NULL)
+		if (!emitter)
 		{
 			SPK_LOG_WARNING("Group::addEmitter(const Ref<Emitter>&) - A NULL emitter cannot be added to a group");
 			return;
@@ -376,7 +376,7 @@ namespace SPK
 
 	void Group::addModifier(const Ref<Modifier>& modifier)
 	{
-		if (modifier == NULL)
+		if (!modifier)
 		{
 			SPK_LOG_WARNING("Group::addModifier(const Ref<Modifier>&) - A NULL modifier cannot be added to a group");
 			return;
@@ -444,7 +444,7 @@ namespace SPK
 	{
 		nbEnabledParameters = 0;
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
-			if (paramInterpolators[i].obj != NULL)
+			if (paramInterpolators[i].obj)
 				enabledParamIndices[nbEnabledParameters++] = i;
 	}
 
@@ -456,7 +456,7 @@ namespace SPK
 		particleData.energies[index] = 1.0f;
 		particleData.lifeTimes[index] = SPK_RANDOM(minLifeTime,maxLifeTime);
 
-		if (colorInterpolator.obj != NULL)
+		if (colorInterpolator.obj)
 			colorInterpolator.obj->init(particleData.colors[index],particle,colorInterpolator.dataSet);
 		else
 			particleData.colors[index] = 0xFFFFFFFF;
@@ -477,12 +477,12 @@ namespace SPK
 		{
 			CreationData& creationData = creationBuffer.front();
 
-			if (creationData.zone != NULL)
+			if (creationData.zone)
 				creationData.zone->generatePosition(particle.position(),creationData.full,particle.getRadius());
 			else
 				particle.position() = creationData.position;
 
-			if (creationData.emitter != NULL)
+			if (creationData.emitter)
 			{
 				float speed = SPK_RANDOM(creationData.emitter->getForceMin(),creationData.emitter->getForceMax()) / particle.getParam(PARAM_MASS);
 				creationData.emitter->generateVelocity(particle,speed);
@@ -504,11 +504,11 @@ namespace SPK
 
 		if (particle.isAlive())
 		{
-			if (renderer.obj != NULL && renderer.obj->isActive())
+			if (renderer.obj && renderer.obj->isActive())
 				renderer.obj->init(particle,renderer.dataSet);
 
 			// birth action
-			if (birthAction != NULL && birthAction->isActive())
+			if (birthAction && birthAction->isActive())
 				birthAction->apply(particle);
 
 			return true;
@@ -613,7 +613,7 @@ namespace SPK
 		AABBMin.set(maxFloat,maxFloat,maxFloat);
 		AABBMax.set(-maxFloat,-maxFloat,-maxFloat);
 
-		if (renderer.obj != NULL && renderer.obj->isActive())
+		if (renderer.obj && renderer.obj->isActive())
 		{
 			renderer.obj->prepareData(*this,renderer.dataSet);
 			renderer.obj->computeAABB(AABBMin,AABBMax,*this,renderer.dataSet);
@@ -663,51 +663,51 @@ namespace SPK
 
 	void Group::addParticles(unsigned int nb,const Ref<Zone>& zone,const Ref<Emitter>& emitter,bool full)
 	{
-		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,Zone*,Emitter*,bool) - emitter must not be NULL");
-		SPK_ASSERT(zone != NULL,"Group::addParticles(unsigned int,Zone*,Emitter*,bool) - zone must not be NULL");
+		SPK_ASSERT(emitter,"Group::addParticles(unsigned int,Zone*,Emitter*,bool) - emitter must not be NULL");
+		SPK_ASSERT(zone,"Group::addParticles(unsigned int,Zone*,Emitter*,bool) - zone must not be NULL");
 		addParticles(emitter->updateTankFromNb(nb),Vector3D(),Vector3D(),zone,emitter,full);
 	}
 
 	void Group::addParticles(unsigned int nb,const Ref<Zone>& zone,const Vector3D& velocity,bool full)
 	{
-		SPK_ASSERT(zone != NULL,"Group::addParticles(unsigned int,Zone*,const Vector3D&,bool) - zone must not be NULL");
+		SPK_ASSERT(zone,"Group::addParticles(unsigned int,Zone*,const Vector3D&,bool) - zone must not be NULL");
 		addParticles(nb,Vector3D(),velocity,zone,SPK_NULL_REF,full);
 	}
 
 	void Group::addParticles(unsigned int nb,const Vector3D& position,const Ref<Emitter>& emitter)
 	{
-		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,const Vector3D&,Emitter*) - emitter must not be NULL");
+		SPK_ASSERT(emitter,"Group::addParticles(unsigned int,const Vector3D&,Emitter*) - emitter must not be NULL");
 		addParticles(emitter->updateTankFromNb(nb),position,Vector3D(),SPK_NULL_REF,emitter);
 	}
 
 	void Group::addParticles(unsigned int nb,const Ref<Emitter>& emitter)
 	{
-		SPK_ASSERT(emitter != NULL,"Group::addParticles(unsigned int,Emitter*) - emitter must not be NULL");
+		SPK_ASSERT(emitter,"Group::addParticles(unsigned int,Emitter*) - emitter must not be NULL");
 		addParticles(emitter->updateTankFromNb(nb),Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
 	}
 
 	void Group::addParticles(const Ref<Zone>& zone,const Ref<Emitter>& emitter,float deltaTime,bool full)
 	{
-		SPK_ASSERT(emitter != NULL,"Group::addParticles(Zone*,Emitter*,float,bool) - emitter must not be NULL");
-		SPK_ASSERT(zone != NULL,"Group::addParticles(Zone*,Emitter*,float,bool) - zone must not be NULL");
+		SPK_ASSERT(emitter,"Group::addParticles(Zone*,Emitter*,float,bool) - emitter must not be NULL");
+		SPK_ASSERT(zone,"Group::addParticles(Zone*,Emitter*,float,bool) - zone must not be NULL");
 		addParticles(emitter->updateTankFromTime(deltaTime),Vector3D(),Vector3D(),zone,emitter,full);
 	}
 
 	void Group::addParticles(const Vector3D& position,const Ref<Emitter>& emitter,float deltaTime)
 	{
-		SPK_ASSERT(emitter != NULL,"Group::addParticles(const Vector3D&,Emitter*,float) - emitter must not be NULL");
+		SPK_ASSERT(emitter,"Group::addParticles(const Vector3D&,Emitter*,float) - emitter must not be NULL");
 		addParticles(emitter->updateTankFromTime(deltaTime),position,Vector3D(),SPK_NULL_REF,emitter);
 	}
 
 	void Group::addParticles(const Ref<Emitter>& emitter,float deltaTime)
 	{
-		SPK_ASSERT(emitter != NULL,"Group::addParticles(Emitter*,float) - emitter must not be NULL");
+		SPK_ASSERT(emitter,"Group::addParticles(Emitter*,float) - emitter must not be NULL");
 		addParticles(emitter->updateTankFromTime(deltaTime),Vector3D(),Vector3D(),emitter->getZone(),emitter,emitter->isFullZone());
 	}
 
 	float Group::addParticles(const Vector3D& start,const Vector3D& end,const Ref<Emitter>& emitter,float step,float offset)
 	{
-		SPK_ASSERT(emitter != NULL,"Group::addParticles(const Vector3D&,const Vector3D&,Emitter*,float,float) - emitter must not be NULL");
+		SPK_ASSERT(emitter,"Group::addParticles(const Vector3D&,const Vector3D&,Emitter*,float,float) - emitter must not be NULL");
 
 		if ((step <= 0.0f)||(offset < 0.0f))
 			return 0.0f;
@@ -719,7 +719,7 @@ namespace SPK
 		{
 			Vector3D position = start;
 			position += displacement * offset / totalDist;
-			addParticles(1,position,Vector3D(),NULL,emitter);
+			addParticles(1,position,Vector3D(),Ref<Zone>(),emitter);
 			offset += step;
 		}
 
@@ -738,7 +738,7 @@ namespace SPK
 		{
 			Vector3D position = start;
 			position += displacement * (offset / totalDist);
-			addParticles(1,position,velocity,NULL,NULL);
+			addParticles(1,position,velocity,Ref<Zone>(),Ref<Emitter>());
 			offset += step;
 		}
 
@@ -782,7 +782,7 @@ namespace SPK
 
 	inline void Group::prepareAdditionnalData()
 	{
-		if (renderer.obj != NULL)
+		if (renderer.obj)
 			renderer.obj->prepareData(*this,renderer.dataSet);
 
 		activeModifiers.clear();
@@ -801,7 +801,7 @@ namespace SPK
 
 		manageOctreeInstance(needsOctree);
 
-		if (colorInterpolator.obj != NULL)
+		if (colorInterpolator.obj)
 		{
 			colorInterpolator.obj->prepareData(*this,colorInterpolator.dataSet);
 			colorInterpolator.obj->interpolate(particleData.colors,*this,colorInterpolator.dataSet);
@@ -880,50 +880,50 @@ namespace SPK
 
 	Ref<SPKObject> Group::findByName(const std::string& name)
 	{
-		Ref<SPKObject>& object = SPKObject::findByName(name);
-		if (object != NULL) return object;
+		Ref<SPKObject> object = SPKObject::findByName(name);
+		if (object) return object;
 
-		if (renderer.obj != NULL)
+		if (renderer.obj)
 		{
 			object = renderer.obj->findByName(name);
-			if (object != NULL) return object;
+			if (object) return object;
 		}
 
-		if (colorInterpolator.obj != NULL)
+		if (colorInterpolator.obj)
 		{
 			object = colorInterpolator.obj->findByName(name);
-			if (object != NULL) return object;
+			if (object) return object;
 		}
 
 		for (size_t i = 0; i < NB_PARAMETERS; ++i)
-			if (paramInterpolators[i].obj != NULL)
+			if (paramInterpolators[i].obj)
 			{
 				object = paramInterpolators[i].obj->findByName(name);
-				if (object != NULL) return object;
+				if (object) return object;
 			}
 
 		for (std::vector<Ref<Emitter> >::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 		{
 			object = (*it)->findByName(name);
-			if (object != NULL) return object;
+			if (object) return object;
 		}
 
 		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
 		{
 			object = it->obj->findByName(name);
-			if (object != NULL) return object;
+			if (object) return object;
 		}
 
-		if (birthAction != NULL)
+		if (birthAction)
 		{
 			object = birthAction->findByName(name);
-			if (object != NULL) return object;
+			if (object) return object;
 		}
 
-		if (deathAction != NULL)
+		if (deathAction)
 		{
 			object = deathAction->findByName(name);
-			if (object != NULL) return object;
+			if (object) return object;
 		}
 
 		return SPK_NULL_REF;
@@ -952,16 +952,16 @@ namespace SPK
 
 		if (attrib = descriptor.getAttributeWithValue("emitters"))
 		{
-			std::vector<Ref<Emitter> >& tmpEmitters = attrib->getValuesRef<Emitter>();
+			const std::vector<Ref<Emitter> >& tmpEmitters = attrib->getValuesRef<Emitter>();
 			for (size_t i = 0; i < tmpEmitters.size(); ++i)
 				addEmitter(tmpEmitters[i]);
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("modifiers"))
 		{
-			std::vector<Ref<Modifier> >& tmpModifiers = attrib->getValuesRef<Modifier>();
+			const std::vector<Ref<Modifier> >& tmpModifiers = attrib->getValuesRef<Modifier>();
 			for (size_t i = 0; i < tmpModifiers.size(); ++i)
-				addModifier(tmpModifiers[i].cast<Modifier>());
+				addModifier(dynamicCast<Modifier>(tmpModifiers[i]));
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("birth action"))
@@ -1040,7 +1040,7 @@ namespace SPK
 		descriptor.getAttribute("still")->setValueOptionalOnFalse(still);
 		descriptor.getAttribute("distance computation enabled")->setValueOptionalOnFalse(distanceComputationEnabled);
 		descriptor.getAttribute("sorting enabled")->setValueOptionalOnFalse(sortingEnabled);
-	
+
 		float tmpRadiuses[2] = {graphicalRadius,physicalRadius};
 		descriptor.getAttribute("radius")->setValues(tmpRadiuses,tmpRadiuses[0] == tmpRadiuses[1] ? 1 : 2);
 	}

@@ -39,11 +39,11 @@
 //
 //		if (doc.Error())
 //		{
-//			SPK_LOG_ERROR("XMLLoader::innerLoad(std::istream&,Graph&) - Error while parsing XML : " << doc.ErrorDesc() << " at line " << doc.ErrorRow() << " and column " << doc.ErrorCol()); 
+//			SPK_LOG_ERROR("XMLLoader::innerLoad(std::istream&,Graph&) - Error while parsing XML : " << doc.ErrorDesc() << " at line " << doc.ErrorRow() << " and column " << doc.ErrorCol());
 //			return false;
 //		}
 //
-//		const TiXmlElement* root = doc.RootElement(); 
+//		const TiXmlElement* root = doc.RootElement();
 //		if (root == NULL || root->ValueStr() != "SPARK")
 //		{
 //			SPK_LOG_ERROR("XMLLoader::innerLoad(std::istream&,Graph&) - The root element is not conform (must be <SPARK>)");
@@ -53,7 +53,7 @@
 //		// Iterates in XML to find the objects and fill the graph
 //		std::vector<const TiXmlElement*> objElements; // This will allow to find back objects description once created
 //		std::map<int,size_t> ref2Index; // This map allows to find back objects index in the vector from their reference id
-//		
+//
 //		findObjects(*root,objElements,ref2Index,true);
 //		for (size_t i = 0; i < objElements.size(); ++i)
 //			graph.addNode(i,objElements[i]->ValueStr());
@@ -69,7 +69,7 @@
 //			Node* node = graph.getNode(i);
 //			if (node != NULL)
 //			{
-//				Descriptor& desc = node->getDescriptor();	
+//				Descriptor& desc = node->getDescriptor();
 //				parseAttributes(element,desc,graph,objElements,ref2Index);
 //			}
 //		}
@@ -103,7 +103,7 @@
 //
 //		if (tmpStr == NULL) // No string value for ref is found
 //			return SPK_NULL_REF;
-//		
+//
 //		int refID = -1;
 //		if (convert(*tmpStr,refID))	// The string value can be converted into a refID
 //		{
@@ -183,7 +183,7 @@
 //						case ATTRIBUTE_TYPE_VECTOR :	setAttributeValue<Vector3D>(*attribute,*attrib); break;
 //						case ATTRIBUTE_TYPE_COLOR :		setAttributeValue<Color>(*attribute,*attrib); break;
 //						case ATTRIBUTE_TYPE_STRING :	setAttributeValue<std::string>(*attribute,*attrib); break;
-//						
+//
 //						case ATTRIBUTE_TYPE_CHARS :		setAttributeValueArray<char>(*attribute,*attrib); break;
 //						case ATTRIBUTE_TYPE_BOOLS :		setAttributeValueArray<bool>(*attribute,*attrib); break;
 //						case ATTRIBUTE_TYPE_INT32S :	setAttributeValueArray<int32>(*attribute,*attrib); break;
@@ -196,7 +196,7 @@
 //						case ATTRIBUTE_TYPE_REF : {
 //							Ref<SPKObject> obj = getRef(*attrib,ref2Index,graph);
 //							if (obj == NULL)
-//								obj = getObject(attrib->FirstChildElement(),objElements,graph); 
+//								obj = getObject(attrib->FirstChildElement(),objElements,graph);
 //							if (obj != NULL)
 //								attribute->setValueRef(obj);
 //							break; }
@@ -208,13 +208,13 @@
 //								Ref<SPKObject> tmp;
 //								if (child->ValueStr() == "Ref")
 //									tmp = getRef(*child,ref2Index,graph);
-//								else 
+//								else
 //									tmp = getObject(child,objElements,graph);
 //								if (tmp != NULL)
 //									objects.push_back(tmp);
 //							}
 //							if (!objects.empty())
-//								attribute->setValuesRef(&objects[0],objects.size());	
+//								attribute->setValuesRef(&objects[0],objects.size());
 //							break; }
 //
 //						default : SPK_LOG_FATAL("XMLLoader::parseAttributes(const TiXmlElement&,Descriptor&,const Graph&,const std::vector<const TiXmlElement*>&,const std::map<int,size_t>&) - Unknown attribute type");
@@ -237,7 +237,7 @@
 //				buffer[i] = tmp[i];
 //			attribute.setValues(buffer,tmp.size());
 //			SPK_DELETE_ARRAY(buffer);
-//		}		
+//		}
 //	}
 //}}
 
@@ -252,7 +252,7 @@ namespace IO
 
 		if (!result)
 		{
-			SPK_LOG_ERROR("XMLLoader::innerLoad(std::istream&,Graph&) - Error while parsing XML : " << result.description() << " at character " << result.offset); 
+			SPK_LOG_ERROR("XMLLoader::innerLoad(std::istream&,Graph&) - Error while parsing XML : " << result.description() << " at character " << result.offset);
 			return false;
 		}
 
@@ -264,9 +264,9 @@ namespace IO
 		}
 
 		// Iterates in XML to find the objects and fill the graph
-		std::vector<const pugi::xml_node> objElements; // This will allow to find back objects description once created
+		std::vector<pugi::xml_node> objElements; // This will allow to find back objects description once created
 		std::map<int,size_t> ref2Index; // This map allows to find back objects index in the vector from their reference id
-		
+
 		findObjects(root,objElements,ref2Index,true);
 		for (size_t i = 0; i < objElements.size(); ++i)
 			graph.addNode(i,std::string(objElements[i].name()));
@@ -282,7 +282,7 @@ namespace IO
 			Node* node = graph.getNode(i);
 			if (node != NULL)
 			{
-				Descriptor& desc = node->getDescriptor();	
+				Descriptor& desc = node->getDescriptor();
 				parseAttributes(element,desc,graph,objElements,ref2Index);
 			}
 		}
@@ -306,7 +306,7 @@ namespace IO
 
 		if (tmpStr == "") // No string value for ref is found
 			return SPK_NULL_REF;
-		
+
 		int refID = -1;
 		if (convert(tmpStr,refID))	// The string value can be converted into a refID
 		{
@@ -322,7 +322,7 @@ namespace IO
 		return SPK_NULL_REF;
 	}
 
-	Ref<SPKObject> XMLLoader::getObject(const pugi::xml_node& element,const std::vector<const pugi::xml_node>& objElements,const Graph& graph) const
+	Ref<SPKObject> XMLLoader::getObject(const pugi::xml_node& element,const std::vector<pugi::xml_node>& objElements,const Graph& graph) const
 	{
 		if (element)
 			for (size_t i = 0; i < objElements.size(); ++i) // This can be optimized in complexity by using a map
@@ -337,7 +337,7 @@ namespace IO
 		return SPK_NULL_REF;
 	}
 
-	void XMLLoader::findObjects(const pugi::xml_node& parent,std::vector<const pugi::xml_node>& objElements,std::map<int,size_t>& ref2Index,bool objectLevel) const
+	void XMLLoader::findObjects(const pugi::xml_node& parent,std::vector<pugi::xml_node>& objElements,std::map<int,size_t>& ref2Index,bool objectLevel) const
 	{
 		for(pugi::xml_node element = parent.first_child(); element; element = element.next_sibling())
 		{
@@ -361,7 +361,7 @@ namespace IO
 		const pugi::xml_node& element,
 		Descriptor& desc,
 		const Graph& graph,
-		const std::vector<const pugi::xml_node>& objElements,
+		const std::vector<pugi::xml_node>& objElements,
 		const std::map<int,size_t>& ref2Index) const
 	{
 		// name
@@ -388,7 +388,7 @@ namespace IO
 						case ATTRIBUTE_TYPE_VECTOR :	setAttributeValue<Vector3D>(*attribute,attrib); break;
 						case ATTRIBUTE_TYPE_COLOR :		setAttributeValue<Color>(*attribute,attrib); break;
 						case ATTRIBUTE_TYPE_STRING :	setAttributeValue<std::string>(*attribute,attrib); break;
-						
+
 						case ATTRIBUTE_TYPE_CHARS :		setAttributeValueArray<char>(*attribute,attrib); break;
 						case ATTRIBUTE_TYPE_BOOLS :		setAttributeValueArray<bool>(*attribute,attrib); break;
 						case ATTRIBUTE_TYPE_INT32S :	setAttributeValueArray<int32>(*attribute,attrib); break;
@@ -401,9 +401,9 @@ namespace IO
 						case ATTRIBUTE_TYPE_REF :
 						{
 							Ref<SPKObject> obj = getRef(attrib,ref2Index,graph);
-							if (obj == NULL)
-								obj = getObject(attrib.first_child(),objElements,graph); 
-							if (obj != NULL)
+							if (!obj)
+								obj = getObject(attrib.first_child(),objElements,graph);
+							if (obj)
 								attribute->setValueRef(obj);
 							break;
 						}
@@ -416,13 +416,13 @@ namespace IO
 								Ref<SPKObject> tmp;
 								if (std::string("Ref") == child.name())
 									tmp = getRef(child,ref2Index,graph);
-								else 
+								else
 									tmp = getObject(child,objElements,graph);
-								if (tmp != NULL)
+								if (tmp)
 									objects.push_back(tmp);
 							}
 							if (!objects.empty())
-								attribute->setValuesRef(&objects[0],objects.size());	
+								attribute->setValuesRef(&objects[0],objects.size());
 							break;
 						}
 
@@ -446,7 +446,7 @@ namespace IO
 				buffer[i] = tmp[i];
 			attribute.setValues(buffer,tmp.size());
 			SPK_DELETE_ARRAY(buffer);
-		}		
+		}
 	}
 }}
 

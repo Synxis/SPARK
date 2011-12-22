@@ -56,10 +56,10 @@ namespace SPK
 
 	Ref<SPKObject> NormalEmitter::findByName(const std::string& name)
 	{
-		Ref<SPKObject>& object = Emitter::findByName(name);
-		if (object != NULL) return object;
+		Ref<SPKObject> object = Emitter::findByName(name);
+		if (object) return object;
 
-		if (normalZone != NULL)
+		if (normalZone)
 			object = normalZone->findByName(name);
 
 		return SPK_NULL_REF;
@@ -68,14 +68,14 @@ namespace SPK
 	void NormalEmitter::propagateUpdateTransform()
 	{
 		Emitter::propagateUpdateTransform();
-		if (normalZone != NULL && !normalZone->isShared())
+		if (normalZone && !normalZone->isShared())
 			normalZone->updateTransform(this);
 	}
 
 	void NormalEmitter::generateVelocity(Particle& particle,float speed) const
 	{
 		if (inverted) speed = -speed;
-		const Ref<Zone>& zone = (normalZone == NULL ? getZone() : normalZone);
+		const Ref<Zone>& zone = (!normalZone ? getZone() : normalZone);
 		particle.velocity() = zone->computeNormal(particle.position()) * speed;
 	}
 

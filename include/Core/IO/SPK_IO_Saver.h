@@ -61,6 +61,8 @@ namespace IO
 		// Nested classes //
 		////////////////////
 
+		class Graph; // Forward declaration for friendship
+
 		class Node
 		{
 		friend class Graph;
@@ -102,14 +104,14 @@ namespace IO
 
 			Graph();
 			Graph(const Graph&);
-			
+
 			std::map<const SPKObject*,Node*> ptr2Nodes;
 			std::list<Node*> nodes;
 
 			mutable std::list<Node*>::iterator currentPosIt;
 			mutable bool posInitialized;
 
-			Node* createNode(Descriptor& descriptor);
+			Node* createNode(const Descriptor& descriptor);
 		};
 
 	private :
@@ -124,7 +126,7 @@ namespace IO
 
 		static void constructGraph(Graph& graph,const System* system);
 		static void constructNode(Graph& graph,const SPKObject* object,size_t level);
-	};	
+	};
 }}
 
 #endif

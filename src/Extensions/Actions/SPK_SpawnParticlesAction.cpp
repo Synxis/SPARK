@@ -86,18 +86,18 @@ namespace SPK
 
 	bool SpawnParticlesAction::checkValidity() const
 	{
-		if (targetGroup == NULL)
+		if (!targetGroup)
 		{
 			SPK_LOG_ERROR("SpawnParticlesAction::checkValidity() - The target group is NULL and cannot be used");
 			return false;
 		}
-		else if (targetGroup->getSystem() == NULL)
+		else if (!targetGroup->getSystem())
 		{
 			SPK_LOG_ERROR("SpawnParticlesAction::checkValidity() - The target group is invalid (it is not bound to a system) and cannot be used");
 			return false;
 		}
 
-		if (baseEmitter == NULL)
+		if (!baseEmitter)
 		{
 			SPK_LOG_ERROR("SpawnParticlesAction::checkValidity() - The base emitter is NULL and cannot be used");
 			return false;
@@ -134,10 +134,10 @@ namespace SPK
 
 	Ref<SPKObject> SpawnParticlesAction::findByName(const std::string& name)
 	{
-		Ref<SPKObject>& object = Action::findByName(name);
-		if (object != NULL) return object;
+		Ref<SPKObject> object = Action::findByName(name);
+		if (object) return object;
 
-		if (baseEmitter != NULL)
+		if (baseEmitter)
 			object = baseEmitter->findByName(name);
 
 		return object;
@@ -147,7 +147,7 @@ namespace SPK
 	{
 		Action::innerImport(descriptor);
 
-		const IO::Attribute* attrib = NULL;	
+		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("spawning numbers"))
 		{
 			std::vector<uint32> nbs = attrib->getValues<uint32>();

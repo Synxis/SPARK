@@ -30,9 +30,9 @@ namespace SPK
 	const size_t Octree::MAX_LEVEL_INDEX = 4; // A too high number will be highly memory comsuming
 	const size_t Octree::MAX_PARTICLES_NB_PER_CELL = 32;
 	const float Octree::OPTIMAL_CELL_SIZE_FACTOR = 4.0f; // optimal cell size is defined as : factor * mean radius
-	const float Octree::MIN_CELL_SIZE = 0.001f; 
+	const float Octree::MIN_CELL_SIZE = 0.001f;
 
-	Octree::Octree(const Ref<Group>& group) : 
+	Octree::Octree(const Ref<Group>& group) :
 		group(*group),
 		cells(64),
 		nbCells(0),
@@ -42,9 +42,9 @@ namespace SPK
 		maxPos(NULL)
 	{}
 
-	Octree::~Octree() 
-	{ 
-		SPK_DELETE_ARRAY(particleCells); 
+	Octree::~Octree()
+	{
+		SPK_DELETE_ARRAY(particleCells);
 		SPK_DELETE_ARRAY(minPos);
 		SPK_DELETE_ARRAY(maxPos);
 	}
@@ -58,7 +58,7 @@ namespace SPK
 			SPK_DELETE_ARRAY(particleCells);
 			SPK_DELETE_ARRAY(minPos);
 			SPK_DELETE_ARRAY(maxPos);
-			
+
 			particleCells = SPK_NEW_ARRAY(Array<size_t>,nbParticles);
 			minPos = SPK_NEW_ARRAY(Triplet,nbParticles);
 			maxPos = SPK_NEW_ARRAY(Triplet,nbParticles);
@@ -66,13 +66,13 @@ namespace SPK
 
 		const float MAX_FLOAT = std::numeric_limits<float>::max();
 		AABBMin.set(MAX_FLOAT,MAX_FLOAT,MAX_FLOAT);
-		AABBMax.set(-MAX_FLOAT,-MAX_FLOAT,-MAX_FLOAT); 
+		AABBMax.set(-MAX_FLOAT,-MAX_FLOAT,-MAX_FLOAT);
 
-		// First traversal in O(n) needed to init the octree 
+		// First traversal in O(n) needed to init the octree
 		float meanRadius = 0.0f;
 		for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
-			const Particle& particle = *particleIt;			
+			const Particle& particle = *particleIt;
 			float radius = particle.getRadius();
 			AABBMin.setMin(particle.position());
 			AABBMax.setMax(particle.position());
@@ -125,7 +125,7 @@ namespace SPK
 
 			Vector3D minPosf = (position - radius) * ratio;
 			Vector3D maxPosf = (position + radius) * ratio;
-			
+
 			minPos[particleIndex].set(minPosf);
 			maxPos[particleIndex].set(maxPosf);
 
@@ -165,7 +165,7 @@ namespace SPK
 			{
 				for (size_t i = 0; i < 8; ++i)
 				{
-					
+
 					size_t childIndex = initNextCell(
 						cells[cellIndex].level + 1,
 						(cells[cellIndex].offsetX << 1) + ((i >> 2) & 1),
@@ -181,7 +181,7 @@ namespace SPK
 				for (size_t i = 0; i < nbParticlesInCell; ++i)
 					addToChildrenCells(cellIndex,cells[cellIndex].particles[i],maxLevel);
 				cells[cellIndex].particles.clear();
-			} 
+			}
 
 			addToChildrenCells(cellIndex,particleIndex,maxLevel);
 		}

@@ -55,25 +55,25 @@ namespace SPK
 		/////////////////////////////
 
 		Ref() : ptr(NULL) {}
-		Ref(NullReferenceValue) : 
+		Ref(NullReferenceValue) :
 			ptr(NULL) {}
-		Ref(const Ref& ref) : 
+		Ref(const Ref& ref) :
 			ptr(ref.get()) { increment(); }
-		template<typename U> Ref(U* ptr) : 
+		template<typename U> Ref(U* ptr) :
 			ptr(ptr) { increment(); }
-		template<typename U> Ref(const Ref<U>& ref) : 
+		template<typename U> Ref(const Ref<U>& ref) :
 			ptr(ref.get()) { increment(); }
-		
+
 		~Ref() { decrement(); }
 
 		//////////////////////////
 		// Operator overloading //
 		//////////////////////////
 
-		Ref& operator=(NullReferenceValue) 
-		{ 
-			reset(); 
-			return *this; 
+		Ref& operator=(NullReferenceValue)
+		{
+			reset();
+			return *this;
 		}
 
 		Ref& operator=(T* ptr)
@@ -116,11 +116,10 @@ namespace SPK
 		T* operator->() const { return ptr; }
 		T* get() const { return ptr; }
 
-		operator bool() const { return ptr != 0; }
+		operator bool() const { return ptr != NULL; }
+		bool operator !()	  { return ptr == NULL; }
 
 		void reset() { decrement(); ptr = NULL; }
-
-		template<typename U> Ref<U> cast() const { return Ref<U>(dynamic_cast<U*>(ptr)); }
 
 	private :
 
@@ -150,6 +149,8 @@ namespace SPK
 	template<typename T,typename U> inline bool operator!=(T* ptr,const Ref<U>& ref) { return ref.get() != ptr; }
 
 	template<typename T> std::ostream& operator<<(std::ostream& s,const Ref<T>& ref) { return s << ref.get(); }
+
+    template<typename T,typename U> Ref<T> dynamicCast(const Ref<U>& ref) { return Ref<T>(dynamic_cast<T*>(ref.get())); }
 }
 
 #endif

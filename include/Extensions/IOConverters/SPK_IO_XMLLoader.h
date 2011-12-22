@@ -45,10 +45,10 @@ namespace IO
 
 		const std::string getValue(const pugi::xml_node& element) const;
 		Ref<SPKObject> getRef(const pugi::xml_node& element,const std::map<int,size_t>& ref2Index,const Graph& graph) const;
-		Ref<SPKObject> getObject(const pugi::xml_node& element,const std::vector<const pugi::xml_node>& objElements,const Graph& graph) const;
+		Ref<SPKObject> getObject(const pugi::xml_node& element,const std::vector<pugi::xml_node>& objElements,const Graph& graph) const;
 
-		void findObjects(const pugi::xml_node& parent,std::vector<const pugi::xml_node>& objElements,std::map<int,size_t>& ref2Index,bool objectLevel) const;
-		void parseAttributes(const pugi::xml_node& element,Descriptor& desc,const Graph& graph,const std::vector<const pugi::xml_node>& objElements,const std::map<int,size_t>& ref2Index) const;
+		void findObjects(const pugi::xml_node& parent,std::vector<pugi::xml_node>& objElements,std::map<int,size_t>& ref2Index,bool objectLevel) const;
+		void parseAttributes(const pugi::xml_node& element,Descriptor& desc,const Graph& graph,const std::vector<pugi::xml_node>& objElements,const std::map<int,size_t>& ref2Index) const;
 
 		template<typename T> void setAttributeValue(Attribute& attribute,const pugi::xml_node& element) const;
 		template<typename T> void setAttributeValueArray(Attribute& attribute,const pugi::xml_node& element) const;
@@ -57,7 +57,7 @@ namespace IO
 		template<typename T> static bool convert2Array(const std::string& str,std::vector<T>& values);
 	};
 
-	template<typename T> 
+	template<typename T>
 	bool XMLLoader::convert(const std::string& str,T& value)
 	{
 		std::istringstream is(str);
@@ -65,7 +65,7 @@ namespace IO
 		return is >> value && is.eof();
 	}
 
-	template<typename T> 
+	template<typename T>
 	bool XMLLoader::convert2Array(const std::string& str,std::vector<T>& values)
 	{
 		values.clear();
@@ -104,12 +104,12 @@ namespace IO
 	{
 		std::vector<T> tmp;
 		const std::string value = getValue(element);
-		if (value != "" && convert2Array(value,tmp)) // Ok because convertArray ensures the vector is not empty 
+		if (value != "" && convert2Array(value,tmp)) // Ok because convertArray ensures the vector is not empty
 			attribute.setValues(&tmp[0],tmp.size());
 	}
 
 	// Specialization for bool as vector<bool> is handled differently in the standard (we cannot cast a vector<bool> to a bool* with &v[0])
-	template<> 
+	template<>
 	void SPK_PREFIX XMLLoader::setAttributeValueArray<bool>(Attribute& attribute,const pugi::xml_node& element) const;
 }}
 

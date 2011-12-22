@@ -28,10 +28,10 @@
 namespace SPK
 {
 #ifdef SPK_TRACE_MEMORY
-	SPKMemoryTracer& SPKMemoryTracer::get() 
+	SPKMemoryTracer& SPKMemoryTracer::get()
 	{
 		static SPKMemoryTracer* instance = NULL;
-		if (instance == NULL) instance = new SPKMemoryTracer; 
+		if (instance == NULL) instance = new SPKMemoryTracer;
 		return *instance;
 	}
 #endif
@@ -47,9 +47,9 @@ namespace SPK
 		// little tweak to ensure the randomSeed is uniformly distributed along all the range
 		for (size_t i = 0; i < 2; ++i)
 			randomSeed = generateRandom(static_cast<unsigned int>(1),std::numeric_limits<unsigned int>::max());
-	
+
 		// Registers all core objects for loading
-		// registerCoreForLoading();	
+		// registerCoreForLoading();
 	}
 
 	// This allows SPARK finalization at application exit
@@ -66,7 +66,7 @@ namespace SPK
 
 	const Ref<Zone>& SPKContext::getDefaultZone()
 	{
-		if (defaultZone == NULL)
+		if (!defaultZone)
 		{
 			// Creates the zone by default
 			defaultZone = Point::create();

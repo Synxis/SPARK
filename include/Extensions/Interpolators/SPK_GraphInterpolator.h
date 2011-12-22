@@ -125,7 +125,7 @@ namespace SPK
 	template<typename T>
 	class GraphInterpolator : public Interpolator<T>
 	{
-	SPK_IMPLEMENT_OBJECT(GraphInterpolator<T>);
+	SPK_DEFINE_OBJECT_TEMPLATE(GraphInterpolator<T>);
 	SPK_DEFINE_DESCRIPTION_TEMPLATE
 
 	public :
@@ -138,7 +138,7 @@ namespace SPK
 
 		/**
 		* @brief Sets the value used to interpolate
-		* 
+		*
 		* See the class description for more information.<br>
 		* Note that the argument param is only used when the type is INTERPOLATOR_PARAM.
 		*
@@ -332,7 +332,7 @@ namespace SPK
 
 	template<typename T>
 	GraphInterpolator<T>::GraphInterpolator() :
-		Interpolator(true),
+		Interpolator<T>(true),
 		graph(),
 		type(INTERPOLATOR_LIFETIME),
 		param(PARAM_SCALE),
@@ -343,7 +343,7 @@ namespace SPK
 
 	template<typename T>
 	GraphInterpolator<T>::GraphInterpolator(const GraphInterpolator<T>& interpolator) :
-		Interpolator(interpolator),
+		Interpolator<T>(interpolator),
 		graph(interpolator.graph),
 		type(interpolator.type),
 		param(interpolator.param),
@@ -402,7 +402,7 @@ namespace SPK
 			SPK_LOG_WARNING("GraphInterpolator<T>::setScaleXVariation(float) - A scale variation with an absolute value >= 1.0 may reverse the interpolation");
 		this->scaleXVariation = scaleXVariation;
 	}
-	
+
 	template<typename T>
 	inline float GraphInterpolator<T>::getScaleXVariation() const
 	{
@@ -524,7 +524,7 @@ namespace SPK
 		}
 
 		// Gets the entry that is immediatly after the current X
-		std::set<InterpolatorEntry<T> >::const_iterator nextIt = graph.upper_bound(currentKey);
+		typename std::set<InterpolatorEntry<T> >::const_iterator nextIt = graph.upper_bound(currentKey);
 
 		// If the current X is higher than the one of the last entry
 		if (nextIt == graph.end())
@@ -541,7 +541,7 @@ namespace SPK
 			const InterpolatorEntry<T>& previousEntry = *(--nextIt);
 			float ratioX = (currentKey.x - previousEntry.x) / (nextEntry.x - previousEntry.x);
 			T y0,y1;
-			
+
 			interpolateEntry(y0,previousEntry,ratioY);
 			interpolateEntry(y1,nextEntry,ratioY);
 
@@ -602,7 +602,7 @@ namespace SPK
 				entries = SPK_NEW_ARRAY(InterpolatorEntry<T>,nbEntries);
 				for (size_t i = 0; i < nbEntries; ++i) entries[i].x = keys[i];
 			}
-			else 
+			else
 				validGraph = false;
 		}
 
@@ -664,7 +664,7 @@ namespace SPK
 			values1 = SPK_NEW_ARRAY(T,graph.size());
 
 			size_t index = 0;
-			for (std::set<InterpolatorEntry<T> >::const_iterator it = graph.begin(); it != graph.end(); ++it)
+			for (typename std::set<InterpolatorEntry<T> >::const_iterator it = graph.begin(); it != graph.end(); ++it)
 			{
 				keys[index] = it->x;
 				values0[index] = it->y0;
@@ -680,12 +680,12 @@ namespace SPK
 				descriptor.getAttribute("graph values 2")->setValues(values1,graph.size());
 		}
 
-		descriptor.getAttribute("interpolation type")->setValue<uint32>(getType(),getType() == INTERPOLATOR_LIFETIME);
-		descriptor.getAttribute("interpolation param")->setValue<uint32>(getInterpolatorParam(),getType() != INTERPOLATOR_PARAM);
+		descriptor.getAttribute("interpolation type")->setValue((uint32)getType(),getType() == INTERPOLATOR_LIFETIME);
+		descriptor.getAttribute("interpolation param")->setValue((uint32)getInterpolatorParam(),getType() != INTERPOLATOR_PARAM);
 		descriptor.getAttribute("looping enabled")->setValue(isLoopingEnabled());
 		descriptor.getAttribute("scale variation")->setValue(getScaleXVariation(),getScaleXVariation() == 0.0f);
 		descriptor.getAttribute("offset variation")->setValue(getOffsetXVariation(),getOffsetXVariation() == 0.0f);
-	
+
 		SPK_DELETE_ARRAY(keys);
 		SPK_DELETE_ARRAY(values0);
 		SPK_DELETE_ARRAY(values1);

@@ -44,7 +44,7 @@ namespace SPK
 		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
-		
+
 		T minValue;
 		T maxValue;
 
@@ -68,14 +68,14 @@ namespace SPK
 
 	template<typename T>
 	RandomInitializer<T>::RandomInitializer(const T& minValue,const T& maxValue) :
-		Interpolator(false),
+		Interpolator<T>(false),
 		minValue(minValue),
 		maxValue(maxValue)
 	{}
 
 	template<typename T>
 	RandomInitializer<T>::RandomInitializer(const RandomInitializer<T>& interpolator) :
-		Interpolator(interpolator),
+		Interpolator<T>(interpolator),
 		minValue(interpolator.minValue),
 		maxValue(interpolator.maxValue)
 	{}

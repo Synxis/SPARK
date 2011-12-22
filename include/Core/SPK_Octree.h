@@ -45,11 +45,14 @@ namespace SPK
 
 	public :
 
-		// A fast and simple self reallocating array (faster than generic std::vectors)
+        class Cell;
+
+        // A fast and simple self reallocating array (faster than generic std::vectors)
 		template<typename T>
 		class Array
 		{
 		friend class Octree;
+		friend class Cell;
 
 		public :
 
@@ -58,7 +61,7 @@ namespace SPK
 			size_t size() const					{ return currentNb; }
 			size_t capacity() const				{ return maxNb; }
 			bool empty() const					{ return currentNb == 0; }
-			T& operator[](size_t i)				{ return values[i]; } 
+			T& operator[](size_t i)				{ return values[i]; }
 			const T& operator[](size_t i) const	{ return values[i]; }
 
 			void push(T t)
@@ -78,8 +81,8 @@ namespace SPK
 			}
 
 			void clear() { currentNb = 0; }
-		
-		private :
+
+		/*private*/public : // tmp workaround because I wasnt able to allows Cell to be friend of Array (compiler bug ?) but thats unsafe
 
 			size_t currentNb;
 			size_t maxNb;
@@ -89,7 +92,7 @@ namespace SPK
 				currentNb(0),
 				maxNb(maxNb)
 			{
-				values = SPK_NEW_ARRAY(T,maxNb);	
+				values = SPK_NEW_ARRAY(T,maxNb);
 			}
 
 			Array<T>(const Array<T>& t) :
@@ -106,7 +109,7 @@ namespace SPK
 			{
 				currentNb = t.currentNb;
 				if (maxNb < currentNb) // Reallocates only if necessary
-				{	
+				{
 					maxNb = t.maxNb;
 					SPK_DELETE_ARRAY(values);
 					values = SPK_NEW_ARRAY(T,maxNb);
@@ -117,9 +120,13 @@ namespace SPK
 			}
 		};
 
-		struct Cell
+
+		class Cell
 		{
 		friend class Octree;
+		friend class Array<Cell>;
+
+		public :
 
 			size_t level;
 			size_t offsetX;
@@ -130,7 +137,7 @@ namespace SPK
 			Array<size_t> particles;
 
 		private :
-			
+
 			void init(size_t level,size_t offsetX,size_t offsetY,size_t offsetZ)
 			{
 				this->level = level;
@@ -169,9 +176,9 @@ namespace SPK
 				offsetZ = cell.offsetZ;
 				hasChildren = cell.hasChildren;
 				std::memcpy(children,cell.children,8 * sizeof(size_t));
-				particles = cell.particles;	
+				particles = cell.particles;
 				return *this;
-			}	
+			}
 		};
 
 		/**
@@ -190,13 +197,13 @@ namespace SPK
 		* @return the neighboring cells of a given particle
 		*/
 		const Array<size_t>& getNeighborCells(size_t particleIndex) const	{ return particleCells[particleIndex]; }
-		
+
 		/**
 		* @brief Gets a given cell by index
 		* @param index : the index of the cell
 		* @return the cell at the given index
 		*/
-		const Cell& getCell(size_t index) const								{ return cells[index]; }	
+		const Cell& getCell(size_t index) const								{ return cells[index]; }
 
 		/**
 		* @brief Gets the minimum position of the axis aligned bounding box of the octree
@@ -228,8 +235,8 @@ namespace SPK
 
 		static const size_t MAX_LEVEL_INDEX;
 		static const size_t MAX_PARTICLES_NB_PER_CELL;
-		static const float OPTIMAL_CELL_SIZE_FACTOR; 
-		static const float MIN_CELL_SIZE; 
+		static const float OPTIMAL_CELL_SIZE_FACTOR;
+		static const float MIN_CELL_SIZE;
 
 		Group& group;
 
