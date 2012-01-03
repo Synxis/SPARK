@@ -33,36 +33,36 @@ namespace SPK
 		&Zone::checkAlways,
 	};
 
-	bool Zone::checkInside(const Particle& particle,Vector3D& normal) const
+	bool Zone::checkInside(const Particle& particle,Vector3D* normal) const
 	{
 		return contains(particle.position(),particle.getRadius());
 	}
 
-	bool Zone::checkOutside(const Particle& particle,Vector3D& normal) const
+	bool Zone::checkOutside(const Particle& particle,Vector3D* normal) const
 	{
 		return !contains(particle.position(),-particle.getRadius());
 	}
 
-	bool Zone::checkIntersect(const Particle& particle,Vector3D& normal) const
+	bool Zone::checkIntersect(const Particle& particle,Vector3D* normal) const
 	{
 		return intersects(particle.oldPosition(),particle.position(),particle.getRadius(),normal);
 	}
 
-	bool Zone::checkEnter(const Particle& particle,Vector3D& normal) const
+	bool Zone::checkEnter(const Particle& particle,Vector3D* normal) const
 	{
 		if (contains(particle.oldPosition()))
 			return intersects(particle.oldPosition(),particle.position(),particle.getRadius(),normal);
 		return false;
 	}
 
-	bool Zone::checkLeave(const Particle& particle,Vector3D& normal) const
+	bool Zone::checkLeave(const Particle& particle,Vector3D* normal) const
 	{
 		if (!contains(particle.oldPosition()))
 			return intersects(particle.oldPosition(),particle.position(),particle.getRadius(),normal);
 		return false;
 	}
 
-	bool Zone::checkAlways(const Particle& particle,Vector3D& normal) const
+	bool Zone::checkAlways(const Particle& particle,Vector3D* normal) const
 	{
 		return true;
 	}

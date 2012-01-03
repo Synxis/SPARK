@@ -62,7 +62,7 @@ namespace SPK
 
 		virtual void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const;
 		virtual bool contains(const Vector3D& v,float radius = 0.0f) const;
-		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f,Vector3D& normal = Vector3D()) const;
+		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f,Vector3D* normal = NULL) const;
 		virtual Vector3D computeNormal(const Vector3D& v) const;
 
 	protected :
@@ -86,7 +86,7 @@ namespace SPK
 			const Vector3D& up = Vector3D(0.0f,1.0f,0.0f));
 		Box(const Box& box);
 
-		bool intersectSlab(float dist0,float dist1,float slab,const Vector3D& axis,float& minRatio,Vector3D& normal) const;
+		bool intersectSlab(float dist0,float dist1,float slab,const Vector3D& axis,float& minRatio,Vector3D* normal) const;
 		Vector3D generateRandomDim(bool full,float radius) const; 
 	};
 

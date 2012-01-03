@@ -122,7 +122,7 @@ namespace SPK
 		return true;
 	}
 
-	bool Box::intersectSlab(float dist0,float dist1,float slab,const Vector3D& axis,float& minRatio,Vector3D& normal) const
+	bool Box::intersectSlab(float dist0,float dist1,float slab,const Vector3D& axis,float& minRatio,Vector3D* normal) const
 	{
 		float d0 = slab - dist0;
 		float d1 = slab - dist1;
@@ -132,14 +132,15 @@ namespace SPK
 			if (ratio < minRatio)
 			{
 				minRatio = ratio;
-				normal = axis;
+				if (normal != NULL)
+					*normal = axis;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	bool Box::intersects(const Vector3D& v0,const Vector3D& v1,float radius,Vector3D& normal) const
+	bool Box::intersects(const Vector3D& v0,const Vector3D& v1,float radius,Vector3D* normal) const
 	{
 		SPK_LOG_INFO("The intersection is not working correctly with the Box Zone at the moment");
 

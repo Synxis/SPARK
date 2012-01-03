@@ -67,16 +67,17 @@ namespace SPK
 
 		virtual void generatePosition(Vector3D& v,bool full,float radius = 0.0f) const = 0;
 		virtual bool contains(const Vector3D& v,float radius = 0.0f) const = 0;
-		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f,Vector3D& normal = Vector3D()) const = 0;
+		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f,Vector3D* normal = NULL) const = 0;
 		virtual Vector3D computeNormal(const Vector3D& v) const = 0;
 		
 		/**
 		* Performs a check for a particle on the zone
 		* @param particle : the particle which is tested
 		* @param zoneTest : the type of test to perform
+		* @param normal : A pointer to a vector used to store the normal (if NULL, the normal wont be computed)
 		* @return true if the test is fullfilled, false otherwise
 		*/
-		bool check(const Particle& particle,ZoneTest zoneTest,Vector3D& normal = Vector3D()) const;
+		bool check(const Particle& particle,ZoneTest zoneTest,Vector3D* normal = NULL) const;
 
 	protected :
 
@@ -93,16 +94,16 @@ namespace SPK
 		Vector3D position;
 		Vector3D tPosition;
 
-		typedef bool (Zone::*checkFn)(const Particle&,Vector3D& normal) const;
+		typedef bool (Zone::*checkFn)(const Particle&,Vector3D* normal) const;
 		static const size_t NB_TEST_TYPES = 6;
 		static checkFn TEST_FN[NB_TEST_TYPES];
 
-		bool checkInside(const Particle& particle,Vector3D& normal) const;
-		bool checkOutside(const Particle& particle,Vector3D& normal) const;
-		bool checkIntersect(const Particle& particle,Vector3D& normal) const;
-		bool checkEnter(const Particle& particle,Vector3D& normal) const;
-		bool checkLeave(const Particle& particle,Vector3D& normal) const;
-		bool checkAlways(const Particle& particle,Vector3D& normal) const;
+		bool checkInside(const Particle& particle,Vector3D* normal) const;
+		bool checkOutside(const Particle& particle,Vector3D* normal) const;
+		bool checkIntersect(const Particle& particle,Vector3D* normal) const;
+		bool checkEnter(const Particle& particle,Vector3D* normal) const;
+		bool checkLeave(const Particle& particle,Vector3D* normal) const;
+		bool checkAlways(const Particle& particle,Vector3D* normal) const;
 	};
 
 	inline Zone::Zone(const Vector3D& position) :
@@ -128,7 +129,7 @@ namespace SPK
 		return tPosition;
 	}
 
-	inline bool Zone::check(const Particle &particle, ZoneTest zoneTest,Vector3D& normal) const
+	inline bool Zone::check(const Particle &particle, ZoneTest zoneTest,Vector3D* normal) const
 	{
 		return (this->*Zone::TEST_FN[zoneTest])(particle,normal);
 	}

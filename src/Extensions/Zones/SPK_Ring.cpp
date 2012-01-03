@@ -91,7 +91,7 @@ namespace SPK
 		v += getTransformedPosition();
 	}
 
-	bool Ring::intersects(const Vector3D& v0,const Vector3D& v1,float radius,Vector3D& normal) const
+	bool Ring::intersects(const Vector3D& v0,const Vector3D& v1,float radius,Vector3D* normal) const
 	{
 		Vector3D r0 = v0 - getTransformedPosition();
 		float dist0 = dotProduct(tNormal,r0);
@@ -130,8 +130,8 @@ namespace SPK
 		float r1SqrNorm = r1.getSqrNorm();
 
 		bool hasIntersection = ((r0SqrNorm >= minSqrRadius && r0SqrNorm <= maxSqrRadius) || (r1SqrNorm >= minSqrRadius && r1SqrNorm <= maxSqrRadius));
-		if (hasIntersection)
-			normal = (dist0 < 0.0f ? -tNormal : tNormal);
+		if (hasIntersection && normal != NULL)
+			*normal = (dist0 < 0.0f ? -tNormal : tNormal);
 		return hasIntersection;
 	}
 

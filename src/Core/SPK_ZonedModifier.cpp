@@ -23,8 +23,6 @@
 
 namespace SPK
 {
-    Vector3D ZonedModifier::dummyVector = Vector3D();
-
 	ZonedModifier::ZonedModifier(
 		unsigned int PRIORITY,
 		bool NEEDS_DATASET,

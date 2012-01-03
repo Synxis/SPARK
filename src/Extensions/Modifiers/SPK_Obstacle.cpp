@@ -53,7 +53,7 @@ namespace SPK
 		Vector3D normal;
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
-			if (checkZone(*particleIt,normal))
+			if (checkZone(*particleIt,&normal))
 			{ 
 				particleIt->position() = particleIt->oldPosition();
 
