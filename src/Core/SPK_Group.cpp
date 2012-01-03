@@ -764,7 +764,7 @@ namespace SPK
 
 		prepareAdditionnalData();
 
-		unsigned int nbManualBorn = nbBufferedParticles;
+		size_t nbManualBorn = nbBufferedParticles;
 
 		size_t dummy;
 		while (nbManualBorn > 0 && particleData.maxParticles - particleData.nbParticles > 0)
