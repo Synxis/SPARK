@@ -23,6 +23,7 @@
 #define H_SPK_DEF
 
 #include <cstdlib>
+#include <climits>
 
 // for windows platform only
 #if defined(WIN32) || defined(_WIN32)
@@ -79,10 +80,20 @@
 */
 namespace SPK
 {
-	// Constant size type
-	#include "Core/pstdint.h" // for portable defined size types - Included in the namespace to avoir conflict (dirty)
-	typedef int32_t		int32;
-	typedef uint32_t	uint32;
+// The code below regarding fixed size integer is an adaptation from SFML code
+// 32 bits integer types
+#if USHRT_MAX == 0xFFFFFFFF
+	typedef signed   short int32;
+	typedef unsigned short uint32;
+#elif UINT_MAX == 0xFFFFFFFF
+	typedef signed   int int32;
+	typedef unsigned int uint32;
+#elif ULONG_MAX == 0xFFFFFFFF
+	typedef signed   long int32;
+	typedef unsigned long uint32;
+#else
+#error No 32 bits integer type for this platform
+#endif
 
 	class Zone;
 
