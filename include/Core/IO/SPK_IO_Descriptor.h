@@ -31,6 +31,8 @@ namespace SPK
 
 namespace IO
 {
+	class Attribute;
+
 	/** 
 	* @brief A description of a SPKObject for serialization/deserialization 
 	* 
@@ -44,7 +46,7 @@ namespace IO
 	class SPK_PREFIX Descriptor
 	{
 	friend class Attribute;
-	friend class SPKObject;
+	friend class SPK::SPKObject;
 
 	public :
 

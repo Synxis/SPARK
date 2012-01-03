@@ -132,67 +132,79 @@ namespace SPK
 	template<typename T>
 	inline bool operator!=(const Iterator<T>& it0,const ConstIterator<T>& it1) { return it0->getIndex() != it1->getIndex(); }
 
+	template<>
 	inline Iterator<Group>::Iterator(Group& group) :
 		particle(group,0)
 	{
 		SPK_ASSERT(group.isInitialized(),"Iterator::Iterator(Group&) - An iterator from an uninitialized group cannot be retrieved");
 	}
 
+	template<>
 	inline Particle& Iterator<Group>::operator*() const
 	{ 
 		return particle;
 	}
-		
+	
+	template<>
 	inline Particle* Iterator<Group>::operator->() const 
 	{
 		return &particle;
 	}
 
+	template<>
 	inline Iterator<Group>& Iterator<Group>::operator++()
 	{
 		++particle.index;
 		return *this;
 	}
 
+	template<>
 	inline Iterator<Group> Iterator<Group>::operator++(int)
 	{
 		Iterator tmp(*this);
 		return ++tmp;
 	}
 
+	template<>
 	inline bool Iterator<Group>::end() const
 	{ 
 		return particle.index >= particle.group.getNbParticles();
 	}
 
+	template<>
 	inline ConstIterator<Group>::ConstIterator(const Group& group) :
 		particle(const_cast<Group&>(group),0)
 	{
 		SPK_ASSERT(group.isInitialized(),"ConstIterator::ConstIterator(Group&) - An const iterator from a uninitialized group cannot be retrieved");	
 	}
 
+	template<>
 	inline const Particle& ConstIterator<Group>::operator*() const
 	{ 
 		return particle;
 	}
-		
+
+	template<>
 	inline const Particle* ConstIterator<Group>::operator->() const 
 	{
 		return &particle;
 	}
 
+	template<>
 	inline ConstIterator<Group>& ConstIterator<Group>::operator++()
 	{
 		++particle.index;
 		return *this;
 	}
 
+	template<>
 	inline ConstIterator<Group> ConstIterator<Group>::operator++(int)
 	{
 		ConstIterator tmp(*this);
 		return ++tmp;
 	}
 
+	template<>
 	inline bool ConstIterator<Group>::end() const
 	{ 
 		return particle.index >= particle.group.getNbParticles();
