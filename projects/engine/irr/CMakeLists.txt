@@ -50,12 +50,18 @@ if(${SPARK_STATIC_BUILD})
 else()
 	add_library(SPARK_Irrlicht SHARED ${SRC_FILES})
 endif()
-target_link_libraries(SPARK_Irrlicht
-	debug SPARK_debug
-	debug ${SPARK_IRRLICHT_LIB_DEBUG}
-	optimized SPARK
-	optimized ${SPARK_IRRLICHT_LIB}
-)
+if(("${SPARK_IRRLICHT_LIB}" STREQUAL "") OR
+   ("${SPARK_IRRLICHT_LIB_DEBUG}" STREQUAL ""))
+	message("	You have to set both SPARK_IRRLICHT_LIB and SPARK_IRRLICHT_LIB_DEBUG for the Irrlicht build to work.
+	Ignore this message if you're not using Irrlicht.")
+else()
+	target_link_libraries(SPARK_Irrlicht
+		debug SPARK_debug
+		debug ${SPARK_IRRLICHT_LIB_DEBUG}
+		optimized SPARK
+		optimized ${SPARK_IRRLICHT_LIB}
+	)
+endif()
 set_target_properties(SPARK_Irrlicht PROPERTIES
 	OUTPUT_NAME SPARK_IRR
 	DEBUG_POSTFIX _debug

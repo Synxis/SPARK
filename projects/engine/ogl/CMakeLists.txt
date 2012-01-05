@@ -11,6 +11,11 @@
 # ###############################################
 cmake_minimum_required(VERSION 2.8)
 project(SPARK_OpenGL)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+	set(SPARK_OPENGL_LIB "GL" CACHE STRING "The name of the library file of OpenGL.")
+else()
+	set(SPARK_OPENGL_LIB "opengl32" CACHE STRING "The name of the library file of OpenGL.")
+endif()
 
 
 
@@ -52,7 +57,7 @@ target_link_libraries(SPARK_OpenGL
 	debug SPARK_debug
 	optimized glew
 	optimized SPARK
-	general opengl32
+	general ${SPARK_OPENGL_LIB}
 )
 set_target_properties(SPARK_OpenGL PROPERTIES
 	OUTPUT_NAME SPARK_GL
