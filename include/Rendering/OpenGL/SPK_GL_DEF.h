@@ -22,14 +22,21 @@
 #ifndef H_SPK_GL_DEF
 #define H_SPK_GL_DEF
 
-#ifdef _MSC_VER
-#pragma warning(disable : 4275) // disables the warning about exporting DLL classes children of non DLL classes
-#endif
+// for windows platform only
+#if defined(WIN32) || defined(_WIN32)
 
 #ifdef SPK_GL_EXPORT
 #define SPK_GL_PREFIX __declspec(dllexport)
 #elif defined(SPK_IMPORT) || defined(SPK_GL_IMPORT)
 #define SPK_GL_PREFIX __declspec(dllimport) 
+#else
+#define SPK_GL_PREFIX
+#endif
+
+#ifdef _MSC_VER
+#pragma warning(disable : 4275) // disables the warning about exporting DLL classes children of non DLL classes
+#endif
+
 #else
 #define SPK_GL_PREFIX
 #endif

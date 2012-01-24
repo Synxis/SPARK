@@ -26,14 +26,20 @@
 
 #include <irrlicht.h>
 
-#ifdef _MSC_VER
-#pragma warning(disable : 4275) // disables the warning about exporting DLL classes children of non DLL classes
-#endif
-
+// for windows platform only
+#if defined(WIN32) || defined(_WIN32)
 #ifdef SPK_IRR_EXPORT
 #define SPK_IRR_PREFIX __declspec(dllexport)
 #elif defined(SPK_IMPORT) || defined(SPK_IRR_IMPORT)
 #define SPK_IRR_PREFIX __declspec(dllimport) 
+#else
+#define SPK_IRR_PREFIX
+#endif
+
+#ifdef _MSC_VER
+#pragma warning(disable : 4275) // disables the warning about exporting DLL classes children of non DLL classes
+#endif
+
 #else
 #define SPK_IRR_PREFIX
 #endif
