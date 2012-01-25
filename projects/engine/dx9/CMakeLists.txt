@@ -32,8 +32,6 @@ file(GLOB_RECURSE SRC_FILES
 # Build step
 # ###############################################
 set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
-add_definitions(-DSPK_CORE_IMPORT)
-add_definitions(-DSPK_DX9_EXPORT)
 include_directories(${SPARK_DIR}/include)
 include_directories(${SPARK_DIRECTX_DIR}/Include)
 if(${SPARK_DIRECTX_LIB_X86})
@@ -50,6 +48,8 @@ link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE})
 if(${SPARK_STATIC_BUILD})
 	add_library(SPARK_DirectX9 STATIC ${SRC_FILES})
 else()
+	add_definitions(-DSPK_CORE_IMPORT)
+	add_definitions(-DSPK_DX9_EXPORT)
 	add_library(SPARK_DirectX9 SHARED ${SRC_FILES})
 endif()
 target_link_libraries(SPARK_DirectX9

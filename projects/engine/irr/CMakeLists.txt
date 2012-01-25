@@ -34,14 +34,14 @@ file(GLOB_RECURSE SRC_FILES
 # Build step
 # ###############################################
 set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
-add_definitions(-DSPK_IRR_EXPORT)
-add_definitions(-DSPK_CORE_IMPORT)
 include_directories(${SPARK_DIR}/include)
 include_directories(${SPARK_IRRLICHT_INCLUDE_DIR})
 link_directories(${SPARK_IRRLICHT_LIB_DIR})
 if(${SPARK_STATIC_BUILD})
 	set(SPARK_OUTPUT_TYPE static)
 else()
+	add_definitions(-DSPK_IRR_EXPORT)
+	add_definitions(-DSPK_CORE_IMPORT)
 	set(SPARK_OUTPUT_TYPE dynamic)
 endif()
 link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE})

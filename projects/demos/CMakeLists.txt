@@ -19,7 +19,7 @@ set(DEMOS_USE_STATIC_LIBS OFF CACHE BOOL "Store whether to link against static (
 # ###############################################
 add_subdirectory(flakes flakes)
 add_subdirectory(collision collision)
-add_subdirectory(test_irr test_irr)
+#add_subdirectory(test_irr test_irr)
 add_subdirectory(test test)
 
 

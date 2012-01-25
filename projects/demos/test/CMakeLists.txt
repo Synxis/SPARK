@@ -28,27 +28,27 @@ set(SRC_FILES
 # Build step
 # ###############################################
 set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
-add_definitions(-DSPK_IMPORT)
 include_directories(${SPARK_DIR}/include)
 include_directories(${SPARK_DIR}/demos/external/SDL/include)
 link_directories(${SPARK_DIR}/demos/external/SDL/lib)
 if(${DEMOS_USE_STATIC_LIBS})
 	link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/static)
 else()
+	add_definitions(-DSPK_IMPORT)
 	link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/dynamic)
 endif()
 add_executable(Test_Simple
 	${SRC_FILES}
 )
 target_link_libraries(Test_Simple
-	debug SPARK_debug
-	debug SPARK_GL_debug
-	optimized SPARK
-	optimized SPARK_GL
 	general opengl32.lib
 	general glu32.lib
 	general SDL.lib
 	general SDLmain.lib
+	debug SPARK_debug
+	debug SPARK_GL_debug
+	optimized SPARK
+	optimized SPARK_GL
 )
 set_target_properties(Test_Simple PROPERTIES
 	DEBUG_POSTFIX _debug
