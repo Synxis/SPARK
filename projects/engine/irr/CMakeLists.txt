@@ -49,6 +49,12 @@ if(${SPARK_STATIC_BUILD})
 	add_library(SPARK_Irrlicht STATIC ${SRC_FILES})
 else()
 	add_library(SPARK_Irrlicht SHARED ${SRC_FILES})
+	add_custom_command(TARGET SPARK_Irrlicht POST_BUILD
+		COMMAND ${CMAKE_COMMAND}
+		ARGS -DSOURCE_FILE:STRING="${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}/SPARK_IRR.dll"
+			-DDESTINATION:STRING="${SPARK_DIR}/demos/bin" -P CopyFile.cmake
+		WORKING_DIRECTORY ${SPARK_DIR}/projects/engine
+	)
 endif()
 if(("${SPARK_IRRLICHT_LIB}" STREQUAL "") OR
    ("${SPARK_IRRLICHT_LIB_DEBUG}" STREQUAL ""))
@@ -61,6 +67,9 @@ else()
 		optimized SPARK
 		optimized ${SPARK_IRRLICHT_LIB}
 	)
+endif()
+if(MSVC)
+	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "/fp:fast")
 endif()
 set_target_properties(SPARK_Irrlicht PROPERTIES
 	OUTPUT_NAME SPARK_IRR

@@ -51,6 +51,15 @@ if(${SPARK_STATIC_BUILD})
 	add_library(SPARK_OpenGL STATIC ${SRC_FILES})
 else()
 	add_library(SPARK_OpenGL SHARED ${SRC_FILES})
+	add_custom_command(TARGET SPARK_OpenGL POST_BUILD
+		COMMAND ${CMAKE_COMMAND}
+		ARGS -DSOURCE_FILE:STRING="${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}/SPARK_GL.dll"
+			-DDESTINATION:STRING="${SPARK_DIR}/demos/bin" -P CopyFile.cmake
+		WORKING_DIRECTORY ${SPARK_DIR}/projects/engine
+	)
+endif()
+if(MSVC)
+	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "/fp:fast")
 endif()
 target_link_libraries(SPARK_OpenGL
 	debug glew_d

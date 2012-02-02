@@ -32,26 +32,30 @@ set(SRC_FILES
 # Build step
 # ###############################################
 set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
+add_definitions(-DSPK_IMPORT)
 include_directories(${SPARK_DIR}/include)
 include_directories(${DEMOS_IRRLICHT_INCLUDE_DIR})
 link_directories(${DEMOS_IRRLICHT_LIB_DIR})
 if(${DEMOS_USE_STATIC_LIBS})
 	link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/static)
 else()
-	add_definitions(-DSPK_IMPORT)
 	link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/dynamic)
 endif()
-add_executable(Test_Irrlicht
-	${SRC_FILES}
-)
-target_link_libraries(Test_Irrlicht
-	debug ${DEMOS_IRRLICHT_LIB_DEBUG}
-	debug SPARK_debug
-	debug SPARK_IRR_debug
-	optimized ${DEMOS_IRRLICHT_LIB}
-	optimized SPARK
-	optimized SPARK_IRR	
-)
+add_executable(Test_Irrlicht ${SRC_FILES})
+if(("${DEMOS_IRRLICHT_LIB}" STREQUAL "") OR
+   ("${DEMOS_IRRLICHT_LIB_DEBUG}" STREQUAL ""))
+	message("	You have to set both DEMOS_IRRLICHT_LIB and DEMOS_IRRLICHT_LIB_DEBUG for the Irrlicht build to work.
+	Ignore this message if you're not using Irrlicht.")
+else()
+	target_link_libraries(Test_Irrlicht
+		debug SPARK_debug
+		debug SPARK_IRR_debug
+		debug ${DEMOS_IRRLICHT_LIB_DEBUG}
+		optimized SPARK
+		optimized SPARK_IRR
+		optimized ${DEMOS_IRRLICHT_LIB}
+	)
+endif()
 set_target_properties(Test_Irrlicht PROPERTIES
 	DEBUG_POSTFIX _debug
 	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/demos/bin
