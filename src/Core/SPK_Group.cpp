@@ -654,11 +654,11 @@ namespace SPK
 	{
 		for (std::vector<Ref<Emitter> >::const_iterator it = emitters.begin(); it != emitters.end(); ++it)
 			if (!(*it)->isShared())
-				(*it)->updateTransform(system);
+				(*it)->updateTransform(this);
 
 		for (std::vector<ModifierDef>::const_iterator it = modifiers.begin(); it != modifiers.end(); ++it)
 			if (!it->obj->isShared() && it->obj->isLocalToSystem())
-				it->obj->updateTransform(system);
+				it->obj->updateTransform(this);
 	}
 
 	void Group::addParticles(unsigned int nb,const Ref<Zone>& zone,const Ref<Emitter>& emitter,bool full)
