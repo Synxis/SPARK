@@ -37,6 +37,9 @@ include_directories(${SPARK_DIR}/external/glew/src)
 set_target_properties(GLEW PROPERTIES
 	OUTPUT_NAME glew
 	DEBUG_POSTFIX _d
+	RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/external/glew/bin
+	LIBRARY_OUTPUT_DIRECTORY ${SPARK_DIR}/external/glew/bin
+	ARCHIVE_OUTPUT_DIRECTORY ${SPARK_DIR}/external/glew/bin
 	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/external/glew/bin
 	LIBRARY_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/external/glew/bin
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/external/glew/bin

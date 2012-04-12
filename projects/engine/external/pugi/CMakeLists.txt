@@ -35,6 +35,9 @@ add_library(PugiXML STATIC ${SRC_FILES})
 set_target_properties(PugiXML PROPERTIES
 	OUTPUT_NAME pugixml
 	DEBUG_POSTFIX _d
+	RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/external/pugixml/bin
+	LIBRARY_OUTPUT_DIRECTORY ${SPARK_DIR}/external/pugixml/bin
+	ARCHIVE_OUTPUT_DIRECTORY ${SPARK_DIR}/external/pugixml/bin
 	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/external/pugixml/bin
 	LIBRARY_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/external/pugixml/bin
 	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/external/pugixml/bin
@@ -42,3 +45,4 @@ set_target_properties(PugiXML PROPERTIES
 	LIBRARY_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/external/pugixml/bin
 	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/external/pugixml/bin
 )
+

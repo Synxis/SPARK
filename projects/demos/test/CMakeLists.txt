@@ -52,6 +52,7 @@ target_link_libraries(Test_Simple
 )
 set_target_properties(Test_Simple PROPERTIES
 	DEBUG_POSTFIX _debug
+	RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/demos/bin
 	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/demos/bin
 	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/demos/bin
 )
