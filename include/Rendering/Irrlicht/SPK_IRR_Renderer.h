@@ -161,7 +161,11 @@ namespace IRR
 
 	inline void IRRRenderer::updateMaterialBlendingMode()
 	{
+#if (IRRLICHT_VERSION_MAJOR > 1 || IRRLICHT_VERSION_MINOR >= 8) // Dont handle 0.x
 		material.MaterialTypeParam = irr::video::pack_textureBlendFunc(
+#else
+		material.MaterialTypeParam = irr::video::pack_texureBlendFunc( // typo error until Irrlich 1.7
+#endif
 			blendSrcFunc,
 			blendDestFunc,
 			irr::video::EMFN_MODULATE_1X,
