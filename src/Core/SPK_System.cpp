@@ -243,7 +243,7 @@ namespace SPK
 	void System::propagateUpdateTransform()
 	{
 		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
-			(*it)->propagateUpdateTransform();
+			(*it)->updateTransform(this);
 	}
 
 	void System::innerImport(const IO::Descriptor& descriptor)

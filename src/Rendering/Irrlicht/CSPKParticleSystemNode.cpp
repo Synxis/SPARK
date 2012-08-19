@@ -31,8 +31,8 @@ namespace scene
 	CSPKParticleSystemNode::CSPKParticleSystemNode(
 		ISceneNode* parent,
 		ISceneManager* mgr,
-		bool initialize,
 		bool worldTransformed,
+		bool initialize,
 		s32 id) :
 			irr::scene::ISceneNode(parent,mgr,id),
 			SPKSystem(SPK::System::create(initialize)),
