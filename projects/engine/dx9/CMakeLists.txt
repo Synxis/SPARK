@@ -51,12 +51,6 @@ else()
 	add_definitions(-DSPK_CORE_IMPORT)
 	add_definitions(-DSPK_DX9_EXPORT)
 	add_library(SPARK_DirectX9 SHARED ${SRC_FILES})
-	add_custom_command(TARGET SPARK_DirectX9 POST_BUILD
-		COMMAND ${CMAKE_COMMAND}
-		ARGS -DSOURCE_FILE:STRING="${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}/SPARK_DX9.dll"
-			-DDESTINATION:STRING="${SPARK_DIR}/demos/bin" -P CopyFile.cmake
-		WORKING_DIRECTORY ${SPARK_DIR}/projects/engine
-	)
 endif()
 if(MSVC)
 	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "/fp:fast")

@@ -61,7 +61,7 @@ source_group(Headers FILES
 set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
 include_directories(${SPARK_DIR}/include)
 include_directories(${SPARK_DIR}/external/pugixml/src)
-link_directories(${SPARK_DIR}/external/pugixml/bin)
+link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/external/pugixml)
 if(${SPARK_STATIC_BUILD})
 	set(SPARK_OUTPUT_TYPE static)
 	add_library(SPARK_Core STATIC ${SRC_FILES})
@@ -69,12 +69,6 @@ else()
 	add_definitions(-DSPK_CORE_EXPORT)
 	set(SPARK_OUTPUT_TYPE dynamic)
 	add_library(SPARK_Core SHARED ${SRC_FILES})
-	add_custom_command(TARGET SPARK_Core POST_BUILD
-		COMMAND ${CMAKE_COMMAND}
-		ARGS -DSOURCE_FILE:STRING="${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}/SPARK.dll"
-			-DDESTINATION:STRING="${SPARK_DIR}/demos/bin" -P CopyFile.cmake
-		WORKING_DIRECTORY ${SPARK_DIR}/projects/engine
-	)
 endif()
 if(MSVC)
 	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "/fp:fast")
