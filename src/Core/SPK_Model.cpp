@@ -197,7 +197,7 @@ namespace SPK
 
 		if (nbInterpolatedParams > 0)
 		{
-			interpolatedParams = new int[nbMutableParams];
+			interpolatedParams = new int[nbInterpolatedParams];
 			for (size_t i = 0; i < nbInterpolatedParams; ++i)
 				interpolatedParams[i] = model.interpolatedParams[i];
 		}
