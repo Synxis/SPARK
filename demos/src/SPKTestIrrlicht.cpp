@@ -105,9 +105,15 @@ int main(int argc, char *argv[])
 	quadRenderer->setTexture(driver->getTexture("res\\flare.bmp"));
 	quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
 
-	SPK::Ref<SPK::RandomEmitter> emitter = SPK::RandomEmitter::create(SPK::Point::create());
-	emitter->setForce(0.4f,0.6f);
-	emitter->setFlow(200);
+	SPK::Ref<SPK::Emitter> emitter1 = SPK::RandomEmitter::create(SPK::Point::create());
+	emitter1->setForce(0.4f,0.6f);
+	emitter1->setFlow(200);
+
+	/*SPK::Ref<SPK::Emitter> emitter1 = SPK::RandomEmitter::create(SPK::Point::create());
+	emitter1->setForce(0.4f,0.6f);
+	emitter1->setFlow(200);*/
+
+	SPK::Ref<SPK::Emitter> emitter2 = SPK::SPKObject::copy(emitter1);
 
 	SPK::Ref<SPK::ColorGraphInterpolator> graphInterpolator = SPK::ColorGraphInterpolator::create();
 	graphInterpolator->addEntry(0.0f,0xFF000088);
@@ -116,27 +122,40 @@ int main(int argc, char *argv[])
 
 	SPK::Ref<SPK::Group> group = system->createSPKGroup(400);
 	group->setRadius(0.15f);
-	group->setLifeTime(1.0f,2.0f);
+	group->setLifeTime(0.5f,1.0f);
 	group->setColorInterpolator(graphInterpolator);
 	group->setParamInterpolator(SPK::PARAM_SCALE,SPK::FloatRandomInterpolator::create(0.8f,1.2f,0.0f,0.0f));
 	group->setParamInterpolator(SPK::PARAM_ANGLE,SPK::FloatRandomInitializer::create(0.0f,2 * 3.14159f));
-	group->addEmitter(emitter);
+	group->addEmitter(emitter1);
+	group->addEmitter(emitter2);
 	group->addModifier(SPK::Gravity::create(SPK::Vector3D(0.0f,-0.5f,0.0f)));
 	group->addModifier(SPK::Friction::create(0.2f));
 	group->setRenderer(quadRenderer);
 
-	// Animates the emitter using Irrlicht
-	irr::scene::CSPKEmitterNode* emitterNode = new irr::scene::CSPKEmitterNode(emitter,smgr->getRootSceneNode(),smgr);
-	emitterNode->drop();
+	// Animates the emitters using Irrlicht
+	irr::scene::CSPKEmitterNode* emitter1Node = new irr::scene::CSPKEmitterNode(emitter1,smgr->getRootSceneNode(),smgr);
+	emitter1Node->drop();
 
-	irr::scene::ISceneNodeAnimator* animator = smgr->createFlyStraightAnimator(
-		irr::core::vector3df(-1.0f,0.0f,0.0f),
-		irr::core::vector3df(1.0f,0.0f,0.0f),
-		500,
-		true,
-		true);
-	emitterNode->addAnimator(animator);
-	animator->drop();
+	irr::scene::ISceneNodeAnimator* animator1 = smgr->createFlyCircleAnimator(
+		irr::core::vector3df(0.0f,0.0f,0.0f),
+		0.6f,
+		0.005f,
+		irr::core::vector3df(0.0f,0.0f,1.0f),
+		0.0f);
+	emitter1Node->addAnimator(animator1);
+	animator1->drop();
+
+	irr::scene::CSPKEmitterNode* emitter2Node = new irr::scene::CSPKEmitterNode(emitter2,smgr->getRootSceneNode(),smgr);
+	emitter2Node->drop();
+
+	irr::scene::ISceneNodeAnimator* animator2 = smgr->createFlyCircleAnimator(
+		irr::core::vector3df(0.0f,0.0f,0.0f),
+		0.6f,
+		0.005f,
+		irr::core::vector3df(0.0f,0.0f,1.0f),
+		0.5f);
+	emitter2Node->addAnimator(animator2);
+	animator2->drop();
 
 
 	while(device->run())
