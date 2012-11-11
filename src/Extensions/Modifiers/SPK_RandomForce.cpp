@@ -113,7 +113,7 @@ namespace SPK
 				Particle& particle = *particleIt;
 				advanceTime(particle,dataSet,deltaTime,*timeIt);
 
-				particle.velocity() += *forceIt * deltaTime / particle.getParam(PARAM_MASS);
+				particle.velocity() += *forceIt * deltaTime / particle.getParamNC(PARAM_MASS);
 
 				++forceIt;
 				++timeIt;

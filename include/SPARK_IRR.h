@@ -39,5 +39,6 @@
 
 // System
 #include "Rendering/Irrlicht/CSPKParticleSystemNode.h"
+#include "Rendering/Irrlicht/CSPKObjectNode.h"
 
 #endif

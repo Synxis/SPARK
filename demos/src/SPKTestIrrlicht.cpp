@@ -125,6 +125,20 @@ int main(int argc, char *argv[])
 	group->addModifier(SPK::Friction::create(0.2f));
 	group->setRenderer(quadRenderer);
 
+	// Animates the emitter using Irrlicht
+	irr::scene::CSPKEmitterNode* emitterNode = new irr::scene::CSPKEmitterNode(emitter,smgr->getRootSceneNode(),smgr);
+	emitterNode->drop();
+
+	irr::scene::ISceneNodeAnimator* animator = smgr->createFlyStraightAnimator(
+		irr::core::vector3df(-1.0f,0.0f,0.0f),
+		irr::core::vector3df(1.0f,0.0f,0.0f),
+		500,
+		true,
+		true);
+	emitterNode->addAnimator(animator);
+	animator->drop();
+
+
 	while(device->run())
 	{
 		driver->beginScene(true, true, irr::video::SColor(0,0,0,0));
