@@ -58,7 +58,7 @@ namespace SPK
 		* @brief Creates a new spawnParticles action
 		* @param minNb : the minimum number of spawned particles
 		* @param maxNb : the maximum number of spawned particles
-		* @param groupIndex : the index of the group in the system in which to spawn particles
+		* @param group : the group in which to spawn particles
 		* @param emitter : the emitter used to spawn particles
 		*/
 		static Ref<SpawnParticlesAction> create(

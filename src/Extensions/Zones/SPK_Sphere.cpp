@@ -50,7 +50,7 @@ namespace SPK
 			const float relRadius = this->radius - radius;
 
 			if (relRadius <= 0.0f) // The particle is larger than the sphere
-				v = getTransformedPosition();
+				v.set(0.0f);
 			else
 			{
 				do v = SPK_RANDOM(Vector3D(-relRadius,-relRadius,-relRadius),Vector3D(relRadius,relRadius,relRadius));

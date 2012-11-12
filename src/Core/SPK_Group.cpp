@@ -48,7 +48,7 @@ namespace SPK
 		AABBMin(),
 		AABBMax(),
 		graphicalRadius(1.0f),
-		physicalRadius(1.0f),
+		physicalRadius(0.0f),
 		nbBufferedParticles(0),
 		birthAction(),
 		deathAction(),
