@@ -21,6 +21,7 @@ add_subdirectory(flakes flakes)
 add_subdirectory(collision collision)
 #add_subdirectory(test_irr test_irr)
 add_subdirectory(test test)
+add_subdirectory(explosion explosion)
 
 
 
