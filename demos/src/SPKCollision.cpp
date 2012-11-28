@@ -287,7 +287,7 @@ int main(int argc, char *argv[])
 
 	// Zone
 	SPK::Ref<SPK::Sphere> sphere = SPK::Sphere::create();
-	SPK::Ref<SPK::Box> cube = SPK::Box::create(SPK::Vector3D(),SPK::Vector3D(0.2f,0.2f,0.2f));
+	SPK::Ref<SPK::Box> cube = SPK::Box::create(SPK::Vector3D(),SPK::Vector3D(1.4f,1.4f,1.4f));
 
 	// Gravity
 	SPK::Ref<SPK::Gravity> gravity = SPK::Gravity::create();
@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::Collider> collider = SPK::Collider::create(0.8f);
 
 	// Obstacle
-	SPK::Ref<SPK::Obstacle> obstacle = SPK::Obstacle::create(sphere,0.8f,0.9f);
+	SPK::Ref<SPK::Obstacle> obstacle = SPK::Obstacle::create(cube,0.8f,0.9f,SPK::ZONE_TEST_INTERSECT);
 	
 	// Group
 	SPK::Ref<SPK::Group> particleGroup = particleSystem->createGroup(NB_PARTICLES);
@@ -372,11 +372,11 @@ int main(int argc, char *argv[])
 			if ((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_SPACE))
 			{
 				// TODO Fix Box zone
-				/*if (obstacle->getZone() == sphere)
+				if (obstacle->getZone() == sphere)
 					obstacle->setZone(cube);
 				else if (obstacle->getZone() == cube)
 					obstacle->setZone(sphere);
-				particleGroup->empty();*/
+				particleGroup->empty();
 			}
 
 			// if pause is pressed, the system is paused
@@ -416,6 +416,8 @@ int main(int argc, char *argv[])
 		glTranslatef(0.0f,0.0f,-CAM_POS_Z);
 		glRotatef(angleX,1.0f,0.0f,0.0f);
 		glRotatef(angleZ,0.0f,0.0f,1.0f);
+
+		//drawBox(0.0f,0.0f,1.0f,SPK::Vector3D(-0.25f),SPK::Vector3D(0.25f));
 
 		if (particleSystem->isAABBComputationEnabled() && particleGroup->getOctree() != NULL)
 		{

@@ -72,16 +72,16 @@ namespace SPK
 			axis[2].normalize();
 
 			axis[1] = up;
-			axis[1].normalize();
 		}
 
 		axis[0] = crossProduct(axis[2],axis[1]);
+		axis[0].normalize();
 		axis[1] = crossProduct(axis[0],axis[2]);
 
 		for (size_t i = 0; i < 3; ++i)
 		{
 			transformDir(tAxis[i],axis[i]);
-			axis[i].normalize();
+			tAxis[i].normalize();
 		}
 	}
 
@@ -133,7 +133,7 @@ namespace SPK
 			{
 				minRatio = ratio;
 				if (normal != NULL)
-					*normal = axis;
+					*normal = (dist0 - dist1 > 0.0f) ? axis : -axis;
 				return true;
 			}
 		}
@@ -142,8 +142,6 @@ namespace SPK
 
 	bool Box::intersects(const Vector3D& v0,const Vector3D& v1,float radius,Vector3D* normal) const
 	{
-		SPK_LOG_INFO("The intersection is not working correctly with the Box Zone at the moment");
-
 		Vector3D d0(v0 - getTransformedPosition());
 		Vector3D d1(v1 - getTransformedPosition());
 
@@ -154,19 +152,27 @@ namespace SPK
 		{
 			float dist0 = dotProduct(tAxis[i],d0);
 			float dist1 = dotProduct(tAxis[i],d1);
+			float minDist,maxDist;
 
 			if (dist1 - dist0 > 0.0f)
 			{
 				dist0 += radius;
 				dist1 += radius;
+				minDist = dist0;
+				maxDist = dist1;
 			}
 			else
 			{
 				dist0 -= radius;
 				dist1 -= radius;
+				minDist = dist1;
+				maxDist = dist0;
 			}
 
-			intersect |= intersectSlab(dist0,dist1,halfDimensions[i],-tAxis[i],minRatio,normal);
+			if (maxDist < -halfDimensions[i] || minDist > halfDimensions[i]) 
+				return false;
+
+			intersect |= intersectSlab(dist0,dist1,halfDimensions[i],tAxis[i],minRatio,normal);
 			intersect |= intersectSlab(dist0,dist1,-halfDimensions[i],tAxis[i],minRatio,normal);
 		}
 
@@ -200,7 +206,7 @@ namespace SPK
 		for (size_t i = 0; i < 3; ++i)
 		{
 			transformDir(tAxis[i],axis[i]);
-			axis[i].normalize();
+			tAxis[i].normalize();
 		}
 	}
 

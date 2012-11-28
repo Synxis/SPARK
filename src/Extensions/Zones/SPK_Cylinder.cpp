@@ -123,11 +123,11 @@ namespace SPK
 	{
 		Vector3D d = v - getTransformedPosition();
 		float tangentDist = dotProduct(d,tAxis);
-		if (std::abs(tangentDist) + radius > height * 0.5f)
+		if (std::abs(tangentDist) - radius > height * 0.5f)
 			return false;
 
 		float normalSqrDist = (d - tangentDist * tAxis).getSqrNorm();
-		float relRadius = this->radius + radius;
+		float relRadius = this->radius - radius;
 		return normalSqrDist <= relRadius * relRadius;   
 	}
 

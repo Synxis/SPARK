@@ -50,14 +50,14 @@ namespace SPK
 
 	bool Zone::checkEnter(const Particle& particle,Vector3D* normal) const
 	{
-		if (contains(particle.oldPosition()))
+		if (!contains(particle.oldPosition()))
 			return intersects(particle.oldPosition(),particle.position(),particle.getRadius(),normal);
 		return false;
 	}
 
 	bool Zone::checkLeave(const Particle& particle,Vector3D* normal) const
 	{
-		if (!contains(particle.oldPosition()))
+		if (contains(particle.oldPosition()))
 			return intersects(particle.oldPosition(),particle.position(),particle.getRadius(),normal);
 		return false;
 	}

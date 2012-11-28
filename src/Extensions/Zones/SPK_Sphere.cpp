@@ -63,7 +63,7 @@ namespace SPK
 
 	bool Sphere::contains(const Vector3D& v,float radius) const
 	{
-		const float relRadius = this->radius + radius;
+		const float relRadius = this->radius - radius;
 		return getSqrDist(getTransformedPosition(),v) <= relRadius * relRadius;
 	}
 
