@@ -11,7 +11,7 @@
 # ###############################################
 cmake_minimum_required(VERSION 2.8)
 project(SPARK_Core)
-set(SPARK_STATIC_BUILD OFF CACHE BOOL "Store whether SPARK is built as a static library (OFF) or a dynamic one (ON)")
+set(SPARK_STATIC_BUILD OFF CACHE BOOL "Store whether SPARK is built as a static library (ON) or a dynamic one OFF)")
 
 
 

@@ -50,7 +50,7 @@ namespace IO
 
 	Ref<System> Loader::load(const std::string& path) const
 	{
-		std::ifstream is(path.c_str(),std::ios::out | std::ios::binary);
+		std::ifstream is(path.c_str(),std::ios::in | std::ios::binary);
 		if (is)
 		{
 			Ref<System> system = load(is);

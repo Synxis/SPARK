@@ -16,7 +16,7 @@ project(GLEW)
 
 # Sources
 # ###############################################
-set(SPARK_DIR ../../../..)
+set(SPARK_DIR ../../..)
 set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
 get_filename_component(SPARK_DIR ${SPARK_DIR}/void REALPATH)
 get_filename_component(SPARK_DIR ${SPARK_DIR} PATH)
