@@ -23,6 +23,8 @@
 
 namespace SPK
 {
+	SPK_DEFINE_ENUM(ZoneTest,SPK_ENUM_ZONE_TEST)
+
 	Zone::checkFn Zone::TEST_FN[Zone::NB_TEST_TYPES] =
 	{
 		&Zone::checkInside,

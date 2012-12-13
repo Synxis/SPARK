@@ -27,6 +27,10 @@
 
 namespace SPK
 {
+	SPK_DEFINE_ENUM(Param,SPK_ENUM_PARAM)
+	SPK_DEFINE_ENUM(Factor,SPK_ENUM_FACTOR)
+	SPK_DEFINE_ENUM(InterpolationType,SPK_ENUM_INTERPOLATION_TYPE)
+
 #ifdef SPK_TRACE_MEMORY
 	SPKMemoryTracer& SPKMemoryTracer::get()
 	{

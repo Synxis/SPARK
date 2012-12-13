@@ -26,6 +26,7 @@
 #include "Core/SPK_DEF.h"
 
 #include "Core/SPK_Logger.h"
+#include "Core/SPK_Enum.h"
 #include "Core/SPK_Reference.h"
 #include "Core/SPK_Vector3D.h"
 #include "Core/SPK_Color.h"

@@ -49,6 +49,7 @@
 
 #include "Core/SPK_MemoryTracer.h"
 #include "Core/SPK_Reference.h"
+#include "Core/SPK_Enum.h"
 
 /**
 * @brief A macro returning a random value within [min,max[
@@ -97,6 +98,7 @@ namespace SPK
 
 	class Zone;
 
+#ifdef SPK_DOXYGEN_ONLY // for documentation purpose only
 	/** @brief Constants defining parameters of a particle */
 	enum Param
 	{
@@ -115,6 +117,44 @@ namespace SPK
 		FACTOR_QUADRATIC = 2,	/**< @brief Defines a quadratic factor (x^2) */
 		FACTOR_CUBIC = 3,		/**< @brief Defines a cubic factor (x^3) */		
 	};
+
+	/**
+	* @enum InterpolationType
+	* @brief Constants defining which type of value is used for interpolation
+	*/
+	enum InterpolationType
+	{
+		INTERPOLATOR_LIFETIME,	/**< Constant defining the life time as the value used to interpolate */
+		INTERPOLATOR_AGE,		/**< Constant defining the age as the value used to interpolate */
+		INTERPOLATOR_PARAM,		/**< Constant defining a parameter as the value used to interpolate */
+		INTERPOLATOR_VELOCITY,	/**< Constant defining the square norm of the velocity as the value used to interpolate */
+	};
+#endif
+
+	#define SPK_ENUM_PARAM(XX) \
+		XX(PARAM_SCALE,=0) \
+		XX(PARAM_MASS,=1) \
+		XX(PARAM_ANGLE,=2) \
+		XX(PARAM_TEXTURE_INDEX,=3) \
+		XX(PARAM_ROTATION_SPEED,=4) \
+
+	SPK_DECLARE_ENUM(Param,SPK_ENUM_PARAM)
+
+	#define SPK_ENUM_FACTOR(XX) \
+		XX(FACTOR_CONSTANT,=0) \
+		XX(FACTOR_LINEAR,=1) \
+		XX(FACTOR_QUADRATIC,=2) \
+		XX(FACTOR_CUBIC,=3) \
+
+	SPK_DECLARE_ENUM(Factor,SPK_ENUM_FACTOR)
+
+	#define SPK_ENUM_INTERPOLATION_TYPE(XX) \
+		XX(INTERPOLATOR_LIFETIME,) \
+		XX(INTERPOLATOR_AGE,) \
+		XX(INTERPOLATOR_PARAM,) \
+		XX(INTERPOLATOR_VELOCITY,) \
+
+	SPK_DECLARE_ENUM(InterpolationType,SPK_ENUM_INTERPOLATION_TYPE)
 
 	/** A singleton class that holds some static objects needed by SPARK */
 	class SPK_PREFIX SPKContext

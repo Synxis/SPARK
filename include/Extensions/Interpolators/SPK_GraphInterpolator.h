@@ -28,18 +28,6 @@
 namespace SPK
 {
 	/**
-	* @enum InterpolationType
-	* @brief Constants defining which type of value is used for interpolation
-	*/
-	enum InterpolationType
-	{
-		INTERPOLATOR_LIFETIME,	/**< Constant defining the life time as the value used to interpolate */
-		INTERPOLATOR_AGE,		/**< Constant defining the age as the value used to interpolate */
-		INTERPOLATOR_PARAM,		/**< Constant defining a parameter as the value used to interpolate */
-		INTERPOLATOR_VELOCITY,	/**< Constant defining the square norm of the velocity as the value used to interpolate */
-	};
-
-	/**
     * @brief An entry in the interpolator graph
 	*
 	* See the Interpolator description for more information
@@ -308,8 +296,8 @@ namespace SPK
 	SPK_ATTRIBUTE("graph keys",ATTRIBUTE_TYPE_FLOATS)
 	SPK_ATTRIBUTE_ARRAY_GENERIC("graph values",T)
 	SPK_ATTRIBUTE_ARRAY_GENERIC("graph values 2",T)
-	SPK_ATTRIBUTE("interpolation type",ATTRIBUTE_TYPE_UINT32)
-	SPK_ATTRIBUTE("interpolation param",ATTRIBUTE_TYPE_UINT32)
+	SPK_ATTRIBUTE("interpolation type",ATTRIBUTE_TYPE_STRING)
+	SPK_ATTRIBUTE("interpolation param",ATTRIBUTE_TYPE_STRING)
 	SPK_ATTRIBUTE("looping enabled",ATTRIBUTE_TYPE_BOOL)
 	SPK_ATTRIBUTE("scale variation",ATTRIBUTE_TYPE_FLOAT)
 	SPK_ATTRIBUTE("offset variation",ATTRIBUTE_TYPE_FLOAT)
@@ -634,9 +622,9 @@ namespace SPK
 		}
 
 		if (attrib = descriptor.getAttributeWithValue("interpolation type"))
-			setType(static_cast<InterpolationType>(attrib->getValue<uint32>()));
+			setType(getEnumValue<InterpolationType>(attrib->getValue<std::string>()));
 		if (attrib = descriptor.getAttributeWithValue("interpolation param"))
-			setType(getType(),static_cast<Param>(attrib->getValue<uint32>()));
+			setType(getType(),getEnumValue<Param>(attrib->getValue<std::string>()));
 		if (attrib = descriptor.getAttributeWithValue("looping enabled"))
 			enableLooping(attrib->getValue<bool>());
 		if (attrib = descriptor.getAttributeWithValue("scale variation"))
@@ -680,8 +668,8 @@ namespace SPK
 				descriptor.getAttribute("graph values 2")->setValues(values1,graph.size());
 		}
 
-		descriptor.getAttribute("interpolation type")->setValue((uint32)getType(),getType() == INTERPOLATOR_LIFETIME);
-		descriptor.getAttribute("interpolation param")->setValue((uint32)getInterpolatorParam(),getType() != INTERPOLATOR_PARAM);
+		descriptor.getAttribute("interpolation type")->setValue(getEnumName(getType()),getType() == INTERPOLATOR_LIFETIME);
+		descriptor.getAttribute("interpolation param")->setValue(getEnumName(getInterpolatorParam()),getType() != INTERPOLATOR_PARAM);
 		descriptor.getAttribute("looping enabled")->setValue(isLoopingEnabled());
 		descriptor.getAttribute("scale variation")->setValue(getScaleXVariation(),getScaleXVariation() == 0.0f);
 		descriptor.getAttribute("offset variation")->setValue(getOffsetXVariation(),getOffsetXVariation() == 0.0f);

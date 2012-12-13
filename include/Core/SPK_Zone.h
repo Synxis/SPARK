@@ -26,6 +26,7 @@ namespace SPK
 {
 	class Particle;
 
+#ifdef SPK_DOXYGEN_ONLY // For documentation purpose only
 	/** Constants defining the tests that can be performed for particles on zones */
 	enum ZoneTest
 	{
@@ -36,6 +37,17 @@ namespace SPK
 		ZONE_TEST_LEAVE,		/**< Does the particle leave the zone ? */
 		ZONE_TEST_ALWAYS,		/**< The test is always passed */
 	};
+#endif
+
+	#define SPK_ENUM_ZONE_TEST(XX) \
+		XX(ZONE_TEST_INSIDE,) \
+		XX(ZONE_TEST_OUTSIDE,) \
+		XX(ZONE_TEST_INTERSECT,) \
+		XX(ZONE_TEST_ENTER,) \
+		XX(ZONE_TEST_LEAVE,) \
+		XX(ZONE_TEST_ALWAYS,) \
+
+	SPK_DECLARE_ENUM(ZoneTest,SPK_ENUM_ZONE_TEST)
 
 	class SPK_PREFIX Zone : public SPKObject
 	{
