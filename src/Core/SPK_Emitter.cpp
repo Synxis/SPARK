@@ -24,7 +24,7 @@
 namespace SPK
 {
 	Emitter::Emitter(const Ref<Zone>& zone,bool full,int tank,float flow,float forceMin,float forceMax) :
-		SPKObject(),
+		Transformable(),
 		active(true),
 		full(full),
 		zone(!zone ? SPK_DEFAULT_ZONE : zone),
@@ -37,7 +37,7 @@ namespace SPK
 	}
 
 	Emitter::Emitter(const Emitter& emitter) :
-		SPKObject(emitter),
+		Transformable(emitter),
 		active(emitter.active),
 		full(emitter.full),
 		flow(emitter.flow),
@@ -117,7 +117,7 @@ namespace SPK
 
 	void Emitter::innerImport(const IO::Descriptor& descriptor)
 	{
-		SPKObject::innerImport(descriptor);
+		Transformable::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
 
@@ -157,7 +157,7 @@ namespace SPK
 
 	void Emitter::innerExport(IO::Descriptor& descriptor) const
 	{
-		SPKObject::innerExport(descriptor);
+		Transformable::innerExport(descriptor);
 
 		descriptor.getAttribute("active")->setValueOptionalOnTrue(isActive());
 

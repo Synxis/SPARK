@@ -42,13 +42,13 @@ namespace SPK
 	*
 	* 
 	*/
-	class Modifier :	public SPKObject,
+	class Modifier :	public Transformable,
 						public DataHandler
 	{
 	friend class Group;
 
 	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(SPKObject)
+	SPK_PARENT_ATTRIBUTES(Transformable)
 	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
 	SPK_ATTRIBUTE("local",ATTRIBUTE_TYPE_BOOL)
 	SPK_END_DESCRIPTION
@@ -137,7 +137,7 @@ namespace SPK
 
 	inline void Modifier::innerImport(const IO::Descriptor& descriptor)
 	{
-		SPKObject::innerImport(descriptor);
+		Transformable::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
 
@@ -149,7 +149,7 @@ namespace SPK
 
 	inline void Modifier::innerExport(IO::Descriptor& descriptor) const
 	{
-		SPKObject::innerExport(descriptor);
+		Transformable::innerExport(descriptor);
 
 		descriptor.getAttribute("active")->setValueOptionalOnTrue(isActive());
 		descriptor.getAttribute("local")->setValueOptionalOnFalse(isLocalToSystem());

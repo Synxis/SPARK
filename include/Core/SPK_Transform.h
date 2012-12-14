@@ -50,7 +50,7 @@ namespace SPK
 	*/
 	class SPK_PREFIX Transform
 	{
-	friend class SPKObject;
+	friend class Transformable;
 
 	public :
 
@@ -320,7 +320,7 @@ namespace SPK
 		unsigned long lastParentUpdate;
 		bool localIdentity;
 
-		SPKObject* parent;
+		Transformable* parent;
 
 		Transform();
 		Transform(const Transform& transform);
@@ -328,7 +328,7 @@ namespace SPK
 		void notifyForUpdate();
 		bool isUpdateNotified() const;
 
-		Ref<SPKObject> getParent() const;
+		Ref<Transformable> getParent() const;
 
 		/**
 		* @brief Updates the world transform of this Transform
@@ -340,7 +340,7 @@ namespace SPK
 		*
 		* @param parent : the parent node of this Transform or NULL
 		*/
-		void update(const Ref<SPKObject>& parent,SPKObject& owner);
+		void update(const Ref<Transformable>& parent,Transformable& owner);
 
 		static void multiply(
 			float* dest,
@@ -459,7 +459,7 @@ namespace SPK
 		++currentUpdate;
 	}
 
-	inline Ref<SPKObject> Transform::getParent() const
+	inline Ref<Transformable> Transform::getParent() const
 	{
 		return parent;
 	}

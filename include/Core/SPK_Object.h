@@ -75,12 +75,10 @@ namespace SPK
 	/** @brief The base class of all SPARK objects */
 	class SPK_PREFIX SPKObject
 	{
-	friend class Transform;
 	template<typename T> friend class Ref;
 
 	SPK_START_DESCRIPTION
 	SPK_ATTRIBUTE("name",ATTRIBUTE_TYPE_STRING)
-	SPK_ATTRIBUTE("transform",ATTRIBUTE_TYPE_FLOATS)
 	SPK_ATTRIBUTE("shared",ATTRIBUTE_TYPE_BOOL)
 	SPK_END_DESCRIPTION
 
@@ -120,29 +118,6 @@ namespace SPK
 		* @param shared : true to make this obkect shared, false not to
 		*/
 		void setShared(bool shared);
-
-		///////////////
-		// Transform //
-		///////////////
-
-		/**
-		* @brief Gets the transform of this object
-		* @return the transform of this object
-		*/
-		Transform& getTransform();
-
-		/**
-		* @brief Gets the transform of this object
-		* This is the const version of getTransform()
-		* @return the transform of this object
-		*/
-		const Transform& getTransform() const;
-
-		/**
-		* @brief Updates the transform of this object
-		* @param parent : the parent object of this object, NULL if it has no parent
-		*/
-		void updateTransform(const Ref<SPKObject>& parent = SPK_NULL_REF);
 
 		//////////
 		// Name //
@@ -208,36 +183,6 @@ namespace SPK
 		SPKObject(bool SHAREABLE = true);
 		SPKObject(const SPKObject& obj);
 
-		/**
-		* @brief Updates all the parameters in the world coordinates
-		*
-		* This method can be overriden in derived classes of SPKObject (By default it does nothing).<br>
-		* It is this method task to compute all parameters of the class that are dependent of the world transform.
-		*/
-		virtual void innerUpdateTransform() {}
-
-		/**
-		* @brief Propagates the update of the transform to object's children of this object
-		*
-		* This method can be overriden in derived classes of SPKObject (By default it does nothing).<br>
-		* It is this method task to call the updateTransform method of the object's children of this object.
-		*/
-		virtual void propagateUpdateTransform() {}
-
-		/**
-		* @brief Transforms a position in this object's space
-		* @param tPos : the transformed position
-		* @param pos : the position to transform
-		*/
-		void transformPos(Vector3D& tPos,const Vector3D& pos);
-
-		/**
-		* @brief Transforms a direction in this object's space
-		* @param tPos : the transformed direction
-		* @param pos : the direction to transform
-		*/
-		void transformDir(Vector3D& tDir,const Vector3D& dir);
-
 		virtual void innerImport(const IO::Descriptor& descriptor);
 		virtual void innerExport(IO::Descriptor& descriptor) const;
 
@@ -247,7 +192,6 @@ namespace SPK
 	private :
 
 		std::string name;
-		Transform transform;
 
 		unsigned int nbReferences;
 
@@ -274,16 +218,6 @@ namespace SPK
 		return shared;
 	}
 
-	inline Transform& SPKObject::getTransform()
-	{
-		return transform;
-	}
-
-	inline const Transform& SPKObject::getTransform() const
-	{
-		return transform;
-	}
-
 	inline void SPKObject::setName(const std::string& name)
 	{
 		this->name = name;
@@ -297,16 +231,6 @@ namespace SPK
 	inline Ref<SPKObject> SPKObject::findByName(const std::string& name)
 	{
 		return getName().compare(name) == 0 ? this : NULL;
-	}
-
-	inline void SPKObject::transformPos(Vector3D& tPos,const Vector3D& pos)
-	{
-		transform.transformPos(tPos,pos);
-	}
-
-	inline void SPKObject::transformDir(Vector3D& tDir,const Vector3D& dir)
-	{
-		transform.transformDir(tDir,dir);
 	}
 
 	template<typename T>

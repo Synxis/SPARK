@@ -36,7 +36,7 @@ namespace SPK
 	};
 
 	Group::Group(const Ref<System>& system,size_t capacity) :
-		SPKObject(false),
+		Transformable(false),
 		system(system.get()),
 		nbEnabledParameters(0),
 		minLifeTime(1.0f),
@@ -58,7 +58,7 @@ namespace SPK
 	}
 
 	Group::Group(const Group& group) :
-		SPKObject(group),
+		Transformable(group),
 		system(NULL),
 		nbEnabledParameters(0),
 		minLifeTime(group.minLifeTime),
@@ -931,7 +931,7 @@ namespace SPK
 
 	void Group::innerImport(const IO::Descriptor& descriptor)
 	{
-		SPKObject::innerImport(descriptor);
+		Transformable::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
 
@@ -1005,7 +1005,7 @@ namespace SPK
 
 	void Group::innerExport(IO::Descriptor& descriptor) const
 	{
-		SPKObject::innerExport(descriptor);
+		Transformable::innerExport(descriptor);
 
 		descriptor.getAttribute("capacity")->setValue<uint32>(getCapacity());
 		descriptor.getAttribute("color interpolator")->setValueOptionalOnNull(getColorInterpolator());

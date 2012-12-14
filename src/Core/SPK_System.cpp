@@ -35,7 +35,7 @@ namespace SPK
 	float System::clampStep(1.0f);
 
 	System::System(bool initialize) :
-		SPKObject(false),
+		Transformable(false),
 		groups(),
 		deltaStep(0.0f),
 		AABBComputationEnabled(false),
@@ -45,7 +45,7 @@ namespace SPK
 	{}
 
 	System::System(const System& system) :
-		SPKObject(system),
+		Transformable(system),
 		deltaStep(0.0f),
 		AABBComputationEnabled(system.AABBComputationEnabled),
 		AABBMin(system.AABBMin),
@@ -248,7 +248,7 @@ namespace SPK
 
 	void System::innerImport(const IO::Descriptor& descriptor)
 	{
-		SPKObject::innerImport(descriptor);
+		Transformable::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
 		if (attrib = descriptor.getAttributeWithValue("groups"))
@@ -261,7 +261,7 @@ namespace SPK
 
 	void System::innerExport(IO::Descriptor& descriptor) const
 	{
-		SPKObject::innerExport(descriptor);
+		Transformable::innerExport(descriptor);
 		if (getNbGroups() > 0)
 			descriptor.getAttribute("groups")->setValuesRef(&groups[0],getNbGroups());
 	}

@@ -198,10 +198,10 @@ namespace SPK
 		notifyForUpdate();
 	}
 
-	void Transform::update(const Ref<SPKObject>& parent,SPKObject& owner)
+	void Transform::update(const Ref<Transformable>& parent,Transformable& owner)
 	{
-		if (isUpdateNotified() ||														// the local transform or instance param have been updated
-			parent != this->parent ||													// the parent has changed
+		if (isUpdateNotified() ||												// the local transform or instance param have been updated
+			parent != this->parent ||											// the parent has changed
 			(parent && lastParentUpdate != parent->transform.currentUpdate))	// the parent transform has been modified
 		{
 			if (!parent)

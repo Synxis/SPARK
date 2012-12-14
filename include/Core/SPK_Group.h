@@ -50,7 +50,7 @@ namespace SPK
 	* </ul>
 	* Groups are contained within a System which commands their update and rendering.
 	*/
-	class SPK_PREFIX Group : public SPKObject
+	class SPK_PREFIX Group : public Transformable
 	{
 	friend class Particle;
 	friend class System;
@@ -59,7 +59,7 @@ namespace SPK
 	SPK_IMPLEMENT_OBJECT(Group)
 
 	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(SPKObject)
+	SPK_PARENT_ATTRIBUTES(Transformable)
 	SPK_ATTRIBUTE("capacity",ATTRIBUTE_TYPE_UINT32)
 	SPK_ATTRIBUTE("life time",ATTRIBUTE_TYPE_FLOATS)
 	SPK_ATTRIBUTE("immortal",ATTRIBUTE_TYPE_BOOL)

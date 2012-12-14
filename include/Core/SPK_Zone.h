@@ -49,11 +49,11 @@ namespace SPK
 
 	SPK_DECLARE_ENUM(ZoneTest,SPK_ENUM_ZONE_TEST)
 
-	class SPK_PREFIX Zone : public SPKObject
+	class SPK_PREFIX Zone : public Transformable
 	{
 
 	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(SPKObject)
+	SPK_PARENT_ATTRIBUTES(Transformable)
 	SPK_ATTRIBUTE("position",ATTRIBUTE_TYPE_VECTOR)
 	SPK_END_DESCRIPTION
 
@@ -119,7 +119,7 @@ namespace SPK
 	};
 
 	inline Zone::Zone(const Vector3D& position) :
-		SPKObject(),
+		Transformable(),
 		position(position)
 	{
 		transformPos(tPosition,position);	
@@ -162,7 +162,7 @@ namespace SPK
 
 	inline void Zone::innerImport(const IO::Descriptor& descriptor)
 	{
-		SPKObject::innerImport(descriptor);
+		Transformable::innerImport(descriptor);
 
 		const IO::Attribute* attrib = NULL;
 
@@ -172,7 +172,7 @@ namespace SPK
 
 	inline void Zone::innerExport(IO::Descriptor& descriptor) const
 	{
-		SPKObject::innerExport(descriptor);
+		Transformable::innerExport(descriptor);
 		descriptor.getAttribute("position")->setValue(getPosition());
 	}
 }
