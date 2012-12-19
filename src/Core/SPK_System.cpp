@@ -35,7 +35,7 @@ namespace SPK
 	float System::clampStep(1.0f);
 
 	System::System(bool initialize) :
-		Transformable(false),
+		Transformable(SHARE_POLICY_TRUE),
 		groups(),
 		deltaStep(0.0f),
 		AABBComputationEnabled(false),

@@ -70,6 +70,14 @@ template<> inline std::string ClassName::asName() { return #ClassName; }
 
 namespace SPK
 {
+	/** @brief Defines the share policy for a SPKObject */
+	enum SharePolicy
+	{
+		SHARE_POLICY_CUSTOM,	/**< The SPKObject is shared at the user's discretion */
+		SHARE_POLICY_TRUE,		/**< The SPKObject is forced to be shared */		
+		SHARE_POLICY_FALSE		/**< The SPKObject is forced to be unshared */
+	};
+
 	namespace IO { class IOManager; }
 
 	/** @brief The base class of all SPARK objects */
@@ -113,7 +121,7 @@ namespace SPK
 		bool isShared() const;
 
 		/**
-		* Sets whether tjis object os shareable or not
+		* Sets whether this object is shareable or not
 		* Note that some type of objects are not shareable
 		* @param shared : true to make this obkect shared, false not to
 		*/
@@ -180,7 +188,7 @@ namespace SPK
 	protected :
 
 		// abstract class
-		SPKObject(bool SHAREABLE = true);
+		SPKObject(SharePolicy SHARE_POLICY = SHARE_POLICY_CUSTOM);
 		SPKObject(const SPKObject& obj);
 
 		virtual void innerImport(const IO::Descriptor& descriptor);
@@ -195,7 +203,7 @@ namespace SPK
 
 		unsigned int nbReferences;
 
-		const bool SHAREABLE;
+		const SharePolicy SHARE_POLICY;
 		bool shared;
 
 		// The copy buffer is used to be able to correctly perform a deep copy of objects. If an object is present more than once is the hierarchy it will be copied only once

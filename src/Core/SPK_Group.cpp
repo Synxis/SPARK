@@ -36,7 +36,7 @@ namespace SPK
 	};
 
 	Group::Group(const Ref<System>& system,size_t capacity) :
-		Transformable(false),
+		Transformable(SHARE_POLICY_FALSE),
 		system(system.get()),
 		nbEnabledParameters(0),
 		minLifeTime(1.0f),

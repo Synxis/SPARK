@@ -23,11 +23,11 @@
 
 namespace SPK
 {
-	SPKObject::SPKObject(bool SHAREABLE) :
+	SPKObject::SPKObject(SharePolicy SHARE_POLICY) :
 		name(),
 		nbReferences(0),
-		SHAREABLE(SHAREABLE),
-		shared(false),
+		SHARE_POLICY(SHARE_POLICY),
+		shared(SHARE_POLICY == SHARE_POLICY_TRUE),
 		copyBuffer(NULL)
 	{
 		SPK_LOG_DEBUG("Creation of SPKObject " << this);
@@ -36,7 +36,7 @@ namespace SPK
 	SPKObject::SPKObject(const SPKObject& obj) :
 		name(obj.name),
 		nbReferences(0),
-		SHAREABLE(obj.SHAREABLE),
+		SHARE_POLICY(obj.SHARE_POLICY),
 		shared(obj.shared),
 		copyBuffer(NULL)
 	{
@@ -51,9 +51,9 @@ namespace SPK
 
 	void SPKObject::setShared(bool shared)
 	{
-		if (shared && !SHAREABLE)
+		if (SHARE_POLICY != SHARE_POLICY_CUSTOM)
 		{
-			SPK_LOG_WARNING("SPKObject::setShared(bool) - This object is of a type that is not shareable. Nothing happens");
+			SPK_LOG_WARNING("SPKObject::setShared(bool) - This object cannot be set to be shared or not. Nothing happens");
 			return;
 		}
 
@@ -102,6 +102,6 @@ namespace SPK
 	void SPKObject::innerExport(IO::Descriptor& descriptor) const
 	{
 		descriptor.getAttribute("name")->setValueOptionalOnEmpty(name);
-		descriptor.getAttribute("shared")->setValueOptionalOnFalse(isShared());
+		descriptor.getAttribute("shared")->setValueOptionalOnFalse(SHARE_POLICY == SHARE_POLICY_CUSTOM && isShared());
 	}
 }

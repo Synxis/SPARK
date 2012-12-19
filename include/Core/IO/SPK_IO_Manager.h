@@ -144,7 +144,7 @@ namespace IO
 		typename std::map<std::string,T*>::iterator it = table.find(name);
 		if (it == table.end())
 		{
-			SPK_LOG_WARNING("IOManager::registerGeneric<T> - " << name << " is not registered and therefore cannot be unregistered")
+			SPK_LOG_WARNING("IOManager::unregisterGeneric<T> - " << name << " is not registered and therefore cannot be unregistered")
 		}
 		else
 		{

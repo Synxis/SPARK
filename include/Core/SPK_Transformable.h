@@ -59,7 +59,7 @@ namespace SPK
 	protected :
 
 		// abstract class
-		Transformable(bool SHAREABLE = true) : SPKObject(SHAREABLE) {}
+		Transformable(SharePolicy SHARE_POLICY = SHARE_POLICY_CUSTOM) : SPKObject(SHARE_POLICY) {}
 		Transformable(const Transformable& obj) : 
 			SPKObject(obj),
 			transform(obj.transform) {}
