@@ -91,10 +91,7 @@ namespace SPK
 			const Ref<Modifier>& modifier = group.copyChild(it->obj);
 			ModifierDef modifierDef(modifier,attachDataSet(modifier.get()));
 			modifiers.push_back(modifierDef);
-			if (isInitialized())
-				sortedModifiers.push_back(modifierDef);
 		}
-		std::sort(sortedModifiers.begin(),sortedModifiers.end(),CompareModifierPriority());
 
 		birthAction = group.copyChild(group.birthAction);
 		deathAction = group.copyChild(group.deathAction);
@@ -802,10 +799,7 @@ namespace SPK
 		manageOctreeInstance(needsOctree);
 
 		if (colorInterpolator.obj)
-		{
 			colorInterpolator.obj->prepareData(*this,colorInterpolator.dataSet);
-			colorInterpolator.obj->interpolate(particleData.colors,*this,colorInterpolator.dataSet);
-		}
 		for (size_t i = 0; i < nbEnabledParameters; ++i)
 		{
 			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
@@ -815,7 +809,7 @@ namespace SPK
 
 	void Group::initData()
 	{
-		if (!particleData.initialized)
+		if (isInitialized() && !particleData.initialized)
 		{
 			// Creates particle data arrays
 			reallocate(particleData.maxParticles);
