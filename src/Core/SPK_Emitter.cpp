@@ -76,7 +76,7 @@ namespace SPK
 
 	void Emitter::setForce(float min,float max)
 	{
-		if (forceMin <= forceMax)
+		if (min <= max)
 		{
 			forceMin = min;
 			forceMax = max;
