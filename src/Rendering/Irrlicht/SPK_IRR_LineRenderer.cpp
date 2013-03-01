@@ -74,8 +74,8 @@ namespace IRR
 		buffer.getMeshBuffer().setDirty(irr::scene::EBT_VERTEX);
 
 		irr::video::IVideoDriver* driver = device->getVideoDriver();
-        driver->setMaterial(material);
-        driver->drawVertexPrimitiveList(
+		driver->setMaterial(material);
+		driver->drawVertexPrimitiveList(
 			buffer.getMeshBuffer().getVertexBuffer().pointer(),
 			group.getNbParticles() * NB_VERTICES_PER_PARTICLE,
 			buffer.getMeshBuffer().getIndexBuffer().pointer(),
