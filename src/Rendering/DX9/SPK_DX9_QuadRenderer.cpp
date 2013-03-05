@@ -61,7 +61,7 @@ namespace DX9
 	void DX9QuadRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const
 	{
 		SPK_ASSERT(renderBuffer != NULL,"DX9QuadRenderer::render(const Group&,const DataSet*,RenderBuffer*) - renderBuffer must not be NULL");
-		DX9Buffer& buffer = dynamic_cast<DX9Buffer&>(*renderBuffer);
+		DX9Buffer& buffer = static_cast<DX9Buffer&>(*renderBuffer);
 		buffer.positionAtStart(); // Repositions all the buffers at the start
 
 		D3DXMATRIX view,world,modelView;

@@ -178,7 +178,7 @@ namespace DX9
 		const Vector3D* vertexBuffer = SPK_GET_DATA(const Vector3DArrayData,dataSet,VERTEX_BUFFER_INDEX).getData();
 		const Color* colorBuffer = SPK_GET_DATA(const ColorArrayData,dataSet,COLOR_BUFFER_INDEX).getData();
 
-		DX9Buffer& buffer = dynamic_cast<DX9Buffer&>(*renderBuffer);
+		DX9Buffer& buffer = static_cast<DX9Buffer&>(*renderBuffer);
 		buffer.positionAtStart(); // Repositions all the buffers at the start
 
 		initBlending();

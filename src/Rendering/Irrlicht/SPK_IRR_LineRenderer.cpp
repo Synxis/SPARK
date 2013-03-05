@@ -59,7 +59,7 @@ namespace IRR
 	void IRRLineRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const
 	{
 		SPK_ASSERT(renderBuffer != NULL,"IRRLineRenderer::render(const Group&,const DataSet*,RenderBuffer*) - renderBuffer must not be NULL");
-		IRRBuffer& buffer = dynamic_cast<IRRBuffer&>(*renderBuffer);
+		IRRBuffer& buffer = static_cast<IRRBuffer&>(*renderBuffer);
 		
 		buffer.positionAtStart();
 		for (ConstGroupIterator particleIt(group); !particleIt.end(); ++particleIt)

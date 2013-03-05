@@ -60,7 +60,7 @@ namespace DX9
 	void DX9PointRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const
 	{
 		SPK_ASSERT(renderBuffer != NULL,"DX9PointRenderer::render(const Group&,const DataSet*,RenderBuffer*) - renderBuffer must not be NULL");
-		DX9Buffer& buffer = dynamic_cast<DX9Buffer&>(*renderBuffer);
+		DX9Buffer& buffer = static_cast<DX9Buffer&>(*renderBuffer);
 		buffer.positionAtStart(); // Repositions all the buffers at the start
 
 		buffer.lock(VERTEX_AND_COLOR_LOCK);

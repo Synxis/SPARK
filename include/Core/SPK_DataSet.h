@@ -29,7 +29,7 @@
 * @param index : the index onf the data in the dataset
 * @return a reference to the data at the given index of the dataset casted in the right type
 */
-#define SPK_GET_DATA(type,dataSetPtr,index) dynamic_cast<type&>(*(dataSetPtr)->getData(index))
+#define SPK_GET_DATA(type,dataSetPtr,index) static_cast<type&>(*(dataSetPtr)->getData(index))
 
 namespace SPK
 {

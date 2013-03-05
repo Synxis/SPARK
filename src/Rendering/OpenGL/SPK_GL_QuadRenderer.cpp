@@ -63,7 +63,7 @@ namespace GL
 	void GLQuadRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const
 	{
 		SPK_ASSERT(renderBuffer != NULL,"GLQuadRenderer::render(const Group&,const DataSet*,RenderBuffer*) - renderBuffer must not be NULL");
-		GLBuffer& buffer = dynamic_cast<GLBuffer&>(*renderBuffer);
+		GLBuffer& buffer = static_cast<GLBuffer&>(*renderBuffer);
 		buffer.positionAtStart(); // Repositions all the buffers at the start
 
 		float oldModelView[16];
