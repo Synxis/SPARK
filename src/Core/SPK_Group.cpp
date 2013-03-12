@@ -364,11 +364,20 @@ namespace SPK
 
 	void Group::removeEmitter(const Ref<Emitter>& emitter)
 	{
-		std::vector<Ref<Emitter> >::iterator it = emitters.begin();
-		if (it != emitters.end())
+		std::vector<Ref<Emitter> >::iterator it = std::find(emitters.begin(),emitters.end(),emitter);
+		if(it != emitters.end())
+		{
 			emitters.erase(it);
+			/// TODO: remove this by optimizing the data structure.
+			for(size_t e = 0; e < activeEmitters.size(); e++)
+				if(activeEmitters[e].obj == emitter.get())
+				{
+					activeEmitters.erase(activeEmitters.begin() + e);
+					break;
+				}
+		}
 		else
-			SPK_LOG_WARNING("Group::removeEmitter(Emitter*) - The emitter was not found in the group and cannot be removed");
+			SPK_LOG_WARNING("Group::removeEmitter(const Ref<Emitter>&) - The emitter was not found in the group and cannot be removed");
 	}
 
 	void Group::addModifier(const Ref<Modifier>& modifier)
