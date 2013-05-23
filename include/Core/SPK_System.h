@@ -264,6 +264,18 @@ namespace SPK
 		*/
 		static StepMode getStepMode();
 
+		//////////
+		// Misc //
+		//////////
+
+		/**
+		* @brief Returns whether the system is active or not
+		* 
+		* A system is active if at least one of its inner groups is active
+		* A group is active if it has at least one particle or one active emitter
+		*/
+		bool isActive() const;
+
 		void initialize();
 		bool isInitialized() const;
 
@@ -297,6 +309,7 @@ namespace SPK
 		float deltaStep;
 
 		bool initialized;
+		bool active;
 
 		// AABB
 		bool AABBComputationEnabled;
@@ -386,6 +399,11 @@ namespace SPK
 	inline bool System::isInitialized() const
 	{
 		return initialized;
+	}
+
+	inline bool System::isActive() const
+	{
+		return active;
 	}
 }
 

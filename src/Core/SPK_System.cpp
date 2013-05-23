@@ -41,7 +41,8 @@ namespace SPK
 		AABBComputationEnabled(false),
 		AABBMin(),
 		AABBMax(),
-		initialized(initialize)
+		initialized(initialize),
+		active(true)
 	{}
 
 	System::System(const System& system) :
@@ -50,7 +51,8 @@ namespace SPK
 		AABBComputationEnabled(system.AABBComputationEnabled),
 		AABBMin(system.AABBMin),
 		AABBMax(system.AABBMax),
-		initialized(system.initialized)
+		initialized(system.initialized),
+		active(system.active)
 	{
 		for (std::vector<Ref<Group> >::const_iterator it = system.groups.begin(); it != system.groups.end(); ++it)
 		{
@@ -159,7 +161,7 @@ namespace SPK
 
 			while(deltaTime >= updateStep)
 			{
-				if ((alive)&&(!innerUpdate(updateStep)))
+				if (alive && !innerUpdate(updateStep))
 					alive = false;
 				deltaTime -= updateStep;
 			}
@@ -191,7 +193,8 @@ namespace SPK
 			AABBMin = AABBMax = pos;
 		}
 
-		return alive;
+		active = alive;
+		return active;
 	}
 
 	void System::renderParticles() const
