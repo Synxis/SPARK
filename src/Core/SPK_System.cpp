@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -121,6 +121,19 @@ namespace SPK
 		}
 	}
 
+	void System::removeController(const Ref<Controller>& ctrl)
+	{
+		std::vector<Ref<Controller> >::iterator it = std::find(controllers.begin(), controllers.end(), ctrl.get());
+		if (it != controllers.end())
+		{
+			controllers.erase(it);
+		}
+		else
+		{
+			SPK_LOG_WARNING("System::removeController(Controller*) - The controller " << ctrl.get() << " was not found in the system and cannot be removed");
+		}
+	}
+
 	size_t System::getNbParticles() const
 	{
 		size_t nbParticles = 0;
@@ -139,7 +152,7 @@ namespace SPK
 
 		bool alive = true;
 
-		if ((clampStepEnabled)&&(deltaTime > clampStep))
+		if (clampStepEnabled && deltaTime > clampStep)
 			deltaTime = clampStep;
 
 		if (stepMode != STEP_MODE_REAL)
@@ -235,8 +248,17 @@ namespace SPK
 
 	bool System::innerUpdate(float deltaTime)
 	{
+		// Transform
 		updateTransform();
 
+		// Controllers
+		for (std::vector<Ref<Controller> >::const_iterator it = controllers.begin(); it != controllers.end(); ++it)
+		{
+			(*it)->updateValues(deltaTime);
+			(*it)->propagate();
+		}
+
+		// Particles
 		bool alive = false;
 		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			alive |= (*it)->updateParticles(deltaTime);
@@ -247,26 +269,6 @@ namespace SPK
 	{
 		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			(*it)->updateTransform(this);
-	}
-
-	void System::innerImport(const IO::Descriptor& descriptor)
-	{
-		Transformable::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("groups"))
-		{
-			const std::vector<Ref<Group> >& tmpGroups = attrib->getValuesRef<Group>();
-			for (size_t i = 0; i < tmpGroups.size(); ++i)
-				groups.push_back(tmpGroups[i]);
-		}
-	}
-
-	void System::innerExport(IO::Descriptor& descriptor) const
-	{
-		Transformable::innerExport(descriptor);
-		if (getNbGroups() > 0)
-			descriptor.getAttribute("groups")->setValuesRef(&groups[0],getNbGroups());
 	}
 
 	void System::setGroupSystem(const Ref<Group>& group,System* system,bool remove)

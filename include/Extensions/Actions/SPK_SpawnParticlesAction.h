@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -39,15 +39,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX SpawnParticlesAction : public Action
 	{
-	SPK_IMPLEMENT_OBJECT(SpawnParticlesAction)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Action)
-	SPK_ATTRIBUTE("spawning numbers",ATTRIBUTE_TYPE_FLOATS)
-	SPK_ATTRIBUTE("base emitter",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("target group",ATTRIBUTE_TYPE_REF)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		//////////////////////////////
@@ -145,10 +136,13 @@ namespace SPK
 		virtual void apply(Particle& particle) const;
 		virtual Ref<SPKObject> findByName(const std::string& name);
 
-	protected :
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+	public :
+		spark_description(SpawnParticlesAction, Action)
+		(
+			spk_attribute(Ref<Emitter>, emitter, setEmitter, getEmitter);
+			spk_attribute(Ref<Group>, targetGroup, setTargetGroup, getTargetGroup);
+			spk_attribute(Pair<unsigned int>, quantity, setNb, getMinNb, getMaxNb);
+		);
 
 	private :
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -89,10 +89,9 @@ namespace SPK
 		}
 	}
 
-	void Emitter::setZone(const Ref<Zone>& zone,bool full)
+	void Emitter::setZone(const Ref<Zone>& zone)
 	{
 		this->zone = (!zone ? SPK_DEFAULT_ZONE : zone);
-		this->full = full;
 	}
 
 	void Emitter::propagateUpdateTransform()
@@ -113,63 +112,5 @@ namespace SPK
 		if (object) return object;
 
 		return zone->findByName(name);
-	}
-
-	void Emitter::innerImport(const IO::Descriptor& descriptor)
-	{
-		Transformable::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-
-		if (attrib = descriptor.getAttributeWithValue("active"))
-			setActive(attrib->getValue<bool>());
-
-		if (attrib = descriptor.getAttributeWithValue("tank"))
-		{
-			std::vector<int32> tmpTanks = attrib->getValues<int32>();
-			switch(tmpTanks.size())
-			{
-				case 1 : setTank(tmpTanks[0]); break;
-				case 2 : setTank(tmpTanks[0],tmpTanks[1]); break;
-				default : SPK_LOG_ERROR("Emitter::innerImport(const IO::Descriptor&) - Wrong number of tanks : " << tmpTanks.size());
-			}
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("flow"))
-			setFlow(attrib->getValue<float>());
-
-		if (attrib = descriptor.getAttributeWithValue("force"))
-		{
-			std::vector<float> tmpForces = attrib->getValues<float>();
-			switch(tmpForces.size())
-			{
-				case 1 : setForce(tmpForces[0],tmpForces[0]); break;
-				case 2 : setForce(tmpForces[0],tmpForces[1]); break;
-				default : SPK_LOG_ERROR("Emitter::innerImport(const IO::Descriptor&) - Wrong number of forces : " << tmpForces.size());
-			}
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("zone"))
-			setZone(attrib->getValueRef<Zone>(),isFullZone());
-		if (attrib = descriptor.getAttributeWithValue("full"))
-			setZone(getZone(),attrib->getValue<bool>());
-	}
-
-	void Emitter::innerExport(IO::Descriptor& descriptor) const
-	{
-		Transformable::innerExport(descriptor);
-
-		descriptor.getAttribute("active")->setValueOptionalOnTrue(isActive());
-
-		int32 tmpTanks[2] = {minTank,maxTank};
-		descriptor.getAttribute("tank")->setValues(tmpTanks,tmpTanks[0] == tmpTanks[1] ? 1 : 2);
-
-		descriptor.getAttribute("flow")->setValue(getFlow());
-
-		float tmpForces[2] = {forceMin,forceMax};
-		descriptor.getAttribute("force")->setValues(tmpForces,tmpForces[0] == tmpForces[1] ? 1 : 2);
-
-		descriptor.getAttribute("zone")->setValueRef(getZone(),getZone() == SPK_DEFAULT_ZONE);
-		descriptor.getAttribute("full")->setValueOptionalOnTrue(isFullZone());
 	}
 }

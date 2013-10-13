@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -54,20 +54,13 @@ namespace SPK
 	{
 	friend class Group;
 
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(SPKObject)
-	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("rendering options",ATTRIBUTE_TYPE_INT32)
-	SPK_ATTRIBUTE("alpha threshold",ATTRIBUTE_TYPE_FLOAT)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		////////////////
 		// Destructor //
 		////////////////
 
-		virtual  ~Renderer() {}
+		virtual ~Renderer() {}
 
 		/////////////
 		// Setters //
@@ -77,16 +70,16 @@ namespace SPK
 		* Specifies whether to use shader or not if possible
 		* @param hint : the shader hint
 		*/
-		static  void useShaderHint(ShaderHint hint);
+		static void useShaderHint(ShaderHint hint);
 
 		/**
 		* Specifies whether to use vbo to transfer data to GPU if possible
 		* @param hint : the vbo hint
 		*/
-		static  void useVBOHint(bool hint);
+		static void useVBOHint(bool hint);
 
-		virtual  void enableRenderingOption(RenderingOption option,bool enable);
-		virtual  void setAlphaTestThreshold(float alphaThreshold);
+		virtual void enableRenderingOption(RenderingOption option,bool enable);
+		virtual void setAlphaTestThreshold(float alphaThreshold);
 		void setActive(bool active);
 		virtual void setBlendMode(BlendMode blendMode) = 0;
 		
@@ -106,9 +99,21 @@ namespace SPK
 		*/
 		static bool getVBOHint();
 
-		virtual  bool isRenderingOptionEnabled(RenderingOption option) const;
-		virtual  float getAlphaTestThreshold() const;
+		virtual bool isRenderingOptionEnabled(RenderingOption option) const;
+		virtual float getAlphaTestThreshold() const;
 		bool isActive() const;
+
+	public : /// TODO: make this private
+		void setRenderingOptions(unsigned int r);
+		unsigned int getRenderingOptions() const;
+
+	public :
+		spark_description(Renderer, SPKObject)
+		(
+			spk_attribute(bool, active, setActive, isActive);
+			//spk_attribute(float, alphaThreshold, setAlphaTestThreshold, getAlphaTestThreshold);
+			spk_attribute(unsigned int, renderingOptions, setRenderingOptions, getRenderingOptions);
+		);
 
 	protected :
 
@@ -119,7 +124,6 @@ namespace SPK
 		Renderer(bool NEEDS_DATASET);
 
 	private :
-
 		// Rendering hints
 		static ShaderHint shaderHint;
 		static bool vboHint;
@@ -145,6 +149,16 @@ namespace SPK
 		renderingOptionsMask(RENDERING_OPTION_DEPTH_WRITE),
 		alphaThreshold(1.0f)
 	{}
+
+	inline void Renderer::setRenderingOptions(unsigned int r)
+	{
+		renderingOptionsMask = r;
+	}
+
+	inline unsigned int Renderer::getRenderingOptions() const
+	{
+		return renderingOptionsMask;
+	}
 
 	inline void Renderer::enableRenderingOption(RenderingOption option,bool enable)
 	{

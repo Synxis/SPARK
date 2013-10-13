@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -41,16 +41,6 @@ namespace SPK
 	class SPK_PREFIX Emitter :	public Transformable
 	{
 	friend class Group;
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Transformable)
-	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("tank",ATTRIBUTE_TYPE_INT32S)
-	SPK_ATTRIBUTE("flow",ATTRIBUTE_TYPE_FLOAT)
-	SPK_ATTRIBUTE("force",ATTRIBUTE_TYPE_FLOATS)
-	SPK_ATTRIBUTE("zone",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("full",ATTRIBUTE_TYPE_BOOL)
-	SPK_END_DESCRIPTION
 
 	public :
 
@@ -193,7 +183,10 @@ namespace SPK
 		* @param zone : the zone of this emitter
 		* @param full : true to generate particles in the whole Zone, false to generate particles only at the zone's borders.
 		*/
-		void setZone(const Ref<Zone>& zone,bool full = true);
+		void setZone(const Ref<Zone>& zone, bool full);
+		
+		void setZone(const Ref<Zone>& zone);
+		void setUseFullZone(bool f);
 
 		/**
 		* @brief Gets the zone of this emitter
@@ -209,6 +202,17 @@ namespace SPK
 
 		virtual Ref<SPKObject> findByName(const std::string& name);
 
+	public :
+		spark_description(Emitter, Transformable)
+		(
+			spk_attribute(bool, active, setActive, isActive);
+			spk_attribute(Pair<int>, tank, setTank, getMinTank, getMaxTank);
+			spk_attribute(float, flow, setFlow, getFlow);
+			spk_attribute(Pair<float>, force, setForce, getForceMin, getForceMax);
+			spk_attribute(Ref<Zone>, zone, setZone, getZone);
+			spk_attribute(bool, fullzone, setUseFullZone, isFullZone);
+		);
+
 	protected :
 
 		Emitter(const Ref<Zone>& zone = SPK_NULL_REF,
@@ -221,9 +225,6 @@ namespace SPK
 		Emitter(const Emitter& emitter);
 
 		virtual void propagateUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -318,6 +319,17 @@ namespace SPK
 	inline bool Emitter::isFullZone() const
 	{
 		return full;
+	}
+
+	inline void Emitter::setZone(const Ref<Zone>& zone, bool full)
+	{
+		setZone(zone);
+		setUseFullZone(full);
+	}
+
+	inline void Emitter::setUseFullZone(bool f)
+	{
+		full = f;
 	}
 
 	inline size_t Emitter::updateTankFromTime(float deltaTime)

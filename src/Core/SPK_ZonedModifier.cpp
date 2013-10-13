@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -91,25 +91,5 @@ namespace SPK
 	{
 		if (!zone->isShared())
 			zone->updateTransform(this);
-	}
-
-	void ZonedModifier::innerImport(const IO::Descriptor& descriptor)
-	{
-		Modifier::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-
-		if (attrib = descriptor.getAttributeWithValue("zone"))
-			setZone(attrib->getValueRef<Zone>());
-		if (attrib = descriptor.getAttributeWithValue("zone test"))
-			setZoneTest(getEnumValue<ZoneTest>(attrib->getValue<std::string>()));
-	}
-
-	void ZonedModifier::innerExport(IO::Descriptor& descriptor) const
-	{
-		Modifier::innerExport(descriptor);
-
-		descriptor.getAttribute("zone")->setValueRef(getZone(),getZone() == SPK_DEFAULT_ZONE);
-		descriptor.getAttribute("zone test")->setValue<std::string>(getEnumName(getZoneTest()),getZone() == SPK_DEFAULT_ZONE);
 	}
 }

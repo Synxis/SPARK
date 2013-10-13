@@ -157,7 +157,7 @@ void drawBoundingBox(const SPK::System& system)
 int main(int argc, char *argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_WM_SetCaption("SPARK 2 test_",NULL);
+	SDL_WM_SetCaption("SPARK 2 test",NULL);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);	// double buffering
 
 	// vsync
@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
 	bool exit = false;
 	bool paused = false;
 	while(!exit)
-	{	
+	{
 		while (SDL_PollEvent(&event))
 		{
 			// if esc is pressed, exit
@@ -296,34 +296,34 @@ int main(int argc, char *argv[])
 	};
 
 	// To be registered automatically
-	SPK::IO::IOManager::get().registerObject<SPK::GL::GLQuadRenderer>();
+	SPK::Factory::getInstance().registerType<SPK::GL::GLQuadRenderer>();
  
 	SPK::Logger::get().setEnabled(false);
 
 	clock_t startTime = clock();
 	for (size_t i = 0; i < 1000; ++i)
-		SPK::IO::IOManager::get().save("test.spk",system);
+		SPK::IO::Manager::get().save("test.spk",system);
 	std::cout << "SAVING SPK BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms for 1000 operations" << std::endl;
 	
 	startTime = clock();
 	for (size_t i = 0; i < 1000; ++i)
-		SPK::IO::IOManager::get().save("test.xml",system);
+		SPK::IO::Manager::get().save("test.xml",system);
 	std::cout << "SAVING XML BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms for 1000 operations" << std::endl;
 	
 	startTime = clock();
 	SPK::Ref<SPK::System> system2;
 	for (size_t i = 0; i < 1000; ++i)
-		system2 = SPK::IO::IOManager::get().load("test.spk");
+		system2 = SPK::IO::Manager::get().load("test.spk");
 	std::cout << "LOADING SPK BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms for 1000 operations" << std::endl;
 
-	SPK::IO::IOManager::get().save("test2.spk",system2); // integrity test. test2.spk must be equivalent to test.spk
+	SPK::IO::Manager::get().save("test2.spk",system2); // integrity test. test2.spk must be equivalent to test.spk
 
 	startTime = clock();
 	for (size_t i = 0; i < 1000; ++i)
-		system2 = SPK::IO::IOManager::get().load("test.xml");
+		system2 = SPK::IO::Manager::get().load("test.xml");
 	std::cout << "LOADING XML BENCH : " << (((clock() - startTime) * 1000) / CLOCKS_PER_SEC) << "ms for 1000 operations" << std::endl;
 
-	SPK::IO::IOManager::get().save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml	
+	SPK::IO::Manager::get().save("test2.xml",system2); // integrity test. test2.xml must be equivalent to test.xml	
 
 	SPK_DUMP_MEMORY
 	}

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -22,7 +22,7 @@
 #ifndef H_SPK_IO_LOADER
 #define H_SPK_IO_LOADER
 
-#include <list>
+//#include <list>
 
 namespace SPK
 {
@@ -30,97 +30,20 @@ namespace SPK
 
 namespace IO
 {
-	/** @brief An abstract class to load an entire particle system from a resource */
-	class SPK_PREFIX Loader
+	/**
+	* @brief Class used to load a system.
+	*
+	* To create a new loader, derive it and implement the load() method. Its work
+	* is to create all objects, load their attributes, and connect them if specified
+	* in the file to load.
+	* To create objects by a type name, use Factory::getInstance().createObject(name).
+	*/
+	class Loader
 	{
-	public :
-
-		//////////////////////////////
-		// Constructor / Destructor //
-		//////////////////////////////
-
-		virtual ~Loader() {}
-
-		/////////////////////
-		// Loading methods //
-		/////////////////////
-
-		/**
-		* @brief Loads a system from an input stream
-		* @param is : the input stream from which to load the system
-		* @return the loaded system or NULL if loading failed
-		*/
-		Ref<System> load(std::istream& is) const;
-
-		/**
-		* @brief Loads a system from a file
-		* @param path : the path from which to load the file
-		* @return the loaded system or NULL if loading failed
-		*/
-		Ref<System> load(const std::string& path) const;
-
-		////////////////////
-		// nested classes //
-		////////////////////
-
-		class Graph; // Forward declaration for friendship
-
-		class Node
-		{
-		friend class Graph;
-		friend class Loader;
-
-		public :
-
-			const Ref<SPKObject>& getObject() const	{ return object; }
-			Descriptor& getDescriptor()				{ return descriptor; }
-
-		private :
-
-			Node(const Ref<SPKObject>& object);
-
-			Ref<SPKObject> object;
-			Descriptor descriptor;
-		};
-
-		class Graph
-		{
-		friend class Loader;
-
-		public :
-
-			bool addNode(size_t key,const std::string& name);
-			bool validateNodes();
-
-			Node* getNode(size_t key) const { return getNode(key,true); }
-
-		private :
-
-			Graph();
-			~Graph();
-
-			std::map<size_t,Node*> key2Ptr;
-			std::list<Node*> nodes;
-
-			bool nodesValidated;
-			Ref<System> system;
-
-			Node* getNode(size_t key,bool withCheck) const; // inner getNode that allows to bypass validation check
-			void destroyAllNodes();
-
-			const Ref<System>& finalize();
-		};
-
-	private :
-
-		/**
-		* @brief The inner load method to be implemented in derived classes
-		* @param is : the input stream from which to load the syste
-		* @param graph : the graph that allows to build the system
-		* @return true if the loading was successful, false if it failed
-		*/
-		virtual bool innerLoad(std::istream& is,Graph& graph) const = 0;
+	public:
+		virtual Ref<System> load(std::istream& is) = 0;
 	};
-}}
+}
+}
 
 #endif

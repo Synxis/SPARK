@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -141,36 +141,5 @@ namespace SPK
 			object = baseEmitter->findByName(name);
 
 		return object;
-	}
-
-	void SpawnParticlesAction::innerImport(const IO::Descriptor& descriptor)
-	{
-		Action::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("spawning numbers"))
-		{
-			std::vector<uint32> nbs = attrib->getValues<uint32>();
-			switch (nbs.size())
-			{
-			case 1 : setNb(nbs[0]); break;
-			case 2 : setNb(nbs[0],nbs[1]); break;
-			default : SPK_LOG_ERROR("SpawnParticlesAction::innerImport(const IO::Descriptor& - The number of numbers set must be 1 or 2");
-			}
-		}
-		if (attrib = descriptor.getAttributeWithValue("base emitter"))
-			setEmitter(attrib->getValueRef<Emitter>());
-		if (attrib = descriptor.getAttributeWithValue("target group"))
-			setTargetGroup(attrib->getValueRef<Group>());
-	}
-
-	void SpawnParticlesAction::innerExport(IO::Descriptor& descriptor) const
-	{
-		Action::innerExport(descriptor);
-
-		uint32 nbs[2] = {minNb,maxNb};
-		descriptor.getAttribute("spawning numbers")->setValues(nbs,nbs[0] == nbs[1] ? 1 : 2);
-		descriptor.getAttribute("base emitter")->setValueRef(getEmitter());
-		descriptor.getAttribute("target group")->setValueRef(getTargetGroup());
 	}
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011														//
+// Copyright (C) 2008-2013														//
 // Julien Fryer - julienfryer@gmail.com											//
 // Thibault Lescoat - info-tibo <at> orange <dot> fr							//
 //																				//
@@ -42,8 +42,6 @@ namespace IRR
 	class SPK_IRR_PREFIX IRRLineRenderer :	public IRRRenderer,
 											public LineRenderBehavior
 	{
-	SPK_IMPLEMENT_OBJECT(IRRLineRenderer)
-
 	public :
 
 		/**
@@ -56,6 +54,11 @@ namespace IRR
 		static  Ref<IRRLineRenderer> create(irr::IrrlichtDevice* d = NULL,float length = 1.0f,float width = 1.0f);
 
 		virtual  void setWidth(float width);
+
+	public :
+		spark_description(IRRLineRenderer, IRRRenderer)
+		(
+		);
 
 	private :
 

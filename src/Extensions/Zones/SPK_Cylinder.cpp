@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -31,7 +31,8 @@ namespace SPK
 		const Vector3D& axis) :
 		Zone(position)
 	{
-		setDimensions(height,radius);
+		setHeight(height);
+		setRadius(radius);
 		setAxis(axis);
 	}
 	
@@ -44,24 +45,6 @@ namespace SPK
 		tNormal(cylinder.tNormal),
 		tCoNormal(cylinder.tCoNormal)
 	{}
-
-	void Cylinder::setDimensions(float height,float radius) 
-	{
-		if (height <= 0.0f)
-		{
-			SPK_LOG_WARNING("Cylinder::setDimenisions(float,float) - The height cannot be negative. Default value is used");
-			height = 1.0f;
-		}
-
-		if (radius <= 0.0f)
-		{
-			SPK_LOG_WARNING("Cylinder::setDimenisions(float,float) - The radius cannot be negative. Default value is used");
-			radius = 1.0f;
-		}
-
-		this->height = height;
-		this->radius = radius;
-	}
 
 	void Cylinder::setAxis(const Vector3D& axis)
 	{
@@ -161,34 +144,5 @@ namespace SPK
 	{
 		Zone::innerUpdateTransform();
 		computeTransformedBase();
-	}
-
-	void Cylinder::innerImport(const IO::Descriptor& descriptor)
-	{
-		Zone::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-
-		float height = this->height;
-		float radius = this->radius;
-
-		if (attrib = descriptor.getAttributeWithValue("height"))
-			height = attrib->getValue<float>();
-
-		if (attrib = descriptor.getAttributeWithValue("radius"))
-			radius = attrib->getValue<float>();
-
-		setDimensions(height,radius);
-
-		if (attrib = descriptor.getAttributeWithValue("axis"))
-			setAxis(attrib->getValue<Vector3D>());
-	}
-
-	void Cylinder::innerExport(IO::Descriptor& descriptor) const
-	{
-		Zone::innerExport(descriptor);
-		descriptor.getAttribute("height")->setValue(getHeight());
-		descriptor.getAttribute("radius")->setValue(getRadius());
-		descriptor.getAttribute("axis")->setValue(getAxis());
 	}
 }

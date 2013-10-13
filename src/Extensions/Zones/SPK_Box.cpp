@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -208,32 +208,5 @@ namespace SPK
 			transformDir(tAxis[i],axis[i]);
 			tAxis[i].normalize();
 		}
-	}
-
-	void Box::innerImport(const IO::Descriptor& descriptor)
-	{
-		Zone::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("dimensions"))
-			setDimensions(attrib->getValue<Vector3D>());
-		
-		Vector3D front = Vector3D(0.0f,0.0f,1.0f);
-		Vector3D up = Vector3D(0.0f,1.0f,0.0f);
-
-		if (attrib = descriptor.getAttributeWithValue("front"))
-			front = attrib->getValue<Vector3D>();
-		if (attrib = descriptor.getAttributeWithValue("up"))
-			up = attrib->getValue<Vector3D>();
-
-		setAxis(front,up);
-	}
-
-	void Box::innerExport(IO::Descriptor& descriptor) const
-	{
-		Zone::innerExport(descriptor);
-		descriptor.getAttribute("dimensions")->setValue(getDimensions());
-		descriptor.getAttribute("front")->setValue(getZAxis());
-		descriptor.getAttribute("up")->setValue(getYAxis());
 	}
 }

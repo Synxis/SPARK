@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -34,15 +34,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX PointMass : public Modifier
 	{
-	SPK_IMPLEMENT_OBJECT(PointMass)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Modifier)
-	SPK_ATTRIBUTE("position",ATTRIBUTE_TYPE_VECTOR)
-	SPK_ATTRIBUTE("mass",ATTRIBUTE_TYPE_FLOAT)
-	SPK_ATTRIBUTE("offset",ATTRIBUTE_TYPE_FLOAT)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		/**
@@ -118,12 +109,17 @@ namespace SPK
 		*/
 		float getOffset() const;
 
+	public :
+		spark_description(PointMass, Modifier)
+		(
+			spk_attribute(Vector3D, position, setPosition, getPosition);
+			spk_attribute(float, mass, setMass, getMass);
+			spk_attribute(float, offset, setOffset, getOffset);
+		);
+
 	protected :
 
-		virtual  void innerUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+		virtual void innerUpdateTransform();
 
 	private :
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -39,14 +39,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX Ring : public Zone
 	{
-	SPK_IMPLEMENT_OBJECT(Ring)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Zone)
-	SPK_ATTRIBUTE("normal",ATTRIBUTE_TYPE_VECTOR)
-	SPK_ATTRIBUTE("radius",ATTRIBUTE_TYPE_FLOATS)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		//////////////////
@@ -127,12 +119,16 @@ namespace SPK
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f,Vector3D* normal = NULL) const;
 		virtual Vector3D computeNormal(const Vector3D& v) const;
 
+	public :
+		spark_description(Ring, Zone)
+		(
+			spk_attribute(Vector3D, normal, setNormal, getNormal);
+			spk_attribute(Pair<float>, radius, setRadius, getMinRadius, getMaxRadius);
+		);
+
 	protected :
 
 		virtual void innerUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

@@ -28,11 +28,6 @@ namespace SPK
 	{
 	friend class Transform;
 
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(SPKObject)
-	SPK_ATTRIBUTE("transform",ATTRIBUTE_TYPE_FLOATS)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		virtual ~Transformable() {}
@@ -55,6 +50,25 @@ namespace SPK
 		* @param parent : the parent transformable of this transformable, NULL if it has no parent
 		*/
 		void updateTransform(const Ref<Transformable>& parent = SPK_NULL_REF);
+
+		///////////////////////
+		// Transform helpers //
+		///////////////////////
+		/// TODO: See Transform
+		void setTransformPosition(const Vector3D& pos);
+		const Vector3D& getTransformPosition() const;
+		void setTransformLookLH(const Vector3D& pos);
+		const Vector3D& getTransformLookLH() const;
+		void setTransformUp(const Vector3D& pos);
+		const Vector3D& getTransformUp() const;
+
+	public:
+		spark_description( Transformable, SPKObject )
+		(
+			spk_attribute(Vector3D, positionVector, setTransformPosition, getTransformPosition);
+			spk_attribute(Vector3D, lookLHVector, setTransformLookLH, getTransformLookLH);
+			spk_attribute(Vector3D, upVector, setTransformUp, getTransformUp);
+		);
 
 	protected :
 
@@ -94,9 +108,6 @@ namespace SPK
 		*/
 		void transformDir(Vector3D& tDir,const Vector3D& dir);
 
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
-
 	private :
 
 		Transform transform;
@@ -120,6 +131,42 @@ namespace SPK
 	inline void Transformable::transformDir(Vector3D& tDir,const Vector3D& dir)
 	{
 		transform.transformDir(tDir,dir);
+	}
+
+	inline void Transformable::setTransformPosition(const Vector3D& pos)
+	{
+		transform.setPosition(pos);
+	}
+
+	inline const Vector3D& Transformable::getTransformPosition() const
+	{
+		/// TODO: improve Transform in order to remove this hack
+		static Vector3D v = transform.getLocalPos();
+		return v;
+	}
+
+	inline void Transformable::setTransformLookLH(const Vector3D& look)
+	{
+		transform.setOrientationLH(look, transform.getLocalUp());
+	}
+
+	inline const Vector3D& Transformable::getTransformLookLH() const
+	{
+		/// TODO: improve Transform in order to remove this hack
+		static Vector3D v = transform.getLocalLookLH();
+		return v;
+	}
+
+	inline void Transformable::setTransformUp(const Vector3D& up)
+	{
+		transform.setOrientationLH(transform.getLocalLookLH(), up);
+	}
+
+	inline const Vector3D& Transformable::getTransformUp() const
+	{
+		/// TODO: improve Transform in order to remove this hack
+		static Vector3D v = transform.getLocalUp();
+		return v;
 	}
 }
 

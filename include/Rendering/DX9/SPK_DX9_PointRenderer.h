@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //                           foulon matthieu - stardeath@wanadoo.fr				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
@@ -43,8 +43,6 @@ namespace DX9
 	class SPK_DX9_PREFIX DX9PointRenderer :	public DX9Renderer,
 											public PointRenderBehavior
 	{
-	SPK_IMPLEMENT_OBJECT(DX9PointRenderer)
-
 	public :
 
 		/**
@@ -100,6 +98,11 @@ namespace DX9
 		* @param screenHeight : the height of the viewport in pixels
 		*/
 		static  void setPixelPerUnit(float fovy,int screenHeight);
+
+	public :
+		spark_description(DX9PointRenderer, DX9Renderer)
+		(
+		);
 
 	protected:
 

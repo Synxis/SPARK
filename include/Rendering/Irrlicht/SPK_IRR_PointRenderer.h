@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK Irrlicht Rendering library												//
-// Copyright (C) 2008-2011														//
+// Copyright (C) 2008-2013														//
 // Julien Fryer - julienfryer@gmail.com											//
 // Thibault Lescoat - info-tibo <at> orange <dot> fr							//
 //																				//
@@ -51,8 +51,6 @@ namespace IRR
 	class SPK_IRR_PREFIX IRRPointRenderer :	public IRRRenderer,
 											public PointRenderBehavior
 	{
-	SPK_IMPLEMENT_OBJECT(IRRPointRenderer)
-
 	public :
 
 		/**
@@ -98,6 +96,11 @@ namespace IRR
 		* @return the material texture layer
 		*/
 		const irr::video::SMaterialLayer& getMaterialLayer() const;
+
+	public :
+		spark_description(IRRPointRenderer, IRRRenderer)
+		(
+		);
 
 	private :
 

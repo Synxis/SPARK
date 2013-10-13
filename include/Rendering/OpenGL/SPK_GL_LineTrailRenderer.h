@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -54,8 +54,6 @@ namespace GL
 	*/
 	class SPK_GL_PREFIX GLLineTrailRenderer : public GLRenderer
 	{
-	SPK_IMPLEMENT_OBJECT(GLLineTrailRenderer)
-
 	public :
 
 		//////////////////
@@ -134,6 +132,11 @@ namespace GL
 		void setDegeneratedLines(Color color);
 
 		virtual void enableBlending(bool blendingEnabled);
+
+	public :
+		spark_description(GLLineTrailRenderer, GLRenderer)
+		(
+		);
 
 	protected :
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -27,6 +27,7 @@ namespace SPK
 	class Particle;
 
 #ifdef SPK_DOXYGEN_ONLY // For documentation purpose only
+
 	/** Constants defining the tests that can be performed for particles on zones */
 	enum ZoneTest
 	{
@@ -37,26 +38,24 @@ namespace SPK
 		ZONE_TEST_LEAVE,		/**< Does the particle leave the zone ? */
 		ZONE_TEST_ALWAYS,		/**< The test is always passed */
 	};
+
 #endif
 
-	#define SPK_ENUM_ZONE_TEST(XX) \
-		XX(ZONE_TEST_INSIDE,) \
-		XX(ZONE_TEST_OUTSIDE,) \
-		XX(ZONE_TEST_INTERSECT,) \
-		XX(ZONE_TEST_ENTER,) \
-		XX(ZONE_TEST_LEAVE,) \
-		XX(ZONE_TEST_ALWAYS,) \
+	#define SPK_ENUM_ZONE_TEST(XX)	\
+		XX(ZONE_TEST_INSIDE,)		\
+		XX(ZONE_TEST_OUTSIDE,)		\
+		XX(ZONE_TEST_INTERSECT,)	\
+		XX(ZONE_TEST_ENTER,)		\
+		XX(ZONE_TEST_LEAVE,)		\
+		XX(ZONE_TEST_ALWAYS,)
 
 	SPK_DECLARE_ENUM(ZoneTest,SPK_ENUM_ZONE_TEST)
 
+	/**
+	*
+	*/
 	class SPK_PREFIX Zone : public Transformable
 	{
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Transformable)
-	SPK_ATTRIBUTE("position",ATTRIBUTE_TYPE_VECTOR)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		////////////////
@@ -91,15 +90,18 @@ namespace SPK
 		*/
 		bool check(const Particle& particle,ZoneTest zoneTest,Vector3D* normal = NULL) const;
 
+	public :
+		spark_description(Zone, Transformable)
+		(
+			spk_attribute(Vector3D, position, setPosition, getPosition);
+		);
+
 	protected :
 
 		Zone(const Vector3D& position = Vector3D());
 
 		virtual  void innerUpdateTransform();
 		static  void normalizeOrRandomize(Vector3D& v);
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -158,22 +160,6 @@ namespace SPK
 			do v = SPK_RANDOM(Vector3D(-1.0f,-1.0f,-1.0f),Vector3D(1.0f,1.0f,1.0f));
 			while (v.getSqrNorm() > 1.0f);
 		}
-	}
-
-	inline void Zone::innerImport(const IO::Descriptor& descriptor)
-	{
-		Transformable::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-
-		if (attrib = descriptor.getAttributeWithValue("position"))
-			setPosition(attrib->getValue<Vector3D>());
-	}
-
-	inline void Zone::innerExport(IO::Descriptor& descriptor) const
-	{
-		Transformable::innerExport(descriptor);
-		descriptor.getAttribute("position")->setValue(getPosition());
 	}
 }
 

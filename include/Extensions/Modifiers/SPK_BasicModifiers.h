@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -26,13 +26,6 @@ namespace SPK
 {
 	class SPK_PREFIX Gravity : public Modifier
 	{
-	SPK_IMPLEMENT_OBJECT(Gravity)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Modifier)
-	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_VECTOR)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		static  Ref<Gravity> create(const Vector3D& value = Vector3D());
@@ -41,12 +34,15 @@ namespace SPK
 		const Vector3D& getValue() const;
 		const Vector3D& getTransformedValue() const;
 
+	public :
+		spark_description(Gravity, Modifier)
+		(
+			spk_attribute(Vector3D, value, setValue, getValue);
+		);
+
 	protected :
 
-		virtual  void innerUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+		virtual void innerUpdateTransform();
 
 	private :
 
@@ -61,23 +57,20 @@ namespace SPK
 
 	class SPK_PREFIX Friction : public Modifier
 	{
-	SPK_IMPLEMENT_OBJECT(Friction)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Modifier)
-	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_FLOAT)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		static  Ref<Friction> create(float value = 0.0f);
 
+		void setValue(float v) { value = v; }
+		float getValue() const { return value; }
+
 		float value;
 
-	protected :
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+	public :
+		spark_description(Friction, Modifier)
+		(
+			spk_attribute(float, value, setValue, getValue);
+		);
 
 	private :
 

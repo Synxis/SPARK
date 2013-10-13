@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -27,45 +27,34 @@ namespace SPK
 	template<typename T>
 	class DefaultInitializer : public Interpolator<T>
 	{
-	SPK_DEFINE_OBJECT_TEMPLATE(DefaultInitializer<T>)
-	SPK_DEFINE_DESCRIPTION_TEMPLATE
+		typedef typename Arg<T>::type Tv;
 
 	public :
 
-		static  Ref<DefaultInitializer<T> > create(const T& value);
+		static  Ref<DefaultInitializer<T> > create(Tv value);
 
-		void setDefaultValue(const T& value);
-		const T& getDefaultValue() const;
+		void setDefaultValue(Tv value);
+		Tv getDefaultValue() const;
 
-	protected :
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+	public :
+		spark_description(DefaultInitializer, Interpolator)
+		(
+			spk_attribute(T, value, setDefaultValue, getDefaultValue);
+		);
 
 	private :
 
 		T defaultValue;
 
-		DefaultInitializer<T>(const T& value = T());
+		DefaultInitializer<T>(Tv value = T());
 		DefaultInitializer<T>(const DefaultInitializer<T>& interpolator);
 
 		virtual  void interpolate(T* data,Group& group,DataSet* dataSet) const {}
 		virtual  void init(T& data,Particle& particle,DataSet* dataSet) const;
 	};
 
-	typedef DefaultInitializer<Color> ColorDefaultInitializer;
-	typedef DefaultInitializer<float> FloatDefaultInitializer;
-
-	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorDefaultInitializer)
-	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatDefaultInitializer)
-
-	SPK_START_DESCRIPTION_TEMPLATE(DefaultInitializer<T>)
-	SPK_PARENT_ATTRIBUTES(Interpolator<T>)
-	SPK_ATTRIBUTE_GENERIC("value",T)
-	SPK_END_DESCRIPTION
-
 	template<typename T>
-	DefaultInitializer<T>::DefaultInitializer(const T& value) :
+	DefaultInitializer<T>::DefaultInitializer(Tv value) :
 		Interpolator<T>(false),
 		defaultValue(value)
 	{}
@@ -77,19 +66,19 @@ namespace SPK
 	{}
 
 	template<typename T>
-	inline Ref<DefaultInitializer<T> > DefaultInitializer<T>::create(const T& value)
+	inline Ref<DefaultInitializer<T> > DefaultInitializer<T>::create(Tv value)
 	{
 		return SPK_NEW(DefaultInitializer<T>,value);
 	}
 
 	template<typename T>
-	inline void DefaultInitializer<T>::setDefaultValue(const T& value)
+	inline void DefaultInitializer<T>::setDefaultValue(Tv value)
 	{
 		defaultValue = value;
 	}
 
 	template<typename T>
-	inline const T& DefaultInitializer<T>::getDefaultValue() const
+	inline typename DefaultInitializer<T>::Tv DefaultInitializer<T>::getDefaultValue() const
 	{
 		return defaultValue;
 	}
@@ -100,22 +89,12 @@ namespace SPK
 		data = defaultValue;
 	}
 
-	template<typename T>
-	void DefaultInitializer<T>::innerImport(const IO::Descriptor& descriptor)
-	{
-		Interpolator<T>::innerImport(descriptor);
+	// Typedefs
+	typedef DefaultInitializer<Color> ColorDefaultInitializer;
+	typedef DefaultInitializer<float> FloatDefaultInitializer;
 
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("value"))
-			setDefaultValue(attrib->getValue<T>());
-	}
-
-	template<typename T>
-	void DefaultInitializer<T>::innerExport(IO::Descriptor& descriptor) const
-	{
-		Interpolator<T>::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValue(getDefaultValue());
-	}
+	spark_description_specialization( ColorDefaultInitializer );
+	spark_description_specialization( FloatDefaultInitializer );
 }
 
 #endif

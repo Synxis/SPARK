@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -49,8 +49,6 @@ namespace GL
 											public QuadRenderBehavior,
 											public Oriented3DRenderBehavior
 	{
-	SPK_IMPLEMENT_OBJECT(GLQuadRenderer)
-
 	public :
 
 		/**
@@ -78,6 +76,11 @@ namespace GL
 		* @return the texture of this GLQuadRenderer
 		*/
 		GLuint getTexture() const;
+
+	public :
+		spark_description(GLQuadRenderer, GLRenderer)
+		(
+		);
 
 	private :
 

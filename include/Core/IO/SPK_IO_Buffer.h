@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -26,13 +26,13 @@ namespace SPK
 {
 namespace IO
 {
-	class IOBuffer
+	class SPK_PREFIX Buffer
 	{
 	public :
 
-		IOBuffer(size_t capacity);
-		IOBuffer(size_t,std::istream& is);
-		~IOBuffer();
+		Buffer(size_t initialCapacity);
+		Buffer(size_t,std::istream& is);
+		~Buffer();
 
 		const char* getData() const	{ return buf; }
 
@@ -64,14 +64,17 @@ namespace IO
 				return swap32(*reinterpret_cast<const int32*>(get(4)));
 		}
 
-		template<class T> T get() const;
+		template<class T> T get() const
+		{
+			return GetHelper<T>::get(this);
+		}
 
 		//////////////////////////////
 		// Primitive put operations //
 		//////////////////////////////
 
 		void put(char c);
-		void put(const char* c,size_t length);
+		void put(const char* c, size_t length);
 
 		void put32(int32 i)
 		{
@@ -85,6 +88,8 @@ namespace IO
 		// Generic put operations //
 		////////////////////////////
 
+		void put(unsigned char c)	{ put((char)c); }
+		void put(signed char c)		{ put((char)c); }
 		void put(float f)			{ put32(*reinterpret_cast<int32*>(&f)); }
 		void put(uint32 i)			{ put32(*reinterpret_cast<int32*>(&i)); }
 		void put(int32 i)			{ put32(i); }
@@ -93,22 +98,97 @@ namespace IO
 		void put(const Color& c)	{ put(reinterpret_cast<const char*>(&c),4); }
 		void put(bool b)			{ put(static_cast<char>(b ? 0x01 : 0x00)); }
 
-		template<class T>
-		void putArray(const std::vector<T>& t)
+		template<typename T>
+		void put(const std::vector<T>& t)
 		{
 			put(static_cast<uint32>(t.size()));
 			for (size_t i = 0; i < t.size(); ++i)
 				put(t[i]);
 		}
 
-		void putBuffer(const IOBuffer& buffer)
+		template<typename T>
+		void put(const Pair<T>& value)
 		{
-			put(buffer.getData(),buffer.getSize());
+			put(value.value1);
+			put(value.value2);
 		}
 
-	private :
+		template<typename T>
+		void put(const Triplet<T>& value)
+		{
+			put(value.value1);
+			put(value.value2);
+			put(value.value3);
+		}
 
-		IOBuffer(const IOBuffer& buffer);
+		template<typename T>
+		void put(const Quadruplet<T>& value)
+		{
+			put(value.value1);
+			put(value.value2);
+			put(value.value3);
+			put(value.value4);
+		}
+
+		void putBuffer(const Buffer& buffer)
+		{
+			put(buffer.getData(), buffer.getSize());
+		}
+
+	private:
+		template<typename T> struct GetHelper {};
+
+		template<typename T>
+		struct GetHelper<Pair<T> >
+		{
+			static Pair<T> get(const Buffer* buffer)
+			{
+				T v1 = buffer->get<T>();
+				T v2 = buffer->get<T>();
+				return Pair<T>(v1, v2);
+			}
+		};
+
+		template<typename T>
+		struct GetHelper<Triplet<T> >
+		{
+			static Triplet<T> get(const Buffer* buffer)
+			{
+				T v1 = buffer->get<T>();
+				T v2 = buffer->get<T>();
+				T v3 = buffer->get<T>();
+				return Triplet<T>(v1, v2, v3);
+			}
+		};
+
+		template<typename T>
+		struct GetHelper<Quadruplet<T> >
+		{
+			static Quadruplet<T> get(const Buffer* buffer)
+			{
+				T v1 = buffer->get<T>();
+				T v2 = buffer->get<T>();
+				T v3 = buffer->get<T>();
+				T v4 = buffer->get<T>();
+				return Quadruplet<T>(v1, v2, v3, v4);
+			}
+		};
+
+		template<typename T>
+		struct GetHelper<std::vector<T> >
+		{
+			static std::vector<T> get(const Buffer* buffer)
+			{
+				unsigned int size = buffer->get<uint32>();
+				std::vector<T> tmp;
+				for(size_t t = 0; t < size; t++)
+					tmp.push_back(buffer->get<T>());
+				return tmp;
+			}
+		};
+
+	private:
+		Buffer(const Buffer& buffer);
 
 		static const bool USE_LITTLE_ENDIANS;
 
@@ -130,19 +210,43 @@ namespace IO
 		static bool isLittleEndians();
 	};
 
-    ////////////////////////////
+	////////////////////////////
+	// Generic put operations //
+	////////////////////////////
+	template<typename T>
+	Buffer& operator<<(Buffer& buffer, T value)
+	{
+		buffer.put(value);
+		return buffer;
+	}
+
+	template<typename T, int N>
+	Buffer& operator<<(Buffer& buffer, T (&value)[N])
+	{
+		buffer.put((const char*)&value, N * sizeof(T));
+		return buffer;
+	}
+
+	////////////////////////////
 	// Generic get operations //
 	////////////////////////////
+	template<> inline char Buffer::get() const	{ return *get(1); }
+	template<> inline unsigned char Buffer::get() const	{ return *get(1); }
+	template<> inline float Buffer::get() const 	{ int32 i = get32(); return *reinterpret_cast<float*>(&i); }
+	template<> inline uint32 Buffer::get() const 	{ int32 i = get32(); return *reinterpret_cast<uint32*>(&i); }
+	template<> inline int32 Buffer::get() const	{ return get32(); }
+	template<> inline Color Buffer::get() const	{ int32 i = get32(); return *reinterpret_cast<Color*>(&i); }
+	template<> inline bool Buffer::get() const	{ return get<char>() != 0; }
 
-    template<> inline char IOBuffer::get() const	{ return *get(1); }
-    template<> inline float IOBuffer::get() const 	{ int32 i = get32(); return *reinterpret_cast<float*>(&i); }
-	template<> inline uint32 IOBuffer::get() const 	{ int32 i = get32(); return *reinterpret_cast<uint32*>(&i); }
-	template<> inline int32 IOBuffer::get() const	{ return get32(); }
-	template<> inline Color IOBuffer::get() const	{ int32 i = get32(); return *reinterpret_cast<Color*>(&i); }
-	template<> inline bool IOBuffer::get() const	{ return get<char>() != 0; }
+	template<> SPK_PREFIX std::string Buffer::get<std::string>() const;
+	template<> SPK_PREFIX Vector3D Buffer::get<Vector3D>() const;
 
-	template<> SPK_PREFIX std::string IOBuffer::get<std::string>() const;
-	template<> SPK_PREFIX Vector3D IOBuffer::get<Vector3D>() const;
+	template<typename T>
+	Buffer& operator>>(Buffer& buffer, T& value)
+	{
+		value = buffer.get<T>();
+		return buffer;
+	}
 }}
 
 #endif

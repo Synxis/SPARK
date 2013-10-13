@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -65,20 +65,5 @@ namespace SPK
 		Zone::innerUpdateTransform();
 		transformDir(tNormal,normal);
 		tNormal.normalize();
-	}
-
-	void Plane::innerImport(const IO::Descriptor& descriptor)
-	{
-		Zone::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("normal"))
-			setNormal(attrib->getValue<Vector3D>());
-	}
-
-	void Plane::innerExport(IO::Descriptor& descriptor) const
-	{
-		Zone::innerExport(descriptor);
-		descriptor.getAttribute("normal")->setValue(getNormal());
 	}
 }

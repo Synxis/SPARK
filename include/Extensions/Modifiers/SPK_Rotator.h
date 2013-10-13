@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -36,8 +36,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX Rotator : public Modifier
 	{
-	SPK_IMPLEMENT_OBJECT(Rotator)
-
 	public :
 
 		/**
@@ -45,6 +43,11 @@ namespace SPK
 		* @return A new registered Rotator
 		*/
 		static  Ref<Rotator> create();
+
+	public :
+		spark_description(Rotator, Modifier)
+		(
+		);
 
 	private :
 

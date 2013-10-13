@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -22,23 +22,34 @@
 #ifndef H_SPARK_CORE
 #define H_SPARK_CORE
 
-// Defines
 #include "Core/SPK_DEF.h"
-
 #include "Core/SPK_Logger.h"
-#include "Core/SPK_Enum.h"
-#include "Core/SPK_Reference.h"
 #include "Core/SPK_Vector3D.h"
 #include "Core/SPK_Color.h"
-#include "Core/IO/SPK_IO_Descriptor.h"
-#include "Core/IO/SPK_IO_Attribute.h"
+#include "Core/SPK_Meta.h"
+#include "Core/SPK_Types.h"
+#include "Core/SPK_TypeOperations.h"
+#include "Core/SPK_Getters.h"
+#include "Core/SPK_Setters.h"
+#include "Core/IO/SPK_IO_Context.h"
+#include "Core/IO/SPK_IO_Deserializer.h"
+#include "Core/IO/SPK_IO_Serializer.h"
+#include "Core/SPK_Connections.h"
+#include "Core/SPK_DescriptionDefines.h"
+#include "Core/SPK_Attributes.h"
+#include "Core/SPK_Controls.h"
+#include "Core/SPK_Traits.h"
+#include "Core/SPK_ClassDescription.h"
+#include "Core/SPK_StaticDescription.h"
 #include "Core/SPK_Transform.h"
 #include "Core/SPK_Object.h"
 #include "Core/SPK_Transformable.h"
+#include "Core/SPK_ConnectionIterators.h"
 #include "Core/SPK_RenderBuffer.h"
 #include "Core/SPK_DataSet.h"
 #include "Core/SPK_ArrayData.h"
 #include "Core/SPK_DataHandler.h"
+#include "Core/SPK_Controller.h"
 #include "Core/SPK_Zone.h"
 #include "Core/SPK_Interpolator.h"
 #include "Core/SPK_Emitter.h"
@@ -51,6 +62,7 @@
 #include "Core/SPK_Particle.h"
 #include "Core/SPK_Iterator.h"
 #include "Core/SPK_Octree.h"
+#include "Core/SPK_Factory.h"
 #include "Core/IO/SPK_IO_Loader.h"
 #include "Core/IO/SPK_IO_Saver.h"
 #include "Core/IO/SPK_IO_Manager.h"

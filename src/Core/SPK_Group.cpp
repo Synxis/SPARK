@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -48,7 +48,7 @@ namespace SPK
 		AABBMin(),
 		AABBMax(),
 		graphicalRadius(1.0f),
-		physicalRadius(0.0f),
+		physicalRadius(1.0f),
 		nbBufferedParticles(0),
 		birthAction(),
 		deathAction(),
@@ -434,6 +434,12 @@ namespace SPK
 		}
 	}
 
+	void Group::removeAllModifiers()
+	{
+		while(modifiers.size() > 0)
+			removeModifier(modifiers.begin()->obj);
+	}
+
 	void Group::setRenderer(const Ref<Renderer>& renderer)
 	{
 		if (this->renderer.obj != renderer)
@@ -809,6 +815,7 @@ namespace SPK
 
 		if (colorInterpolator.obj)
 			colorInterpolator.obj->prepareData(*this,colorInterpolator.dataSet);
+
 		for (size_t i = 0; i < nbEnabledParameters; ++i)
 		{
 			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
@@ -930,121 +937,5 @@ namespace SPK
 		}
 
 		return SPK_NULL_REF;
-	}
-
-	void Group::innerImport(const IO::Descriptor& descriptor)
-	{
-		Transformable::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-
-		if (attrib = descriptor.getAttributeWithValue("capacity"))
-			reallocate(attrib->getValue<uint32>());
-		if (attrib = descriptor.getAttributeWithValue("color interpolator"))
-			setColorInterpolator(attrib->getValueRef<ColorInterpolator>());
-		if (attrib = descriptor.getAttributeWithValue("scale interpolator"))
-			setParamInterpolator(PARAM_SCALE,attrib->getValueRef<FloatInterpolator>());
-		if (attrib = descriptor.getAttributeWithValue("mass interpolator"))
-			setParamInterpolator(PARAM_MASS,attrib->getValueRef<FloatInterpolator>());
-		if (attrib = descriptor.getAttributeWithValue("angle interpolator"))
-			setParamInterpolator(PARAM_ANGLE,attrib->getValueRef<FloatInterpolator>());
-		if (attrib = descriptor.getAttributeWithValue("texture index interpolator"))
-			setParamInterpolator(PARAM_TEXTURE_INDEX,attrib->getValueRef<FloatInterpolator>());
-		if (attrib = descriptor.getAttributeWithValue("rotation speed interpolator"))
-			setParamInterpolator(PARAM_ROTATION_SPEED,attrib->getValueRef<FloatInterpolator>());
-
-		if (attrib = descriptor.getAttributeWithValue("emitters"))
-		{
-			const std::vector<Ref<Emitter> >& tmpEmitters = attrib->getValuesRef<Emitter>();
-			for (size_t i = 0; i < tmpEmitters.size(); ++i)
-				addEmitter(tmpEmitters[i]);
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("modifiers"))
-		{
-			const std::vector<Ref<Modifier> >& tmpModifiers = attrib->getValuesRef<Modifier>();
-			for (size_t i = 0; i < tmpModifiers.size(); ++i)
-				addModifier(dynamicCast<Modifier>(tmpModifiers[i]));
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("birth action"))
-			setBirthAction(attrib->getValueRef<Action>());
-		if (attrib = descriptor.getAttributeWithValue("death action"))
-			setDeathAction(attrib->getValueRef<Action>());
-		if (attrib = descriptor.getAttributeWithValue("renderer"))
-			setRenderer(attrib->getValueRef<Renderer>());
-
-		if (attrib = descriptor.getAttributeWithValue("life time"))
-		{
-			std::vector<float> tmpTimes = attrib->getValues<float>();
-			switch(tmpTimes.size())
-			{
-				case 1 : setLifeTime(tmpTimes[0],tmpTimes[0]); break;
-				case 2 : setLifeTime(tmpTimes[0],tmpTimes[1]); break;
-				default : SPK_LOG_ERROR("Group::innerImport(const IO::Descriptor&) - Wrong number of life times : " << tmpTimes.size());
-			}
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("immortal"))
-			setImmortal(attrib->getValue<bool>());
-		if (attrib = descriptor.getAttributeWithValue("still"))
-			setStill(attrib->getValue<bool>());
-		if (attrib = descriptor.getAttributeWithValue("distance computation enabled"))
-			enableDistanceComputation(attrib->getValue<bool>());
-		if (attrib = descriptor.getAttributeWithValue("sorting enabled"))
-			enableSorting(attrib->getValue<bool>());
-
-		if (attrib = descriptor.getAttributeWithValue("radius"))
-		{
-			std::vector<float> tmpRadiuses = attrib->getValues<float>();
-			switch(tmpRadiuses.size())
-			{
-				case 1 : setRadius(tmpRadiuses[0]); break;
-				case 2 : setGraphicalRadius(tmpRadiuses[0]); setPhysicalRadius(tmpRadiuses[1]); break;
-				default : SPK_LOG_ERROR("Group::innerImport(const IO::Descriptor&) - Wrong number of radiuses : " << tmpRadiuses.size());
-			}
-		}
-	}
-
-	void Group::innerExport(IO::Descriptor& descriptor) const
-	{
-		Transformable::innerExport(descriptor);
-
-		descriptor.getAttribute("capacity")->setValue<uint32>(getCapacity());
-		descriptor.getAttribute("color interpolator")->setValueOptionalOnNull(getColorInterpolator());
-		descriptor.getAttribute("scale interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_SCALE));
-		descriptor.getAttribute("mass interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_MASS));
-		descriptor.getAttribute("angle interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_ANGLE));
-		descriptor.getAttribute("texture index interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_TEXTURE_INDEX));
-		descriptor.getAttribute("rotation speed interpolator")->setValueOptionalOnNull(getParamInterpolator(PARAM_ROTATION_SPEED));
-
-		size_t nbEmitters = getNbEmitters();
-		if (nbEmitters > 0)
-			descriptor.getAttribute("emitters")->setValuesRef(&emitters[0],nbEmitters);
-
-		size_t nbModifiers = getNbModifiers();
-		if (nbModifiers > 0)
-		{
-			Ref<Modifier>* tmpModifiers = SPK_NEW_ARRAY(Ref<Modifier>,nbModifiers);
-			for (size_t i = 0; i < nbModifiers; ++i)
-				tmpModifiers[i] = getModifier(i);
-			descriptor.getAttribute("modifiers")->setValuesRef(tmpModifiers,nbModifiers);
-			SPK_DELETE_ARRAY(tmpModifiers);
-		}
-
-		descriptor.getAttribute("birth action")->setValueOptionalOnNull(getBirthAction());
-		descriptor.getAttribute("death action")->setValueOptionalOnNull(getDeathAction());
-		descriptor.getAttribute("renderer")->setValueOptionalOnNull(getRenderer());
-
-		float tmpTimes[2] = {minLifeTime,maxLifeTime};
-		descriptor.getAttribute("life time")->setValues(tmpTimes,tmpTimes[0] == tmpTimes[1] ? 1 : 2);
-
-		descriptor.getAttribute("immortal")->setValueOptionalOnFalse(immortal);
-		descriptor.getAttribute("still")->setValueOptionalOnFalse(still);
-		descriptor.getAttribute("distance computation enabled")->setValueOptionalOnFalse(distanceComputationEnabled);
-		descriptor.getAttribute("sorting enabled")->setValueOptionalOnFalse(sortingEnabled);
-
-		float tmpRadiuses[2] = {graphicalRadius,physicalRadius};
-		descriptor.getAttribute("radius")->setValues(tmpRadiuses,tmpRadiuses[0] == tmpRadiuses[1] ? 1 : 2);
 	}
 }

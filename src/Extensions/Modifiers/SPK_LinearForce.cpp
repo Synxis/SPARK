@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -76,14 +76,6 @@ namespace SPK
 		force->setZone(zone,zoneTest);
 		force->useAsSimpleForce(value);
 		return force;
-	}
-
-	void LinearForce::setRelative(bool relative,bool squaredSpeed)
-	{
-		this->relative = relative;
-		this->squaredSpeed = relative & squaredSpeed;
-		if (!relative && squaredSpeed)
-			SPK_LOG_WARNING("LinearForce::setRelative(bool,bool) - Only relative force can use squared speed");
 	}
 
 	void LinearForce::useAsWind(const Vector3D& value,Factor surfaceFactor)
@@ -199,46 +191,5 @@ namespace SPK
 					particle.velocity() += relativeForce * discreteFactor;
 				}
 		}
-	}
-
-	void LinearForce::innerImport(const IO::Descriptor& descriptor)
-	{
-		ZonedModifier::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("value"))
-			setValue(attrib->getValue<Vector3D>());
-
-		if (attrib = descriptor.getAttributeWithValue("relative value"))
-		{
-			bool tmpSquaredSpeed = false;
-			bool tmpRelative = attrib->getValue<bool>();
-			if (attrib = descriptor.getAttributeWithValue("squared speed"))
-				tmpSquaredSpeed = attrib->getValue<bool>();
-			setRelative(tmpRelative,tmpSquaredSpeed);
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("parameter"))
-		{
-			Factor tmpFactor = FACTOR_LINEAR;
-			Param tmpParam = getEnumValue<Param>(attrib->getValue<std::string>());
-			if (attrib = descriptor.getAttributeWithValue("factor type"))
-				tmpFactor = getEnumValue<Factor>(attrib->getValue<std::string>());
-			setParam(tmpParam,tmpFactor);
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("coefficient"))
-			setCoef(attrib->getValue<float>());
-	}
-
-	void LinearForce::innerExport(IO::Descriptor& descriptor) const
-	{
-		ZonedModifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValue(getValue());
-		descriptor.getAttribute("relative value")->setValue(isRelative());
-		descriptor.getAttribute("squared speed")->setValue(isSquaredSpeedUsed());
-		descriptor.getAttribute("parameter")->setValue<std::string>(getEnumName(getParam()));
-		descriptor.getAttribute("factor type")->setValue<std::string>(getEnumName(getFactor()));
-		descriptor.getAttribute("coefficient")->setValue(getCoef());
 	}
 }

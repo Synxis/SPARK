@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -140,33 +140,5 @@ namespace SPK
 		Zone::innerUpdateTransform();
 		transformDir(tNormal,normal);
 		tNormal.normalize();
-	}
-
-	void Ring::innerImport(const IO::Descriptor& descriptor)
-	{
-		Zone::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("normal"))
-			setNormal(attrib->getValue<Vector3D>());
-		if (attrib = descriptor.getAttributeWithValue("radius"))
-		{
-			std::vector<float> tmpRadius = attrib->getValues<float>();
-			switch (tmpRadius.size())
-			{
-			case 1 : setRadius(tmpRadius[0],tmpRadius[0]); break;
-			case 2 : setRadius(tmpRadius[0],tmpRadius[1]); break;
-			default : SPK_LOG_ERROR("Ring::innerImport(const IO::Descriptor&) - Wrong number of radiuses : " << tmpRadius.size());
-			}
-		}
-	}
-
-	void Ring::innerExport(IO::Descriptor& descriptor) const
-	{
-		Zone::innerExport(descriptor);
-
-		descriptor.getAttribute("normal")->setValue(getNormal());
-		float tmpRadius[2] = {minRadius,maxRadius};
-		descriptor.getAttribute("radius")->setValues(tmpRadius,2);
 	}
 }

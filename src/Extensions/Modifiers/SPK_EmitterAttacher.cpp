@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -166,35 +166,5 @@ namespace SPK
 	{
 		data[index] = copy(emitter);
 		data[index]->getTransform().reset();
-	}
-
-	void EmitterAttacher::innerImport(const IO::Descriptor& descriptor)
-	{
-		Modifier::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("base emitter"))
-			setEmitter(attrib->getValueRef<Emitter>());
-
-		if (attrib = descriptor.getAttributeWithValue("orientation enabled"))
-		{
-			bool tmpRotationEnabled = false;
-			bool tmpOrientationEnabled = attrib->getValue<bool>();
-			if (attrib = descriptor.getAttributeWithValue("rotation enabled"))
-				tmpRotationEnabled = attrib->getValue<bool>();
-			enableEmitterOrientation(tmpOrientationEnabled,tmpRotationEnabled);
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("target group"))
-			setTargetGroup(attrib->getValueRef<Group>());
-	}
-
-	void EmitterAttacher::innerExport(IO::Descriptor& descriptor) const
-	{
-		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("base emitter")->setValueRef(getEmitter());
-		descriptor.getAttribute("orientation enabled")->setValue(isEmitterOrientationEnabled());
-		descriptor.getAttribute("rotation enabled")->setValue(isEmitterRotationEnabled());
-		descriptor.getAttribute("target group")->setValueRef(getTargetGroup());
 	}
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -113,6 +113,11 @@ namespace GL
 		* This method restores the OpenGL states at the values they were at the last call of saveGLStates().
 		*/
 		static void restoreGLStates();
+
+	public :
+		spark_description(GLRenderer, Renderer)
+		(
+		);
 
 	protected :
 

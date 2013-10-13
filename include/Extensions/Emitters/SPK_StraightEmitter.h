@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -30,13 +30,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX StraightEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_OBJECT(StraightEmitter)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Emitter)
-	SPK_ATTRIBUTE("direction",ATTRIBUTE_TYPE_VECTOR)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		/**
@@ -74,12 +67,15 @@ namespace SPK
 		*/
 		const Vector3D& getTransformedDirection() const;
 
+	public :
+		spark_description(StraightEmitter, Emitter)
+		(
+			spk_attribute(Vector3D, direction, setDirection, getDirection);
+		);
+
 	protected :
 
 		virtual void innerUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

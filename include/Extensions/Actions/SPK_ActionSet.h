@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -28,13 +28,6 @@ namespace SPK
 {
 	class SPK_PREFIX ActionSet : public Action
 	{
-	SPK_IMPLEMENT_OBJECT(ActionSet)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Action)
-	SPK_ATTRIBUTE("actions",ATTRIBUTE_TYPE_REFS)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		static  Ref<ActionSet> create();
@@ -45,15 +38,17 @@ namespace SPK
 		void removeAction(const Ref<Action>& action);
 		const Ref<Action>& getAction(size_t index) const;
 		size_t getNbActions() const;
+		void clearActions();
 
 		virtual void apply(Particle& particle) const;
 
 		virtual Ref<SPKObject> findByName(const std::string& name);
 
-	protected :
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+	public :
+		spark_description(ActionSet, Action)
+		(
+			spk_array(Ref<Action>, actions, addAction, removeAction, clearActions, getAction, getNbActions);
+		);
 
 	private :
 

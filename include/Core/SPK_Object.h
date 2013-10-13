@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -25,49 +25,6 @@
 #include <string>
 #include <map>
 
-#define SPK_START_DESCRIPTION \
-\
-protected : \
-virtual void fillAttributeList(std::vector<IO::Attribute>& attributes) const \
-{
-
-#define SPK_PARENT_ATTRIBUTES(ParentName)	ParentName::fillAttributeList(attributes);
-#define SPK_ATTRIBUTE(Name,Type)			attributes.push_back(SPK::IO::Attribute(Name,SPK::IO::Type));
-#define SPK_ATTRIBUTE_GENERIC(Name,T)		attributes.push_back(SPK::IO::Attribute(Name,SPK::IO::Attribute::getAttributeType<T>()));
-#define SPK_ATTRIBUTE_ARRAY_GENERIC(Name,T)	attributes.push_back(SPK::IO::Attribute(Name,SPK::IO::Attribute::getAttributeTypeArray<T>()));
-
-
-#define SPK_END_DESCRIPTION }
-
-#define SPK_IMPLEMENT_OBJECT(ClassName) \
-private : \
-friend class SPK::IO::IOManager; \
-template<typename T> friend class SPK::Ref; \
-static std::string asName()								{ return #ClassName; } \
-static SPK::Ref<SPK::SPKObject> createSerializable()	{ return SPK_NEW(ClassName); } \
-virtual SPK::Ref<SPK::SPKObject> clone() const			{ return SPK_NEW(ClassName,*this); } \
-public : \
-virtual std::string getClassName() const				{ return ClassName::asName(); }
-
-// For templates
-#define SPK_DEFINE_DESCRIPTION_TEMPLATE	protected : void fillAttributeList(std::vector<SPK::IO::Attribute>& attributes) const;
-#define SPK_START_DESCRIPTION_TEMPLATE(ClassName) \
-template<typename T> inline void ClassName::fillAttributeList(std::vector<SPK::IO::Attribute>& attributes) const \
-{
-
-#define SPK_DEFINE_OBJECT_TEMPLATE(ClassName) \
-private : \
-friend class SPK::IO::IOManager; \
-template<typename U> friend class SPK::Ref; \
-static std::string asName(); \
-static SPK::Ref<SPK::SPKObject> createSerializable()		{ return SPK_NEW(ClassName); } \
-virtual SPK::Ref<SPK::SPKObject> clone() const				{ return SPK_NEW(ClassName,*this); } \
-public : \
-virtual std::string getClassName() const					{ return ClassName::asName(); }
-
-#define SPK_IMPLEMENT_OBJECT_TEMPLATE(ClassName) \
-template<> inline std::string ClassName::asName() { return #ClassName; }
-
 namespace SPK
 {
 	/** @brief Defines the share policy for a SPKObject */
@@ -78,18 +35,9 @@ namespace SPK
 		SHARE_POLICY_FALSE		/**< The SPKObject is forced to be unshared */
 	};
 
-	namespace IO { class IOManager; }
-
 	/** @brief The base class of all SPARK objects */
 	class SPK_PREFIX SPKObject
 	{
-	template<typename T> friend class Ref;
-
-	SPK_START_DESCRIPTION
-	SPK_ATTRIBUTE("name",ATTRIBUTE_TYPE_STRING)
-	SPK_ATTRIBUTE("shared",ATTRIBUTE_TYPE_BOOL)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		/**
@@ -155,44 +103,27 @@ namespace SPK
 		*/
 		virtual Ref<SPKObject> findByName(const std::string& name);
 
-		///////////////////
-		// Serialization //
-		///////////////////
+	public:
+		spark_description(SPKObject, void)
+		(
+			spk_attribute(std::string, name, setName, getName);
+			spk_attribute(bool, shared, setShared, isShared);
+		);
 
-		/**
-		* @brief Create a descriptor for this object
-		* The descriptor created has no attribute values set.<br>
-		* Use exportAttributes, if you need a descriptor with set attributes.
-		* @return a descriptor with empty attributes of this type of object
-		*/
-		IO::Descriptor createDescriptor() const;
-
-		/**
-		* @brief Imports the attributes of a descriptor and use it to set up this object
-		* @param descriptor : The descriptor used to set up this object
-		*/
-		void importAttributes(const IO::Descriptor& descriptor);
-
-		/**
-		* @brief Exports the attribute of this object in a descriptor
-		* @return A descriptor representing the object
-		*/
-		IO::Descriptor exportAttributes() const;
-
-		/**
-		* @brief Gets the class name of this object
-		* @return the class name
-		*/
-		virtual std::string getClassName() const = 0;
-
+	private:
+		friend class System;
+		template<typename T> friend class Ref;
+		template<typename T> friend class ValueControl;
+		friend SPK_PREFIX ConnectionStatus connect(const Ref<SPKObject>&, const std::string&, const Ref<SPKObject>&,
+			const std::string&, unsigned int, const std::string&);
+		friend SPK_PREFIX void disconnect(const Ref<SPKObject>&, const std::string&, const Ref<SPKObject>&,
+			const std::string&, unsigned int, const std::string&);
+		
 	protected :
 
 		// abstract class
 		SPKObject(SharePolicy SHARE_POLICY = SHARE_POLICY_CUSTOM);
 		SPKObject(const SPKObject& obj);
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 		template<typename T>
 		Ref<T> copyChild(const Ref<T>& ref) const;
@@ -212,8 +143,6 @@ namespace SPK
 		// * Passing the copyBuffer to methods was too dirty and messed up the interface (Impossible to use the copy constructor anymore)
 		// Note that with this method the copy of the same object remains not thread safe but the copy of different object is
 		mutable std::map<SPKObject*,SPKObject*>* copyBuffer;
-
-		virtual Ref<SPKObject> clone() const = 0;
 	};
 
 	inline unsigned int SPKObject::getNbReferences() const

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -48,35 +48,5 @@ namespace SPK
 			for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 				particleIt->velocity() *= ratio;
 		}
-	}
-
-	void Gravity::innerImport(const IO::Descriptor& descriptor)
-	{
-		Modifier::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("value"))
-			setValue(attrib->getValue<Vector3D>());
-	}
-
-	void Gravity::innerExport(IO::Descriptor& descriptor) const
-	{
-		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValue(getValue());
-	}
-
-	void Friction::innerImport(const IO::Descriptor& descriptor)
-	{
-		Modifier::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("value"))
-			value = attrib->getValue<float>();
-	}
-
-	void Friction::innerExport(IO::Descriptor& descriptor) const
-	{
-		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("value")->setValue(value);
 	}
 }

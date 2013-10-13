@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -129,43 +129,5 @@ namespace SPK
 				++forceIt;
 				++timeIt;
 			}
-	}
-
-	void RandomForce::innerImport(const IO::Descriptor& descriptor)
-	{
-		Modifier::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("values"))
-		{
-			std::vector<Vector3D> tmpValues = attrib->getValues<Vector3D>();
-			switch (tmpValues.size())
-			{
-			case 1 : setVectors(tmpValues[0],tmpValues[0]); break;
-			case 2 : setVectors(tmpValues[0],tmpValues[1]); break;
-			default : SPK_LOG_ERROR("RandomForce::innerImport(const IO::Descriptor&) - Wrong number of values : " << tmpValues.size());
-			}
-		}
-		if (attrib = descriptor.getAttributeWithValue("period"))
-		{
-			std::vector<float> tmpPeriods = attrib->getValues<float>();
-			switch (tmpPeriods.size())
-			{
-			case 1 : setPeriods(tmpPeriods[0],tmpPeriods[0]); break;
-			case 2 : setPeriods(tmpPeriods[0],tmpPeriods[1]); break;
-			default : SPK_LOG_ERROR("RandomForce::innerImport(const IO::Descriptor&) - Wrong number of periods : " << tmpPeriods.size());
-			}
-		}
-	}
-
-	void RandomForce::innerExport(IO::Descriptor& descriptor) const
-	{
-		Modifier::innerExport(descriptor);
-
-		Vector3D tmpValues[2] = {minVector,maxVector};
-		descriptor.getAttribute("values")->setValues(tmpValues,2);
-
-		float tmpPeriods[2] = {minPeriod,maxPeriod};
-		descriptor.getAttribute("period")->setValues(tmpPeriods,minPeriod == maxPeriod ? 1 : 2);
 	}
 }

@@ -1,6 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 :                                                    //
+//  - Julien Fryer - julienfryer@gmail.com				                        //
+//  - Thibault Lescoat - info-tibo@orange.fr                                    //
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -24,8 +26,6 @@
 
 #ifndef SPK_NO_XML
 
-#include <sstream>
-
 namespace pugi
 {
 	class xml_node;
@@ -36,82 +36,22 @@ namespace SPK
 {
 namespace IO
 {
+	class XMLDeserializer;
+
 	/** @brief A class to deserialize a System from an XML document */
 	class SPK_PREFIX XMLLoader : public Loader
 	{
-	private :
+	public:
+		Ref<System> load(std::istream& is);
 
-		virtual bool innerLoad(std::istream& is,Graph& graph) const;
-
-		const std::string getValue(const pugi::xml_node& element) const;
-		Ref<SPKObject> getRef(const pugi::xml_node& element,const std::map<int,size_t>& ref2Index,const Graph& graph) const;
-		Ref<SPKObject> getObject(const pugi::xml_node& element,const std::vector<pugi::xml_node>& objElements,const Graph& graph) const;
-
-		void findObjects(const pugi::xml_node& parent,std::vector<pugi::xml_node>& objElements,std::map<int,size_t>& ref2Index,bool objectLevel) const;
-		void parseAttributes(const pugi::xml_node& element,Descriptor& desc,const Graph& graph,const std::vector<pugi::xml_node>& objElements,const std::map<int,size_t>& ref2Index) const;
-
-		template<typename T> void setAttributeValue(Attribute& attribute,const pugi::xml_node& element) const;
-		template<typename T> void setAttributeValueArray(Attribute& attribute,const pugi::xml_node& element) const;
-
-		template<typename T> static bool convert(const std::string& str,T& value);
-		template<typename T> static bool convert2Array(const std::string& str,std::vector<T>& values);
+	private:
+		friend class XMLDeserializer;
+		struct LoadContext;
+		void processNode(const pugi::xml_node& node, LoadContext& context);
+		void processConnection(unsigned int id, LoadContext& context);
 	};
-
-	template<typename T>
-	bool XMLLoader::convert(const std::string& str,T& value)
-	{
-		std::istringstream is(str);
-		is >> std::boolalpha;
-		return is >> value && is.eof();
-	}
-
-	template<typename T>
-	bool XMLLoader::convert2Array(const std::string& str,std::vector<T>& values)
-	{
-		values.clear();
-
-		if (str.empty())
-			return false;
-
-		size_t oldPos = 0;
-		size_t pos = 0;
-		T tmp = T();
-
-		do
-		{
-			pos = str.find(';',oldPos);
-			std::string subStr = str.substr(oldPos,pos - oldPos);
-			if (convert(subStr,tmp))
-				values.push_back(tmp);
-			oldPos = pos + 1;
-		}
-		while (pos != std::string::npos);
-
-		return !values.empty();
-	}
-
-	template<typename T>
-	void XMLLoader::setAttributeValue(Attribute& attribute,const pugi::xml_node& element) const
-	{
-		T tmp = T();
-		const std::string value = getValue(element);
-		if (value != "" && convert(value,tmp))
-			attribute.setValue(tmp);
-	}
-
-	template<typename T>
-	void XMLLoader::setAttributeValueArray(Attribute& attribute,const pugi::xml_node& element) const
-	{
-		std::vector<T> tmp;
-		const std::string value = getValue(element);
-		if (value != "" && convert2Array(value,tmp)) // Ok because convertArray ensures the vector is not empty
-			attribute.setValues(&tmp[0],tmp.size());
-	}
-
-	// Specialization for bool as vector<bool> is handled differently in the standard (we cannot cast a vector<bool> to a bool* with &v[0])
-	template<>
-	void SPK_PREFIX XMLLoader::setAttributeValueArray<bool>(Attribute& attribute,const pugi::xml_node& element) const;
-}}
+}
+}
 
 #endif
 #endif

@@ -28,25 +28,4 @@ namespace SPK
 		SPK_ASSERT(parent != this,"SPKObject::updateTransform(const SPKObject*) - A Transformable cannot be its own parent");
 		transform.update(parent,*this);
 	}
-
-	void Transformable::innerImport(const IO::Descriptor& descriptor)
-	{
-		SPKObject::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("transform"))
-		{
-			std::vector<float> t = attrib->getValues<float>();
-			if (t.size() == 16)
-				transform.set(&t[0]);
-			else
-				SPK_LOG_ERROR("SPKObject::innerImport(const IO::Descriptor&) - Wrong number of entries for attribute transform");
-		}
-	}
-
-	void Transformable::innerExport(IO::Descriptor& descriptor) const
-	{
-		SPKObject::innerExport(descriptor);
-		descriptor.getAttribute("transform")->setValues(transform.getLocal(),Transform::TRANSFORM_LENGTH,transform.isLocalIdentity());
-	}
 }

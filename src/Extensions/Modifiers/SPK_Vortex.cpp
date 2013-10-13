@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -108,42 +108,5 @@ namespace SPK
 		transformPos(tPosition,position);
 		transformDir(tDirection,direction);
 		tDirection.normalize();
-	}
-
-	void Vortex::innerImport(const IO::Descriptor& descriptor)
-	{
-		Modifier::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("position"))
-			setPosition(attrib->getValue<Vector3D>());
-		if (attrib = descriptor.getAttributeWithValue("direction"))
-			setDirection(attrib->getValue<Vector3D>());
-		if (attrib = descriptor.getAttributeWithValue("rotation speed"))
-			setRotationSpeed(attrib->getValue<float>(),isRotationSpeedAngular());
-		if (attrib = descriptor.getAttributeWithValue("attraction speed"))
-			setAttractionSpeed(attrib->getValue<float>(),isAttractionSpeedLinear());
-		if (attrib = descriptor.getAttributeWithValue("angular speed enabled"))
-			setRotationSpeed(getRotationSpeed(),attrib->getValue<bool>());
-		if (attrib = descriptor.getAttributeWithValue("linear speed enabled"))
-			setRotationSpeed(getAttractionSpeed(),attrib->getValue<bool>());
-		if (attrib = descriptor.getAttributeWithValue("eye radius"))
-			setEyeRadius(attrib->getValue<float>());
-		if (attrib = descriptor.getAttributeWithValue("killing particles enabled"))
-			enableParticleKilling(attrib->getValue<bool>());
-	}
-
-	void Vortex::innerExport(IO::Descriptor& descriptor) const
-	{
-		Modifier::innerExport(descriptor);
-
-		descriptor.getAttribute("position")->setValue(getPosition());
-		descriptor.getAttribute("direction")->setValue(getDirection());
-		descriptor.getAttribute("rotation speed")->setValue(getRotationSpeed());
-		descriptor.getAttribute("attraction speed")->setValue(getAttractionSpeed());
-		descriptor.getAttribute("angular speed enabled")->setValue(isRotationSpeedAngular());
-		descriptor.getAttribute("linear speed enabled")->setValue(isAttractionSpeedLinear());
-		descriptor.getAttribute("eye radius")->setValue(getEyeRadius());
-		descriptor.getAttribute("killing particles enabled")->setValueOptionalOnFalse(isParticleKillingEnabled());
 	}
 }

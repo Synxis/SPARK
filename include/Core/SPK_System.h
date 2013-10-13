@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -59,12 +59,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX System : public Transformable
 	{
-	SPK_IMPLEMENT_OBJECT(System)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Transformable)
-	SPK_ATTRIBUTE("groups",ATTRIBUTE_TYPE_REFS)
-	SPK_END_DESCRIPTION
 
 	public :
 
@@ -74,6 +68,35 @@ namespace SPK
 
 		static Ref<System> create(bool initialize = true);
 		~System();
+
+		////////////////////////////
+		// Controllers management //
+		////////////////////////////
+
+		/**
+		* @brief Adds a controller to the system
+		*/
+		void addController(const Ref<Controller>& ctrl);
+
+		/**
+		* @brief Removes a controller from the system
+		*/
+		void removeController(const Ref<Controller>& ctrl);
+
+		/**
+		* @brief Removes all controllers in the system
+		*/
+		void removeAllControllers();
+
+		/**
+		* @brief Returns the i-th controller
+		*/
+		const Ref<Controller>& getController(size_t i) const;
+
+		/**
+		* @brief Returns the number of controllers in the system
+		*/
+		size_t getNbControllers() const;
 
 		///////////////////////
 		// Groups management //
@@ -101,6 +124,11 @@ namespace SPK
 		* @param group : a pointer on the group to remove from the system
 		*/
 		void removeGroup(const Ref<Group>& group);
+
+		/**
+		* @brief Removes all groups in this system
+		*/
+		void removeAllGroups();
 
 		/**
 		* @brief Gets the group at index
@@ -280,18 +308,24 @@ namespace SPK
 		bool isInitialized() const;
 
 		virtual Ref<SPKObject> findByName(const std::string& name);
+		
+	public :
+		spark_description(System, Transformable)
+		(
+			spk_attribute(bool, computeAABB, enableAABBComputation, isAABBComputationEnabled);
+			spk_array(Ref<Group>, groups, addGroup, removeGroup, removeAllGroups, getGroup, getNbGroups);
+			spk_array(Ref<Controller>, controllers, addController, removeController, removeAllControllers, getController, getNbControllers);
+		);
 
 	protected :
 
 		std::vector<Ref<Group> > groups; // vector containing all the groups of the system
+		std::vector<Ref<Controller> > controllers;
 
 		System(bool initialize = true);
 		System(const System& system);
 
 		virtual void propagateUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -332,9 +366,36 @@ namespace SPK
 		return groups[index];
 	}
 
+	inline void System::removeAllGroups()
+	{
+		groups.clear();
+	}
+
 	inline size_t System::getNbGroups() const
 	{
 		return groups.size();
+	}
+
+	inline void System::addController(const Ref<Controller>& ctrl)
+	{
+		if(ctrl)
+			controllers.push_back(ctrl);
+	}
+
+	inline void System::removeAllControllers()
+	{
+		controllers.clear();
+	}
+
+	inline const Ref<Controller>& System::getController(size_t i) const
+	{
+		SPK_ASSERT(i < getNbControllers(),"System::getController(size_t) - Index of controller is out of bounds : " << i);
+		return controllers[i];
+	}
+
+	inline size_t System::getNbControllers() const
+	{
+		return controllers.size();
 	}
 
 	inline void System::enableAABBComputation(bool AABB)

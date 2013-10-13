@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -23,31 +23,33 @@
 #define H_SPK_GRAPHINTERPOLATOR
 
 #include <cmath> // for std::abs
-#include <set>
+#include <vector>
 
 namespace SPK
 {
 	/**
-    * @brief An entry in the interpolator graph
+	* @brief An entry in the interpolator graph
 	*
 	* See the Interpolator description for more information
 	*/
 	template<typename T>
 	struct InterpolatorEntry
 	{
+		unsigned int id;
+
 		float x;	/**< x value of this entry */
 		T y0;		/**< y first value of this entry */
 		T y1;		/**< y second value of this entry */
 
 		/** @brief Default constructor of interpolator entry */
-		InterpolatorEntry() : x(0.0f),y0(),y1() {}
+		InterpolatorEntry() : x(0),y0(),y1() {}
 
 		/**
 		* @brief Constructs an interpolator entry with y0 and y1 having the same value
 		* @param x : the x value
 		* @param y : the y value (value of y0 and y1)
 		*/
-		InterpolatorEntry(float x,T y) : x(x),y0(y),y1(y) {}
+		InterpolatorEntry(float x, T y) : x(x),y0(y),y1(y) {}
 
 		/**
 		* @brief Constructs and interpolator entry
@@ -55,15 +57,8 @@ namespace SPK
 		* @param y0 : the y0 value
 		* @param y1 : the y1 value
 		*/
-		InterpolatorEntry(float x,T y0,T y1) : x(x),y0(y0),y1(y1) {}
-
-		// used internally
-		InterpolatorEntry(float x) : x(x) {}
+		InterpolatorEntry(float x, T y0, T y1) : x(x),y0(y0),y1(y1) {}
 	};
-
-    // forward declaration to allow the set of entries in interpolator to be constructed
-	template<typename T>
-    inline bool operator<(const InterpolatorEntry<T>& entry0,const InterpolatorEntry<T>& entry1);
 
 	/**
 	* @class Interpolator
@@ -113,10 +108,8 @@ namespace SPK
 	template<typename T>
 	class GraphInterpolator : public Interpolator<T>
 	{
-	SPK_DEFINE_OBJECT_TEMPLATE(GraphInterpolator<T>);
-	SPK_DEFINE_DESCRIPTION_TEMPLATE
-
 	public :
+		typedef typename Arg<T>::type argType;
 
 		static  Ref<GraphInterpolator<T> > create();
 
@@ -133,7 +126,10 @@ namespace SPK
 		* @param type : the type of value used to interpolate
 		* @param param : the parameter used to interpolate when the type is INTERPOLATOR_PARAM.
 		*/
-		void setType(InterpolationType type,Param param = PARAM_SCALE);
+		void setType(InterpolationType type, Param param);
+		void setType(InterpolationType type);
+
+		void setParam(Param param);
 
 		/**
 		* @brief Gets the type of value used to interpolate
@@ -203,31 +199,12 @@ namespace SPK
 		/////////////////////////
 
 		/**
-		* @brief Gets the graph of the interpolator
-		* @return the graph of the interpolator
-		*/
-		std::set<InterpolatorEntry<T> >& getGraph();
-
-		/**
-		* @brief Gets the graph of the interpolator (constant version)
-		* @return the graph of the interpolator
-		*/
-		const std::set<InterpolatorEntry<T> >& getGraph() const;
-
-		/**
-		* @brief Adds an entry to the graph
-		* @param entry : the entry to add to the graph
-		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
-		*/
-		bool addEntry(const InterpolatorEntry<T>& entry);
-
-		/**
 		* @brief Adds an entry to the graph
 		* @param x : the x of the entry to add
 		* @param y : the y of the entry to add (y0 and y1 are set to y)
 		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
 		*/
-		bool addEntry(float x,T y);
+		bool addEntry(float x, T y);
 
 		/**
 		* @brief Adds an entry to the graph
@@ -236,15 +213,41 @@ namespace SPK
 		* @param y1 : the y1 of the entry to add
 		* @return true if the entry has been added to the graph, false if not (the graph already contains an entry with the same x)
 		*/
-		bool addEntry(float x,T y0,T y1);
+		bool addEntry(float x, T y0, T y1);
 
 		/** @brief Clears the graph (removes all the entries) */
 		void clearGraph();
 
-	protected :
+		/** @brief Returns the number of entries in the graph */
+		unsigned int getNbEntries() const;
 
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+		/** @brief Removes an entry specified by index */
+		void removeEntry(unsigned int id);
+
+	public :
+		void createEntry();
+		void setX(unsigned id, float x);
+		float getX(unsigned int id) const;
+		void setY0(unsigned id, argType y);
+		argType getY0(unsigned int id) const;
+		void setY1(unsigned id, argType y);
+		argType getY1(unsigned int id) const;
+
+	public :
+		spark_description(GraphInterpolator, Interpolator)
+		(
+			spk_attribute(InterpolationType, interpolationType, setType, getType);
+			spk_attribute(Param, parameter, setParam, getInterpolatorParam);
+			spk_attribute(bool, loop, enableLooping, isLoopingEnabled);
+			spk_attribute(float, scale, setScaleXVariation, getScaleXVariation);
+			spk_attribute(float, offset, setOffsetXVariation, getOffsetXVariation);
+			spk_structure(graph, createEntry, removeEntry, clearGraph, getNbEntries)
+			(
+				spk_field(float, x, setX, getX);
+				spk_field(T, y0, setY0, getY0);
+				spk_field(T, y1, setY1, getY1);
+			);
+		);
 
 	private :
 
@@ -253,7 +256,8 @@ namespace SPK
 		static const size_t SCALE_X_DATA_INDEX = 1;
 		static const size_t RATIO_Y_DATA_INDEX = 2;
 
-		std::set<InterpolatorEntry<T> > graph;
+		std::vector<InterpolatorEntry<T> > graph;
+		std::vector<unsigned int> sortedGraph;
 
 		InterpolationType type;
 		Param param;
@@ -276,8 +280,12 @@ namespace SPK
 
 		virtual void createData(DataSet& dataSet,const Group& group) const;
 
-		virtual void interpolate(T* data,Group& group,DataSet* dataSet) const;
-		virtual void init(T& data,Particle& particle,DataSet* dataSet) const;
+		virtual void interpolate(T* data, Group& group, DataSet* dataSet) const;
+		virtual void init(T& data, Particle& particle, DataSet* dataSet) const;
+		
+		void sortGraph(unsigned int start);
+		void swapEntries(unsigned int id1, unsigned int id2);
+		void swapSortedEntries(unsigned int id1, unsigned int id2);
 
 		// Interpolates between the two ys of an entry function of the ratioY
 		void interpolateEntry(T& result,const InterpolatorEntry<T>& entry,float ratio) const;
@@ -288,20 +296,8 @@ namespace SPK
 	typedef GraphInterpolator<Color> ColorGraphInterpolator;
 	typedef GraphInterpolator<float> FloatGraphInterpolator;
 
-	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorGraphInterpolator)
-	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatGraphInterpolator)
-
-	SPK_START_DESCRIPTION_TEMPLATE(GraphInterpolator<T>)
-	SPK_PARENT_ATTRIBUTES(Interpolator<T>)
-	SPK_ATTRIBUTE("graph keys",ATTRIBUTE_TYPE_FLOATS)
-	SPK_ATTRIBUTE_ARRAY_GENERIC("graph values",T)
-	SPK_ATTRIBUTE_ARRAY_GENERIC("graph values 2",T)
-	SPK_ATTRIBUTE("interpolation type",ATTRIBUTE_TYPE_STRING)
-	SPK_ATTRIBUTE("interpolation param",ATTRIBUTE_TYPE_STRING)
-	SPK_ATTRIBUTE("looping enabled",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("scale variation",ATTRIBUTE_TYPE_FLOAT)
-	SPK_ATTRIBUTE("offset variation",ATTRIBUTE_TYPE_FLOAT)
-	SPK_END_DESCRIPTION
+	spark_description_specialization( ColorGraphInterpolator );
+	spark_description_specialization( FloatGraphInterpolator );
 
 	template<typename T>
 	typename GraphInterpolator<T>::computeXFn GraphInterpolator<T>::COMPUTE_X_FN[4] =
@@ -321,7 +317,6 @@ namespace SPK
 	template<typename T>
 	GraphInterpolator<T>::GraphInterpolator() :
 		Interpolator<T>(true),
-		graph(),
 		type(INTERPOLATOR_LIFETIME),
 		param(PARAM_SCALE),
 		scaleXVariation(0.0f),
@@ -333,6 +328,7 @@ namespace SPK
 	GraphInterpolator<T>::GraphInterpolator(const GraphInterpolator<T>& interpolator) :
 		Interpolator<T>(interpolator),
 		graph(interpolator.graph),
+		sortedGraph(interpolator.sortedGraph),
 		type(interpolator.type),
 		param(interpolator.param),
 		scaleXVariation(interpolator.scaleXVariation),
@@ -345,6 +341,18 @@ namespace SPK
 	{
 		this->type = type;
 		this->param = param;
+	}
+
+	template<typename T>
+	inline void GraphInterpolator<T>::setType(InterpolationType t)
+	{
+		type = t;
+	}
+
+	template<typename T>
+	inline void GraphInterpolator<T>::setParam(Param p)
+	{
+		param = p;
 	}
 
 	template<typename T>
@@ -398,39 +406,146 @@ namespace SPK
 	}
 
 	template<typename T>
-	inline std::set<InterpolatorEntry<T> >& GraphInterpolator<T>::getGraph()
+	inline void GraphInterpolator<T>::swapEntries(unsigned int id1, unsigned int id2)
 	{
-		return graph;
+		if(id1 == id2)
+			return;
+
+		unsigned int sId1 = graph[id1].id;
+		unsigned int sId2 = graph[id2].id;
+		InterpolatorEntry<T> tmp = graph[id1];
+		graph[id1] = graph[id2];
+		graph[id2] = tmp;
+		graph[id1].id = sId2;
+		graph[id2].id = sId1;
+		sortedGraph[sId1] = id2;
+		sortedGraph[sId2] = id1;
 	}
 
 	template<typename T>
-	inline const std::set<InterpolatorEntry<T> >& GraphInterpolator<T>::getGraph() const
+	inline void GraphInterpolator<T>::swapSortedEntries(unsigned int sId1, unsigned int sId2)
 	{
-		return graph;
+		if(sId1 == sId2)
+			return;
+
+		unsigned int id1 = sortedGraph[sId1];
+		unsigned int id2 = sortedGraph[sId2];
+		sortedGraph[sId1] = id2;
+		sortedGraph[sId2] = id1;
+		graph[id1].id = sId2;
+		graph[id2].id = sId1;
 	}
 
 	template<typename T>
-	inline bool GraphInterpolator<T>::addEntry(const InterpolatorEntry<T>& entry)
+	inline void GraphInterpolator<T>::sortGraph(unsigned int start)
 	{
-		return graph.insert(entry).second;
+		for(unsigned int i = start; i < sortedGraph.size(); i++)
+			for(unsigned int k = i; k >= 1; k--)
+			{
+				unsigned int a = sortedGraph[k];
+				unsigned int b = sortedGraph[k-1];
+				if(graph[a].x < graph[b].x)
+					swapSortedEntries(k, k-1);
+				else
+					break;
+			}
 	}
 
 	template<typename T>
-	inline bool GraphInterpolator<T>::addEntry(float x,T y)
+	inline unsigned int GraphInterpolator<T>::getNbEntries() const
 	{
-		return addEntry(InterpolatorEntry<T>(x,y));
+		return graph.size();
 	}
 
 	template<typename T>
-	inline bool GraphInterpolator<T>::addEntry(float x,T y0,T y1)
+	inline void GraphInterpolator<T>::removeEntry(unsigned int id)
 	{
-		return addEntry(InterpolatorEntry<T>(x,y0,y1));
+		if(id >= graph.size())
+			return;
+
+		description::graph::elementRemoved(this, id);
+		swapEntries(id, graph.size() - 1);
+		unsigned int sortedId = graph[graph.size() - 1].id;
+		graph.erase(graph.begin() + (graph.size() - 1));
+		sortedGraph.erase(sortedGraph.begin() + sortedId);
+		for(unsigned int i = sortedId; i < sortedGraph.size(); i++)
+			graph[sortedGraph[i]].id--;
+	}
+
+	template<typename T>
+	inline void GraphInterpolator<T>::createEntry()
+	{
+		InterpolatorEntry<T> entry(0, 0);
+		if(graph.size() > 0)
+		{
+			unsigned int last = sortedGraph[sortedGraph.size() - 1];
+			entry.x = graph[last].x + 1;
+		}
+		entry.id = sortedGraph.size();
+		graph.push_back(entry);
+		sortedGraph.push_back(graph.size() - 1);
+	}
+
+	template<typename T>
+	inline void GraphInterpolator<T>::setX(unsigned id, float x)
+	{
+		graph[id].x = x;
+		sortGraph(graph[id].id);
+	}
+
+	template<typename T>
+	inline float GraphInterpolator<T>::getX(unsigned int id) const
+	{
+		return graph[id].x;
+	}
+
+	template<typename T>
+	inline void GraphInterpolator<T>::setY0(unsigned id, argType y)
+	{
+		graph[id].y0 = y;
+	}
+
+	template<typename T>
+	inline typename GraphInterpolator<T>::argType GraphInterpolator<T>::getY0(unsigned int id) const
+	{
+		return graph[id].y0;
+	}
+
+	template<typename T>
+	inline void GraphInterpolator<T>::setY1(unsigned id, argType y)
+	{
+		graph[id].y1 = y;
+	}
+
+	template<typename T>
+	inline typename GraphInterpolator<T>::argType GraphInterpolator<T>::getY1(unsigned int id) const
+	{
+		return graph[id].y1;
+	}
+
+	template<typename T>
+	inline bool GraphInterpolator<T>::addEntry(float x, T y)
+	{
+		return addEntry(x, y, y);
+	}
+
+	template<typename T>
+	inline bool GraphInterpolator<T>::addEntry(float x, T y0, T y1)
+	{
+		createEntry();
+		graph[graph.size() - 1].x = x;
+		graph[graph.size() - 1].y0 = y0;
+		graph[graph.size() - 1].y1 = y1;
+		sortGraph(sortedGraph.size() - 1);
+		return true;
 	}
 
 	template<typename T>
 	inline void GraphInterpolator<T>::clearGraph()
 	{
+		description::graph::elementsCleared(this);
 		graph.clear();
+		sortedGraph.clear();
 	}
 
 	template<typename T>
@@ -485,60 +600,59 @@ namespace SPK
 	}
 
 	template<typename T>
-	void GraphInterpolator<T>::interpolateParticle(T& data,const Particle& particle,float offsetX,float scaleX,float ratioY) const
+	void GraphInterpolator<T>::interpolateParticle(T& data, const Particle& particle, float offsetX, float scaleX, float ratioY) const
 	{
-		// First finds the current X of the particle
-		InterpolatorEntry<T> currentKey((this->*GraphInterpolator<T>::COMPUTE_X_FN[type])(particle));
-		currentKey.x += offsetX; // Offsets it
-		currentKey.x *= scaleX;  // Scales it
+		float currentX = (this->*GraphInterpolator<T>::COMPUTE_X_FN[type])(particle);
+		currentX = (currentX + offsetX) * scaleX;
 
-		if (loopingEnabled)
+		// Recompute X if looping
+		if(loopingEnabled)
 		{
-			// If the graph has less than 2 entries, we cannot loop
-			if (graph.size() < 2)
+			float firstX = graph[*sortedGraph.begin()].x;
+			float lastX = graph[*sortedGraph.rbegin()].x;
+			if(lastX - firstX <= 0.000001f)
 			{
-				interpolateEntry(data,*(graph.begin()),ratioY);
+				interpolateEntry(data, *(graph.begin()), ratioY);
 				return;
 			}
-
-			// Else finds the current X in the range
-			const float beginX = graph.begin()->x;
-			const float rangeX = graph.rbegin()->x - beginX;
-			float newX = (currentKey.x - beginX) / rangeX;
-			newX -= static_cast<int>(newX);
-			if (newX < 0.0f)
-				newX = 1.0f + newX;
-			currentKey.x = beginX + newX * rangeX;
+			float normalizedX = currentX / (lastX - firstX);
+			normalizedX -= (int)normalizedX;
+			if(normalizedX < 0)
+				normalizedX += 1;
+			currentX = normalizedX * (lastX - firstX) + firstX;
 		}
 
-		// Gets the entry that is immediatly after the current X
-		typename std::set<InterpolatorEntry<T> >::const_iterator nextIt = graph.upper_bound(currentKey);
+		// Find whether the key is in the graph
+		if(currentX <= graph[*sortedGraph.begin()].x)
+		{
+			// Before first key
+			interpolateEntry(data, graph[*sortedGraph.begin()], ratioY);
+		}
+		else if(currentX >= graph[*sortedGraph.rbegin()].x)
+		{
+			// After last key
+			interpolateEntry(data, graph[*sortedGraph.rbegin()], ratioY);
+		}
+		else
+		{
+			// Inside 2 keys
+			unsigned int after = 0;
+			while(after < sortedGraph.size() && graph[sortedGraph[after]].x <= currentX)
+				after++;
 
-		// If the current X is higher than the one of the last entry
-		if (nextIt == graph.end())
-		{
-			interpolateEntry(data,*(--nextIt),ratioY); // Sets the value of the last entry
-		}
-		else if (nextIt == graph.begin()) // If the current X is lower than the first entry, sets the value to the first entry
-		{
-			interpolateEntry(data,*nextIt,ratioY);
-		}
-		else	// Else interpolated between the entries before and after the current X
-		{
-			const InterpolatorEntry<T>& nextEntry = *nextIt;
-			const InterpolatorEntry<T>& previousEntry = *(--nextIt);
-			float ratioX = (currentKey.x - previousEntry.x) / (nextEntry.x - previousEntry.x);
+			const InterpolatorEntry<T>& nextEntry = graph[sortedGraph[after]];
+			const InterpolatorEntry<T>& previousEntry = graph[sortedGraph[after-1]];
+			float ratioX = (currentX - previousEntry.x) / (nextEntry.x - previousEntry.x);
 			T y0,y1;
 
-			interpolateEntry(y0,previousEntry,ratioY);
-			interpolateEntry(y1,nextEntry,ratioY);
-
-			interpolateParam(data,y0,y1,ratioX);
+			interpolateEntry(y0, previousEntry, ratioY);
+			interpolateEntry(y1, nextEntry, ratioY);
+			interpolateParam(data, y0, y1, ratioX);
 		}
 	}
 
 	template<typename T>
-	void GraphInterpolator<T>::interpolate(T* data,Group& group,DataSet* dataSet) const
+	void GraphInterpolator<T>::interpolate(T* data, Group& group, DataSet* dataSet) const
 	{
 		SPK_ASSERT(!graph.empty(),"GraphInterpolator<T>::interpolate(T*,Group&,DataSet*) const - The graph of the interpolator is empty. Cannot interpolate");
 
@@ -568,133 +682,6 @@ namespace SPK
 		ratioYData[index] = SPK_RANDOM(0.0f,1.0f);
 		interpolateParticle(data,particle,offsetXData[index],scaleXData[index],ratioYData[index]);
 	}
-
-	template<typename T>
-	void GraphInterpolator<T>::innerImport(const IO::Descriptor& descriptor)
-	{
-		Interpolator<T>::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-
-		InterpolatorEntry<T>* entries = NULL;
-		size_t nbEntries = 0;
-		bool validGraph = true;
-
-		if (attrib = descriptor.getAttributeWithValue("graph keys"))
-		{
-			std::vector<float> keys = attrib->getValues<float>();
-			nbEntries = keys.size();
-
-			if (nbEntries > 0)
-			{
-				entries = SPK_NEW_ARRAY(InterpolatorEntry<T>,nbEntries);
-				for (size_t i = 0; i < nbEntries; ++i) entries[i].x = keys[i];
-			}
-			else
-				validGraph = false;
-		}
-
-		if (validGraph && (attrib = descriptor.getAttributeWithValue("graph values")))
-		{
-			std::vector<T> values0 = attrib->getValues<T>();
-			if (values0.size() == nbEntries)
-				for (size_t i = 0; i < nbEntries; ++i) entries[i].y0 = entries[i].y1 = values0[i];
-			else
-				validGraph = false;
-		}
-
-		if (validGraph && (attrib = descriptor.getAttributeWithValue("graph values")))
-		{
-			std::vector<T> values1 = attrib->getValues<T>();
-			if (values1.size() == nbEntries)
-				for (size_t i = 0; i < nbEntries; ++i) entries[i].y1 = values1[i];
-			else
-				validGraph = false;
-		}
-
-		if (validGraph)
-			for (size_t i = 0; i < nbEntries; ++i)
-				addEntry(entries[i]);
-		else
-		{
-			clearGraph();
-			SPK_LOG_ERROR("GraphInterpolator<T>::innerImport(const IO::Descriptor&) - The imported graph is not valid (nb of entries are not consistent");
-		}
-
-		if (attrib = descriptor.getAttributeWithValue("interpolation type"))
-			setType(getEnumValue<InterpolationType>(attrib->getValue<std::string>()));
-		if (attrib = descriptor.getAttributeWithValue("interpolation param"))
-			setType(getType(),getEnumValue<Param>(attrib->getValue<std::string>()));
-		if (attrib = descriptor.getAttributeWithValue("looping enabled"))
-			enableLooping(attrib->getValue<bool>());
-		if (attrib = descriptor.getAttributeWithValue("scale variation"))
-			setScaleXVariation(attrib->getValue<float>());
-		if (attrib = descriptor.getAttributeWithValue("offset variation"))
-			setOffsetXVariation(attrib->getValue<float>());
-
-		SPK_DELETE_ARRAY(entries);
-	}
-
-	template<typename T>
-	void GraphInterpolator<T>::innerExport(IO::Descriptor& descriptor) const
-	{
-		Interpolator<T>::innerExport(descriptor);
-
-		float* keys = NULL;
-		T* values0 = NULL;
-		T* values1 = NULL;
-		bool twoChannels = false;
-
-		if (!graph.empty())
-		{
-			keys = SPK_NEW_ARRAY(float,graph.size());
-			values0 = SPK_NEW_ARRAY(T,graph.size());
-			values1 = SPK_NEW_ARRAY(T,graph.size());
-
-			size_t index = 0;
-			for (typename std::set<InterpolatorEntry<T> >::const_iterator it = graph.begin(); it != graph.end(); ++it)
-			{
-				keys[index] = it->x;
-				values0[index] = it->y0;
-				values1[index] = it->y1;
-				if (values0[index] != values1[index])
-					twoChannels = true;
-				++index;
-			}
-
-			descriptor.getAttribute("graph keys")->setValues(keys,graph.size());
-			descriptor.getAttribute("graph values")->setValues(values0,graph.size());
-			if (twoChannels)
-				descriptor.getAttribute("graph values 2")->setValues(values1,graph.size());
-		}
-
-		descriptor.getAttribute("interpolation type")->setValue(getEnumName(getType()),getType() == INTERPOLATOR_LIFETIME);
-		descriptor.getAttribute("interpolation param")->setValue(getEnumName(getInterpolatorParam()),getType() != INTERPOLATOR_PARAM);
-		descriptor.getAttribute("looping enabled")->setValue(isLoopingEnabled());
-		descriptor.getAttribute("scale variation")->setValue(getScaleXVariation(),getScaleXVariation() == 0.0f);
-		descriptor.getAttribute("offset variation")->setValue(getOffsetXVariation(),getOffsetXVariation() == 0.0f);
-
-		SPK_DELETE_ARRAY(keys);
-		SPK_DELETE_ARRAY(values0);
-		SPK_DELETE_ARRAY(values1);
-	}
-
-    /////////////////////////////////////////////////////////////
-	// Functions to sort the entries on the interpolator graph //
-	/////////////////////////////////////////////////////////////
-
-	template<typename T>
-	inline bool operator<(const InterpolatorEntry<T>& entry0,const InterpolatorEntry<T>& entry1)
-	{
-		return entry0.x < entry1.x;
-	}
-
-	template<typename T>
-	inline bool operator==(const InterpolatorEntry<T>& entry0,const InterpolatorEntry<T>& entry1)
-	{
-		return entry0.x == entry1.x;
-	}
-
 }
 
 #endif

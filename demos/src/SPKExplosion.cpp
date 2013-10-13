@@ -623,8 +623,8 @@ int main(int argc, char *argv[])
 			frameFPS.pop_front();
 	}
 
-	SPK::IO::IOManager::get().save("explosion.xml",baseSystem);
-	SPK::IO::IOManager::get().save("explosion.spk",baseSystem);
+	SPK::IO::Manager::get().save("explosion.xml",baseSystem);
+	SPK::IO::Manager::get().save("explosion.spk",baseSystem);
 	
 	SPK_DUMP_MEMORY
 	particleSystems.clear();

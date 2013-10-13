@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -34,14 +34,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX NormalEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_OBJECT(NormalEmitter)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Emitter)
-	SPK_ATTRIBUTE("normal zone",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("inverted normals",ATTRIBUTE_TYPE_BOOL)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		/** @brief Creates a new normalEmitter */
@@ -94,12 +86,16 @@ namespace SPK
 
 		virtual Ref<SPKObject> findByName(const std::string& name);
 
+	public :
+		spark_description(NormalEmitter, Emitter)
+		(
+			spk_attribute(Ref<Zone>, normalZone, setNormalZone, getNormalZone);
+			spk_attribute(bool, inverted, setInverted, isInverted);
+		);
+
 	protected :
 
 		virtual void propagateUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 	

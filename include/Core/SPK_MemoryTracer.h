@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -41,15 +41,11 @@
 
 #include <string>
 #include <set>
-#include <ctime>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <algorithm>
-#include <sstream>
 
 namespace SPK
 {
+	// Note: don't forget to verify static objects that depends on the tracer.
+	// For the moment, only SPKContext and IO::Manager depends on it
 	class SPK_PREFIX SPKMemoryTracer
 	{
 	struct BlockInfo;
@@ -62,80 +58,10 @@ namespace SPK
 
 		static SPKMemoryTracer& get();
 
-		void* registerAllocation(void* position,size_t size,const std::string& type,const std::string& file,size_t line)
-		{
-			if (position == NULL)
-				return NULL;
-
-			BlockInfo info(position);
-			info.size = size;
-			info.type = type;
-			info.fileName = file;
-			info.lineNb = line;
-			info.time = static_cast<float>(clock()) / CLOCKS_PER_SEC;
-			info.index = nextIndex++;
-
-			blocks.insert(info);
-
-			totalMemorySize += size;
-			if (totalMemorySize > maxMemorySize)
-				maxMemorySize = totalMemorySize;
-
-			return position;
-		}
-
-		void unregisterAllocation(void* position)
-		{
-			std::set<BlockInfo>::iterator it = blocks.find(BlockInfo(position));
-			if (it != blocks.end())
-			{
-				totalMemorySize -= it->size;
-				blocks.erase(it);
-			}
-		}
-
-		void dumpMemory()
-		{
-			std::ofstream file("SPARK_Memory_Dump.txt",std::ios::out | std::ios::app);
-
-			if (file)
-			{
-				std::vector<BlockInfo> sortedBlocks(blocks.begin(),blocks.end());
-				std::sort(sortedBlocks.begin(),sortedBlocks.end(),compareAllocTime);
-
-				time_t currentTime = time(NULL);
-				tm* timeinfo = localtime(&currentTime);
-				file << "-----------------------------------------------------------------------------------------------\n";
-				file << "SPARK MEMORY DUMP - " << asctime(timeinfo) << "\n\n";
-				file.precision(3);
-				file << "Dynamic memory used: " << totalMemorySize << " bytes allocated (" << totalMemorySize / (1024.0f * 1024.0f) << " mb) in " << blocks.size() << " blocks\n";
-				file << "Maximum dynamic memory allocated: " << maxMemorySize << " bytes ("<< maxMemorySize / (1024.0f * 1024.0f) << " mb)\n";
-				file << "Total number of allocated blocks: " << nextIndex << "\n\n";
-
-				std::vector<BlockInfo>::const_iterator it = sortedBlocks.begin();
-				std::vector<BlockInfo>::const_iterator end = sortedBlocks.end();
-				for (; it != end; ++it)
-				{
-					file << it->position << " - ";
-
-					file.width(10);
-					file << std::right << it->size << " bytes";
-
-					file.width(32);
-					std::ostringstream typeStr;
-					typeStr << " of " << it->type;
-					file << std::right << typeStr.str();
-
-					file.width(18);
-					std::ostringstream timeStr;
-					timeStr << " at " << it->time << " sec";
-					file << std::right << timeStr.str();
-					file << "\t(" << it->fileName << " - line " << it->lineNb << ")\n";
-				}
-				file << "-----------------------------------------------------------------------------------------------\n\n";
-				file.close();
-			}
-		}
+		void* registerAllocation(void* position, size_t size, const std::string& type, const std::string& file, size_t line);
+		void unregisterAllocation(void* position);
+		std::string formatSize(unsigned int s);
+		void dumpMemory();
 
 	private :
 
@@ -162,7 +88,6 @@ namespace SPK
 		SPKMemoryTracer& operator=(const SPKMemoryTracer&); // Not used
 
 		unsigned long nextIndex;
-
 		unsigned long totalMemorySize;
 		unsigned long maxMemorySize;
 

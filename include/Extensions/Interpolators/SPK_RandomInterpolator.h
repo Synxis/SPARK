@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -27,24 +27,24 @@ namespace SPK
 	template<typename T>
 	class RandomInterpolator : public Interpolator<T>
 	{
-	SPK_DEFINE_OBJECT_TEMPLATE(RandomInterpolator<T>);
-	SPK_DEFINE_DESCRIPTION_TEMPLATE
+		typedef typename Arg<T>::type Tv;
 
 	public :
 
 		static  Ref<RandomInterpolator<T> > create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
 
-		void setValues(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue);
+		void setValues(Tv minBirthValue, Tv maxBirthValue, Tv minDeathValue, Tv maxDeathValue);
 
-		const T& getMinBirthValue() const;
-		const T& getMaxBirthValue() const;
-		const T& getMinDeathValue() const;
-		const T& getMaxDeathValue() const;
+		Tv getMinBirthValue() const;
+		Tv getMaxBirthValue() const;
+		Tv getMinDeathValue() const;
+		Tv getMaxDeathValue() const;
 
-	protected :
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+	public :
+		spark_description(RandomInterpolator, Interpolator)
+		(
+			spk_attribute(Quadruplet<T>, values, setValues, getMinBirthValue, getMaxBirthValue, getMinDeathValue, getMaxDeathValue);
+		);
 
 	private :
 
@@ -74,13 +74,8 @@ namespace SPK
 	typedef RandomInterpolator<Color> ColorRandomInterpolator;
 	typedef RandomInterpolator<float> FloatRandomInterpolator;
 
-	SPK_IMPLEMENT_OBJECT_TEMPLATE(ColorRandomInterpolator)
-	SPK_IMPLEMENT_OBJECT_TEMPLATE(FloatRandomInterpolator)
-
-	SPK_START_DESCRIPTION_TEMPLATE(RandomInterpolator<T>)
-	SPK_PARENT_ATTRIBUTES(Interpolator<T>)
-	SPK_ATTRIBUTE_ARRAY_GENERIC("values",T)
-	SPK_END_DESCRIPTION
+	spark_description_specialization( ColorRandomInterpolator );
+	spark_description_specialization( FloatRandomInterpolator );
 
 	template<typename T>
 	inline Ref<RandomInterpolator<T> > RandomInterpolator<T>::create(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue)
@@ -107,7 +102,7 @@ namespace SPK
 	{}
 
 	template<typename T>
-	void RandomInterpolator<T>::setValues(const T& minBirthValue,const T& maxBirthValue,const T& minDeathValue,const T& maxDeathValue)
+	void RandomInterpolator<T>::setValues(Tv minBirthValue, Tv maxBirthValue, Tv minDeathValue, Tv maxDeathValue)
 	{
 		this->minBirthValue = minBirthValue;
 		this->maxBirthValue = maxBirthValue;
@@ -116,25 +111,25 @@ namespace SPK
 	}
 
 	template<typename T>
-	inline const T& RandomInterpolator<T>::getMinBirthValue() const
+	inline typename RandomInterpolator<T>::Tv RandomInterpolator<T>::getMinBirthValue() const
 	{
 		return minBirthValue;
 	}
 
 	template<typename T>
-	inline const T& RandomInterpolator<T>::getMaxBirthValue() const
+	inline typename RandomInterpolator<T>::Tv RandomInterpolator<T>::getMaxBirthValue() const
 	{
 		return maxBirthValue;
 	}
 
 	template<typename T>
-	inline const T& RandomInterpolator<T>::getMinDeathValue() const
+	inline typename RandomInterpolator<T>::Tv RandomInterpolator<T>::getMinDeathValue() const
 	{
 		return minDeathValue;
 	}
 
 	template<typename T>
-	inline const T& RandomInterpolator<T>::getMaxDeathValue() const
+	inline typename RandomInterpolator<T>::Tv RandomInterpolator<T>::getMaxDeathValue() const
 	{
 		return maxDeathValue;
 	}
@@ -176,30 +171,6 @@ namespace SPK
 		size_t index = particle.getIndex();
 		data = SPK_GET_DATA(ArrayData<T>,dataSet,BIRTH_VALUE_DATA_INDEX)[index] = SPK_RANDOM(minBirthValue,maxBirthValue);
 		SPK_GET_DATA(ArrayData<T>,dataSet,DEATH_VALUE_DATA_INDEX)[index] = SPK_RANDOM(minDeathValue,maxDeathValue);
-	}
-
-	template<typename T>
-	void RandomInterpolator<T>::innerImport(const IO::Descriptor& descriptor)
-	{
-		Interpolator<T>::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("values"))
-		{
-			std::vector<T> tmpValues = attrib->getValues<T>();
-			if (tmpValues.size() == 4)
-				setValues(tmpValues[0],tmpValues[1],tmpValues[2],tmpValues[3]);
-			else
-				SPK_LOG_ERROR("RandomInterpolator<T>::innerImport(const IO::Descriptor&) - Wrong number of values : " << tmpValues.size());
-		}
-	}
-
-	template<typename T>
-	void RandomInterpolator<T>::innerExport(IO::Descriptor& descriptor) const
-	{
-		Interpolator<T>::innerExport(descriptor);
-		T tmpValues[4] = {minBirthValue,maxBirthValue,minDeathValue,maxDeathValue};
-		descriptor.getAttribute("values")->setValues(tmpValues,4);
 	}
 }
 

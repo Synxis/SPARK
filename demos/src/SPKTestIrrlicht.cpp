@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK Irrlicht Rendering library												//
-// Copyright (C) 2008-2011														//
+// Copyright (C) 2008-2013														//
 // Julien Fryer - julienfryer@gmail.com											//
 // Thibault Lescoat -  info-tibo <at> orange <dot> fr							//
 //																				//
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     scene::ISceneManager* smgr = device->getSceneManager();
     gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-    device->setWindowCaption(L"SPARK Irrlicht test");
+    device->setWindowCaption(L"SPARK Irrlicht test - Animator on CSPKIrrlichtObject");
 	device->getCursorControl()->setVisible(false);
     irr::scene::ICameraSceneNode* cam = smgr->addCameraSceneNodeFPS(smgr->getRootSceneNode(),100.0f,0.0005f);
     cam->setPosition(irr::core::vector3df(0.0f,0.0f,1.5f));

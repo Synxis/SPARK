@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //                           foulon matthieu - stardeath@wanadoo.fr				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
@@ -56,8 +56,6 @@ namespace DX9
 	*/
 	class SPK_DX9_PREFIX DX9LineTrailRenderer : public DX9Renderer
 	{
-	SPK_IMPLEMENT_OBJECT(DX9LineTrailRenderer)
-
 	public :
 
 		//////////////////
@@ -138,6 +136,11 @@ namespace DX9
 		void setDegeneratedLines(Color color);
 
 		virtual void enableBlending(bool blendingEnabled);
+
+	public :
+		spark_description(DX9LineTrailRenderer, DX9Renderer)
+		(
+		);
 
 	protected :
 

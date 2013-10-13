@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -26,17 +26,17 @@ namespace SPK
 {
 namespace IO
 {
-	const bool IOBuffer::USE_LITTLE_ENDIANS = IOBuffer::isLittleEndians();
+	const bool Buffer::USE_LITTLE_ENDIANS = Buffer::isLittleEndians();
 
-	IOBuffer::IOBuffer(size_t capacity) :
+	Buffer::Buffer(size_t capacity) :
 		capacity(capacity),
 		size(0),
 		position(0)
 	{
-		buf = SPK_NEW_ARRAY(char,capacity);
+		buf = SPK_NEW_ARRAY(char, capacity);
 	}
 
-	IOBuffer::IOBuffer(size_t capacity,std::istream& is) :
+	Buffer::Buffer(size_t capacity,std::istream& is) :
 		capacity(capacity),
 		size(0),
 		position(0)
@@ -46,27 +46,28 @@ namespace IO
 		size = capacity;
 	}
 
-	IOBuffer::~IOBuffer()
+	Buffer::~Buffer()
 	{
 		SPK_DELETE_ARRAY(buf);
 	}
 
-	const char* IOBuffer::get(size_t length) const
+	const char* Buffer::get(size_t length) const
 	{
+		size_t oldPos = position;
 		position += length;
 		if (position >= size) position = size;
-		return buf + position - length;
+		return buf + oldPos;
 	}
 
-	template<> std::string IOBuffer::get<std::string>() const	
+	template<> std::string Buffer::get<std::string>() const	
 	{ 
-		char c; 
+		char c;
 		std::string str;
 		while ((c = get<char>()) != '\0' && position < size) { str += c; }
 		return str;
 	}
 
-	template<> Vector3D IOBuffer::get<Vector3D>() const	
+	template<> Vector3D Buffer::get<Vector3D>() const	
 	{ 
 		float x = get<float>();
 		float y = get<float>();
@@ -74,36 +75,38 @@ namespace IO
 		return Vector3D(x,y,z); 
 	}
 
-	void IOBuffer::put(char c) 
+	void Buffer::put(char c) 
 	{ 
 		updateSize(position + 1); 
 		buf[position++] = c; 
 	}
 
-	void IOBuffer::put(const char* c,size_t length) 
+	void Buffer::put(const char* c,size_t length) 
 	{ 
 		updateSize(position + length);
 		std::memcpy(buf + position,c,length);
 		position += length;
 	}
 
-	void IOBuffer::updateSize(size_t newPosition)
+	void Buffer::updateSize(size_t newPosition)
 	{
 		size_t newCapacity = capacity;
 		while (newPosition >= newCapacity)
 			newCapacity <<= 1;	
+
 		if (newCapacity != capacity)
 		{
-			char* newBuf = SPK_NEW_ARRAY(char,newCapacity);
-			std::memcpy(newBuf,buf,size);
+			char* newBuf = SPK_NEW_ARRAY(char, newCapacity);
+			std::memcpy(newBuf, buf, size);
 			SPK_DELETE_ARRAY(buf);
 			buf = newBuf;
+			capacity = newCapacity;
 		}
 		if (newPosition > size)
 			size = newPosition;
 	}
 
-	bool IOBuffer::isLittleEndians()
+	bool Buffer::isLittleEndians()
 	{
 		uint32 test = 0x01;
 		return (reinterpret_cast<char*>(&test)[0]) == 0x01;

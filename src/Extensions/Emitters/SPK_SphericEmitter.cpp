@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -137,31 +137,5 @@ namespace SPK
 		Emitter::innerUpdateTransform();
 		transformDir(tDirection,direction);
 		computeMatrix();
-	}
-
-	void SphericEmitter::innerImport(const IO::Descriptor& descriptor)
-	{
-		Emitter::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("direction"))
-			setDirection(attrib->getValue<Vector3D>());
-		if (attrib = descriptor.getAttributeWithValue("angles"))
-		{
-			std::vector<float> tmpAngles = attrib->getValues<float>();
-			if (tmpAngles.size() == 2)
-				setAngles(tmpAngles[0],tmpAngles[1]);
-			else 
-				SPK_LOG_ERROR("SphericEmitter::innerImport(const IO::Descriptor&) - Wrong number of angles : " << tmpAngles.size());
-		}
-	}
-
-	void SphericEmitter::innerExport(IO::Descriptor& descriptor) const
-	{
-		Emitter::innerExport(descriptor);
-
-		descriptor.getAttribute("direction")->setValue(getDirection());
-		float tmpAngles[2] = {angleMin,angleMax};
-		descriptor.getAttribute("angles")->setValues(tmpAngles,2);
 	}
 }

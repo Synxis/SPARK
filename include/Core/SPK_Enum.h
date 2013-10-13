@@ -31,29 +31,35 @@
 #define SPK_ENUM_CASE(name,value)	case name : return #name;
 #define SPK_ENUM_CMP(name,value)	if (str == #name) return name;
 
-#define SPK_DECLARE_ENUM(EnumType,ENUM_DEF) \
-enum EnumType { \
-	ENUM_DEF(SPK_ENUM_VALUE) \
-}; \
-template<> SPK_PREFIX std::string getEnumName(EnumType value); \
-template<> SPK_PREFIX EnumType getEnumValue(const std::string& name); \
+#define SPK_DECLARE_ENUM(EnumType,ENUM_DEF)									\
+	enum EnumType															\
+	{																		\
+		ENUM_DEF(SPK_ENUM_VALUE)											\
+	};																		\
+	template<> SPK_PREFIX std::string getEnumName(EnumType value);			\
+	template<> SPK_PREFIX EnumType getEnumValue(const std::string& name);
 
-#define SPK_DEFINE_ENUM(EnumType,ENUM_DEF) \
-template<> \
-std::string getEnumName(EnumType value) { \
-	switch(value) { \
-		ENUM_DEF(SPK_ENUM_CASE) \
-		default : \
-		SPK_LOG_ERROR("Cannot find a name in " << #EnumType << " for " << value); \
-			return ""; \
-	} \
-} \
-template<> \
-EnumType getEnumValue(const std::string& str) { \
-	ENUM_DEF(SPK_ENUM_CMP) \
-	SPK_LOG_ERROR("Cannot find a value in " << #EnumType << " for " << str); \
-	return static_cast<EnumType>(0); \
-} \
+#define SPK_DEFINE_ENUM(EnumType,ENUM_DEF)									\
+	template<>																\
+	std::string getEnumName(EnumType value)									\
+	{																		\
+		switch(value)														\
+		{																	\
+			ENUM_DEF(SPK_ENUM_CASE)											\
+			default:														\
+				SPK_LOG_ERROR("Cannot find a name in "						\
+					<< #EnumType << " for " << value);						\
+				return "";													\
+		}																	\
+	}																		\
+	template<>																\
+	EnumType getEnumValue(const std::string& str)							\
+	{																		\
+		ENUM_DEF(SPK_ENUM_CMP)												\
+		SPK_LOG_ERROR("Cannot find a value in "								\
+			<< #EnumType << " for " << str);								\
+		return static_cast<EnumType>(0);									\
+	}
 
 namespace SPK 
 {
@@ -80,7 +86,7 @@ namespace SPK
 	* @return the integer representation of this flag
 	*/
 	template<typename T>
-	size_t getORedEnumValue(const std::string& enums) // TODO Needs testing...
+	size_t getORedEnumValue(const std::string& enums) /// TODO Needs testing...
 	{
 		size_t pos = 0;
 		size_t flag = 0;
@@ -107,7 +113,7 @@ namespace SPK
 	* @return the string representation of this flag of the form "ENUM1 | ENUM2 | ..."
 	*/
 	template<typename T>
-	std::string getORedEnumString(int flag) // TODO Needs testing...
+	std::string getORedEnumString(int flag) /// TODO Needs testing...
 	{
 		std::stringbuf buf;
 		bool hasOneORedEnum = false;

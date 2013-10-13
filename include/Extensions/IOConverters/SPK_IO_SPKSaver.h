@@ -1,6 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 :                                                    //
+//  - Julien Fryer - julienfryer@gmail.com				                        //
+//  - Thibault Lescoat - info-tibo@orange.fr                                    //
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -22,26 +24,45 @@
 #ifndef H_SPK_IO_SPKSAVER
 #define H_SPK_IO_SPKSAVER
 
+#include "SPK_IO_SPKCommon.h"
+
 namespace SPK
 {
 namespace IO
 {
+	class SPKSerializer;
+
 	/** @brief A class to serialize a System in a spk format stream */
 	class SPK_PREFIX SPKSaver : public Saver
 	{
-	private :
+	public:
+		/** @brief Constructor */
+		SPKSaver();
 
-		static const char MAGIC_NUMBER[3];
-		static const char VERSION;
+		/** @brief Destructor */
+		~SPKSaver();
+		
+		/** @brief Reimplementation */
+		void beginSave(std::ostream& os, const std::vector<SPKObject*>& objRef);
 
-		static const size_t DATA_LENGTH_OFFSET;
-		static const size_t HEADER_LENGTH;
+		/** @brief Reimplementation */
+		void serializeConnection(const Ref<SPKObject>& sender, const std::string& ctrl,
+			const Ref<SPKObject>& receiver, const std::string& attr, unsigned int fieldId, const std::string& field);
 
-		virtual bool innerSave(std::ostream& os,Graph& graph) const;
+		/** @brief Reimplementation */
+		bool endSave();
 
-		bool writeObject(IOBuffer& buffer,const Descriptor& desc,Graph& graph) const;
-		bool writeAttribute(IOBuffer& buffer,const Attribute& attrib,Graph& graph) const;
-	};	
+	protected:
+		/** @brief Reimplementation */
+		Serializer* getSerializer();
+
+	private:
+		friend class SPKSerializer;
+		struct SaveContext;
+
+		SPKSerializer* serializer;
+		SaveContext* context;
+	};
 }}
 
 #endif

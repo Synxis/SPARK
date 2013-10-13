@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -26,15 +26,6 @@ namespace SPK
 {
 	class SPK_PREFIX Cylinder : public Zone
 	{
-	SPK_IMPLEMENT_OBJECT(Cylinder)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Zone)
-	SPK_ATTRIBUTE("height",ATTRIBUTE_TYPE_FLOAT)
-	SPK_ATTRIBUTE("radius",ATTRIBUTE_TYPE_FLOAT)
-	SPK_ATTRIBUTE("axis",ATTRIBUTE_TYPE_VECTOR)
-	SPK_END_DESCRIPTION
-
 	public :
 	
 		static Ref<Cylinder> create(
@@ -43,7 +34,8 @@ namespace SPK
 			float radius = 1.0f,
 			const Vector3D& axis = Vector3D(0.0f,1.0f,0.0f));
 
-		void setDimensions(float height,float radius);
+		void setHeight(float h);
+		void setRadius(float r);
 		float getHeight() const	{ return height; }
 		float getRadius() const	{ return radius; }
 
@@ -56,12 +48,17 @@ namespace SPK
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f,Vector3D* normal = NULL) const;
 		virtual Vector3D computeNormal(const Vector3D& v) const;
 
+	public :
+		spark_description(Cylinder, Zone)
+		(
+			spk_attribute(Vector3D, axis, setAxis, getAxis);
+			spk_attribute(float, height, setHeight, getHeight);
+			spk_attribute(float, radius, setRadius, getRadius);
+		);
+
 	protected :
 
 		virtual void innerUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -87,6 +84,16 @@ namespace SPK
 	inline Ref<Cylinder> Cylinder::create(const Vector3D& position,float height,float radius,const Vector3D& axis)
 	{
 		return SPK_NEW(Cylinder,position,height,radius,axis);
+	}
+
+	inline void Cylinder::setHeight(float h)
+	{
+		height = h >= 0 ? h : 0;
+	}
+
+	inline void Cylinder::setRadius(float r)
+	{
+		radius = r >= 0 ? r : 0;
 	}
 }
 

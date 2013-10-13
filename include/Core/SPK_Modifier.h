@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -42,16 +42,9 @@ namespace SPK
 	*
 	* 
 	*/
-	class Modifier :	public Transformable,
-						public DataHandler
+	class Modifier : public Transformable, public DataHandler
 	{
 	friend class Group;
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Transformable)
-	SPK_ATTRIBUTE("active",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("local",ATTRIBUTE_TYPE_BOOL)
-	SPK_END_DESCRIPTION
 
 	public :
 
@@ -81,12 +74,16 @@ namespace SPK
 		*/
 		unsigned int getPriority() const;
 
+	public :
+		spark_description(Modifier, Transformable)
+		(
+			spk_attribute(bool, active, setActive, isActive);
+			spk_attribute(bool, local, setLocalToSystem, isLocalToSystem);
+		);
+
 	protected :
 
 		Modifier(unsigned int PRIORITY,bool NEEDS_DATASET,bool CALL_INIT,bool NEEDS_OCTREE);
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -133,26 +130,6 @@ namespace SPK
 	inline unsigned int Modifier::getPriority() const
 	{
 		return PRIORITY;
-	}
-
-	inline void Modifier::innerImport(const IO::Descriptor& descriptor)
-	{
-		Transformable::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-
-		if (attrib = descriptor.getAttributeWithValue("active"))
-			setActive(attrib->getValue<bool>());
-		if (attrib = descriptor.getAttributeWithValue("local"))
-			setLocalToSystem(attrib->getValue<bool>());
-	}
-
-	inline void Modifier::innerExport(IO::Descriptor& descriptor) const
-	{
-		Transformable::innerExport(descriptor);
-
-		descriptor.getAttribute("active")->setValueOptionalOnTrue(isActive());
-		descriptor.getAttribute("local")->setValueOptionalOnFalse(isLocalToSystem());
 	}
 }
 

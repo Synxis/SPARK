@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -34,14 +34,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX RandomForce : public Modifier
 	{
-	SPK_IMPLEMENT_OBJECT(RandomForce)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Modifier)
-	SPK_ATTRIBUTE("values",ATTRIBUTE_TYPE_VECTORS)
-	SPK_ATTRIBUTE("period",ATTRIBUTE_TYPE_FLOATS)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		/**
@@ -125,12 +117,16 @@ namespace SPK
 		*/
 		float getMaxPeriod() const;
 
+	public :
+		spark_description(RandomForce, Modifier)
+		(
+			spk_attribute(Pair<Vector3D>, values, setVectors, getMinVector, getMaxVector);
+			spk_attribute(Pair<float>, periods, setPeriods, getMinPeriod, getMaxPeriod);
+		);
+
 	protected :
 
 		virtual void innerUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 

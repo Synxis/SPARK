@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -27,33 +27,31 @@
 
 namespace SPK
 {
-	SPK_DEFINE_ENUM(Param,SPK_ENUM_PARAM)
-	SPK_DEFINE_ENUM(Factor,SPK_ENUM_FACTOR)
-	SPK_DEFINE_ENUM(InterpolationType,SPK_ENUM_INTERPOLATION_TYPE)
+	SPK_DEFINE_ENUM(Param, SPK_ENUM_PARAM)
+	SPK_DEFINE_ENUM(Factor, SPK_ENUM_FACTOR)
+	SPK_DEFINE_ENUM(InterpolationType, SPK_ENUM_INTERPOLATION_TYPE)
+	SPK_DEFINE_ENUM(ConnectionStatus, SPK_ENUM_CONNECTION_STATUS)
 
-#ifdef SPK_TRACE_MEMORY
-	SPKMemoryTracer& SPKMemoryTracer::get()
+	SPKContext& SPKContext::get()
 	{
-		static SPKMemoryTracer* instance = NULL;
-		if (instance == NULL) instance = new SPKMemoryTracer;
-		return *instance;
+		static SPKContext instance;
+		return instance;
 	}
-#endif
-
-	SPKContext SPKContext::instance = SPKContext();
 
 	// This allows SPARK initialization at application start up
 	SPKContext::SPKContext() :
 		defaultZone()
 	{
+		// Ensure MemoryTracer is created before the context, because it will be used in the destructor
+#ifdef SPK_TRACE_MEMORY
+		SPK::SPKMemoryTracer::get();
+#endif
+
 		// Inits the random seed
 		randomSeed = static_cast<unsigned int>(std::time(NULL));
 		// little tweak to ensure the randomSeed is uniformly distributed along all the range
 		for (size_t i = 0; i < 2; ++i)
 			randomSeed = generateRandom(static_cast<unsigned int>(1),std::numeric_limits<unsigned int>::max());
-
-		// Registers all core objects for loading
-		// registerCoreForLoading();
 	}
 
 	// This allows SPARK finalization at application exit

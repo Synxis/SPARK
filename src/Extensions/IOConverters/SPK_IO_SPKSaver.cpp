@@ -1,6 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 :                                                    //
+//  - Julien Fryer - julienfryer@gmail.com				                        //
+//  - Thibault Lescoat - info-tibo@orange.fr                                    //
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -26,104 +28,262 @@ namespace SPK
 {
 namespace IO
 {
-	const char SPKSaver::MAGIC_NUMBER[3] = { 0x53, 0x50, 0x4B }; // "SPK" in ASCII
-	const char SPKSaver::VERSION = 0;
+	const unsigned char SPKFormatVariables::MAGIC_NUMBER[3] = { 'S', 'P', 'K' };
+	const unsigned char SPKFormatVariables::VERSION = 1;
 
-	const size_t SPKSaver::DATA_LENGTH_OFFSET = 4;
-	const size_t SPKSaver::HEADER_LENGTH = 12;
-
-	bool SPKSaver::innerSave(std::ostream& os,Graph& graph) const
+	struct SPKSaver::SaveContext
 	{
-		IOBuffer output(2048);	// Output buffer
-		IOBuffer buffer(256);	// buffer for objects writing
-
-		// Header
-		output.put(MAGIC_NUMBER,3);
-		output.put(VERSION);
-		output.skip(4); // Room for data length
-		output.put(static_cast<uint32>(graph.getNbNodes()));
-
-		// Writes objects
-		Node* node = NULL;
-		while ((node = graph.getNextNode()) != NULL)
+		struct Object
 		{
-			buffer.clear();
-			writeObject(buffer,node->getDescriptor(),graph);
-			output.putBuffer(buffer);
+			SPKObject* object;
+			unsigned int id;
+		};
+
+		std::vector<Object> objects;
+		IO::Buffer buffer;
+		std::ostream& os;
+		unsigned int nbConnections;
+		unsigned int nbConnectionPosition;
+
+		SaveContext(std::ostream& o) :
+			os(o),
+			buffer(2048),
+			nbConnections(0),
+			nbConnectionPosition(0)
+		{
 		}
 
-		// Writes data length
-		output.setPosition(DATA_LENGTH_OFFSET);
-		output.put(static_cast<uint32>(output.getSize() - HEADER_LENGTH));
+		unsigned int refId(SPKObject* object)
+		{
+			if(!object)
+				return 0;
+			for(unsigned int t = 0; t < objects.size(); t++)
+				if(objects[t].object == object)
+					return objects[t].id;
+			return 0;
+		}
+	};
 
-		os.write(output.getData(),output.getSize()); // Writes the output buffer into the output stream
-		return true;
-	}
-
-	bool SPKSaver::writeObject(IOBuffer& buffer,const Descriptor& desc,Graph& graph) const
+	class SPKSerializer : public SerializerConcept<SPKSerializer>
 	{
-		buffer.put(desc.getName());	
+	public:
+		SPKSerializer(SPKSaver* s) : saver(s), current(0), nbAttrPos(0), nbAttrs(0) {}
 
-		size_t lengthOffset = buffer.getPosition();
-		buffer.skip(4); // Room for data length
+		template<typename T>
+		void storeValue(const T& value, Buffer& buffer)
+		{
+			buffer << value;
+		}
 
-		buffer.put(static_cast<uint32>(desc.getSignature()));
+		template<typename T>
+		void storeValue(const Ref<T>& value, Buffer& buffer)
+		{
+			buffer << saver->context->refId(value.get());
+		}
 
-		for (size_t i = 0; i < desc.getNbAttributes(); ++i)
-			writeAttribute(buffer,desc.getAttribute(i),graph);
+		template<typename T>
+		void storeValue(const Pair<Ref<T> >& value, Buffer& buffer)
+		{
+			buffer << saver->context->refId(value.value1.get());
+			buffer << saver->context->refId(value.value2.get());
+		}
 
-		buffer.setPosition(lengthOffset);
-		buffer.put(static_cast<uint32>(buffer.getSize() - lengthOffset - 4));
-		return true;
-	}
+		template<typename T>
+		void storeValue(const Triplet<Ref<T> >& value, Buffer& buffer)
+		{
+			buffer << saver->context->refId(value.value1.get());
+			buffer << saver->context->refId(value.value2.get());
+			buffer << saver->context->refId(value.value3.get());
+		}
 
-	bool SPKSaver::writeAttribute(IOBuffer& buffer,const Attribute& attrib,Graph& graph) const
-	{
-		bool defined = attrib.hasValue() && !attrib.isValueOptional();
-		buffer.put(defined);
+		template<typename T>
+		void storeValue(const Quadruplet<Ref<T> >& value, Buffer& buffer)
+		{
+			buffer << saver->context->refId(value.value1.get());
+			buffer << saver->context->refId(value.value2.get());
+			buffer << saver->context->refId(value.value3.get());
+			buffer << saver->context->refId(value.value4.get());
+		}
 
-		if (defined)	
-			switch (attrib.getType())
-			{
-			case ATTRIBUTE_TYPE_CHAR :		buffer.put(attrib.getValue<char>()); break;
-			case ATTRIBUTE_TYPE_BOOL :		buffer.put(attrib.getValue<bool>()); break;
-			case ATTRIBUTE_TYPE_INT32 :		buffer.put(attrib.getValue<int32>()); break;
-			case ATTRIBUTE_TYPE_UINT32 :	buffer.put(attrib.getValue<uint32>()); break;
-			case ATTRIBUTE_TYPE_FLOAT :		buffer.put(attrib.getValue<float>()); break;
-			case ATTRIBUTE_TYPE_VECTOR :	buffer.put(attrib.getValue<Vector3D>()); break;
-			case ATTRIBUTE_TYPE_COLOR :		buffer.put(attrib.getValue<Color>()); break;
-			case ATTRIBUTE_TYPE_STRING :	buffer.put(attrib.getValue<std::string>()); break;	
+		template<typename T>
+		void storeValue(const std::vector<Ref<T> >& value, Buffer& buffer)
+		{
+			buffer << value.size();
+			for(unsigned int t = 0; t < value.size(); t++)
+				buffer << saver->context->refId(value[t].get());
+		}
 
-			case ATTRIBUTE_TYPE_CHARS :		buffer.putArray(attrib.getValues<char>()); break;
-			case ATTRIBUTE_TYPE_BOOLS :		buffer.putArray(attrib.getValues<bool>()); break;
-			case ATTRIBUTE_TYPE_INT32S :	buffer.putArray(attrib.getValues<int32>()); break;
-			case ATTRIBUTE_TYPE_UINT32S :	buffer.putArray(attrib.getValues<uint32>()); break;
-			case ATTRIBUTE_TYPE_FLOATS :	buffer.putArray(attrib.getValues<float>()); break;
-			case ATTRIBUTE_TYPE_VECTORS :	buffer.putArray(attrib.getValues<Vector3D>()); break;
-			case ATTRIBUTE_TYPE_COLORS :	buffer.putArray(attrib.getValues<Color>()); break;
-			case ATTRIBUTE_TYPE_STRINGS :	buffer.putArray(attrib.getValues<std::string>()); break;
+		template<typename T>
+		void storeTypedValue(const T& value)
+		{
+			Buffer& buffer = saver->context->buffer;
 			
-			case ATTRIBUTE_TYPE_REF : {
-				Node* refNode = graph.getNode(attrib.getValueRef<SPKObject>());
-				if (refNode != NULL)
-					buffer.put(static_cast<uint32>(refNode->getReferenceID()));
-				break; }
+			// Type
+			buffer << *(unsigned int*)&(ToSPKType<T>::type);
+			
+			// Value
+			storeValue(value, buffer);
+		}
 
-			case ATTRIBUTE_TYPE_REFS : {
-				const std::vector<Ref<SPKObject> >& refs = attrib.getValuesRef<SPKObject>();
-				buffer.put(static_cast<uint32>(refs.size()));
-				for (size_t i = 0; i < refs.size(); ++i)
-				{
-					Node* refNode = graph.getNode(refs[i]);
-					if (refNode != NULL)
-						buffer.put(static_cast<uint32>(refNode->getReferenceID()));
-				}
-				break; }
+		void storeAttributeHeader(const char* attrName, const SPK::IO::Context& sc)
+		{
+			Buffer& buffer = saver->context->buffer;
 
-			default :
-				SPK_LOG_FATAL("SPKSaver::writeAttribute(IOBuffer&,const Attribute&,Graph&) - Unknown attribute type");
+			buffer << std::string(attrName);
+			buffer << sc.isStructuredAttribute();
+		}
+
+		void saveObjectHeader(SPKObject* obj)
+		{
+			Buffer& buffer = saver->context->buffer;
+
+			if(current)
+			{
+				unsigned int pos = buffer.getPosition();
+				buffer.setPosition(nbAttrPos);
+				buffer << nbAttrs;
+				buffer << (pos - buffer.getPosition() - 4);
+				buffer.setPosition(pos);
 			}
 
+			current = obj;
+
+			if(current)
+			{
+				// Object header
+				buffer << saver->context->refId(obj);
+				nbAttrPos = buffer.getPosition();
+				buffer << (unsigned int)0 << (unsigned int)0;
+				nbAttrs = 0;
+			}
+		}
+
+		void emptyAttribute(const char* name, const Context& sc)
+		{
+			// Attribute header
+			storeAttributeHeader(name, sc);
+
+			// Structured attribute header
+			saver->context->buffer << (unsigned int)0 << (unsigned int)0;
+
+			nbAttrs++;
+		}
+
+		template<typename T>
+		void serialize(const char* attrName, const T& value, const SPK::IO::Context& sc)
+		{
+			if(current != sc.object)
+				saveObjectHeader(sc.object);
+
+			if(!sc.isStructuredAttribute())
+			{
+				// Attribute is standard or array
+				storeAttributeHeader(attrName, sc);
+				storeTypedValue<T>(value);
+				nbAttrs++;
+			}
+			else
+			{
+				// Attribute is structured, first save the header (if first field)
+				Buffer& buffer = saver->context->buffer;
+				if(sc.structured.id == 0 && sc.structured.fieldIndex == 0)
+				{
+					storeAttributeHeader(attrName, sc);
+					buffer << sc.structured.size << sc.structured.fieldCount;
+					nbAttrs++;
+				}
+
+				// Field header
+				buffer << std::string(sc.structured.fieldName);
+				buffer << sc.structured.id;
+
+				// Value
+				storeTypedValue<T>(value);
+			}
+		}
+
+	private:
+		SPKSaver* saver;
+		SPKObject* current;
+		unsigned int nbAttrPos;
+		unsigned int nbAttrs;
+	};
+
+	SPKSaver::SPKSaver() :
+		serializer(0),
+		context(0)
+	{
+		serializer = SPK_NEW(SPKSerializer, this);
+	}
+
+	SPKSaver::~SPKSaver()
+	{
+		SPK_DELETE(serializer);
+	}
+		
+	void SPKSaver::beginSave(std::ostream& os, const std::vector<SPKObject*>& objRef)
+	{
+		// Context
+		context = SPK_NEW(SaveContext, os);
+		for(unsigned int t = 0; t < objRef.size(); t++)
+		{
+			SaveContext::Object obj;
+			obj.id = t + 1;
+			obj.object = objRef[t];
+			context->objects.push_back(obj);
+		}
+
+		// Header
+		context->buffer << SPKFormatVariables::MAGIC_NUMBER
+			<< SPKFormatVariables::VERSION
+			<< objRef.size();
+		context->nbConnectionPosition = context->buffer.getPosition();
+		context->buffer << (unsigned int)0; // Number of connections will be known in the 2nd phase
+		context->buffer << (unsigned int)0; // Data-length is not already known
+
+		// Type list
+		for(unsigned int t = 0; t < objRef.size(); t++)
+			context->buffer << objRef[t]->getClassName();
+	}
+
+	void SPKSaver::serializeConnection(const Ref<SPKObject>& sender, const std::string& ctrl,
+		const Ref<SPKObject>& receiver, const std::string& attr, unsigned int fieldId, const std::string& field)
+	{
+		// End the last object
+		serializer->saveObjectHeader(0);
+
+		ClassDescription cd = sender->getDescription();
+		context->nbConnections++;
+
+		context->buffer << context->refId(sender.get());
+		context->buffer << ctrl;
+		context->buffer << context->refId(receiver.get());
+		context->buffer << attr;
+		context->buffer << fieldId;
+		context->buffer << field;
+	}
+
+	bool SPKSaver::endSave()
+	{
+		if(!context)
+			return false;
+
+		// End the last object
+		serializer->saveObjectHeader(0);
+
+		context->buffer.setPosition(context->nbConnectionPosition);
+		context->buffer << context->nbConnections;
+		context->buffer << (context->buffer.getSize() - context->buffer.getPosition() - 4);
+		context->os.write(context->buffer.getData(), context->buffer.getSize());
+
+		SPK_DELETE(context);
+		context = 0;
 		return true;
 	}
-}}
+
+	Serializer* SPKSaver::getSerializer()
+	{
+		return serializer;
+	}
+}
+}

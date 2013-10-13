@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -193,7 +193,7 @@ namespace SPK
 		* The neighboring cells of a particle are the cells in which lie the particle.<br>
 		* Note the index of the particle passed also lies within each of its neighboring cells.<br>
 		* Note also that particles are guaranteed to be ordered by index within a given cell.
-		* @param particleIndex : the index of the particle
+		* @param particleIndex ; the index of the particle
 		* @return the neighboring cells of a given particle
 		*/
 		const Array<size_t>& getNeighborCells(size_t particleIndex) const	{ return particleCells[particleIndex]; }

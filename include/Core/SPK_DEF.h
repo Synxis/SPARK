@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -99,6 +99,7 @@ namespace SPK
 	class Zone;
 
 #ifdef SPK_DOXYGEN_ONLY // for documentation purpose only
+
 	/** @brief Constants defining parameters of a particle */
 	enum Param
 	{
@@ -109,7 +110,7 @@ namespace SPK
 		PARAM_ROTATION_SPEED = 4,		/**< @brief The rotation speed of a particle */
 	};
 
-	/** @brief Constants defining the way a factor is applied*/
+	/** @brief Constants defining the way a factor is applied */
 	enum Factor
 	{
 		FACTOR_CONSTANT = 0,	/**< @brief Defines a constant factor (C) */
@@ -129,32 +130,70 @@ namespace SPK
 		INTERPOLATOR_PARAM,		/**< Constant defining a parameter as the value used to interpolate */
 		INTERPOLATOR_VELOCITY,	/**< Constant defining the square norm of the velocity as the value used to interpolate */
 	};
+
+	/** @brief Constants defining the result of a connection attempt */
+	enum ConnectionStatus
+	{
+		CONNECTION_STATUS_OK,							/**< @brief No problems encountered while attempting to connect */
+		CONNECTION_STATUS_OK_FIELD_NOT_NEEDED,			/**< @brief Connection successful; an id and/or a field name was given but was unecessary */
+		CONNECTION_STATUS_INVALID_SENDER,				/**< @brief The controller reference is invalid */
+		CONNECTION_STATUS_INVALID_CONTROL,				/**< @brief The specified control does not exist */
+		CONNECTION_STATUS_INVALID_RECEIVER,				/**< @brief The the controlled object reference is invalid */
+		CONNECTION_STATUS_INVALID_ATTRIBUTE,			/**< @brief The specified attribute does not exist */
+		CONNECTION_STATUS_INVALID_ID,					/**< @brief The specified id does not exist */
+		CONNECTION_STATUS_INVALID_FIELD,				/**< @brief The specified field does not exist */
+		CONNECTION_STATUS_TYPE_ERROR,					/**< @brief The type of the control and the type of the attribute (or attribute subfield) does not match */
+		CONNECTION_STATUS_ALREADY_CONNECTED,			/**< @brief The specified attribute (or field) is already connected */
+	};
+
 #endif
 
-	#define SPK_ENUM_PARAM(XX) \
-		XX(PARAM_SCALE,=0) \
-		XX(PARAM_MASS,=1) \
-		XX(PARAM_ANGLE,=2) \
-		XX(PARAM_TEXTURE_INDEX,=3) \
-		XX(PARAM_ROTATION_SPEED,=4) \
+	// Register enums
+	/// IMPORTANT NOTE: BaseType and TypeSpecifier are not common enums, and they are handled
+	/// differently. See SPK_Types.h. Do not add them here !
 
-	SPK_DECLARE_ENUM(Param,SPK_ENUM_PARAM)
+	// Param
+	#define SPK_ENUM_PARAM(XX)						\
+		XX(PARAM_SCALE,=0)							\
+		XX(PARAM_MASS,=1)							\
+		XX(PARAM_ANGLE,=2)							\
+		XX(PARAM_TEXTURE_INDEX,=3)					\
+		XX(PARAM_ROTATION_SPEED,=4)
 
-	#define SPK_ENUM_FACTOR(XX) \
-		XX(FACTOR_CONSTANT,=0) \
-		XX(FACTOR_LINEAR,=1) \
-		XX(FACTOR_QUADRATIC,=2) \
-		XX(FACTOR_CUBIC,=3) \
+	SPK_DECLARE_ENUM(Param, SPK_ENUM_PARAM)
 
-	SPK_DECLARE_ENUM(Factor,SPK_ENUM_FACTOR)
+	// Factor
+	#define SPK_ENUM_FACTOR(XX)						\
+		XX(FACTOR_CONSTANT,=0)						\
+		XX(FACTOR_LINEAR,=1)						\
+		XX(FACTOR_QUADRATIC,=2)						\
+		XX(FACTOR_CUBIC,=3)
 
-	#define SPK_ENUM_INTERPOLATION_TYPE(XX) \
-		XX(INTERPOLATOR_LIFETIME,) \
-		XX(INTERPOLATOR_AGE,) \
-		XX(INTERPOLATOR_PARAM,) \
-		XX(INTERPOLATOR_VELOCITY,) \
+	SPK_DECLARE_ENUM(Factor, SPK_ENUM_FACTOR)
 
-	SPK_DECLARE_ENUM(InterpolationType,SPK_ENUM_INTERPOLATION_TYPE)
+	// InterpolationType
+	#define SPK_ENUM_INTERPOLATION_TYPE(XX)			\
+		XX(INTERPOLATOR_LIFETIME,)					\
+		XX(INTERPOLATOR_AGE,)						\
+		XX(INTERPOLATOR_PARAM,)						\
+		XX(INTERPOLATOR_VELOCITY,)
+
+	SPK_DECLARE_ENUM(InterpolationType, SPK_ENUM_INTERPOLATION_TYPE)
+
+	// ConnectionStatus
+	#define SPK_ENUM_CONNECTION_STATUS(XX)			\
+		XX(CONNECTION_STATUS_OK,)					\
+		XX(CONNECTION_STATUS_OK_FIELD_NOT_NEEDED,)	\
+		XX(CONNECTION_STATUS_INVALID_SENDER,)		\
+		XX(CONNECTION_STATUS_INVALID_CONTROL,)		\
+		XX(CONNECTION_STATUS_INVALID_RECEIVER,)		\
+		XX(CONNECTION_STATUS_INVALID_ATTRIBUTE,)	\
+		XX(CONNECTION_STATUS_INVALID_ID,)			\
+		XX(CONNECTION_STATUS_INVALID_FIELD,)		\
+		XX(CONNECTION_STATUS_TYPE_ERROR,)			\
+		XX(CONNECTION_STATUS_ALREADY_CONNECTED,)
+
+	SPK_DECLARE_ENUM(ConnectionStatus, SPK_ENUM_CONNECTION_STATUS)
 
 	/** A singleton class that holds some static objects needed by SPARK */
 	class SPK_PREFIX SPKContext
@@ -165,7 +204,7 @@ namespace SPK
 		* @brief Gets the singleton instance
 		* @return the instance of the context
 		*/
-		static  SPKContext& get();
+		static SPKContext& get();
 
 		/** @brief Releases all dynamic data held by the context */
 		void release();
@@ -188,8 +227,6 @@ namespace SPK
 
 	private :
 
-		static SPKContext instance;
-
 		Ref<Zone> defaultZone;
 		unsigned int randomSeed;
 
@@ -200,29 +237,24 @@ namespace SPK
 		SPKContext& operator=(const SPKContext&); // Not used
 	};
 
-	inline SPKContext& SPKContext::get()
-	{
-		return instance;
-	}
-
 	template<typename T>
 	inline T SPKContext::generateRandom(const T& min,const T& max)
-    {
+	{
 		// optimized standard minimal
 		long tmp0 = 16807L * (randomSeed & 0xFFFFL);
-        long tmp1 = 16807L * (randomSeed >> 16);
-        long tmp2 = (tmp0 >> 16) + tmp1;
-        tmp0 = ((tmp0 & 0xFFFF)|((tmp2 & 0x7FFF) << 16)) + (tmp2 >> 15);
+		long tmp1 = 16807L * (randomSeed >> 16);
+		long tmp2 = (tmp0 >> 16) + tmp1;
+		tmp0 = ((tmp0 & 0xFFFF)|((tmp2 & 0x7FFF) << 16)) + (tmp2 >> 15);
 
 		// correction of the error
-        if ((tmp0 & 0x80000000L) != 0)
+		if ((tmp0 & 0x80000000L) != 0)
 			tmp0 = (tmp0 + 1) & 0x7FFFFFFFL;
 
 		randomSeed = tmp0;
 
 		// find a random number in the interval
-        return static_cast<T>(min + ((randomSeed - 1) / 2147483646.0) * (max - min));
-    }
+		return static_cast<T>(min + ((randomSeed - 1) / 2147483646.0) * (max - min));
+	}
 }
 
 #endif

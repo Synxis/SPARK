@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -47,8 +47,6 @@ namespace GL
 	*/
 	class SPK_GL_PREFIX GLLineRenderer : public GLRenderer, public LineRenderBehavior
 	{
-	SPK_IMPLEMENT_OBJECT(GLLineRenderer)
-
 	public :
 
 		/**
@@ -58,6 +56,11 @@ namespace GL
 		* @return A new GLLineRenderer
 		*/
 		static  Ref<GLLineRenderer> create(float length = 1.0f,float width = 1.0f);
+
+	public :
+		spark_description(GLLineRenderer, GLRenderer)
+		(
+		);
 
 	private :
 

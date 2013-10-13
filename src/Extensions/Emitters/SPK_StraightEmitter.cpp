@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -63,20 +63,5 @@ namespace SPK
 		Emitter::innerUpdateTransform();
 		transformDir(tDirection,direction);
 		tDirection.normalize();
-	}
-
-	void StraightEmitter::innerImport(const IO::Descriptor& descriptor)
-	{
-		Emitter::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("direction"))
-			setDirection(attrib->getValue<Vector3D>());
-	}
-
-	void StraightEmitter::innerExport(IO::Descriptor& descriptor) const
-	{
-		Emitter::innerExport(descriptor);
-		descriptor.getAttribute("direction")->setValue(getDirection());
 	}
 }

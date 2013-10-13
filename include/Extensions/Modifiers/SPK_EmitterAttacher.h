@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -28,16 +28,6 @@ namespace SPK
 
 	class SPK_PREFIX EmitterAttacher : public Modifier
 	{
-	SPK_IMPLEMENT_OBJECT(EmitterAttacher)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Modifier)
-	SPK_ATTRIBUTE("base emitter",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("orientation enabled",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("rotation enabled",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("target group",ATTRIBUTE_TYPE_REF)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		static Ref<EmitterAttacher> create(
@@ -54,17 +44,24 @@ namespace SPK
 		void setTargetGroup(const Ref<Group>& group);
 		const Ref<Group>& getTargetGroup() const;
 
-		void enableEmitterOrientation(bool orientate,bool rotate = false);
+		void enableEmitterOrientation(bool o);
+		void enableEmitterRotation(bool r);
 		bool isEmitterOrientationEnabled() const;
 		bool isEmitterRotationEnabled() const;
+
+	public :
+		spark_description(EmitterAttacher, Modifier)
+		(
+			spk_attribute(Ref<Emitter>, baseEmitter, setEmitter, getEmitter);
+			spk_attribute(Ref<Group>, targetGroup, setTargetGroup, getTargetGroup);
+			spk_attribute(bool, enableOrientation, enableEmitterOrientation, isEmitterOrientationEnabled);
+			spk_attribute(bool, enableRotation, enableEmitterRotation, isEmitterRotationEnabled);
+		);
 
 	protected :
 
 		virtual void createData(DataSet& dataSet,const Group& group) const;
 		virtual void checkData(DataSet& dataSet,const Group& group) const;
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -147,10 +144,14 @@ namespace SPK
 		return targetGroup;
 	}
 
-	inline void EmitterAttacher::enableEmitterOrientation(bool orientate,bool rotate)
+	inline void EmitterAttacher::enableEmitterRotation(bool rotate)
+	{
+		rotationEnabled = rotate;
+	}
+
+	inline void EmitterAttacher::enableEmitterOrientation(bool orientate)
 	{
 		orientationEnabled = orientate;
-		rotationEnabled = rotate;
 	}
 
 	inline bool EmitterAttacher::isEmitterOrientationEnabled() const

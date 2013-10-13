@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -56,30 +56,6 @@ namespace SPK
 	friend class System;
 	friend class DataSet;
 
-	SPK_IMPLEMENT_OBJECT(Group)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(Transformable)
-	SPK_ATTRIBUTE("capacity",ATTRIBUTE_TYPE_UINT32)
-	SPK_ATTRIBUTE("life time",ATTRIBUTE_TYPE_FLOATS)
-	SPK_ATTRIBUTE("immortal",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("still",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("distance computation enabled",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("sorting enabled",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("radius",ATTRIBUTE_TYPE_FLOATS)
-	SPK_ATTRIBUTE("color interpolator",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("scale interpolator",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("mass interpolator",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("angle interpolator",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("texture index interpolator",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("rotation speed interpolator",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("emitters",ATTRIBUTE_TYPE_REFS)
-	SPK_ATTRIBUTE("modifiers",ATTRIBUTE_TYPE_REFS)
-	SPK_ATTRIBUTE("birth action",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("death action",ATTRIBUTE_TYPE_REF)
-	SPK_ATTRIBUTE("renderer",ATTRIBUTE_TYPE_REF)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		static Ref<Group> create(size_t capacity = 100);
@@ -96,6 +72,17 @@ namespace SPK
 
 		void setParamInterpolator(Param param,const Ref<FloatInterpolator>& interpolator);
 		const Ref<FloatInterpolator>& getParamInterpolator(Param param) const;
+
+		void setScaleInterpolator(const Ref<FloatInterpolator>& interpolator);
+		void setMassInterpolator(const Ref<FloatInterpolator>& interpolator);
+		void setAngleInterpolator(const Ref<FloatInterpolator>& interpolator);
+		void setTextureIndexInterpolator(const Ref<FloatInterpolator>& interpolator);
+		void setRotationSpeedInterpolator(const Ref<FloatInterpolator>& interpolator);
+		const Ref<FloatInterpolator>& getScaleInterpolator() const;
+		const Ref<FloatInterpolator>& getMassInterpolator() const;
+		const Ref<FloatInterpolator>& getAngleInterpolator() const;
+		const Ref<FloatInterpolator>& getTextureIndexInterpolator() const;
+		const Ref<FloatInterpolator>& getRotationSpeedInterpolator() const;
 
 		float getMinLifeTime() const;
 		float getMaxLifeTime() const;
@@ -115,11 +102,13 @@ namespace SPK
 
 		void addEmitter(const Ref<Emitter>& emitter);
 		void removeEmitter(const Ref<Emitter>& emitter);
+		void removeAllEmitters();
 		const Ref<Emitter>& getEmitter(size_t index) const;
 		size_t getNbEmitters() const;
 
 		void addModifier(const Ref<Modifier>& modifier);
 		void removeModifier(const Ref<Modifier>& modifier);
+		void removeAllModifiers();
 		const Ref<Modifier>& getModifier(size_t index) const;
 		size_t getNbModifiers() const;
 
@@ -378,10 +367,29 @@ namespace SPK
 
 		virtual Ref<SPKObject> findByName(const std::string& name);
 	
-	protected :
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
+	public :
+		spark_description(Group, Transformable)
+		(
+			spk_attribute(unsigned int, capacity, reallocate, getCapacity);
+			spk_attribute(Pair<float>, lifeTime, setLifeTime, getMinLifeTime, getMaxLifeTime);
+			spk_attribute(bool, immortal, setImmortal, isImmortal);
+			spk_attribute(bool, still, setStill, isStill);
+			spk_attribute(bool, computeDistances, enableDistanceComputation, isDistanceComputationEnabled);
+			spk_attribute(bool, sortParticles, enableSorting, isSortingEnabled);
+			spk_attribute(float, physicalRadius, setPhysicalRadius, getPhysicalRadius);
+			spk_attribute(float, graphicalRadius, setGraphicalRadius, getGraphicalRadius);
+			spk_attribute(Ref<ColorInterpolator>, colorInterpolator, setColorInterpolator, getColorInterpolator);
+			spk_attribute(Ref<FloatInterpolator>, scaleInterpolator, setScaleInterpolator, getScaleInterpolator);
+			spk_attribute(Ref<FloatInterpolator>, massInterpolator, setMassInterpolator, getMassInterpolator);
+			spk_attribute(Ref<FloatInterpolator>, angleInterpolator, setAngleInterpolator, getAngleInterpolator);
+			spk_attribute(Ref<FloatInterpolator>, textureIndexInterpolator, setTextureIndexInterpolator, getTextureIndexInterpolator);
+			spk_attribute(Ref<FloatInterpolator>, rotationSpeedInterpolator, setRotationSpeedInterpolator, getRotationSpeedInterpolator);
+			spk_array(Ref<Emitter>, emitters, addEmitter, removeEmitter, removeAllEmitters, getEmitter, getNbEmitters);
+			spk_array(Ref<Modifier>, modifiers, addModifier, removeModifier, removeAllModifiers, getModifier, getNbModifiers);
+			spk_attribute(Ref<Action>, birthAction, setBirthAction, getBirthAction);
+			spk_attribute(Ref<Action>, deathAction, setDeathAction, getDeathAction);
+			spk_attribute(Ref<Renderer>, renderer, setRenderer, getRenderer);
+		);
 
 	private :
 
@@ -620,7 +628,7 @@ namespace SPK
 			std::memcpy(oldT,t,copySize * sizeof(T));
 		SPK_DELETE_ARRAY(oldT);
 	}
-		
+
 	inline bool Group::isInitialized() const
 	{
 		return system != NULL && system->isInitialized();
@@ -634,6 +642,61 @@ namespace SPK
 	inline void Group::setStill(bool still)
 	{
 		this->still = still;
+	}
+
+	inline void Group::removeAllEmitters()
+	{
+		emitters.clear();
+	}
+
+	inline void Group::setScaleInterpolator(const Ref<FloatInterpolator>& interpolator)
+	{
+		setParamInterpolator(PARAM_SCALE, interpolator);
+	}
+
+	inline void Group::setMassInterpolator(const Ref<FloatInterpolator>& interpolator)
+	{
+		setParamInterpolator(PARAM_MASS, interpolator);
+	}
+
+	inline void Group::setAngleInterpolator(const Ref<FloatInterpolator>& interpolator)
+	{
+		setParamInterpolator(PARAM_ANGLE, interpolator);
+	}
+
+	inline void Group::setTextureIndexInterpolator(const Ref<FloatInterpolator>& interpolator)
+	{
+		setParamInterpolator(PARAM_TEXTURE_INDEX, interpolator);
+	}
+
+	inline void Group::setRotationSpeedInterpolator(const Ref<FloatInterpolator>& interpolator)
+	{
+		setParamInterpolator(PARAM_ROTATION_SPEED, interpolator);
+	}
+
+	inline const Ref<FloatInterpolator>& Group::getScaleInterpolator() const
+	{
+		return getParamInterpolator(PARAM_SCALE);
+	}
+
+	inline const Ref<FloatInterpolator>& Group::getMassInterpolator() const
+	{
+		return getParamInterpolator(PARAM_MASS);
+	}
+
+	inline const Ref<FloatInterpolator>& Group::getAngleInterpolator() const
+	{
+		return getParamInterpolator(PARAM_ANGLE);
+	}
+
+	inline const Ref<FloatInterpolator>& Group::getTextureIndexInterpolator() const
+	{
+		return getParamInterpolator(PARAM_TEXTURE_INDEX);
+	}
+
+	inline const Ref<FloatInterpolator>& Group::getRotationSpeedInterpolator() const
+	{
+		return getParamInterpolator(PARAM_ROTATION_SPEED);
 	}
 
 	inline const Ref<FloatInterpolator>& Group::getParamInterpolator(Param param) const

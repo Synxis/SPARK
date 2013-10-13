@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -30,8 +30,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX RandomEmitter : public Emitter
 	{
-	SPK_IMPLEMENT_OBJECT(RandomEmitter)
-
 	public :
 
 		/**
@@ -45,6 +43,11 @@ namespace SPK
 			float flow = 1.0f,
 			float forceMin = 1.0f,
 			float forceMax = 1.0f);
+
+	public :
+		spark_description(RandomEmitter, Emitter)
+		(
+		);
 
 	private :
 

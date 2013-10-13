@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -22,110 +22,61 @@
 #ifndef H_SPK_IO_SAVER
 #define H_SPK_IO_SAVER
 
-#include <list>
-
 namespace SPK
 {
 namespace IO
 {
-	/** @brief An abstract class to save an entire particle system in a resource */
-	class SPK_PREFIX Saver
+	/**
+	* @brief Interface allowing to create new formatting formats.
+	* By subclassing this interface and registering it in the IO manager,
+	* you can save a whole system to an arbitrary stream (file, console, network, ...).
+	* The save process is divided in two consecutive phases:
+	*	1. Saving the objects of the system (including the system itself). This is an
+	*	   attribute-centric phase, in which a serializer is used to serialize all attributes
+	*	   of all objects in the system, consecutively. There is no method called to indicate
+	*	   that the object changed; instead, a IO::Context is provided, and it contains
+	*	   (among other things) the object containing the attribute.
+	*	2. Saving the connections. For each connection, the method @c serializeConnection
+	*	   is called. The @c id and @c field of a connection are meaningless if the
+	*	   attribute is structured (in this case, the name of the field will be empty).
+	*/
+	class Saver
 	{
-	public :
-
-		//////////////////////////////
-		// Constructor / Destructor //
-		//////////////////////////////
-
+	public:
+		/** @brief Destructor */
 		virtual ~Saver() {}
-
-		////////////////////
-		// Saving methods //
-		////////////////////
+		
+		/**
+		* @brief Starts a save operation.
+		* The @c objRef parameter allows to attach an object to a ref id.
+		* Its use is not compulsory. This parameter is guaranteed not to
+		* be null.
+		*/
+		virtual void beginSave(std::ostream& os, const std::vector<SPKObject*>& objRef) = 0;
 
 		/**
-		* @brief Saves a system to an output stream
-		* @param os : the output stream to save the system to
-		* @return true if the system has been successfully saved, false if not
+		* @brief Serialize a connection.
+		* This method is called once for each connection in the system; if 'field' is empty, then
+		* the connection is not made to a field and both 'field' and 'fieldId' can be ignored.
+		* @note This function is called only after the serialization of all objects in the system,
+		* thus attributes and objects are serialized first, and connections are serialized at last.
 		*/
-		bool save(std::ostream& os,const Ref<System>& system) const;
+		virtual void serializeConnection(const Ref<SPKObject>& sender, const std::string& ctrl,
+			const Ref<SPKObject>& receiver, const std::string& attr, unsigned int fieldId, const std::string& field) = 0;
 
 		/**
-		* @brief Saves a system in a file
-		* @param path : the path of the file to save the system in
-		* @return true if the system has been successfully saved, false if not
+		* @brief Ends the save operation.
+		* @return True if the save succeeded, else false
 		*/
-		bool save(const std::string& path,const Ref<System>& system) const;
+		virtual bool endSave() = 0;
 
-		////////////////////
-		// Nested classes //
-		////////////////////
-
-		class Graph; // Forward declaration for friendship
-
-		class Node
-		{
-		friend class Graph;
-		friend class Saver;
-		friend bool compareNodePriority(const Node*,const Node*);
-
-		public :
-
-			size_t getReferenceID() const			{ return refID; }
-			const Descriptor& getDescriptor() const	{ return descriptor; }
-			size_t getNbReferences() const			{ return nbReferences; }
-			void markAsProcessed() const			{ processed = true; }
-			bool isProcessed() const				{ return processed; }
-
-		private :
-
-			Node(const Descriptor& descriptor);
-
-			size_t refID;
-			mutable bool processed;
-			size_t nbReferences;
-			Descriptor descriptor;
-			size_t priority;
-		};
-
-		class Graph
-		{
-		friend class Saver;
-
-		public :
-
-			~Graph();
-
-			Node* getNode(const Ref<SPKObject>& ptr);
-			Node* getNextNode();
-			size_t getNbNodes()	{ return nodes.size(); }
-
-		private :
-
-			Graph();
-			Graph(const Graph&);
-
-			std::map<const SPKObject*,Node*> ptr2Nodes;
-			std::list<Node*> nodes;
-
-			mutable std::list<Node*>::iterator currentPosIt;
-			mutable bool posInitialized;
-
-			Node* createNode(const Descriptor& descriptor);
-		};
-
-	private :
+	protected:
+		friend class Manager;
 
 		/**
-		* @brief The inner save method to be implemented in derived classes
-		* @param os : the output stream to save the system to
-		* @param graph : the graph that contains the hierarchy of nodes to save
-		* @return true if the saving was successful, false if it failed
+		* @brief Returns the serializer used to save the objects
 		*/
-		virtual bool innerSave(std::ostream& os,Graph& graph) const = 0;
-
-		static void constructGraph(Graph& graph,const System* system);
-		static void constructNode(Graph& graph,const SPKObject* object,size_t level);
+		virtual Serializer* getSerializer() = 0;
 	};
 }}
 

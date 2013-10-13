@@ -1,6 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 :                                                    //
+//  - Julien Fryer - julienfryer@gmail.com				                        //
+//  - Thibault Lescoat - info-tibo@orange.fr                                    //
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -25,171 +27,412 @@
 namespace SPK
 {
 namespace IO
-{	
-	const char SPKLoader::MAGIC_NUMBER[3] = { 0x53, 0x50, 0x4B }; // "SPK" in ASCII
-	const char SPKLoader::VERSION = 0;
-
-	const size_t SPKLoader::DATA_LENGTH_OFFSET = 4;
-	const size_t SPKLoader::HEADER_LENGTH = 12;
-
-	bool SPKLoader::innerLoad(std::istream& is,Graph& graph) const
+{
+	// Load context
+	// -----------------------------
+	struct SPKLoader::LoadContext
 	{
-		// Check header
-		const IOBuffer header(HEADER_LENGTH,is);
-		for (size_t i = 0; i < 3; ++i)
-			if (header.get<char>() != MAGIC_NUMBER[i])
+		struct Object
+		{
+			struct FieldKey
 			{
-				SPK_LOG_ERROR("SPKLoader::innerLoad(std::istream&,Graph&) - Invalid SPK format");
-				return false;
-			}
+				std::string name;
+				unsigned int id;
 
-		if (header.get<char>() != VERSION)
-		{
-			SPK_LOG_ERROR("SPKLoader::innerLoad(std::istream&,Graph&) - Wrong version of SPK format");
-			return false;
-		}
-
-		size_t dataLength = header.get<uint32>();
-		SPK_LOG_DEBUG("SPKLoader::innerLoad(std::istream&,Graph&) - Data length : " << dataLength << " bytes");
-
-		size_t nbObjects = header.get<uint32>();
-		SPK_LOG_DEBUG("SPKLoader::innerLoad(std::istream&,Graph&) - Nb objects : " << nbObjects);
-		
-		// Loads data
-		const IOBuffer data(dataLength,is);
-		if (is.bad())
-		{
-			SPK_LOG_ERROR("SPKLoader::innerLoad(std::istream&,Graph&) - Error while reading the stream");
-			return false;
-		}
-
-		size_t* objectDataOffset = SPK_NEW_ARRAY(size_t,nbObjects);	
-		
-		// First pass to get the objects types
-		for (size_t i = 0; i < nbObjects; ++i)
-		{
-			if (data.isAtEnd())
-			{
-				SPK_LOG_ERROR("SPKLoader::innerLoad(std::istream&,Graph&) - Corrupted data");
-				SPK_DELETE_ARRAY(objectDataOffset);
-				return false;
-			}
-
-			std::string type = data.get<std::string>();
-			objectDataOffset[i] = data.getPosition();
-			data.skip(data.get<uint32>());
-			graph.addNode(i,type);
-		}
-
-		if (!graph.validateNodes())
-			return false;
-
-		// Second pass to fill the descriptors
-		for (size_t i = 0; i < nbObjects; ++i)
-		{
-			Node* node = graph.getNode(i);
-			if (node != NULL)
-			{
-				data.setPosition(objectDataOffset[i]);
-				if (!readObject(*node,graph,data))
+				FieldKey(const std::string& s, unsigned int i) : name(s), id(i) {}
+				bool operator<(const FieldKey& key) const
 				{
-					SPK_DELETE_ARRAY(objectDataOffset);
-					return false;
+					if(name == key.name)
+						return id < key.id;
+					else
+						return name < key.name;
+				}
+			};
+
+			struct StructuredAttribute
+			{
+				std::map<FieldKey, unsigned int> fields;
+				unsigned int size;
+
+				StructuredAttribute() : size(0) {}
+			};
+
+			std::map<std::string, unsigned int> standardAttributes;
+			std::map<std::string, StructuredAttribute> structuredAttributes;
+			Ref<SPKObject> obj;
+		};
+
+		std::vector<Object> objects;
+		Buffer buffer;
+		unsigned int systemRef;
+
+
+		LoadContext(std::istream& is, unsigned int dl);
+
+		template<typename T>
+		Ref<T> getObject(unsigned int ref) const;
+	};
+
+	SPKLoader::LoadContext::LoadContext(std::istream& is, unsigned int dl) :
+		buffer(dl, is),
+		systemRef(0)
+	{
+	}
+
+	template<typename T>
+	inline Ref<T> SPKLoader::LoadContext::getObject(unsigned int ref) const
+	{
+		if(ref > 0 && ref <= objects.size())
+		{
+			if(objects[ref - 1].obj && objects[ref - 1].obj->getDescription().doesInherit(T::description::getClassName()))
+				return Ref<T>((T*)objects[ref - 1].obj.get());
+		}
+		return SPK_NULL_REF;
+	}
+
+	template<>
+	inline Ref<SPKObject> SPKLoader::LoadContext::getObject(unsigned int ref) const
+	{
+		if(ref > 0 && ref <= objects.size())
+			return objects[ref - 1].obj;
+		return SPK_NULL_REF;
+	}
+
+	// Helpers
+	// -----------------------------
+	template<typename T>
+	struct TypeMismatchBoundSetter : public BoundSetter<T>
+	{
+		void operator()(typename Arg<T>::type) const
+		{
+			SPK_LOG_WARNING("SPKLoader::load(std::istream&) - Warning: saved value and attribute value do not have the same type");
+		}
+	};
+
+	struct SPKHelper
+	{
+		template<typename T>
+		static inline void loadValue(SPKLoader::LoadContext& context, const BoundSetter<T>* setValue)
+		{
+			T value = context.buffer.get<T>();
+			if(setValue)
+				(*setValue)(value);
+		}
+
+		template<typename T>
+		static inline void loadValue(SPKLoader::LoadContext& context, const BoundSetter<Ref<T> >* setValue)
+		{
+			unsigned int ref = context.buffer.get32();
+			Ref<T> value = context.getObject<T>(ref);
+			if(setValue)
+				(*setValue)(value);
+		}
+
+		template<typename T>
+		static inline void loadValue(SPKLoader::LoadContext& context, const BoundSetter<Pair<Ref<T> > >* setValue)
+		{
+			unsigned int ref1 = context.buffer.get32();
+			unsigned int ref2 = context.buffer.get32();
+			Pair<Ref<T> > value(context.getObject<T>(ref1), context.getObject<T>(ref2));
+			if(setValue)
+				(*setValue)(value);
+		}
+
+		template<typename T>
+		static inline void loadValue(SPKLoader::LoadContext& context, const BoundSetter<Triplet<Ref<T> > >* setValue)
+		{
+			unsigned int ref1 = context.buffer.get32();
+			unsigned int ref2 = context.buffer.get32();
+			unsigned int ref3 = context.buffer.get32();
+			Triplet<Ref<T> > value(context.getObject<T>(ref1), context.getObject<T>(ref2), context.getObject<T>(ref3));
+			if(setValue)
+				(*setValue)(value);
+		}
+
+		template<typename T>
+		static inline void loadValue(SPKLoader::LoadContext& context, const BoundSetter<Quadruplet<Ref<T> > >* setValue)
+		{
+			unsigned int ref1 = context.buffer.get32();
+			unsigned int ref2 = context.buffer.get32();
+			unsigned int ref3 = context.buffer.get32();
+			unsigned int ref4 = context.buffer.get32();
+			Quadruplet<Ref<T> > value(context.getObject<T>(ref1), context.getObject<T>(ref2), context.getObject<T>(ref3), context.getObject<T>(ref4));
+			if(setValue)
+				(*setValue)(value);
+		}
+
+		template<typename T>
+		static inline void loadValue(SPKLoader::LoadContext& context, const BoundSetter<std::vector<Ref<T> > >* setValue)
+		{
+			unsigned int size = context.buffer.get32();
+			std::vector<Ref<T> > value;
+			for(unsigned int t = 0; t < size; t++)
+			{
+				Ref<T> obj = context.getObject<T>(context.buffer.get32());
+				if(obj) value.push_back(obj);
+			}
+			if(setValue)
+				(*setValue)(value);
+		}
+	};
+
+	// Value deserialization helper
+	// -----------------------------
+	template<typename T>
+	struct SPKLoader::ValueLoader
+	{
+		const BoundSetter<T>* setValue;
+		LoadContext& context;
+
+		ValueLoader(const BoundSetter<T>* s, LoadContext& c) : setValue(s), context(c) {}
+		template<typename U>
+		void call()
+		{
+			if(meta::IsSame<T, U>::value)
+				SPKHelper::loadValue(context, setValue);
+			else if(setValue)
+			{
+				TypeMismatchBoundSetter<U> warn;
+				SPKHelper::loadValue(context, &warn);
+			}
+			else
+			{
+				BoundSetter<U>* nullSetter = 0;
+				SPKHelper::loadValue(context, nullSetter);
+			}
+		}
+	};
+
+	// Deserializer
+	// -----------------------------
+	class SPKDeserializer : public DeserializerConcept<SPKDeserializer>
+	{
+	public:
+		SPKDeserializer(unsigned int r, SPKLoader::LoadContext& c) : ref(r), context(c) {}
+
+		unsigned int sizeOfAttribute(const char* attrName)
+		{
+			std::map<std::string, SPKLoader::LoadContext::Object::StructuredAttribute>::const_iterator it = context.objects[ref - 1].structuredAttributes.find(attrName);
+			if(it != context.objects[ref - 1].structuredAttributes.end())
+				return it->second.size;
+			return 0;
+		}
+
+		template<typename T>
+		void deserialize(const char* name, const BoundSetter<T>& setValue, const Context& dc)
+		{
+			if(!dc.isStructuredAttribute())
+			{
+				std::map<std::string, unsigned int>::const_iterator it = context.objects[ref - 1].standardAttributes.find(name);
+				if(it != context.objects[ref - 1].standardAttributes.end())
+				{
+					// Position the buffer just before the typed value
+					context.buffer.setPosition(it->second);
+
+					// Get the value type
+					unsigned int rawType = context.buffer.get32();
+					ValueType valueType = *(ValueType*)&rawType;
+					
+					// Deserialize the value
+					SPKLoader::ValueLoader<T> vl(&setValue, context);
+					selectTemplate<SPKLoader::ValueLoader<T>&>(valueType, vl);
+				}
+				else
+				{
+					SPK_LOG_WARNING("SPKLoader::load(std::istream&) - Warning: attribute '" << name << "' not present in file");
+				}
+			}
+			else
+			{
+				std::map<std::string, SPKLoader::LoadContext::Object::StructuredAttribute>::const_iterator it = context.objects[ref - 1].structuredAttributes.find(name);
+				if(it != context.objects[ref - 1].structuredAttributes.end())
+				{
+					std::map<SPKLoader::LoadContext::Object::FieldKey, unsigned int>::const_iterator field =
+						it->second.fields.find(SPKLoader::LoadContext::Object::FieldKey(dc.structured.fieldName, dc.structured.id));
+					if(field != it->second.fields.end())
+					{
+						// Position the buffer just before the typed value
+						context.buffer.setPosition(field->second);
+
+						// Get the value type
+						unsigned int rawType = context.buffer.get32();
+						ValueType valueType = *(ValueType*)&rawType;
+					
+						// Deserialize the value
+						SPKLoader::ValueLoader<T> vl(&setValue, context);
+						selectTemplate<SPKLoader::ValueLoader<T>&>(valueType, vl);
+					}
+					else
+					{
+						SPK_LOG_WARNING("SPKLoader::load(std::istream&) - Warning: field '" << dc.structured.fieldName
+							<< "'@" << dc.structured.id << " in attribute '" << name << "' not present in file");
+					}
+				}
+				else
+				{
+					SPK_LOG_WARNING("SPKLoader::load(std::istream&) - Warning: attribute '" << name << "' not present in file");
 				}
 			}
 		}
 
-		SPK_DELETE_ARRAY(objectDataOffset);
-		return true;
-	}
-
-	bool SPKLoader::readObject(Node& node,const Graph& graph,const IOBuffer& data) const
+	private:
+		SPKLoader::LoadContext& context;
+		unsigned int ref;
+	};
+	
+	// Loader
+	// -----------------------------
+	Ref<System> SPKLoader::load(std::istream& is)
 	{
-		Descriptor& desc = node.getDescriptor();		
-		size_t attributeDataSize = data.get<uint32>();
-		size_t endOffset = data.getPosition() + attributeDataSize;
-		if (desc.getSignature() != data.get<uint32>())
+		// Header: Magic number
+		if(is.peek() != SPKFormatVariables::MAGIC_NUMBER[0]
+			|| (is.ignore() && is.peek() != SPKFormatVariables::MAGIC_NUMBER[1])
+			|| (is.ignore() && is.peek() != SPKFormatVariables::MAGIC_NUMBER[2]))
 		{
-			SPK_LOG_WARNING("SPKLoader::readObject(Node&,const Graph&,const IOBuffer&) - Wrong signature for node "+node.getObject()->getClassName());
-		}
-		else
-		{
-			for (size_t i = 0; i < desc.getNbAttributes(); ++i)
-			{
-				Attribute& attrib = desc.getAttribute(i);
-				if (!readAttribute(attrib,graph,data))
-					return false;
-			}
-
-			if (data.getPosition() != endOffset)
-			{
-				SPK_LOG_ERROR("SPKLoader::readObject(Node&,const Graph&,const IOBuffer&) - Corrupted data");
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	bool SPKLoader::readAttribute(Attribute& attrib,const Graph& graph,const IOBuffer& data) const
-	{
-		if (data.isAtEnd())
-		{
-			SPK_LOG_ERROR("SPKLoader::readAttribute(Attribute&,const Graph&,const IOBuffer&) - Corrupted data");
-			return false;
-		}
-
-		if (data.get<bool>())
-		{
-			switch (attrib.getType())
-			{
-			case ATTRIBUTE_TYPE_CHAR :		attrib.setValue(data.get<char>()); break;
-			case ATTRIBUTE_TYPE_BOOL :		attrib.setValue(data.get<bool>()); break;
-			case ATTRIBUTE_TYPE_INT32 :		attrib.setValue(data.get<int32>()); break;
-			case ATTRIBUTE_TYPE_UINT32 :	attrib.setValue(data.get<uint32>()); break;
-			case ATTRIBUTE_TYPE_FLOAT :		attrib.setValue(data.get<float>()); break;
-			case ATTRIBUTE_TYPE_VECTOR :	attrib.setValue(data.get<Vector3D>()); break;
-			case ATTRIBUTE_TYPE_COLOR :		attrib.setValue(data.get<Color>()); break;
-			case ATTRIBUTE_TYPE_STRING :	attrib.setValue(data.get<std::string>()); break;
-			
-			case ATTRIBUTE_TYPE_CHARS :		setAttributeValues<char>(attrib,data); break;
-			case ATTRIBUTE_TYPE_BOOLS :		setAttributeValues<bool>(attrib,data); break;
-			case ATTRIBUTE_TYPE_INT32S :	setAttributeValues<int32>(attrib,data); break;
-			case ATTRIBUTE_TYPE_UINT32S :	setAttributeValues<uint32>(attrib,data); break;
-			case ATTRIBUTE_TYPE_FLOATS :	setAttributeValues<float>(attrib,data); break;
-			case ATTRIBUTE_TYPE_VECTORS :	setAttributeValues<Vector3D>(attrib,data); break;
-			case ATTRIBUTE_TYPE_COLORS :	setAttributeValues<Color>(attrib,data); break;
-			case ATTRIBUTE_TYPE_STRINGS :	setAttributeValues<std::string>(attrib,data); break;
-
-			case ATTRIBUTE_TYPE_REF : {	
-				attrib.setValue(readReference(graph,data));
-				break; }
-
-			case ATTRIBUTE_TYPE_REFS : {
-				size_t nbValues = data.get<uint32>();
-				Ref<SPKObject>* objects = SPK_NEW_ARRAY(Ref<SPKObject>,nbValues);
-				for (size_t i = 0; i < nbValues; ++i)
-					objects[i] = readReference(graph,data);
-				attrib.setValues(objects,nbValues);
-				SPK_DELETE_ARRAY(objects);
-				break; }
-
-			default : {
-				SPK_LOG_FATAL("SPKLoader::readAttribute(Attribute&,const Graph&,const IOBuffer&) - Unknown attribute type");
-				return false; }
-			}
-		}
-
-		return true;
-	}
-
-	Ref<SPKObject> SPKLoader::readReference(const Graph& graph,const IOBuffer& data) const
-	{
-		size_t ref = data.get<uint32>() - 1;
-		Node* node = graph.getNode(ref);
-		if (node != NULL)	
-			return node->getObject();
-		else
+			SPK_LOG_ERROR("SPKLoader::load(std::istream&) - The stream does not contain a SPARK effect");
 			return SPK_NULL_REF;
+		}
+		is.ignore();
+			
+		// Header: parse informations
+		Buffer header(13, is);
+		unsigned char version = header.get<unsigned char>();
+		if(version != SPKFormatVariables::VERSION)
+		{
+			SPK_LOG_ERROR("SPKLoader::load(std::istream&) - Version of SPARK effect in stream (" << (int)version << ") does not match the version of the loader (" << (int)SPKFormatVariables::VERSION << ")");
+			return SPK_NULL_REF;
+		}
+		unsigned int nbObjects = header.get32();
+		unsigned int nbConnections = header.get32();
+		unsigned int dataLength = header.get32();
+
+		// Parse object list
+		LoadContext context(is, dataLength);
+		parseObjectList(context, nbObjects);
+
+		// Parse the file
+		for(unsigned int t = 0; t < nbObjects; t++)
+			parseObject(context);
+
+		// For number of connections, process data
+		for(unsigned int t = 0; t < nbConnections; t++)
+			parseConnection(context);
+
+		// Deserialize to clone the setters of non-structured attributes
+		for(unsigned int t = 0; t < nbObjects; t++)
+		{
+			Ref<SPKObject> rawObj = context.getObject<SPKObject>(t + 1);
+			if(!rawObj) continue;
+			SPKDeserializer deserializer(t + 1, context);
+			rawObj->getDescription().deserialize(deserializer);
+		}
+		
+		// Return system
+		if(!context.systemRef)
+		{
+			SPK_LOG_ERROR("SPKLoader::load(std::istream&) - No system found");
+			return SPK_NULL_REF;
+		}
+		return context.getObject<System>(context.systemRef);
 	}
-}}
+
+	void SPKLoader::parseObjectList(LoadContext& context, unsigned int nbObjects)
+	{
+		for(unsigned int t = 0; t < nbObjects; t++)
+		{
+			LoadContext::Object obj;
+			obj.obj = Factory::getInstance().createObject(context.buffer.get<std::string>());
+			context.objects.push_back(obj);
+			
+			if(obj.obj && obj.obj->getDescription().doesInherit("System"))
+			{
+				if(context.systemRef != 0)
+				{
+					SPK_LOG_ERROR("SPKLoader::load(std::istream&) - Too many systems");
+				}
+				else
+					context.systemRef = t + 1;
+			}
+		}
+	}
+
+	void SPKLoader::parseConnection(LoadContext& context)
+	{
+		unsigned int senderId = context.buffer.get32();
+		std::string control = context.buffer.get<std::string>();
+		unsigned int receiverId = context.buffer.get32();
+		std::string attribute = context.buffer.get<std::string>();
+		unsigned int id = context.buffer.get32();
+		std::string field = context.buffer.get<std::string>();
+		
+		Ref<SPKObject> sender = context.getObject<SPKObject>(senderId);
+		Ref<SPKObject> receiver = context.getObject<SPKObject>(receiverId);
+		ConnectionStatus status = connect(sender, control, receiver, attribute, id, field);
+
+		if(status == CONNECTION_STATUS_OK_FIELD_NOT_NEEDED)
+		{
+			SPK_LOG_WARNING("XMLLoader::load(std::istream&) - Connection succeeded, but field is not needed: [" << senderId << "]::"
+				<< control << " -> [" << receiverId << "]::" << attribute << " (\"" << field << "\"," << id << ")");
+		}
+		else if(status != CONNECTION_STATUS_OK)
+		{
+			SPK_LOG_ERROR("SPKLoader::load(std::istream&) - Connection failed: [" << senderId << "]::"
+				<< control << " -> [" << receiverId << "]::" << attribute << " (\"" << field << "\"," << id << ") : error " << status);
+		}
+	}
+
+	void SPKLoader::parseObject(LoadContext& context)
+	{
+		unsigned int ref = context.buffer.get32();
+		unsigned int nbAttributes = context.buffer.get32();
+		unsigned int dataLength = context.buffer.get32();
+
+		Ref<SPKObject> rawObj = context.getObject<SPKObject>(ref);
+		if(!rawObj)
+		{
+			context.buffer.skip(dataLength);
+			return;
+		}
+
+		// Parse each attribute
+		for(unsigned int a = 0; a < nbAttributes; a++)
+		{
+			std::string attrName = context.buffer.get<std::string>();
+			bool isStructured = context.buffer.get<bool>();
+
+			if(isStructured)
+			{
+				unsigned int count = context.buffer.get32();
+				unsigned int fieldNb = context.buffer.get32();
+				
+				// Parse each field
+				for(unsigned int f = 0; f < count * fieldNb; f++)
+				{
+					std::string fieldName = context.buffer.get<std::string>();
+					unsigned int cellId = context.buffer.get32();
+					context.objects[ref - 1].structuredAttributes[attrName].fields[LoadContext::Object::FieldKey(fieldName, cellId)] = context.buffer.getPosition();
+					if(cellId >= context.objects[ref - 1].structuredAttributes[attrName].size)
+						context.objects[ref - 1].structuredAttributes[attrName].size = cellId + 1;
+					skipValue(context);
+				}
+			}
+			else
+			{
+				context.objects[ref - 1].standardAttributes[attrName] = context.buffer.getPosition();
+				skipValue(context);
+			}
+		}
+	}
+
+	void SPKLoader::skipValue(LoadContext& context)
+	{
+		// Type
+		unsigned int rawType = context.buffer.get32();
+		ValueType valueType = *(ValueType*)&rawType;
+
+		// Value
+		ValueLoader<bool> vl(0, context);
+		selectTemplate<ValueLoader<bool>&>(valueType, vl);
+	}
+}
+}

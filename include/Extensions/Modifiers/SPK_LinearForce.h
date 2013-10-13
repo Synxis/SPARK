@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -40,18 +40,6 @@ namespace SPK
 	*/
 	class SPK_PREFIX LinearForce : public ZonedModifier
 	{
-	SPK_IMPLEMENT_OBJECT(LinearForce)
-
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(ZonedModifier)
-	SPK_ATTRIBUTE("value",ATTRIBUTE_TYPE_VECTOR)
-	SPK_ATTRIBUTE("relative value",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("squared speed",ATTRIBUTE_TYPE_BOOL)
-	SPK_ATTRIBUTE("parameter",ATTRIBUTE_TYPE_STRING)
-	SPK_ATTRIBUTE("factor type",ATTRIBUTE_TYPE_STRING)
-	SPK_ATTRIBUTE("coefficient",ATTRIBUTE_TYPE_FLOAT)
-	SPK_END_DESCRIPTION
-
 	public :
 
 		//////////////////
@@ -162,7 +150,9 @@ namespace SPK
 		* @param relative : true to use a relative force, false not to
 		* @param squaredSpeed : true to use squared speed, false to use speed
 		*/
-		void setRelative(bool relative,bool squaredSpeed = false);
+		void setRelative(bool relative, bool squaredSpeed);
+		void setRelative(bool relative);
+		void setUseSquaredSpeed(bool u);
 
 		/**
 		* @brief Tells whether this force is relative to the particle's velocity
@@ -201,7 +191,10 @@ namespace SPK
 		* @param param : the parameter to use
 		* @param factor : the degree of the parameter
 		*/
-		void setParam(Param param,Factor factor = FACTOR_LINEAR);
+		void setParam(Param param, Factor factor);
+		void setParam(Param param);
+
+		void setFactor(Factor factor);
 
 		/**
 		* @brief Gets the parameter used to modulate the force
@@ -291,12 +284,20 @@ namespace SPK
 		*/
 		void useAsSimpleForce(const Vector3D& value);
 
+	public :
+		spark_description(LinearForce, ZonedModifier)
+		(
+			spk_attribute(Vector3D, value, setValue, getValue);
+			spk_attribute(bool, relative, setRelative, isRelative);
+			spk_attribute(bool, useSquaredSpeed, setUseSquaredSpeed, isSquaredSpeedUsed);
+			spk_attribute(float, coefficient, setCoef, getCoef);
+			spk_attribute(Param, parameter, setParam, getParam);
+			spk_attribute(Factor, factor, setFactor, getFactor);
+		);
+
 	protected :
 
 		virtual  void innerUpdateTransform();
-
-		virtual void innerImport(const IO::Descriptor& descriptor);
-		virtual void innerExport(IO::Descriptor& descriptor) const;
 
 	private :
 
@@ -343,6 +344,16 @@ namespace SPK
 		return tValue;
 	}
 
+	inline void LinearForce::setUseSquaredSpeed(bool u)
+	{
+		squaredSpeed = u;
+	}
+
+	inline void LinearForce::setRelative(bool r)
+	{
+		relative = r;
+	}
+
 	inline bool LinearForce::isRelative() const
 	{
 		return relative;
@@ -353,15 +364,31 @@ namespace SPK
 		return squaredSpeed;
 	}
 
+	inline void LinearForce::setRelative(bool r, bool s)
+	{
+		relative = r;
+		squaredSpeed = s;
+	}
+
 	inline void LinearForce::setNoParam()
 	{
 		factor = FACTOR_CONSTANT;
 	}
 
-	inline void LinearForce::setParam(Param param,Factor factor)
+	inline void LinearForce::setParam(Param p, Factor f)
 	{
-		this->param = param;
-		this->factor = factor;
+		param = p;
+		factor = f;
+	}
+
+	inline void LinearForce::setParam(Param p)
+	{
+		param = p;
+	}
+
+	inline void LinearForce::setFactor(Factor f)
+	{
+		factor = f;
 	}
 	
 	inline Param LinearForce::getParam() const

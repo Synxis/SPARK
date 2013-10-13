@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -29,18 +29,17 @@ namespace SPK
 
 	/** @brief An abstract generic class that allows to interpolate data */
 	template<typename T>
-	class Interpolator :	public SPKObject,
-							public DataHandler
+	class Interpolator : public SPKObject, public DataHandler
 	{
 	friend class Group;
 
-	SPK_START_DESCRIPTION
-	SPK_PARENT_ATTRIBUTES(SPKObject)
-	SPK_END_DESCRIPTION
+	public :
+		virtual ~Interpolator() {}
 
 	public :
-
-		virtual  ~Interpolator() {}
+		spark_description(Interpolator, SPKObject)
+		(
+		);
 
 	protected :
 

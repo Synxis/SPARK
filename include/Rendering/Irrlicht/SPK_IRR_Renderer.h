@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011														//
+// Copyright (C) 2008-2013														//
 // Julien Fryer - julienfryer@gmail.com											//
 // Thibault Lescoat - info-tibo <at> orange <dot> fr							//
 //																				//
@@ -112,6 +112,11 @@ namespace IRR
 		const irr::video::SMaterial& getMaterial() const;
 
 		virtual bool isRenderingOptionEnabled(RenderingOption renderingHint) const;
+
+	public :
+		spark_description(IRRRenderer, Renderer)
+		(
+		);
 
 	protected :
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -26,8 +26,6 @@ namespace SPK
 {
 	class Point : public Zone
 	{
-	SPK_IMPLEMENT_OBJECT(Point);
-
 	public :
 
 		static Ref<Point> create(const Vector3D& position = Vector3D());
@@ -36,6 +34,11 @@ namespace SPK
 		virtual bool contains(const Vector3D& v,float radius = 0.0f) const;
 		virtual bool intersects(const Vector3D& v0,const Vector3D& v1,float radius = 0.0f,Vector3D* normal = NULL) const;
 		virtual Vector3D computeNormal(const Vector3D& v) const;
+
+	public :
+		spark_description(Point, Zone)
+		(
+		);
 
 	private :
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -48,8 +48,6 @@ namespace GL
 	class SPK_GL_PREFIX GLPointRenderer :	public GLRenderer,
 											public PointRenderBehavior
 	{
-	SPK_IMPLEMENT_OBJECT(GLPointRenderer)
-
 	public :
 
 		/**
@@ -104,6 +102,11 @@ namespace GL
 
 		static bool isPointSpriteSupported();
 		static bool isWorldSizeSupported();
+
+	public :
+		spark_description(GLPointRenderer, GLRenderer)
+		(
+		);
 
 	private :
 

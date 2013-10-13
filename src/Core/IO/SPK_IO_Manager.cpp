@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -25,183 +25,357 @@
 namespace SPK
 {
 namespace IO
-{	
-	IOManager::IOManager()
+{
+	// -----------------------------------------------------------------------------------
+	// Helper used to build a vector of all objects in a system
+	// -----------------------------------------------------------------------------------
+	class GraphBuilder : public SerializerConcept<GraphBuilder>
 	{
-		registerIOConverters();
-		registerCoreObjects();
-	}
+	public:
+		GraphBuilder(std::vector<SPKObject*>& n) : nodes(n) {}
 
-	IOManager& IOManager::get()
-	{
-		static IOManager instance;
-		return instance;
-	}
-
-	void IOManager::unregisterAll() // TODO Unregister at IOManager destruction ?
-	{
-		registeredObjects.clear();
-		std::map<std::string,Loader*>::const_iterator it = registeredLoaders.begin();
-		for (std::map<std::string,Loader*>::const_iterator it = registeredLoaders.begin(); it != registeredLoaders.end(); ++it)
-			SPK_DELETE(it->second);
-		registeredLoaders.clear();
-		for (std::map<std::string,Saver*>::const_iterator it = registeredSavers.begin(); it != registeredSavers.end(); ++it)
-			SPK_DELETE(it->second);
-		registeredSavers.clear();
-	}
-
-	Ref<System> IOManager::load(const std::string& path) const
-	{
-		std::string name = getExtension(path);
-		Loader* loader = getLoader(name);
-		
-		if (loader == NULL)
+		template<typename T>
+		void addObject(const Ref<T>& value)
 		{
-			SPK_LOG_ERROR("IOManager::load(const std::string&) - The extension " << name << " is not known");
-			return SPK_NULL_REF;
-		}
-		
-		return loader->load(path);
-	}
-
-	Ref<System> IOManager::load(const std::string& ext,std::istream& is) const
-	{
-		std::string name = formatExtension(ext);
-		Loader* loader = getLoader(name);
-		
-		if (loader == NULL)
-		{
-			SPK_LOG_ERROR("IOManager::load(const std::string&,std::ostream&) - The extension " << name << " is not known");
-			return SPK_NULL_REF;
-		}
-		
-		return loader->load(is);
-	}
-
-	bool IOManager::save(const std::string& path,const Ref<System>& system) const
-	{
-		std::string name = getExtension(path);
-		Saver* saver = getSaver(name);
-
-		if (saver == NULL)
-		{
-			SPK_LOG_ERROR("IOManager::saver(const std::string&,const System*) - The extension " << name << " is not known");
-			return false;
-		}
-		
-		return saver->save(path,system);
-	}
-
-	bool IOManager::save(const std::string& ext,std::ostream& os,const Ref<System>& system) const
-	{
-		std::string name = formatExtension(ext);
-		Saver* saver = getSaver(name);
-
-		if (saver == NULL)
-		{
-			SPK_LOG_ERROR("IOManager::saver(const std::string&,std::ostream& is,const System*) - The extension " << name << " is not known");
-			return false;
+			if(SPKObject* object = (SPKObject*)value.get())
+			{
+				for(unsigned int t = 0; t < nodes.size(); t++)
+					if(nodes[t] == object)
+						return;
+				
+				nodes.push_back(object);
+				object->getDescription().serialize(*this);
+			}
 		}
 
-		return saver->save(os,system);
-	}
+		template<typename T>
+		void serialize(const char*, const Ref<T>& value, const SPK::IO::Context&)
+		{
+			addObject(value);
+		}
 
-	std::string IOManager::formatExtension(const std::string& ext)
+		template<typename T>
+		void serialize(const char*, const Pair<Ref<T> >& value, const SPK::IO::Context&)
+		{
+			addObject(value.value1);
+			addObject(value.value2);
+		}
+
+		template<typename T>
+		void serialize(const char*, const Triplet<Ref<T> >& value, const SPK::IO::Context&)
+		{
+			addObject(value.value1);
+			addObject(value.value2);
+			addObject(value.value3);
+		}
+
+		template<typename T>
+		void serialize(const char*, const Quadruplet<Ref<T> >& value, const SPK::IO::Context&)
+		{
+			addObject(value.value1);
+			addObject(value.value2);
+			addObject(value.value3);
+			addObject(value.value4);
+		}
+
+		template<typename T>
+		void serialize(const char*, const std::vector<Ref<T> >& value, const SPK::IO::Context&)
+		{
+			for(unsigned int t = 0; t < value.size(); t++)
+				addObject(value[t]);
+		}
+
+		template<typename T>
+		void serialize(const char*, const T&, const SPK::IO::Context&)
+		{
+		}
+
+	private:
+		std::vector<SPKObject*>& nodes;
+	};
+
+	// -----------------------------------------------------------------------------------
+	// Helper used to serialize all connections of a system
+	// -----------------------------------------------------------------------------------
+	class ConnectionSerializer : public SerializerConcept<ConnectionSerializer>
 	{
-		std::string result(ext);
+	public:
+		ConnectionSerializer(Saver* s) : saver(s) {}
 
-		for (size_t i = 0; i < ext.size(); ++i)
-			result[i] = tolower(ext[i]);
+		void serializeConnections(const Ref<SPKObject>& object)
+		{
+			if(object)
+			{
+				for(OutConnectionsIterator it(object); !it.end(); ++it)
+					saver->serializeConnection(it->sender(), it->control(), it->receiver(), it->attribute(), it->id(), it->field());
+				object->getDescription().serialize(*this);
+			}
+		}
+
+		template<typename T>
+		void serialize(const char*, const Ref<T>& value, const SPK::IO::Context&)
+		{
+			serializeConnections(value);
+		}
+
+		template<typename T>
+		void serialize(const char*, const Pair<Ref<T> >& value, const SPK::IO::Context&)
+		{
+			serializeConnections(value.value1);
+			serializeConnections(value.value2);
+		}
+
+		template<typename T>
+		void serialize(const char*, const Triplet<Ref<T> >& value, const SPK::IO::Context&)
+		{
+			serializeConnections(value.value1);
+			serializeConnections(value.value2);
+			serializeConnections(value.value3);
+		}
+
+		template<typename T>
+		void serialize(const char*, const Quadruplet<Ref<T> >& value, const SPK::IO::Context&)
+		{
+			serializeConnections(value.value1);
+			serializeConnections(value.value2);
+			serializeConnections(value.value3);
+			serializeConnections(value.value4);
+		}
+
+		template<typename T>
+		void serialize(const char*, const std::vector<Ref<T> >& value, const SPK::IO::Context&)
+		{
+			for(unsigned int t = 0; t < value.size(); t++)
+				serializeConnections(value[t]);
+		}
+
+		template<typename T>
+		void serialize(const char*, const T&, const SPK::IO::Context&)
+		{
+		}
+
+	private:
+		Saver* saver;
+	};
+
+	// -----------------------------------------------------------------------------------
+	// String utility
+	// -----------------------------------------------------------------------------------
+	std::string lowerString(const std::string& str)
+	{
+		std::string result(str);
+
+		for (size_t i = 0; i < str.size(); ++i)
+			result[i] = tolower(str[i]);
 
 		return result;
 	}
 
-	std::string IOManager::getExtension(const std::string& path)
+	// -----------------------------------------------------------------------------------
+	// Registration utilities
+	// -----------------------------------------------------------------------------------
+	template<typename T>
+	bool registerGeneric(const std::string& ext, T* t, std::map<std::string, T*>& table, bool overrideIfFound)
+	{
+		const std::string name = lowerString(ext);
+		typename std::map<std::string, T*>::iterator it = table.find(name);
+		if (it != table.end())
+		{
+			if(overrideIfFound)
+			{
+				SPK_LOG_WARNING("registerGeneric<T> - overriding " << name << "...")
+				SPK_DELETE(it->second);
+				table.erase(it);
+			}
+			else
+				return false;
+		}
+
+		table.insert(std::make_pair(name,t));
+		return true;
+	}
+
+	template<typename T>
+	void unregisterGeneric(const std::string& ext, std::map<std::string, T*>& table)
+	{
+		const std::string name = lowerString(ext);
+		typename std::map<std::string, T*>::iterator it = table.find(name);
+		if (it != table.end())
+		{
+			SPK_DELETE(it->second);
+			table.erase(it);
+		}
+	}
+
+	template<typename T>
+	T* getGeneric(const std::string& ext, const std::map<std::string, T*>& table)
+	{
+		const std::string name = lowerString(ext);
+		typename std::map<std::string, T*>::const_iterator it = table.find(name);
+		return it != table.end() ? it->second : 0;
+	}
+
+	// -----------------------------------------------------------------------------------
+	// IO::Manager
+	// -----------------------------------------------------------------------------------
+	Manager& Manager::get()
+	{
+		static Manager instance;
+		return instance;
+	}
+
+	Manager::Manager()
+	{
+		// Ensure MemoryTracer is created before the manager, because it will be used in the destructor
+#ifdef SPK_TRACE_MEMORY
+		SPK::SPKMemoryTracer::get();
+#endif
+
+		registerIOConverters();
+	}
+
+	Manager::~Manager()
+	{
+		unregisterIOConverters();
+	}
+
+	void Manager::registerIOConverters()
+	{
+		// SPK Converters
+		registerLoader("spk", SPK_NEW(SPKLoader));
+		registerSaver("spk", SPK_NEW(SPKSaver));
+
+#ifndef SPK_NO_XML
+		// XML converters
+		registerLoader("xml", SPK_NEW(XMLLoader));
+		registerSaver("xml", SPK_NEW(XMLSaver));
+#endif
+	}
+
+	void Manager::unregisterIOConverters()
+	{
+		for (std::map<std::string,Loader*>::const_iterator it = loaders.begin(); it != loaders.end(); ++it)
+			SPK_DELETE(it->second);
+		loaders.clear();
+		for (std::map<std::string,Saver*>::const_iterator it = savers.begin(); it != savers.end(); ++it)
+			SPK_DELETE(it->second);
+		savers.clear();
+	}
+
+	std::string Manager::getExtension(const std::string& path)
 	{
 		size_t index = path.find_last_of('.');
 		
 		if (index != std::string::npos && index != path.size() - 1)
-			return formatExtension(path.substr(index + 1));
+			return lowerString(path.substr(index + 1));
 
 		return "";
 	}
 
-	Ref<SPKObject> IOManager::createObject(const std::string& id) const
+	void Manager::registerLoader(const std::string& ext, Loader* loader)
 	{
-		std::map<std::string,createSerializableFn>::const_iterator it = registeredObjects.find(id);
-		if (it != registeredObjects.end())
-			return (*it->second)();
-		else
+		registerGeneric(ext, loader, loaders, true);
+	}
+
+	void Manager::unregisterLoader(const std::string& ext)
+	{
+		unregisterGeneric(ext, loaders);
+	}
+
+	Loader* Manager::getLoader(const std::string& ext) const
+	{
+		return getGeneric(ext, loaders);
+	}
+
+	void Manager::registerSaver(const std::string& ext, Saver* saver)
+	{
+		registerGeneric(ext, saver, savers, true);
+	}
+
+	void Manager::unregisterSaver(const std::string& ext)
+	{
+		unregisterGeneric(ext, savers);
+	}
+
+	Saver* Manager::getSaver(const std::string& ext) const
+	{
+		return getGeneric(ext, savers);
+	}
+
+	Ref<System> Manager::load(const std::string& path) const
+	{
+		std::string ext = getExtension(path);
+		std::ifstream file(path.c_str(), std::ios::in | std::ios::binary);
+		Ref<System> system = load(ext, file);
+		file.close();
+		return system;
+	}
+
+	Ref<System> Manager::load(const std::string& ext, std::istream& is) const
+	{
+		Loader* loader = getLoader(ext);
+
+		if(!loader)
+		{
+			SPK_LOG_ERROR("IO::Manager::load - no loader found for extension '" << ext << "'")
 			return SPK_NULL_REF;
+		}
+
+		Ref<System> system = loader->load(is);
+
+		if(system)
+			SPK_LOG_INFO("IO::Manager::load - Loaded '" << ext << "' system")
+		else
+			SPK_LOG_ERROR("IO::Manager::load - Failed to load system for extension '" << ext << "'")
+		return system;
 	}
 
-	void IOManager::linkGroup(Group& group,System& system) const
+	bool Manager::save(const std::string& path, const Ref<System>& system) const
 	{
-		group.system = &system;
-		group.reallocate(1); // dummy allocation
+		std::string ext = getExtension(path);
+		std::ofstream file(path.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
+		bool r = save(ext, file, system);
+		file.close();
+		return r;
 	}
 
-	void IOManager::registerIOConverters()
+	bool Manager::save(const std::string& ext, std::ostream& os, const Ref<System>& system) const
 	{
-		// SPK Converters
-		registerLoader("spk",SPK_NEW(SPKLoader));
-		registerSaver("spk",SPK_NEW(SPKSaver));
+		if(!system)
+		{
+			SPK_LOG_ERROR("IO::Manager::save - cannot save null system")
+			return false;
+		}
 
-#ifndef SPK_NO_XML
-		// XML converters
-		registerLoader("xml",SPK_NEW(XMLLoader));
-		registerSaver("xml",SPK_NEW(XMLSaver));
-#endif
-	}
+		Saver* saver = getSaver(ext);
 
-	void IOManager::registerCoreObjects()
-	{
-		// Core
-		registerObject<System>();	
-		registerObject<Group>();
+		if(!saver)
+		{
+			SPK_LOG_ERROR("IO::Manager::save - no saver found for extension '" << ext << "'")
+			return false;
+		}
+
+		// Get list of objects to serialize
+		std::vector<SPKObject*> objects;
+		objects.push_back(system.get());
+		GraphBuilder gb(objects);
+		system->getDescription().serialize(gb);
+
+		// Serialize the system
+		saver->beginSave(os, objects);
+		for(unsigned int t = 0; t < objects.size(); t++)
+			objects[t]->getDescription().serialize(*saver->getSerializer());
+
+		// Connections
+		ConnectionSerializer cs(saver);
+		system->getDescription().serialize(cs);
 		
-		// Interpolators
-		registerObject<FloatDefaultInitializer>();	
-		registerObject<ColorDefaultInitializer>();
-		registerObject<FloatRandomInitializer>();
-		registerObject<ColorRandomInitializer>();
-		registerObject<FloatSimpleInterpolator>();
-		registerObject<ColorSimpleInterpolator>();
-		registerObject<FloatRandomInterpolator>();
-		registerObject<ColorRandomInterpolator>();
-		registerObject<FloatGraphInterpolator>();
-		registerObject<ColorGraphInterpolator>();
-
-		// Zones
-		registerObject<Point>();
-		registerObject<Sphere>();
-		registerObject<Plane>();
-		registerObject<Ring>();
-		registerObject<Box>();
-		registerObject<Cylinder>();
-
-		// Emitters
-		registerObject<StaticEmitter>();
-		registerObject<RandomEmitter>();
-		registerObject<StraightEmitter>();
-		registerObject<SphericEmitter>();
-		registerObject<NormalEmitter>();
-
-		// Modifiers
-		registerObject<Gravity>();
-		registerObject<Friction>();
-		registerObject<Obstacle>();
-		registerObject<Rotator>();
-		registerObject<Collider>();
-		registerObject<Destroyer>();
-		registerObject<Vortex>();
-		registerObject<EmitterAttacher>();
-		registerObject<PointMass>();
-		registerObject<RandomForce>();
-		registerObject<LinearForce>();
-
-		// Actions
-		registerObject<ActionSet>();
-		registerObject<SpawnParticlesAction>();
+		bool succeeded = saver->endSave();
+		if(succeeded)
+			SPK_LOG_INFO("IO::Manager::save - Saved '" << ext << "' system")
+		else
+			SPK_LOG_ERROR("IO::Manager::save - Failed to save system for extension '" << ext << "'")
+		return succeeded;
 	}
-}}
+}
+}

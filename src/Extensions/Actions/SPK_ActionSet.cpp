@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -33,6 +33,11 @@ namespace SPK
 	}
 
 	ActionSet::~ActionSet(){}
+
+	void ActionSet::clearActions()
+	{
+		actions.clear();
+	}
 
 	void ActionSet::addAction(const Ref<Action>& action)
 	{
@@ -78,24 +83,5 @@ namespace SPK
 		}
 
 		return SPK_NULL_REF;
-	}
-
-	void ActionSet::innerImport(const IO::Descriptor& descriptor)
-	{
-		Action::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("actions"))
-		{
-			std::vector<Ref<Action> > tmpActions = attrib->getValuesRef<Action>();
-			for (size_t i = 0; i < tmpActions.size(); ++i)
-				addAction(tmpActions[i]);
-		}
-	}
-
-	void ActionSet::innerExport(IO::Descriptor& descriptor) const
-	{
-		Action::innerExport(descriptor);
-		descriptor.getAttribute("actions")->setValuesRef<Action>(&actions[0],getNbActions());
 	}
 }

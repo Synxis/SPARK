@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -23,7 +23,7 @@
 
 namespace SPK
 {
-	SPK_DEFINE_ENUM(ZoneTest,SPK_ENUM_ZONE_TEST)
+	SPK_DEFINE_ENUM(ZoneTest, SPK_ENUM_ZONE_TEST)
 
 	Zone::checkFn Zone::TEST_FN[Zone::NB_TEST_TYPES] =
 	{

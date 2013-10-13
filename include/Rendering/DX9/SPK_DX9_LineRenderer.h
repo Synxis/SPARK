@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //                           foulon matthieu - stardeath@wanadoo.fr				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
@@ -48,8 +48,6 @@ namespace DX9
 	*/
 	class SPK_DX9_PREFIX DX9LineRenderer : public DX9Renderer, public LineRenderBehavior
 	{
-	SPK_IMPLEMENT_OBJECT(DX9LineRenderer)
-
 	public :
 
 		/**
@@ -59,6 +57,11 @@ namespace DX9
 		* @return A new DX9LineRenderer
 		*/
 		static  DX9LineRenderer* create(float length = 1.0f);
+
+	public :
+		spark_description(DX9LineRenderer, DX9Renderer)
+		(
+		);
 
 	private :
 

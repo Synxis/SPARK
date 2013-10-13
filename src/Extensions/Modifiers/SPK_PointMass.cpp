@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // SPARK particle engine														//
-// Copyright (C) 2008-2011 - Julien Fryer - julienfryer@gmail.com				//
+// Copyright (C) 2008-2013 - Julien Fryer - julienfryer@gmail.com				//
 //																				//
 // This software is provided 'as-is', without any express or implied			//
 // warranty.  In no event will the authors be held liable for any damages		//
@@ -63,26 +63,5 @@ namespace SPK
 			force *= massSecond / (force.getSqrNorm() + sqrOffset);
 			particle.velocity() += force;
 		}
-	}
-
-	void PointMass::innerImport(const IO::Descriptor& descriptor)
-	{
-		Modifier::innerImport(descriptor);
-
-		const IO::Attribute* attrib = NULL;
-		if (attrib = descriptor.getAttributeWithValue("position"))
-			setPosition(attrib->getValue<Vector3D>());
-		if (attrib = descriptor.getAttributeWithValue("mass"))
-			setMass(attrib->getValue<float>());
-		if (attrib = descriptor.getAttributeWithValue("offset"))
-			setOffset(attrib->getValue<float>());
-	}
-
-	void PointMass::innerExport(IO::Descriptor& descriptor) const
-	{
-		Modifier::innerExport(descriptor);
-		descriptor.getAttribute("position")->setValue(getPosition());
-		descriptor.getAttribute("mass")->setValue(getMass());
-		descriptor.getAttribute("offset")->setValue(getOffset());
 	}
 }
