@@ -95,7 +95,7 @@ namespace IO
 		void put(int32 i)			{ put32(i); }
 		void put(std::string s)		{ put(s.data(),s.size()); put('\0'); }
 		void put(const Vector3D& v)	{ put(v.x); put(v.y); put(v.z); }
-		void put(const Color& c)	{ put32(*reinterpret_cast<int32*>(&c)); }
+		void put(const Color& c)	{ put32(*reinterpret_cast<const int32*>(&c)); }
 		void put(bool b)			{ put(static_cast<char>(b ? 0x01 : 0x00)); }
 
 		template<typename T>

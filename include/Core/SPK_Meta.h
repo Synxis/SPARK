@@ -128,8 +128,7 @@ namespace meta
 			* @brief This value is true if the predicate matched for the index
 			* @c n, else false.
 			*/
-			//*
-			typedef typename F<item,n>::predicate<tag, param> traitsPredicate;
+			typedef typename F<item,n>::template predicate<tag, param> traitsPredicate;
 			static const bool match = traitsPredicate::value;
 
 			/**
