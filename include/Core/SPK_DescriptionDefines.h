@@ -263,7 +263,7 @@ namespace meta
 							   _spk_obj,													\
 							   &_spk_obj::_setter_,											\
 							   typename SPK::Getters<_type_,_spk_obj>						\
-								   ::store<SPK_UNPACK_GETTERS_(_spk_obj,__VA_ARGS__)>,		\
+								::template store<SPK_UNPACK_GETTERS_(_spk_obj,__VA_ARGS__)>,\
 							   name ## _name_,												\
 							   &description_base::_spk_get_attr_ ## _name_> _name_;			\
 	private:																				\
@@ -358,8 +358,8 @@ namespace meta
 									_spk_obj,												\
 									&_spk_obj::_setter_,									\
 									typename SPK::Getters<_type_,_spk_obj>					\
-										::extra<unsigned int>								\
-										::store<SPK_UNPACK_GETTERS_(_spk_obj,__VA_ARGS__)>,	\
+									::template extra<unsigned int>							\
+									::template store<SPK_UNPACK_GETTERS_(_spk_obj,__VA_ARGS__)>,\
 									name ## _name_,											\
 									attrName,												\
 									&_spk_get_field_ ## _name_> _name_;						\
