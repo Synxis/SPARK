@@ -66,8 +66,8 @@ int main(int argc, char *argv[])
 	//!IRRLICHT
     video::E_DRIVER_TYPE chosenDriver = video::EDT_OPENGL;
 #ifdef _WIN32
-	if(MessageBoxA(0,"Do you want to use DirectX 9 ? (else OpenGL)","SPARK Irrlicht test",MB_YESNO | MB_ICONQUESTION) == IDYES)
-        chosenDriver = video::EDT_DIRECT3D9;
+	if(MessageBoxA(0,"Do you want to use DirectX 11 ? (else OpenGL)","SPARK Irrlicht test",MB_YESNO | MB_ICONQUESTION) == IDYES)
+        chosenDriver = video::EDT_DIRECT3D11;
 #endif
 
     //!IRRLICHT
@@ -99,11 +99,21 @@ int main(int argc, char *argv[])
 	system->drop(); // We let the scene manager take care of the system life time
 
 	{
+	//*
 	SPK::Ref<SPK::IRR::IRRQuadRenderer> quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
 	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
 	quadRenderer->setTexture(driver->getTexture("res\\flare.bmp"));
 	quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
+	/*/
+	SPK::Ref<SPK::IRR::IRRPointRenderer> quadRenderer = SPK::IRR::IRRPointRenderer::create(device);
+	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
+	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE, false);
+	/* /
+	SPK::Ref<SPK::IRR::IRRLineRenderer> quadRenderer = SPK::IRR::IRRLineRenderer::create(device, 0.1f, 4.5f);
+	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
+	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE, false);
+	//*/
 
 	SPK::Ref<SPK::Emitter> emitter1 = SPK::RandomEmitter::create(SPK::Point::create());
 	emitter1->setForce(0.4f,0.6f);

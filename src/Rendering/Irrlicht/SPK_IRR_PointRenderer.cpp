@@ -92,13 +92,12 @@ namespace IRR
 		irr::video::IVideoDriver* driver = device->getVideoDriver();
         driver->setMaterial(material);
         driver->drawVertexPrimitiveList(
-			buffer.getMeshBuffer().getVertexBuffer().pointer(),
+			false,
+			buffer.getMeshBuffer().getVertexBuffer(),
+			false,
+			buffer.getMeshBuffer().getIndexBuffer(),
 			group.getNbParticles(),
-			buffer.getMeshBuffer().getIndexBuffer().pointer(),
-			group.getNbParticles(),
-			irr::video::EVT_STANDARD,
-			type == POINT_TYPE_SPRITE ? irr::scene::EPT_POINT_SPRITES : irr::scene::EPT_POINTS,
-			buffer.getMeshBuffer().getIndexBuffer().getType());
+			type == POINT_TYPE_SPRITE ? irr::scene::EPT_POINT_SPRITES : irr::scene::EPT_POINTS);
 	}
 
 	void IRRPointRenderer::computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const

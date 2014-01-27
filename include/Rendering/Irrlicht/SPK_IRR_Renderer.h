@@ -118,10 +118,12 @@ namespace IRR
 		(
 		);
 
-	protected :
+	public:
+		// Material is public for the moment, but this is likedly to change in the future
+		mutable irr::video::SMaterial material;
 
+	protected:
 		irr::IrrlichtDevice* device;	// the device
-		mutable irr::video::SMaterial material;	// the material
 
 		IRRRenderer(irr::IrrlichtDevice* device = NULL,bool NEEDS_DATASET = false);
 
@@ -130,7 +132,7 @@ namespace IRR
 		irr::video::E_BLEND_FACTOR blendSrcFunc;
 		irr::video::E_BLEND_FACTOR blendDestFunc;
 		unsigned int alphaSource;
-
+		irr::video::IVertexDescriptor* Psizedesc;
 		void updateMaterialBlendingMode();
 	};
 	

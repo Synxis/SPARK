@@ -50,14 +50,14 @@ namespace IRR
 		void setNextTexCoords(float u,float v);
 		void skipNextTexCoords(size_t nb);
 
-		irr::scene::IDynamicMeshBuffer& getMeshBuffer();
-		const irr::scene::IDynamicMeshBuffer& getMeshBuffer() const;
+		irr::scene::CMeshBuffer<irr::video::S3DVertex>& getMeshBuffer();
+		const irr::scene::CMeshBuffer<irr::video::S3DVertex>& getMeshBuffer() const;
 
 		void setUsed(size_t nb);
 
 	private :
 
-		irr::scene::CDynamicMeshBuffer* meshBuffer;
+		irr::scene::CMeshBuffer<irr::video::S3DVertex>* meshBuffer;
 		irr::IrrlichtDevice* device;
 
 		size_t nbParticles;
@@ -85,12 +85,12 @@ namespace IRR
 
 	inline void IRRBuffer::setNextIndex(int index)
 	{
-		meshBuffer->getIndexBuffer().setValue(currentIndexIndex++,index);
+		meshBuffer->getIndexBuffer()->setIndex(currentIndexIndex++,index);
 	}
 
 	inline void IRRBuffer::setNextVertex(const Vector3D& vertex)
 	{
-		meshBuffer->getVertexBuffer()[currentVertexIndex++].Pos.set(
+		((irr::video::S3DVertex*)meshBuffer->getVertexBuffer()->getVertices())[currentVertexIndex++].Pos.set(
 			vertex.x,
 			vertex.y,
 			vertex.z);
@@ -98,7 +98,7 @@ namespace IRR
 
 	inline void IRRBuffer::setNextColor(const Color& color)
 	{
-		meshBuffer->getVertexBuffer()[currentColorIndex++].Color.set(color.getARGB());
+		((irr::video::S3DVertex*)meshBuffer->getVertexBuffer()->getVertices())[currentColorIndex++].Color.set(color.getARGB());
 	}
 
 	inline void IRRBuffer::skipNextColors(size_t nb)
@@ -108,7 +108,7 @@ namespace IRR
 
 	inline void IRRBuffer::setNextTexCoords(float u,float v)
 	{
-		meshBuffer->getVertexBuffer()[currentTexCoordIndex++].TCoords.set(u,v);
+		((irr::video::S3DVertex*)meshBuffer->getVertexBuffer()->getVertices())[currentTexCoordIndex++].TCoords.set(u,v);
 	}
 
 	inline void IRRBuffer::skipNextTexCoords(size_t nb)
@@ -116,12 +116,12 @@ namespace IRR
 		currentTexCoordIndex += nb;
 	}
 
-	inline irr::scene::IDynamicMeshBuffer& IRRBuffer::getMeshBuffer()
+	inline irr::scene::CMeshBuffer<irr::video::S3DVertex>& IRRBuffer::getMeshBuffer()
 	{
 		return *meshBuffer;
 	}
 
-	inline const irr::scene::IDynamicMeshBuffer& IRRBuffer::getMeshBuffer() const
+	inline const irr::scene::CMeshBuffer<irr::video::S3DVertex>& IRRBuffer::getMeshBuffer() const
 	{
 		return *meshBuffer;
 	}

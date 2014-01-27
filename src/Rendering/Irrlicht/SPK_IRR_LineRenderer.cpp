@@ -76,13 +76,12 @@ namespace IRR
 		irr::video::IVideoDriver* driver = device->getVideoDriver();
 		driver->setMaterial(material);
 		driver->drawVertexPrimitiveList(
-			buffer.getMeshBuffer().getVertexBuffer().pointer(),
-			group.getNbParticles() * NB_VERTICES_PER_PARTICLE,
-			buffer.getMeshBuffer().getIndexBuffer().pointer(),
+			false,
+			buffer.getMeshBuffer().getVertexBuffer(),
+			false,
+			buffer.getMeshBuffer().getIndexBuffer(),
 			group.getNbParticles(),
-			irr::video::EVT_STANDARD,
-			irr::scene::EPT_LINES,
-			buffer.getMeshBuffer().getIndexBuffer().getType());
+			irr::scene::EPT_LINES);
 	}
 
 	void IRRLineRenderer::computeAABB(Vector3D& AABBMin,Vector3D& AABBMax,const Group& group,const DataSet* dataSet) const

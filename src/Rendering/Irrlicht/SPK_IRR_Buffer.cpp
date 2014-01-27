@@ -44,8 +44,8 @@ namespace IRR
 		SPK_ASSERT(nbVerticesPerParticle > 0,"IRRBuffer::IRRBuffer(irr::IrrlichtDevice*,irr::scene::E_PRIMITIVE_TYPE,size_t) - The number of vertices per particle cannot be 0");
 		SPK_ASSERT(nbIndicesPerParticle > 0,"IRRBuffer::IRRBuffer(irr::IrrlichtDevice*,irr::scene::E_PRIMITIVE_TYPE,size_t) - The number of indices per particle cannot be 0");
 
-		meshBuffer = new irr::scene::CDynamicMeshBuffer(irr::video::EVT_STANDARD,getIndiceType());
-			
+		meshBuffer = new irr::scene::CMeshBuffer<irr::video::S3DVertex>(device->getVideoDriver()->getVertexDescriptor("standard"),getIndiceType());
+
 		// Allocates space for buffers
 		setUsed(nbParticles);
 
@@ -67,7 +67,10 @@ namespace IRR
 			nb = nbParticles;
 		}
 
-		meshBuffer->getVertexBuffer().set_used(nb * nbVerticesPerParticle);
-		meshBuffer->getIndexBuffer().set_used(nb * nbIndicesPerParticle);
+		/// TODO: removing conditions results in nothing rendered, investigate this.
+		//if(meshBuffer->getVertexBuffer()->getVertexCount() <nb * nbVerticesPerParticle)
+		meshBuffer->getVertexBuffer()->set_used(nb * nbVerticesPerParticle);
+		//if(meshBuffer->getIndexBuffer()->getIndexCount()!=nb * nbIndicesPerParticle)
+		meshBuffer->getIndexBuffer()->set_used(nb * nbIndicesPerParticle);
 	}
 }}

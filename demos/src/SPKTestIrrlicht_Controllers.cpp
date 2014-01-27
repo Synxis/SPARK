@@ -128,8 +128,8 @@ int main(int argc, char *argv[])
 	//!IRRLICHT
 	video::E_DRIVER_TYPE chosenDriver = video::EDT_OPENGL;
 #ifdef _WIN32
-	if(MessageBoxA(0,"Do you want to use DirectX 9 ? (else OpenGL)","SPARK Irrlicht test",MB_YESNO | MB_ICONQUESTION) == IDYES)
-		chosenDriver = video::EDT_DIRECT3D9;
+	if(MessageBoxA(0,"Do you want to use DirectX 11 ? (else OpenGL)","SPARK Irrlicht test",MB_YESNO | MB_ICONQUESTION) == IDYES)
+		chosenDriver = video::EDT_DIRECT3D11;
 #endif
 
 	//!IRRLICHT
