@@ -41,7 +41,7 @@ namespace SPK
 		Tv getMaxDeathValue() const;
 
 	public :
-		spark_description(RandomInterpolator, Interpolator)
+		spark_description(RandomInterpolator, Interpolator<T>)
 		(
 			spk_attribute(Quadruplet<T>, values, setValues, getMinBirthValue, getMaxBirthValue, getMinDeathValue, getMaxDeathValue);
 		);

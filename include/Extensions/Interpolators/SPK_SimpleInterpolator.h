@@ -38,7 +38,7 @@ namespace SPK
 		Tv getDeathValue() const;
 
 	public :
-		spark_description(SimpleInterpolator, Interpolator)
+		spark_description(SimpleInterpolator, Interpolator<T>)
 		(
 			spk_attribute(Pair<T>, values, setValues, getBirthValue, getDeathValue);
 		);

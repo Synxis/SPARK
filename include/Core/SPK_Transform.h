@@ -24,6 +24,8 @@
 
 namespace SPK
 {
+    class Transformable;
+
 	/// TODO: Improve this in order to be able to use the w of vectors
 	/**
 	* @class Transform

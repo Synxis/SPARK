@@ -61,65 +61,69 @@
 		return static_cast<EnumType>(0);									\
 	}
 
-namespace SPK 
+namespace SPK
 {
 	/**
 	* @brief Gets the string representation of an enumerated value
 	* @param value : the value of the enumerated
-	* @return the name of an enumerated 
+	* @return the name of an enumerated
 	*/
 	template<typename T>
-	std::string getEnumName(T value);	
+	std::string getEnumName(T value);
 
-	/** 
+	/**
 	* @brief Gets the value of an enumerated from its string representation
 	* @param str : the name of the enumerated
 	* @return the value of an enumerated
 	*/
 	template<typename T>
-	T getEnumValue(const std::string& str);	
+	T getEnumValue(const std::string& str);
 
-	/** 
+	/**
 	* @brief Returns an integer representation of an ORed enum string
 	* The enumeration values must be power of two for the result to be consistent.
 	* @param enums : A string of the form "ENUM1 | ENUM2 | ..."
 	* @return the integer representation of this flag
 	*/
+	/// TODO See whether it is useful. If no, then remove, if yes, fix it before commit
+	/*
 	template<typename T>
-	size_t getORedEnumValue(const std::string& enums) /// TODO Needs testing...
+	size_t getORedEnumValue(const std::string& enums)
 	{
 		size_t pos = 0;
 		size_t flag = 0;
-		while (pos < enums.length)
+		while (pos < enums.size())
 		{
 			size_t startPos = pos;
 			pos = enums.find_first_of(" |",startPos);
-			if (pos == std::npos)
-				pos = enums.length;
-			if (pos > startPos) 
+			if (pos == std::string::npos)
+				pos = enums.size();
+			if (pos > startPos)
 			{
 				T value = getEnumValue(enums.substr(startPos,pos - startPos)); // to call the right function
 				flag |= value;
-			}				
+			}
 			++pos;
 		}
 		return flag;
-	} 
+	}*/
 
 	/**
 	* @brief Returns a string representation of an Ored enum flag
-	* The enumeration values must be power of two for the result to be consistent. 
+	* The enumeration values must be power of two for the result to be consistent.
 	* @param flag : A flag representing an ORed enum
 	* @return the string representation of this flag of the form "ENUM1 | ENUM2 | ..."
 	*/
+	/// TODO See whether it is useful. If no, then remove, if yes, fix it before commit
+	/*
 	template<typename T>
-	std::string getORedEnumString(int flag) /// TODO Needs testing...
+	std::string getORedEnumString(int flag)
 	{
 		std::stringbuf buf;
 		bool hasOneORedEnum = false;
 		for (size_t i = 1; i < 32; ++i)
 			if ((flag & (1 << i)) != 0)
-			{		
+			{
 				std::string name = getEnumName(static_cast<T>(1 << i));
 				if (!name.empty())
 				{
@@ -131,8 +135,9 @@ namespace SPK
 			}
 		if (!hasOneORedEnum)
 			buf << getName(static_cast<T>(0));
-		return buf.str();	
+		return buf.str();
 	}
+	*/
 }
 
 #endif

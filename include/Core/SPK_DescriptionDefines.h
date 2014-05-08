@@ -90,7 +90,7 @@ namespace meta
 		static const bool value = true;														\
 	};																						\
 	static const bool unique ## _t_ = SPK::meta::attr_name_already_taken<					\
-		_spk_check ## _t_<parentDescription>::value>::value
+		_spk_check ## _t_<typename description_root::parentDescription>::value>::value
 
 #define SPK_REGISTER_DESC_TYPE( _tag_ , _type_ )											\
 		template<bool b>																	\
@@ -205,10 +205,9 @@ namespace meta
 		}																					\
 		SPK_STRING(_spk_inner_name, _classname_);											\
 		typedef _classname_ _spk_obj;														\
-		class description_base : public														\
-			SPK::DescriptionBase<description_base,											\
-								 _spk_obj,													\
-								 _parentobject_>											\
+		typedef SPK::DescriptionBase<description_base,										\
+			_spk_obj, _parentobject_> description_root;										\
+		class description_base : public description_root									\
 		_spk_description_body
 
 /**

@@ -57,8 +57,8 @@ namespace SPK
 		*/
 		void disconnect()
 		{
-			while(nextConnection)
-				nextConnection->remove();
+			while(this->nextConnection)
+				this->nextConnection->remove();
 		}
 
 		/**
@@ -67,7 +67,7 @@ namespace SPK
 		*/
 		void propagate()
 		{
-			Connection<T>* c = (Connection<T>*)nextConnection;
+			Connection<T>* c = (Connection<T>*)(this->nextConnection);
 			while(c)
 			{
 				c->set(value);
@@ -93,7 +93,7 @@ namespace SPK
 		{
 			value = v;
 		}
-		
+
 	private:
 		T value;
 	};

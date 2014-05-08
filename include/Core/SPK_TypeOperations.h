@@ -192,22 +192,22 @@ namespace SPK
 	{
 		typedef typename relations<n>::type item;
 		typedef typename item::cppType baseType;
-		
+
 		template<typename T>
 		static void select(ValueType type, T templatedFunctor)
 		{
 			if(type.base == item::spkType)
 			{
 				if(type.specifier == TS_SINGLE)
-					templatedFunctor.call<baseType>();
+					templatedFunctor.template call<baseType>();
 				else if(type.specifier == TS_PAIR)
-					templatedFunctor.call<Pair<baseType> >();
+					templatedFunctor.template call<Pair<baseType> >();
 				else if(type.specifier == TS_TRIPLET)
-					templatedFunctor.call<Triplet<baseType> >();
+					templatedFunctor.template call<Triplet<baseType> >();
 				else if(type.specifier == TS_QUADRUPLET)
-					templatedFunctor.call<Quadruplet<baseType> >();
+					templatedFunctor.template call<Quadruplet<baseType> >();
 				else if(type.specifier == TS_ARRAY)
-					templatedFunctor.call<std::vector<baseType> >();
+					templatedFunctor.template call<std::vector<baseType> >();
 			}
 			else
 			{
@@ -233,7 +233,7 @@ namespace SPK
 	{
 		RuntimeTypeSwitch<meta::typeRelationsArray>::select<T>(type, templatedFunctor);
 	}
-	
+
 	/**
 	* @brief Returns the name of a BaseType
 	*/

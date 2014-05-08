@@ -53,6 +53,9 @@ namespace SPK
 	template<typename T, class obj>
 	struct Getters : public GetterBase<T,obj>
 	{
+	    typedef typename GetterBase<T,obj>::type type;
+	    typedef typename GetterBase<T,obj>::returnType returnType;
+
 		/**
 		* @brief Stores getters address for later call
 		*/
@@ -76,7 +79,8 @@ namespace SPK
 		struct extra
 		{
 			/** @brief Convenient typedef */
-			typedef typename extra_<P>::type gtype;
+			typedef GetterBase<T,obj> Base;
+			typedef typename Base::template extra_<P>::type gtype;
 
 			/**
 			* @brief Stores getters address for later call
@@ -100,6 +104,9 @@ namespace SPK
 	template<typename T, class obj>
 	struct Getters<Pair<T>,obj> : public GetterBase<T,obj>
 	{
+	    typedef typename GetterBase<T,obj>::type type;
+	    typedef typename GetterBase<T,obj>::returnType returnType;
+
 		template<type g1, type g2>
 		struct store
 		{
@@ -112,7 +119,7 @@ namespace SPK
 		template<typename P>
 		struct extra
 		{
-			typedef typename extra_<P>::type gtype;
+			typedef typename GetterBase<T,obj>::template extra_<P>::type gtype;
 
 			template<gtype g1, gtype g2>
 			struct store
@@ -129,6 +136,9 @@ namespace SPK
 	template<typename T, class obj>
 	struct Getters<Triplet<T>,obj> : public GetterBase<T,obj>
 	{
+	    typedef typename GetterBase<T,obj>::type type;
+	    typedef typename GetterBase<T,obj>::returnType returnType;
+
 		template<type g1, type g2, type g3>
 		struct store
 		{
@@ -141,7 +151,7 @@ namespace SPK
 		template<typename P>
 		struct extra
 		{
-			typedef typename extra_<P>::type gtype;
+			typedef typename GetterBase<T,obj>::template extra_<P>::type gtype;
 
 			template<gtype g1, gtype g2, gtype g3>
 			struct store
@@ -158,6 +168,9 @@ namespace SPK
 	template<typename T, class obj>
 	struct Getters<Quadruplet<T>,obj> : public GetterBase<T,obj>
 	{
+	    typedef typename GetterBase<T,obj>::type type;
+	    typedef typename GetterBase<T,obj>::returnType returnType;
+
 		template<type g1, type g2, type g3, type g4>
 		struct store
 		{
@@ -170,7 +183,7 @@ namespace SPK
 		template<typename P>
 		struct extra
 		{
-			typedef typename extra_<P>::type gtype;
+			typedef typename GetterBase<T,obj>::template extra_<P>::type gtype;
 
 			template<gtype g1, gtype g2, gtype g3, gtype g4>
 			struct store

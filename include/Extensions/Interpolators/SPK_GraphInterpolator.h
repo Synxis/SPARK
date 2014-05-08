@@ -234,7 +234,7 @@ namespace SPK
 		argType getY1(unsigned int id) const;
 
 	public :
-		spark_description(GraphInterpolator, Interpolator)
+		spark_description(GraphInterpolator, Interpolator<T>)
 		(
 			spk_attribute(InterpolationType, interpolationType, setType, getType);
 			spk_attribute(Param, parameter, setParam, getInterpolatorParam);
@@ -282,7 +282,7 @@ namespace SPK
 
 		virtual void interpolate(T* data, Group& group, DataSet* dataSet) const;
 		virtual void init(T& data, Particle& particle, DataSet* dataSet) const;
-		
+
 		void sortGraph(unsigned int start);
 		void swapEntries(unsigned int id1, unsigned int id2);
 		void swapSortedEntries(unsigned int id1, unsigned int id2);

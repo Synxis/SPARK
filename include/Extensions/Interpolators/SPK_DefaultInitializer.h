@@ -37,7 +37,7 @@ namespace SPK
 		Tv getDefaultValue() const;
 
 	public :
-		spark_description(DefaultInitializer, Interpolator)
+		spark_description(DefaultInitializer, Interpolator<T>)
 		(
 			spk_attribute(T, value, setDefaultValue, getDefaultValue);
 		);

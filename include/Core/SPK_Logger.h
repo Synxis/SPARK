@@ -74,14 +74,14 @@
 #else
 
 #ifdef _DEBUG
-#define SPK_LOG_DEBUG(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_DEBUG) << entry << "\n"; SPK::Logger::get().flush();}
+#define SPK_LOG_DEBUG(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_DEBUG, false) << entry << "\n"; SPK::Logger::get().flush();}
 #else
 #define SPK_LOG_DEBUG(entry) {}
 #endif
-#define SPK_LOG_INFO(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_INFO) << entry << "\n"; SPK::Logger::get().flush();}
-#define SPK_LOG_WARNING(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_WARNING) << entry << "\n"; SPK::Logger::get().flush();}
-#define SPK_LOG_ERROR(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_ERROR) << entry << "\n"; SPK::Logger::get().flush();}
-#define SPK_LOG_FATAL(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_FATAL) << entry << "\n"; SPK::Logger::get().flush();}
+#define SPK_LOG_INFO(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_INFO, false) << entry << "\n"; SPK::Logger::get().flush();}
+#define SPK_LOG_WARNING(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_WARNING, false) << entry << "\n"; SPK::Logger::get().flush();}
+#define SPK_LOG_ERROR(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_ERROR, false) << entry << "\n"; SPK::Logger::get().flush();}
+#define SPK_LOG_FATAL(entry) {SPK::Logger::get().getStream(SPK::LOG_PRIORITY_FATAL, false) << entry << "\n"; SPK::Logger::get().flush();}
 
 #define SPK_ASSERT(condition,text) \
 { \
@@ -220,7 +220,7 @@ namespace SPK
 		* @param skipPrefix : false to add a prefix to the stream, true not to
 		* @return : a stream object used to log on entries
 		*/
-		Stream getStream(LogPriority priority,bool skipPrefix = false);
+		Stream getStream(LogPriority priority, bool skipPrefix = false);
 
 		/**
 		* @brief Gets the prefix flag of the logger
@@ -252,7 +252,7 @@ namespace SPK
 
 		class Stream
 		{
-		friend Stream Logger::getStream(LogPriority,bool);
+		friend Stream Logger::getStream(LogPriority, bool);
 
 		public :
 
@@ -326,7 +326,7 @@ namespace SPK
 	
 	inline void Logger::addEntry(LogPriority priority,const std::string& entry)
 	{
-		getStream(priority) << entry.c_str() << "\n";
+		getStream(priority, false) << entry.c_str() << "\n";
 		flush();
 	}
 

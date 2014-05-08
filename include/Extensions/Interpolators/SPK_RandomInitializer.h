@@ -38,7 +38,7 @@ namespace SPK
 		Tv getMaxValue() const;
 
 	public :
-		spark_description(RandomInitializer, Interpolator)
+		spark_description(RandomInitializer, Interpolator<T>)
 		(
 			spk_attribute(Pair<T>, values, setValues, getMinValue, getMaxValue);
 		);

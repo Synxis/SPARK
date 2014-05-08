@@ -201,7 +201,7 @@ namespace SPK
 		* (A -> B -> C), then A inherits A, B and C, B inherits B and C, and C inherits C.
 		*/
 		static bool doesInherit(const std::string& className);
-		
+
 	protected:
 		static void deserializeStatic(void* o, IO::Deserializer& d);
 		static void serializeStatic(void* o, IO::Serializer& s);
@@ -209,7 +209,7 @@ namespace SPK
 		static ConnectionStatus connect(ConnectionParameters& cp, Obj* object);
 		static ConnectionStatus processConnection(ConnectionParameters& cp);
 		static void processDisconnection(const ConnectionParameters& cp);
-		
+
 		virtual ConnectionStatus connect(ConnectionParameters& parameters, const Ref<SPKObject>& sender);
 		virtual ConnectionStatus acceptConnection(ConnectionParameters& cp);
 		virtual void disconnect(const ConnectionParameters& cp);
@@ -257,7 +257,7 @@ namespace SPK
 		if(i < parentDescription::getControlNb())
 			return parentDescription::getControlName(i);
 		else
-			return query<>::ctrl::select<item_name>(i - parentDescription::getControlNb());
+			return query<>::ctrl::template select<item_name>(i - parentDescription::getControlNb());
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -266,7 +266,7 @@ namespace SPK
 		if(i < parentDescription::getControlNb())
 			return parentDescription::getControlType(i);
 		else
-			return query<>::ctrl::select<item_type>(i - parentDescription::getControlNb());
+			return query<>::ctrl::template select<item_type>(i - parentDescription::getControlNb());
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -281,7 +281,7 @@ namespace SPK
 		if(i < parentDescription::getAttributeNb())
 			return parentDescription::getAttributeName(i);
 		else
-			return query<>::attr::select<item_name>(i - parentDescription::getAttributeNb());
+			return query<>::attr::template select<item_name>(i - parentDescription::getAttributeNb());
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -290,16 +290,16 @@ namespace SPK
 		if(i < parentDescription::getAttributeNb())
 			return parentDescription::getAttributeType(i);
 		else
-			return query<>::attr::select<item_type>(i - parentDescription::getAttributeNb());
+			return query<>::attr::template select<item_type>(i - parentDescription::getAttributeNb());
 	}
-	
+
 	template<typename T, typename Obj, typename Parent>
 	inline bool DescriptionBase<T,Obj,Parent>::isAttributeStructured(unsigned int i)
 	{
 		if(i < parentDescription::getAttributeNb())
 			return parentDescription::isAttributeStructured(i);
 		else
-			return query<>::attr::select<is_structured>(i - parentDescription::getAttributeNb());
+			return query<>::attr::template select<is_structured>(i - parentDescription::getAttributeNb());
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -308,7 +308,7 @@ namespace SPK
 		if(i < parentDescription::getAttributeNb())
 			return parentDescription::getFieldNb(i);
 		else
-			return query<>::attr::select<field_nb>(i - parentDescription::getAttributeNb());
+			return query<>::attr::template select<field_nb>(i - parentDescription::getAttributeNb());
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -317,7 +317,7 @@ namespace SPK
 		if(a < parentDescription::getAttributeNb())
 			return parentDescription::getFieldName(a, f);
 		else
-			return query<>::attr::select<field_name>(a - parentDescription::getAttributeNb(), f);
+			return query<>::attr::template select<field_name>(a - parentDescription::getAttributeNb(), f);
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -326,7 +326,7 @@ namespace SPK
 		if(a < parentDescription::getAttributeNb())
 			return parentDescription::getFieldType(a, f);
 		else
-			return query<>::attr::select<field_type>(a - parentDescription::getAttributeNb(), f);
+			return query<>::attr::template select<field_type>(a - parentDescription::getAttributeNb(), f);
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -369,14 +369,14 @@ namespace SPK
 	inline void DescriptionBase<T,Obj,Parent>::deserializeStatic(void* o, IO::Deserializer& d)
 	{
 		parentDescription::deserialize((Parent*)((Obj*)o),d);
-		query<>::attr::process<deserialize_attr, IO::Deserializer&>(d, (Obj*)o);
+		query<>::attr::template process<deserialize_attr, IO::Deserializer&>(d, (Obj*)o);
 	}
 
 	template<typename T, typename Obj, typename Parent>
 	inline void DescriptionBase<T,Obj,Parent>::serializeStatic(void* o, IO::Serializer& s)
 	{
 		parentDescription::serialize((Parent*)((Obj*)o),s);
-		query<>::attr::process<serialize_attr, IO::Serializer&>(s, (Obj*)o);
+		query<>::attr::template process<serialize_attr, IO::Serializer&>(s, (Obj*)o);
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -390,12 +390,12 @@ namespace SPK
 	{
 		serializeStatic((void*)o, s);
 	}
-	
+
 	template<typename T, typename Obj, typename Parent>
 	inline void DescriptionBase<T,Obj,Parent>::propagate(Obj* o)
 	{
 		parentDescription::propagate((Parent*)o);
-		query<>::ctrl::process<propagate_ctrl>(o);
+		query<>::ctrl::template process<propagate_ctrl>(o);
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -403,9 +403,9 @@ namespace SPK
 	inline bool DescriptionBase<T,Obj,Parent>::setControl(Obj* object, unsigned int i, V value)
 	{
 		if(i < parentDescription::getControlNb())
-			return parentDescription::setControl<V>(object, i, value);
+			return parentDescription::template setControl<V>(object, i, value);
 		else
-			return query<>::ctrl::select<set_ctrl_value, V>(i - parentDescription::getControlNb(), value, object);
+			return query<>::ctrl::template select<set_ctrl_value, V>(i - parentDescription::getControlNb(), value, object);
 	}
 
 	template<typename T, typename Obj, typename Parent>
@@ -421,7 +421,7 @@ namespace SPK
 	inline ConnectionStatus DescriptionBase<T,Obj,Parent>::connect(ConnectionParameters& cp, Obj* object)
 	{
 		ConnectionStatus status = CONNECTION_STATUS_INVALID_CONTROL;
-		query<>::ctrl::process<connect_ctrl, ConnectionParameters&, ConnectionStatus&>(cp, status, object);
+		query<>::ctrl::template process<connect_ctrl, ConnectionParameters&, ConnectionStatus&>(cp, status, object);
 
 		if(status == CONNECTION_STATUS_INVALID_CONTROL)
 			return parentDescription::connect(cp, object);
@@ -433,7 +433,7 @@ namespace SPK
 	inline ConnectionStatus DescriptionBase<T,Obj,Parent>::processConnection(ConnectionParameters& cp)
 	{
 		ConnectionStatus status = CONNECTION_STATUS_INVALID_ATTRIBUTE;
-		query<>::attr::process<connect_attr, const ConnectionParameters&, ConnectionStatus&>(cp, status);
+		query<>::attr::template process<connect_attr, const ConnectionParameters&, ConnectionStatus&>(cp, status);
 
 		if(status == CONNECTION_STATUS_INVALID_ATTRIBUTE)
 			return parentDescription::processConnection(cp);
@@ -456,7 +456,7 @@ namespace SPK
 	template<typename T, typename Obj, typename Parent>
 	inline void DescriptionBase<T,Obj,Parent>::processDisconnection(const ConnectionParameters& cp)
 	{
-		query<>::attr::process<disconnect_attr, const ConnectionParameters&>(cp);
+		query<>::attr::template process<disconnect_attr, const ConnectionParameters&>(cp);
 		parentDescription::processDisconnection(cp);
 	}
 
@@ -472,7 +472,7 @@ namespace SPK
 		if(i < parentDescription::getControlNb())
 			return parentDescription::getControlConnection(object, i);
 		else
-			return query<>::ctrl::select<item_connection>(i - parentDescription::getControlNb(), (Obj*)object);
+			return query<>::ctrl::template select<item_connection>(i - parentDescription::getControlNb(), (Obj*)object);
 	}
 }
 
