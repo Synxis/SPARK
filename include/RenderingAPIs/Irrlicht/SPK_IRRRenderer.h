@@ -219,7 +219,7 @@ namespace IRR
 
 	inline void IRRRenderer::updateMaterialBlendingMode()
 	{
-		material.MaterialTypeParam = irr::video::pack_texureBlendFunc(
+		material.MaterialTypeParam = irr::video::pack_textureBlendFunc(
 			blendSrcFunc,
 			blendDestFunc,
 			irr::video::EMFN_MODULATE_1X,
