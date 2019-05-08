@@ -273,7 +273,7 @@ namespace IO
 
 		context->buffer.setPosition(context->nbConnectionPosition);
 		context->buffer << context->nbConnections;
-		context->buffer << (context->buffer.getSize() - context->buffer.getPosition() - 4);
+		context->buffer << unsigned int(context->buffer.getSize() - context->buffer.getPosition() - 4);
 		context->os.write(context->buffer.getData(), context->buffer.getSize());
 
 		SPK_DELETE(context);
