@@ -56,6 +56,12 @@ set_target_properties(Explosion PROPERTIES
 )
 
 
+INSTALL(
+    TARGETS Explosion
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
 
 
 

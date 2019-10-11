@@ -22,7 +22,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj" )
 
 IF(NOT SPARK_ENABLE_DX9)
     add_definitions(-DSPK_NO_DX9_INC)
-ENDIF(SPARK_ENABLE_DX9)
+ENDIF(NOT SPARK_ENABLE_DX9)
 
 # Projects
 # ###############################################

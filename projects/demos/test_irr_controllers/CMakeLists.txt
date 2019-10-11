@@ -65,7 +65,12 @@ set_target_properties(Test_Irrlicht_Ctrl PROPERTIES
 
 
 
-
+INSTALL(
+    TARGETS Test_Irrlicht_Ctrl
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
 
 
 

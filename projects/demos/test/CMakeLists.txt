@@ -62,7 +62,12 @@ set_target_properties(Test_Simple PROPERTIES
 )
 
 
-
+INSTALL(
+    TARGETS Test_Simple
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
 
 
 

@@ -55,6 +55,12 @@ set_target_properties(Flakes PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/demos/bin
 )
 
+INSTALL(
+    TARGETS Flakes
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
 
 
 

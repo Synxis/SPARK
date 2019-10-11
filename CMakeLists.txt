@@ -12,4 +12,7 @@ find_package(SDL)
 
 
 add_subdirectory(projects/engine)
+
+if(SDL_FOUND)
 add_subdirectory(projects/demos)
+endif(SDL_FOUND)

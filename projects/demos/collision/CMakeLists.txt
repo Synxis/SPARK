@@ -56,7 +56,12 @@ set_target_properties(Collision PROPERTIES
 )
 
 
-
+INSTALL(
+    TARGETS Collision
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
 
 
 
