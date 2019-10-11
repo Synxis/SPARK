@@ -481,7 +481,7 @@ namespace SPK
 
 		if (nbManualBorn == 0)
 		{
-			activeEmitters[emitterIndex].obj->emit(particle);
+			activeEmitters[emitterIndex].obj->emitIt(particle);
 			if (--activeEmitters[emitterIndex].nbBorn == 0)
 				++emitterIndex;
 		}
