@@ -5,6 +5,8 @@
 #                                               #
 # ############################################# #
 
+PROJECT(SPARK)
+
 SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules/")
 
 find_package(OpenGL)

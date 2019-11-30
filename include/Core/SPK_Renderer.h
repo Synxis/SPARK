@@ -38,7 +38,8 @@ namespace SPK
 	enum RenderingOption
 	{
 		RENDERING_OPTION_ALPHA_TEST = 1 << 0,
-		RENDERING_OPTION_DEPTH_WRITE = 1 << 1,
+		RENDERING_OPTION_DEPTH_TEST = 1 << 1,
+		RENDERING_OPTION_DEPTH_WRITE = 1 << 2,
 	};
 
 	/** Constants to specify whether to compute stuff on GPU if possible */
@@ -78,8 +79,8 @@ namespace SPK
 		*/
 		static void useVBOHint(bool hint);
 
-		virtual void enableRenderingOption(RenderingOption option,bool enable);
-		virtual void setAlphaTestThreshold(float alphaThreshold);
+		void enableRenderingOption(RenderingOption option,bool enable);
+		void setAlphaTestThreshold(float alphaThreshold);
 		void setActive(bool active);
 		virtual void setBlendMode(BlendMode blendMode) = 0;
 		
@@ -99,8 +100,8 @@ namespace SPK
 		*/
 		static bool getVBOHint();
 
-		virtual bool isRenderingOptionEnabled(RenderingOption option) const;
-		virtual float getAlphaTestThreshold() const;
+		bool isRenderingOptionEnabled(RenderingOption option) const;
+		float getAlphaTestThreshold() const;
 		bool isActive() const;
 
 	public : /// TODO: make this private
@@ -111,7 +112,7 @@ namespace SPK
 		spark_description(Renderer, SPKObject)
 		(
 			spk_attribute(bool, active, setActive, isActive);
-			//spk_attribute(float, alphaThreshold, setAlphaTestThreshold, getAlphaTestThreshold);
+			spk_attribute(float, alphaThreshold, setAlphaTestThreshold, getAlphaTestThreshold);
 			spk_attribute(unsigned int, renderingOptions, setRenderingOptions, getRenderingOptions);
 		);
 
@@ -146,7 +147,7 @@ namespace SPK
 		SPKObject(),
 		DataHandler(NEEDS_DATASET),
 		active(true),
-		renderingOptionsMask(RENDERING_OPTION_DEPTH_WRITE),
+		renderingOptionsMask(RENDERING_OPTION_DEPTH_TEST|RENDERING_OPTION_DEPTH_WRITE),
 		alphaThreshold(1.0f)
 	{}
 

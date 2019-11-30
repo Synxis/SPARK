@@ -214,6 +214,7 @@ ${CMAKE_SOURCE_DIR}/include/Extensions/Renderers/SPK_QuadRenderBehavior.h
 )
 
 set(NIUBI_SETUP_Extensions_Zones_HEADERS
+${CMAKE_SOURCE_DIR}/include/Extensions/Zones/SPK_Line.h
 ${CMAKE_SOURCE_DIR}/include/Extensions/Zones/SPK_Box.h
 ${CMAKE_SOURCE_DIR}/include/Extensions/Zones/SPK_Cylinder.h
 ${CMAKE_SOURCE_DIR}/include/Extensions/Zones/SPK_Plane.h

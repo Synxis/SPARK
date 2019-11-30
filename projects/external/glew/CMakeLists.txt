@@ -21,9 +21,10 @@ set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
 get_filename_component(SPARK_DIR ${SPARK_DIR}/void REALPATH)
 get_filename_component(SPARK_DIR ${SPARK_DIR} PATH)
 file(GLOB_RECURSE SRC_FILES
-	${SPARK_DIR}/external/glew/src/*.c
-	${SPARK_DIR}/external/glew/src/*.cpp
-	${SPARK_DIR}/external/glew/src/*.cxx
+#	${SPARK_DIR}/external/glew/src/*.c
+#	${SPARK_DIR}/external/glew/src/*.cpp
+#	${SPARK_DIR}/external/glew/src/*.cxx
+	${SPARK_DIR}/external/glew/src/glew.c
 	${SPARK_DIR}/external/glew/src/*.h
 	${SPARK_DIR}/external/glew/src/*.hpp
 )

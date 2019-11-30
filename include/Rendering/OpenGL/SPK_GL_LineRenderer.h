@@ -57,9 +57,18 @@ namespace GL
 		*/
 		static  Ref<GLLineRenderer> create(float length = 1.0f,float width = 1.0f);
 
+
+        void setLength(float length) { LineRenderBehavior::setLength(length); }
+        void setWidth(float width) { LineRenderBehavior::setWidth(width); }
+        float getLength() const { return LineRenderBehavior::getLength(); }
+        float getWidth() const { return LineRenderBehavior::getWidth(); }
+
+
 	public :
 		spark_description(GLLineRenderer, GLRenderer)
 		(
+            spk_attribute(float, length, setLength, getLength);
+            spk_attribute(float, width, setWidth, getWidth);
 		);
 
 	private :
