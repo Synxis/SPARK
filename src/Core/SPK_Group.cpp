@@ -270,7 +270,7 @@ namespace SPK
 		}
 	}
 
-	void Group::reallocate(size_t capacity)
+	void Group::reallocate(unsigned int capacity)
 	{
 		SPK_ASSERT(capacity != 0,"Group::reallocate(size_t) - Group capacity must not be 0");
 
@@ -481,7 +481,7 @@ namespace SPK
 
 		if (nbManualBorn == 0)
 		{
-			activeEmitters[emitterIndex].obj->emit(particle);
+			activeEmitters[emitterIndex].obj->emitIt(particle);
 			if (--activeEmitters[emitterIndex].nbBorn == 0)
 				++emitterIndex;
 		}

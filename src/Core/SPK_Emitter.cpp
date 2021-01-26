@@ -100,7 +100,7 @@ namespace SPK
 			zone->updateTransform(this);
 	}
 
-	void Emitter::emit(Particle& particle) const
+	void Emitter::emitIt(Particle& particle) const
 	{
 		zone->generatePosition(particle.position(),full,particle.getRadius());
 		generateVelocity(particle,SPK_RANDOM(forceMin,forceMax) / particle.getParam(PARAM_MASS));

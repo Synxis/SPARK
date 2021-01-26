@@ -91,6 +91,7 @@ namespace IO
 		void put(unsigned char c)	{ put((char)c); }
 		void put(signed char c)		{ put((char)c); }
 		void put(float f)			{ put32(*reinterpret_cast<int32*>(&f)); }
+		void put(size_t i)			{ put32(*reinterpret_cast<int32*>(&i)); }
 		void put(uint32 i)			{ put32(*reinterpret_cast<int32*>(&i)); }
 		void put(int32 i)			{ put32(i); }
 		void put(std::string s)		{ put(s.data(),s.size()); put('\0'); }

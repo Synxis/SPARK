@@ -46,15 +46,16 @@ namespace GL
 		textureIndex(renderer.textureIndex)
 	{}
 
-	bool GLQuadRenderer::setTexturingMode(TextureMode mode)
+#if 1
+	void GLQuadRenderer::setTexturingMode(TextureMode mode)
 	{
 		if ((mode == TEXTURE_MODE_3D && !SPK_GL_CHECK_EXTENSION(SPK_GL_TEXTURE_3D_EXT)))
-			return false;
+			return /*false*/;
 
 		texturingMode = mode;
-		return true;
+		//return true;
 	}
-
+#endif
 	RenderBuffer* GLQuadRenderer::attachRenderBuffer(const Group& group) const
 	{
 		return SPK_NEW(GLBuffer,group.getCapacity() << 2);
@@ -104,6 +105,7 @@ namespace GL
 #endif
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D,textureIndex);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, getTextureBlending());
 
 			// Selects the correct function
 			if (!group.isEnabled(PARAM_TEXTURE_INDEX))
@@ -137,6 +139,7 @@ namespace GL
 #ifndef SPK_GL_NO_EXT
 			glEnable(GL_TEXTURE_3D_EXT);
 			glBindTexture(GL_TEXTURE_3D_EXT,textureIndex);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, getTextureBlending());
 #endif
 
 			// Selects the correct function

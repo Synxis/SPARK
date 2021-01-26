@@ -38,6 +38,7 @@
 #include "Extensions/Zones/SPK_Plane.h"
 #include "Extensions/Zones/SPK_Ring.h"
 #include "Extensions/Zones/SPK_Box.h"
+#include "Extensions/Zones/SPK_Line.h"
 #include "Extensions/Zones/SPK_Cylinder.h"
 
 // Emitters

@@ -64,7 +64,7 @@ namespace SPK
 		* @param mode : the texturing mode of this GLQuadRenderer
 		* @return true if the rendering mode can be set, false if it cannot
 		*/
-		virtual  bool setTexturingMode(TextureMode mode);
+		/*virtual*/  void setTexturingMode(TextureMode mode);
 
 		/**
 		* @brief Sets the cut of the texture
@@ -187,10 +187,10 @@ namespace SPK
 	};
 
 
-	inline bool QuadRenderBehavior::setTexturingMode(TextureMode mode)
+	inline void QuadRenderBehavior::setTexturingMode(TextureMode mode)
 	{
 		texturingMode = mode;
-		return true;
+		//return true;
 	}
 
 	inline void QuadRenderBehavior::setScale(float scaleX,float scaleY)

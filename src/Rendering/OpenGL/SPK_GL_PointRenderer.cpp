@@ -38,24 +38,24 @@ namespace GL
 	bool GLPointRenderer::isPointSpriteSupported()	{ return SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_SPRITE_EXT); }
 	bool GLPointRenderer::isWorldSizeSupported()	{ return SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_PARAMETERS_EXT); }
 
-	bool GLPointRenderer::setType(PointType type)
+    void GLPointRenderer::setType(PointType type)
 	{
 		if ((type == POINT_TYPE_SPRITE)&&(!SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_SPRITE_EXT)))
 		{
 			SPK_LOG_WARNING("GLPointRenderer::setType(PointType) - POINT_TYPE_SPRITE is not available on the hardware");
-			return false;
+			return /*false*/;
 		}
 
 		this->type = type;
-		return true;
+		//return true;
 	}
 
-	bool GLPointRenderer::enableWorldSize(bool worldSizeEnabled)
+    void GLPointRenderer::enableWorldSize(bool worldSizeEnabled)
 	{
 		worldSize = (worldSizeEnabled && SPK_GL_CHECK_EXTENSION(SPK_GL_POINT_PARAMETERS_EXT));
 		if (worldSize != worldSizeEnabled)
 			SPK_LOG_WARNING("GLPointRenderer::enableWorldSize(true) - World size for points is not available on the hardware");
-		return worldSize;
+		//return worldSize;
 	}
 
 	void GLPointRenderer::render(const Group& group,const DataSet* dataSet,RenderBuffer* renderBuffer) const
@@ -78,6 +78,7 @@ namespace GL
 		case POINT_TYPE_SPRITE :
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D,textureIndex);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, getTextureBlending());
 #ifndef SPK_GL_NO_EXT
 			glTexEnvf(GL_POINT_SPRITE_ARB,GL_COORD_REPLACE_ARB,GL_TRUE);
 			glEnable(GL_POINT_SPRITE_ARB);
@@ -97,12 +98,12 @@ namespace GL
 		if (worldSize) 
 		{
 #ifndef SPK_GL_NO_EXT
-			// derived size = size * sqrt(1 / (A + B * distance + C * distance²))
+			// derived size = size * sqrt(1 / (A + B * distance + C * distance?)
 			const float POINT_SIZE_CURRENT = 32.0f;
 			const float POINT_SIZE_MIN = 1.0f;
 			const float POINT_SIZE_MAX = 1024.0f;
 			const float sqrtC = POINT_SIZE_CURRENT / (group.getGraphicalRadius() * worldScale * 2.0f * pixelPerUnit);
-			const float QUADRATIC_WORLD[3] = {0.0f,0.0f,sqrtC * sqrtC}; // A = 0; B = 0; C = (POINT_SIZE_CURRENT / (size * pixelPerUnit))²
+			const float QUADRATIC_WORLD[3] = {0.0f,0.0f,sqrtC * sqrtC}; // A = 0; B = 0; C = (POINT_SIZE_CURRENT / (size * pixelPerUnit))?
 			glPointParameterfvEXT(GL_DISTANCE_ATTENUATION_EXT,QUADRATIC_WORLD);
 			glPointSize(POINT_SIZE_CURRENT);
 			glPointParameterfEXT(GL_POINT_SIZE_MIN_EXT,POINT_SIZE_MIN);

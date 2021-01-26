@@ -135,6 +135,10 @@ namespace SPK
 		*/
 		void setOrientation(LookOrientation lookOrientation,UpOrientation upOrientation,LockedAxis lockedAxis);
 
+        void setLookOrientation(LookOrientation lookOrientation) { this->lookOrientation = lookOrientation; }
+        void setUpOrientation(UpOrientation upOrientation) { this->upOrientation = upOrientation; }
+        void setLockedAxis(LockedAxis lockedAxis) { this->lockedAxis = lockedAxis; }
+
 		/**
 		* @brief Sets the way quads are oriented in the universe
 		*

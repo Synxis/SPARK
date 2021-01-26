@@ -61,7 +61,7 @@ namespace SPK
 		* @param type : the type of points to use in this PointRenderBehavior
 		* @return true if the type can be set, false otherwise
 		*/
-		virtual  bool setType(PointType type);
+		  bool setType(PointType type);
 
 		/**
 		* @brief Gets the type of points in this PointRenderBehavior
@@ -77,7 +77,7 @@ namespace SPK
 		* @brief Sets the size of the points in this PointRenderBehavior
 		* @param size : the size of the points in this PointRenderBehavior
 		*/
-		virtual  void setScreenSize(float screenSize);
+		  void setScreenSize(float screenSize);
 
 		/**
 		* @brief Gets the size of points in this PointRenderBehavior
@@ -85,7 +85,7 @@ namespace SPK
 		*/
 		float getScreenSize() const;
 
-		virtual  void setWorldScale(float worldScale);
+		  void setWorldScale(float worldScale);
 		float getWorldScale() const;
 
 		/**
@@ -93,7 +93,7 @@ namespace SPK
 		* @param worldSizeEnabled : true to enable universe size, false to use screen size
 		* @return true the type of size can be set, false otherwise
 		*/
-		virtual  bool enableWorldSize(bool worldSizeEnabled);
+		  bool enableWorldSize(bool worldSizeEnabled);
 
 		/**
 		* @brief Tells whether world size is enabled or not in this GLPointRenderer

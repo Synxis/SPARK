@@ -57,7 +57,7 @@ namespace GL
 		*/
 		static  Ref<GLPointRenderer> create(float screenSize = 1.0f);
 
-		virtual bool setType(PointType type);
+		void setType(PointType type);
 
 		/**
 		* @brief Sets the way size of points is computed in this GLPointRenderer
@@ -70,7 +70,7 @@ namespace GL
 		* @param worldSizeEnabled : true to enable universe size, false to use screen size
 		* @return true the type of size can be set, false otherwise
 		*/
-		bool enableWorldSize(bool worldSizeEnabled);
+        void enableWorldSize(bool worldSizeEnabled);
 
 		/**
 		* @brief Sets the texture of this GLPointRenderer
@@ -103,9 +103,27 @@ namespace GL
 		static bool isPointSpriteSupported();
 		static bool isWorldSizeSupported();
 
+
+        //virtual  bool setType(PointType type) { PointRenderBehavior::setType(type); }
+        PointType getType() const { return PointRenderBehavior::getType(); }
+
+        void setScreenSize(float screenSize) { PointRenderBehavior::setScreenSize(screenSize); }
+        float getScreenSize() const { return PointRenderBehavior::getScreenSize(); }
+
+        void setWorldScale(float worldScale) { PointRenderBehavior::setWorldScale(worldScale); }
+        float getWorldScale() const { return PointRenderBehavior::getWorldScale(); }
+
+        //bool enableWorldSize(bool worldSizeEnabled) { PointRenderBehavior::enableWorldSize(worldSizeEnabled); }
+        bool isWorldSizeEnabled() const { return PointRenderBehavior::isWorldSizeEnabled(); }
+
 	public :
 		spark_description(GLPointRenderer, GLRenderer)
 		(
+            spk_attribute(PointType, type, setType, getType);
+            spk_attribute(float, screensize, setScreenSize, getScreenSize);
+            spk_attribute(float, worldscale, setWorldScale, getWorldScale);
+            spk_attribute(bool, isworldsizeenabled, enableWorldSize, isWorldSizeEnabled);
+
 		);
 
 	private :

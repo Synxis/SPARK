@@ -243,7 +243,7 @@ namespace SPK
 
 		mutable float fraction;
 		
-		void emit(Particle& particle) const;
+		void emitIt(Particle& particle) const;
 
 		size_t updateTankFromTime(float deltaTime);
 		size_t updateTankFromNb(size_t nb);
