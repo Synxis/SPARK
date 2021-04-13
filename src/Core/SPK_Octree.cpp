@@ -189,8 +189,7 @@ namespace SPK
 
 	void Octree::addToChildrenCells(size_t parentIndex,size_t particleIndex,size_t maxLevel) // TODO This code may be optimized ?
 	{
-		const Cell& parent = cells[parentIndex];
-		size_t childLevel = parent.level + 1;
+		size_t childLevel = cells[parentIndex].level + 1;
 		size_t divisor = maxLevel - childLevel;
 
 		Triplet& min = minPos[particleIndex];
@@ -211,6 +210,6 @@ namespace SPK
 		for (int x = minIndexX; x <= maxIndexX; ++x)
 			for (int y = minIndexY; y <= maxIndexY; ++y)
 				for (int z = minIndexZ; z <= maxIndexZ; ++z)
-					addToCell(parent.children[(x << 2) | (y << 1) | z],particleIndex,maxLevel);
+					addToCell(cells[parentIndex].children[(x << 2) | (y << 1) | z],particleIndex,maxLevel);
 	}
 }
