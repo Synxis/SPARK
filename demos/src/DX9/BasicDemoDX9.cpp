@@ -445,13 +445,13 @@ int Run()
 
 void InitializeConsoleStdIO()
 {
-    // si une console est rattachée au processus, alors il existe des fichiers
+    // si une console est rattachee au processus, alors il existe des fichiers
     // virtuel CONIN$ et CONOUT$ qui permettent respectivement de lire
-    // et d'écrire depuis / dans cette console (voir la doc de CreateFile).
+    // et d'ecrire depuis / dans cette console (voir la doc de CreateFile).
 
 #if _MSC_VER >= 1400 // VC++ 8
     {
-    // éviter le warning C4996: 'freopen' was declared deprecated
+    // eviter le warning C4996: 'freopen' was declared deprecated
     // This function or variable may be unsafe. Consider using freopen_s instead.
     FILE *stream;
     freopen_s( &stream, "CONIN$", "r", stdin );
@@ -513,7 +513,7 @@ LRESULT CALLBACK MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case WM_MOUSEMOVE:
 			{
-				// déplacement relatif
+				// deplacement relatif
 				int	px = GET_X_LPARAM(lParam);
 				int	py = GET_Y_LPARAM(lParam);
 				

@@ -125,11 +125,11 @@ namespace DX9
 
 	void DX9PointRenderer::enablePointParameter(float size,bool distance)
 	{
-		// derived size = size * sqrt(1 / (A + B * distance + C * distance²))
+		// derived size = size * sqrt(1 / (A + B * distance + C * distance^2))
 		if (distance)
 		{
 			const float sqrtC = POINT_SIZE_CURRENT / (size * pixelPerUnit);
-			const float QUADRATIC_WORLD[3] = {0.0f,0.0f,sqrtC * sqrtC}; // A = 0; B = 0; C = (POINT_SIZE_CURRENT / (size * pixelPerUnit))²
+			const float QUADRATIC_WORLD[3] = {0.0f,0.0f,sqrtC * sqrtC}; // A = 0; B = 0; C = (POINT_SIZE_CURRENT / (size * pixelPerUnit))^2
 			DX9Info::getDevice()->SetRenderState(D3DRS_POINTSCALE_A, FtoDW(QUADRATIC_WORLD[0]));
 			DX9Info::getDevice()->SetRenderState(D3DRS_POINTSCALE_B, FtoDW(QUADRATIC_WORLD[1]));
 			DX9Info::getDevice()->SetRenderState(D3DRS_POINTSCALE_C, FtoDW(QUADRATIC_WORLD[2]));
@@ -137,7 +137,7 @@ namespace DX9
 		else
 		{
 			const float sqrtA = POINT_SIZE_CURRENT / size;
-			const float QUADRATIC_WORLD[3] = {sqrtA * sqrtA,0.0f,0.0f};	// A = (POINT_SIZE_CURRENT / size)²; B = 0; C = 0
+			const float QUADRATIC_WORLD[3] = {sqrtA * sqrtA,0.0f,0.0f};	// A = (POINT_SIZE_CURRENT / size)^2; B = 0; C = 0
 			DX9Info::getDevice()->SetRenderState(D3DRS_POINTSCALE_A, FtoDW(QUADRATIC_WORLD[0]));
 			DX9Info::getDevice()->SetRenderState(D3DRS_POINTSCALE_B, FtoDW(QUADRATIC_WORLD[1]));
 			DX9Info::getDevice()->SetRenderState(D3DRS_POINTSCALE_C, FtoDW(QUADRATIC_WORLD[2]));

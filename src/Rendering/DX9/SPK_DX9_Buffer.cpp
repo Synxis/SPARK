@@ -45,7 +45,7 @@ namespace DX9
 		DX9Info::getDevice()->CreateVertexBuffer(nbVertices*sizeof(D3DXVECTOR3), D3DUSAGE_DYNAMIC, D3DFVF_XYZ, D3DPOOL_DEFAULT, &vertexBuffer, NULL);
 		DX9Info::getDevice()->CreateVertexBuffer(nbVertices*sizeof(D3DCOLOR), D3DUSAGE_DYNAMIC, D3DFVF_DIFFUSE, D3DPOOL_DEFAULT, &colorBuffer, NULL);
 
-		// TODO : gérer les indices 32bit
+		// TODO : gerer les indices 32bit
 		if( nbIndices > 0 )
 		{
 			DX9Info::getDevice()->CreateIndexBuffer(nbIndices*sizeof(short), 0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, 0);
@@ -77,7 +77,7 @@ namespace DX9
 			unlock();
 		}
 
-		// TODO : gérer autre chose que les textures 2D
+		// TODO : gerer autre chose que les textures 2D
 		if(nbTexCoords > 0)
 			DX9Info::getDevice()->CreateVertexBuffer(nbVertices*sizeof(D3DXVECTOR2), D3DUSAGE_DYNAMIC, D3DFVF_TEX1|D3DFVF_TEXCOORDSIZE1(nbTexCoords), D3DPOOL_DEFAULT, &texCoordBuffer, NULL);
 	}
