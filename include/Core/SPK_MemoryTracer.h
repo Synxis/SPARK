@@ -22,7 +22,7 @@
 #ifndef H_SPK_MEMORYTRACER
 #define H_SPK_MEMORYTRACER
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || !defined(NDEBUG)
 #define SPK_TRACE_MEMORY
 #endif
 
