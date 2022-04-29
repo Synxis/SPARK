@@ -327,6 +327,15 @@ namespace meta
 		SPK_STRING(name ## _name_, _name_);													\
 		SPK_REGISTER_DESC_TYPE(Attr, _name_);												\
 		SPK_CHECK_UNIQUENESS(_name_);														\
+		typedef SPK::StructuredAttributeBase<					    						\
+				_name_,																		\
+				name ## _name_,																\
+				_spk_obj,																	\
+				&_spk_obj::_create_,														\
+				&_spk_obj::_remove_,														\
+				&_spk_obj::_clear_,															\
+				&_spk_obj::_getsize_,														\
+				GET_COUNT(Attr)> StructAttBase;		     									\
 	public:																					\
 		class _name_																		\
 			: public SPK::StructuredAttributeBase<											\
@@ -343,27 +352,27 @@ namespace meta
 /**
 * @brief Defines a shield in a structured attribute (cannot be used elsewhere)
 */
-#define spk_field( _type_ , _name_ , _setter_ , ... )										\
-	private:																				\
-		SPK_STRING(name ## _name_, _name_);													\
-		static void* _spk_get_field_ ## _name_(_spk_obj* obj)								\
-		{																					\
-			description_base* desc = description_base::_spk_getDescription(obj);			\
-			void* attr = desc->getAttributePtr<instantiation::index>();						\
-			return &(((instantiation::type*)attr)->_spk_field_ ## _name_);					\
-		}																					\
-	public:																					\
-		typedef SPK::FieldAttribute<_type_,													\
-									_spk_obj,												\
-									&_spk_obj::_setter_,									\
-									typename SPK::Getters<_type_,_spk_obj>					\
-									::template extra<unsigned int>							\
-									::template store<SPK_UNPACK_GETTERS_(_spk_obj,__VA_ARGS__)>,\
-									name ## _name_,											\
-									attrName,												\
-									&_spk_get_field_ ## _name_> _name_;						\
-	private:																				\
-		_name_ _spk_field_ ## _name_;														\
+#define spk_field( _type_ , _name_ , _setter_ , ... )													\
+	private:																							\
+		SPK_STRING(name ## _name_, _name_);																\
+		static void* _spk_get_field_ ## _name_(_spk_obj* obj)											\
+		{																								\
+			description_base* desc = description_base::_spk_getDescription(obj);						\
+			void* attr = desc->getAttributePtr<StructAttBase::instantiation::index>();					\
+			return &(((typename StructAttBase::instantiation::type*)attr)->_spk_field_ ## _name_);		\
+		}																								\
+	public:																								\
+		typedef SPK::FieldAttribute<_type_,																\
+									_spk_obj,															\
+									&_spk_obj::_setter_,												\
+									typename SPK::Getters<_type_,_spk_obj>								\
+									::template extra<unsigned int>										\
+									::template store<SPK_UNPACK_GETTERS_(_spk_obj,__VA_ARGS__)>,		\
+									name ## _name_,														\
+									typename StructAttBase::attrName,									\
+									&_spk_get_field_ ## _name_> _name_;									\
+	private:																							\
+		_name_ _spk_field_ ## _name_;																	\
 		SPK_REGISTER_DESC_TYPE(Field, _name_)
 
 #endif
