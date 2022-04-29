@@ -21,7 +21,7 @@
 // 3. This notice may not be removed or altered from any source distribution.	//
 //////////////////////////////////////////////////////////////////////////////////
 
-#ifndef H_PK_IRR_LINERENDERER
+#ifndef H_SPK_IRR_LINERENDERER
 #define H_SPK_IRR_LINERENDERER
 
 #include "Rendering/Irrlicht/SPK_IRR_Renderer.h"
