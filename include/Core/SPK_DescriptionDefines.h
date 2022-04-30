@@ -93,82 +93,83 @@ namespace meta
 		_spk_check ## _t_<typename description_root::parentDescription>::value>::value
 
 #define SPK_REGISTER_DESC_TYPE( _tag_ , _type_ )											\
+		static const unsigned int spk_meta_count_ ## _type_ = GET_COUNT(_tag_);				\
 		template<bool b>																	\
-		struct spk ## _tag_<GET_COUNT(_tag_), b>											\
+		struct spk ## _tag_<SPK::meta::CountWrapper<spk_meta_count_ ## _type_>, b>			\
 		{																					\
 			static const bool isVoid = false;												\
 			typedef _type_ type;															\
 		};																					\
-		INC_COUNT(_tag_)
+		INC_COUNT(_tag_, _type_)
 
 /**
 * @internal
 */
-#define _spk_description_body( ... )														\
-		{																					\
-		private:																			\
-			static description_base* _spk_getDescription(_spk_obj* obj)						\
-			{																				\
-				return &obj->_spk_description_obj;											\
-			}																				\
-			template<typename,typename,typename> friend class SPK::DescriptionBase;			\
-			template<int index, bool unused = true>											\
-			struct spkAttr																	\
-			{																				\
-				static const bool isVoid = true;											\
-				typedef SPK::DefaultAttribute<_spk_obj> type;								\
-			};																				\
-			MAKE_COUNTER(Attr);																\
-																							\
-			template<int index, bool unused = true>											\
-			struct spkCtrl																	\
-			{																				\
-				static const bool isVoid = true;											\
-				typedef SPK::DefaultControl<_spk_obj> type;									\
-			};																				\
-			MAKE_COUNTER(Ctrl);																\
-																							\
-			/* Workaround for VS2003-2012 : the following structure (Instantiate)         */\
-			/* triggers infinite inheritance if used in class template and defined        */\
-			/* outside it. See the following page:                                        */\
-			/*http://stackoverflow.com/questions/15620686/templated-recurrent-type-error  */\
-			template<template<int,bool=true> class A, int n = 0, bool = A<n>::isVoid>		\
-			struct Instantiate : public Instantiate<A, n+1>									\
-			{																				\
-				typedef typename A<n>::type type;											\
-				type object;																\
-				using Instantiate<A, n+1>::getObject;										\
-				Instantiate() : object() {}													\
-				type* getObject(SPK::meta::NumOverload<n>)									\
-				{																			\
-					return &object;															\
-				}																			\
-			};																				\
-			template<template<int,bool> class A, int n>										\
-			struct Instantiate<A, n, true>													\
-			{																				\
-				void getObject();															\
-			};																				\
-		public:																				\
-			__VA_ARGS__																		\
-		private:																			\
-			Instantiate<spkAttr> _spk_attributes;											\
-			template<int n>																	\
-			typename spkAttr<n>::type* getAttributePtr()									\
-			{																				\
-				return _spk_attributes.getObject(SPK::meta::NumOverload<n>());				\
-			}																				\
-		};																					\
-	public:																					\
-		class description : public description_base											\
-		{																					\
-		public:																				\
-			static const char* getClassName()												\
-			{																				\
-				return _spk_inner_name::get();												\
-			}																				\
-		};																					\
-	private:																				\
+#define _spk_description_body( ... )																				\
+		{																											\
+		private:																									\
+			static description_base* _spk_getDescription(_spk_obj* obj)												\
+			{																										\
+				return &obj->_spk_description_obj;																	\
+			}																										\
+			template<typename,typename,typename> friend class SPK::DescriptionBase;									\
+			template<typename CW, bool unused = true>																\
+			struct spkAttr																							\
+			{																										\
+				static const bool isVoid = true;																	\
+				typedef SPK::DefaultAttribute<_spk_obj> type;														\
+			};																										\
+			MAKE_COUNTER(Attr);																						\
+																													\
+			template<typename CW, bool unused = true>																\
+			struct spkCtrl																							\
+			{																										\
+				static const bool isVoid = true;																	\
+				typedef SPK::DefaultControl<_spk_obj> type;															\
+			};																										\
+			MAKE_COUNTER(Ctrl);																						\
+																													\
+			/* Workaround for VS2003-2012 : the following structure (Instantiate)         */						\
+			/* triggers infinite inheritance if used in class template and defined        */						\
+			/* outside it. See the following page:                                        */						\
+			/*http://stackoverflow.com/questions/15620686/templated-recurrent-type-error  */						\
+			template<template<typename,bool=true> class A, int n = 0, bool = A<SPK::meta::CountWrapper<n>>::isVoid>	\
+			struct Instantiate : public Instantiate<A, n+1>															\
+			{																										\
+				typedef typename A<SPK::meta::CountWrapper<n>>::type type;											\
+				type object;																						\
+				using Instantiate<A, n+1>::getObject;																\
+				Instantiate() : object() {}																			\
+				type* getObject(SPK::meta::NumOverload<n>)															\
+				{																									\
+					return &object;																					\
+				}																									\
+			};																										\
+			template<template<typename,bool> class A, int n>														\
+			struct Instantiate<A, n, true>																			\
+			{																										\
+				void getObject();																					\
+			};																										\
+		public:																										\
+			__VA_ARGS__																								\
+		private:																									\
+			Instantiate<spkAttr> _spk_attributes;																	\
+			template<int n>																							\
+			typename spkAttr<SPK::meta::CountWrapper<n>>::type* getAttributePtr()									\
+			{																										\
+				return _spk_attributes.getObject(SPK::meta::NumOverload<n>());										\
+			}																										\
+		};																											\
+	public:																											\
+		class description : public description_base																	\
+		{																											\
+		public:																										\
+			static const char* getClassName()																		\
+			{																										\
+				return _spk_inner_name::get();																		\
+			}																										\
+		};																											\
+	private:																										\
 		description_base _spk_description_obj
 
 /**
@@ -306,7 +307,7 @@ namespace meta
 				unsigned int>																\
 			friend class SPK::StructuredAttributeBase;										\
 																							\
-			template<int index, bool unused = true>											\
+			template<typename CW, bool unused = true>										\
 			struct spkField																	\
 			{																				\
 				static const bool isVoid = true;											\

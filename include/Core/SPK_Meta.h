@@ -417,6 +417,12 @@ namespace meta
 	template<int n> struct Counter : public Counter<n-1> {};
 	template<> struct Counter<0> {};
 
+	template<unsigned int n>
+	struct CountWrapper
+	{
+		static const unsigned int value = n;
+	};
+
 	// Create a counter
 #define MAKE_COUNTER( _tag_ ) \
 		static SPK::meta::Count<1> _spk_count_ ## _tag_ (SPK::meta::Counter<1>)
@@ -424,8 +430,9 @@ namespace meta
 	// Use counter
 #define GET_COUNT( _tag_ ) \
 		((sizeof(_spk_count_ ## _tag_ (SPK::meta::Counter<MAX_COUNT + 1>())) / sizeof(bool)) - 1)
-#define INC_COUNT( _tag_ ) \
-		static SPK::meta::Count<GET_COUNT(_tag_) + 2> _spk_count_ ## _tag_ (SPK::meta::Counter<GET_COUNT(_tag_) + 2>)
+#define INC_COUNT( _tag_, _uniqueid_ ) \
+		static const unsigned int spk_meta_inc_count_ ## _uniqueid_ = GET_COUNT(_tag_); \
+		static SPK::meta::Count<spk_meta_inc_count_ ## _uniqueid_ + 2> _spk_count_ ## _tag_ (SPK::meta::Counter<spk_meta_inc_count_ ## _uniqueid_ + 2>)
 }
 }
 
@@ -475,6 +482,6 @@ namespace meta
 		static const bool isVoid = false;													\
 		typedef BaseTypeRelation<_cpp_, _base_, cpp_name, spk_name, _passtype_> type;		\
 	};																						\
-	INC_COUNT(type_relation)
+	INC_COUNT(type_relation, _base_)
 
 #endif

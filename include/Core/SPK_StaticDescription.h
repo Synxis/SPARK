@@ -219,11 +219,11 @@ namespace SPK
 	private:
 		// Array of controls
 		template<int n>
-		struct Controls : public T::template spkCtrl<n,true> {};
+		struct Controls : public T::template spkCtrl<SPK::meta::CountWrapper<n>,true> {};
 
 		// Array of attributes
 		template<int n>
-		struct Attributes : public T::template spkAttr<n,true> {};
+		struct Attributes : public T::template spkAttr<SPK::meta::CountWrapper<n>,true> {};
 
 		/**
 		* @brief Holds the 'queries' allowing to get / alter information on controls and attributes
