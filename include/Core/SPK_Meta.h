@@ -24,6 +24,8 @@
 #ifndef H_SPK_META
 #define H_SPK_META
 
+#include <type_traits>
+
 // Note: '__is_enum' intrinsic supported by at least VC++ >= 2005 and GCC >= 4.3
 #define IS_ENUM( X ) __is_enum(X)
 
@@ -373,25 +375,9 @@ namespace meta
 
 	/**
 	* @internal
-	* @brief Meta-function storing whether the type is abstract or not
-	*/
-	template<typename T>
-	struct IsAbstract
-	{
-		struct yes { char d[5]; };
-		struct no { char d[2]; };
-
-		template <typename C> static no test(C (*)[1]);
-		template <typename> static yes test(...);
-
-		static const bool value = (sizeof(test<T>(0)) == sizeof(yes));
-	};
-
-	/**
-	* @internal
 	* @brief Structure used to clone a type
 	*/
-	template<typename T, bool = IsAbstract<T>::value>
+	template<typename T, bool = std::is_abstract<T>::value>
 	struct Cloner
 	{
 		static T* clone(const T* source) { return new T(*source); }
