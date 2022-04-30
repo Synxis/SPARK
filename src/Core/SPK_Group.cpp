@@ -54,7 +54,7 @@ namespace SPK
 		deathAction(),
 		octree(NULL)
 	{
-		reallocate(capacity);
+		reallocate(static_cast<unsigned int>(capacity));
 	}
 
 	Group::Group(const Group& group) :
@@ -270,7 +270,7 @@ namespace SPK
 		}
 	}
 
-	void Group::reallocate(size_t capacity)
+	void Group::reallocate(unsigned int capacity)
 	{
 		SPK_ASSERT(capacity != 0,"Group::reallocate(size_t) - Group capacity must not be 0");
 

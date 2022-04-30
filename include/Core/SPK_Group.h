@@ -91,13 +91,13 @@ namespace SPK
 
 		bool isEnabled(Param param) const;
 
-		size_t getNbParticles() const;
-		size_t getCapacity() const;
+		unsigned int getNbParticles() const;
+		unsigned int getCapacity() const;
 
 		Particle getParticle(size_t index);
 		const Particle getParticle(size_t index) const;
 
-		void reallocate(size_t capacity);
+		void reallocate(unsigned int capacity);
 		void empty();
 
 		void addEmitter(const Ref<Emitter>& emitter);
@@ -401,8 +401,8 @@ namespace SPK
 		{
 			bool initialized;
 
-			size_t nbParticles;
-			size_t maxParticles;
+			unsigned int nbParticles;
+			unsigned int maxParticles;
 
 			// Particles attributes
 			Vector3D* positions;
@@ -734,12 +734,12 @@ namespace SPK
 		return particleData.parameters[param] != NULL;
 	}
 
-	inline size_t Group::getNbParticles() const
+	inline unsigned int Group::getNbParticles() const
 	{
 		return particleData.nbParticles;
 	}
 
-	inline size_t Group::getCapacity() const
+	inline unsigned int Group::getCapacity() const
 	{
 		return particleData.maxParticles;
 	}
