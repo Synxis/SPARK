@@ -91,14 +91,14 @@ namespace SPK
 
 		bool isEnabled(Param param) const;
 
-		unsigned int getNbParticles() const;
-		unsigned int getCapacity() const;
+		inline unsigned int getNbParticles() const;
+		inline unsigned int getCapacity() const;
 
 		Particle getParticle(size_t index);
 		const Particle getParticle(size_t index) const;
 
 		void reallocate(unsigned int capacity);
-		void empty();
+		inline void empty();
 
 		void addEmitter(const Ref<Emitter>& emitter);
 		void removeEmitter(const Ref<Emitter>& emitter);
