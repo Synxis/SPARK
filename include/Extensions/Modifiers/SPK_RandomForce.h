@@ -69,13 +69,13 @@ namespace SPK
 		* @brief Gets the min vector
 		* @return the min vector
 		*/
-		const Vector3D& getMinVector() const;
+		inline const Vector3D& getMinVector() const;
 
 		/**
 		* @brief Gets the max vector
 		* @return the max vector
 		*/
-		const Vector3D& getMaxVector() const;
+		inline const Vector3D& getMaxVector() const;
 
 		/**
 		* @brief Gets the transformed min vector
@@ -109,13 +109,13 @@ namespace SPK
 		* @brief Gets the minimal period
 		* @return the minimal period
 		*/
-		float getMinPeriod() const;
+		inline float getMinPeriod() const;
 
 		/**
 		* @brief Gets the maximal period
 		* @return the maximal period
 		*/
-		float getMaxPeriod() const;
+		inline float getMaxPeriod() const;
 
 	public :
 		spark_description(RandomForce, Modifier)

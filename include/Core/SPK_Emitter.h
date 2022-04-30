@@ -57,13 +57,13 @@ namespace SPK
 		*
 		* @param active : true to activate this emitter, false to deactivate it
 		*/
-		void setActive(bool active);
+		inline void setActive(bool active);
 
 		/**
 		* @brief Tells whether this emitter is active or not
 		* @return true if this emitter is active, false if is is inactive
 		*/
-		bool isActive() const;
+		inline bool isActive() const;
 
 		//////////
 		// Tank //
@@ -82,7 +82,7 @@ namespace SPK
 		*
 		* @param tank : the initial number of particles in this emitters's tank
 		*/
-		void setTank(int tank);
+		inline void setTank(int tank);
 
 		/**
 		* @brief Sets the min and max number of particles in this emitter's tank
@@ -100,25 +100,25 @@ namespace SPK
 		* @brief Gets the current number of particles in this emitter's tank
 		* @return the current number of particles in this emitters's tank
 		*/
-		int getCurrentTank() const;
+		inline int getCurrentTank() const;
 
 		/**
 		* @brief Gets the minimum initial number of particles in this emitter's tank
 		* @return the minimum initial number of particles in this emitters's tank
 		*/
-		int getMinTank() const;
+		inline int getMinTank() const;
 
 		/**
 		* @brief Gets the maximum initial number of particles in this emitter's tank
 		* @return the maximum initial number of particles in this emitters's tank
 		*/
-		int getMaxTank() const;
+		inline int getMaxTank() const;
 
 		/**
 		* @brief Resets the current tank
 		* The current tank is reevaluated between the min and max tank
 		*/
-		void resetTank();
+		inline void resetTank();
 
 		//////////
 		// Flow //
@@ -140,7 +140,7 @@ namespace SPK
 		* @brief Gets the flow of this emitter
 		* @return the flow of this emitter
 		*/
-		float getFlow() const;
+		inline float getFlow() const;
 
 		///////////
 		// Force //
@@ -163,13 +163,13 @@ namespace SPK
 		* @brief Gets the minimum force of this emitter
 		* @return the minimum force of this emitter
 		*/
-		float getForceMin() const;
+		inline float getForceMin() const;
 
 		/**
 		* @brief Gets the maximum force of this emitter
 		* @return the maximum force of this emitter
 		*/
-		float getForceMax() const;
+		inline float getForceMax() const;
 		
 		//////////
 		// Zone //
@@ -183,22 +183,22 @@ namespace SPK
 		* @param zone : the zone of this emitter
 		* @param full : true to generate particles in the whole Zone, false to generate particles only at the zone's borders.
 		*/
-		void setZone(const Ref<Zone>& zone, bool full);
+		inline void setZone(const Ref<Zone>& zone, bool full);
 		
 		void setZone(const Ref<Zone>& zone);
-		void setUseFullZone(bool f);
+		inline void setUseFullZone(bool f);
 
 		/**
 		* @brief Gets the zone of this emitter
 		* @return the zone of this emitter
 		*/
-		const Ref<Zone>& getZone() const;
+		inline const Ref<Zone>& getZone() const;
 
 		/**
 		* @brief Tells whether this emitter emits in the whole Zone or only at its borders
 		* @return true if this emitter emits in the whole Zone, false if it is only at its borders
 		*/
-		bool isFullZone() const;
+		inline bool isFullZone() const;
 
 		virtual Ref<SPKObject> findByName(const std::string& name);
 
@@ -245,8 +245,8 @@ namespace SPK
 		
 		void emit(Particle& particle) const;
 
-		size_t updateTankFromTime(float deltaTime);
-		size_t updateTankFromNb(size_t nb);
+		inline size_t updateTankFromTime(float deltaTime);
+		inline size_t updateTankFromNb(size_t nb);
 
 		/**
 		* @brief Gives the particle an initial velocity

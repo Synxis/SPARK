@@ -68,9 +68,9 @@ namespace SPK
 		// Position //
 		//////////////
 
-		void setPosition(const Vector3D& position);
-		const Vector3D& getPosition() const;
-		const Vector3D& getTransformedPosition() const;
+		inline void setPosition(const Vector3D& position);
+		inline const Vector3D& getPosition() const;
+		inline const Vector3D& getTransformedPosition() const;
 
 		///////////////
 		// Interface //
@@ -88,7 +88,7 @@ namespace SPK
 		* @param normal : A pointer to a vector used to store the normal (if NULL, the normal wont be computed)
 		* @return true if the test is fullfilled, false otherwise
 		*/
-		bool check(const Particle& particle,ZoneTest zoneTest,Vector3D* normal = NULL) const;
+		inline bool check(const Particle& particle,ZoneTest zoneTest,Vector3D* normal = NULL) const;
 
 	public :
 		spark_description(Zone, Transformable)
@@ -100,8 +100,8 @@ namespace SPK
 
 		Zone(const Vector3D& position = Vector3D());
 
-		virtual  void innerUpdateTransform();
-		static  void normalizeOrRandomize(Vector3D& v);
+		inline virtual  void innerUpdateTransform();
+		inline static  void normalizeOrRandomize(Vector3D& v);
 
 	private :
 

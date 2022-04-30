@@ -66,19 +66,19 @@ namespace SPK
 		* @brief Gets the normal zone of this normalEmitter
 		* @return the normal zone of this normalEmitter
 		*/
-		const Ref<Zone>& getNormalZone() const;
+		inline const Ref<Zone>& getNormalZone() const;
 
 		/**
 		* @brief Sets whether normals are inverted or not
 		* @param inverted true to use inverted normals, false not to
 		*/
-		void setInverted(bool inverted);
+		inline void setInverted(bool inverted);
 
 		/**
 		* @brief Tells whether normals are inverted for this normalEmitter
 		* @return true if normals are inverted, false if not
 		*/
-		bool isInverted() const;
+		inline bool isInverted() const;
 
 		/////////////
 		// Herited //

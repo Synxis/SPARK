@@ -37,7 +37,7 @@ namespace SPK
 		void addAction(const Ref<Action>& action);
 		void removeAction(const Ref<Action>& action);
 		const Ref<Action>& getAction(size_t index) const;
-		size_t getNbActions() const;
+		inline size_t getNbActions() const;
 		void clearActions();
 
 		virtual void apply(Particle& particle) const;

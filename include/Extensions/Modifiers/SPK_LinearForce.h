@@ -118,13 +118,13 @@ namespace SPK
 		* The value of the force is a vector defining a direction and its norm defines the power of the force
 		* @param value : the value of the force
 		*/
-		void setValue(const Vector3D& value);
+		inline void setValue(const Vector3D& value);
 
 		/**
 		* @brief Gets the value of the force
 		* @return the value of the force
 		*/
-		const Vector3D& getValue() const;
+		inline const Vector3D& getValue() const;
 
 		/**
 		* @brief Gets the transformed value of the force
@@ -151,14 +151,14 @@ namespace SPK
 		* @param squaredSpeed : true to use squared speed, false to use speed
 		*/
 		void setRelative(bool relative, bool squaredSpeed);
-		void setRelative(bool relative);
-		void setUseSquaredSpeed(bool u);
+		inline void setRelative(bool relative);
+		inline void setUseSquaredSpeed(bool u);
 
 		/**
 		* @brief Tells whether this force is relative to the particle's velocity
 		* @return true if the force is relative, false if not
 		*/
-		bool isRelative() const;
+		inline bool isRelative() const;
 
 		/**
 		* @brief Tells whether squared relative speed is used to deduce the discrete force
@@ -166,7 +166,7 @@ namespace SPK
 		* approximation of the reality
 		* @return true if the squared relative speed is used, false otherwise
 		*/
-		bool isSquaredSpeedUsed() const;
+		inline bool isSquaredSpeedUsed() const;
 
 		///////////////
 		// Parameter //
@@ -192,21 +192,21 @@ namespace SPK
 		* @param factor : the degree of the parameter
 		*/
 		void setParam(Param param, Factor factor);
-		void setParam(Param param);
+		inline void setParam(Param param);
 
-		void setFactor(Factor factor);
+		inline void setFactor(Factor factor);
 
 		/**
 		* @brief Gets the parameter used to modulate the force
 		* @return the parameter used to modulate the force 
 		*/
-		Param getParam() const;
+		inline Param getParam() const;
 
 		/**
 		* @brief Gets the degree of the parameter used
 		* @return the degree of the parameter used
 		*/
-		Factor getFactor() const;
+		inline Factor getFactor() const;
 
 		/////////////////
 		// Coefficient //
@@ -216,13 +216,13 @@ namespace SPK
 		* @brief Sets the constant by which is multiplied the force
 		* @param coef : the constant by which is multiplied the force
 		*/
-		void setCoef(float coef);
+		inline void setCoef(float coef);
 
 		/**
 		* @brief Gets the constant by which is multiplied the force
 		* @return the constant by which is multiplied the force 
 		*/
-		float getCoef() const;
+		inline float getCoef() const;
 
 		//////////////
 		// Helpers //

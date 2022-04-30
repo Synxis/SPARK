@@ -78,9 +78,9 @@ namespace SPK
 		*/
 		static void useVBOHint(bool hint);
 
-		virtual void enableRenderingOption(RenderingOption option,bool enable);
-		virtual void setAlphaTestThreshold(float alphaThreshold);
-		void setActive(bool active);
+		inline virtual void enableRenderingOption(RenderingOption option,bool enable);
+		inline virtual void setAlphaTestThreshold(float alphaThreshold);
+		inline void setActive(bool active);
 		virtual void setBlendMode(BlendMode blendMode) = 0;
 		
 		/////////////
@@ -91,21 +91,21 @@ namespace SPK
 		* Gets the shader hint
 		* @return : the shader hint
 		*/
-		static ShaderHint getShaderHint();
+		inline static ShaderHint getShaderHint();
 
 		/**
 		* Gets the vbo hint
 		* @return : the vbo hint
 		*/
-		static bool getVBOHint();
+		inline static bool getVBOHint();
 
-		virtual bool isRenderingOptionEnabled(RenderingOption option) const;
-		virtual float getAlphaTestThreshold() const;
-		bool isActive() const;
+		inline virtual bool isRenderingOptionEnabled(RenderingOption option) const;
+		inline virtual float getAlphaTestThreshold() const;
+		inline bool isActive() const;
 
 	public : /// TODO: make this private
-		void setRenderingOptions(unsigned int r);
-		unsigned int getRenderingOptions() const;
+		inline void setRenderingOptions(unsigned int r);
+		inline unsigned int getRenderingOptions() const;
 
 	public :
 		spark_description(Renderer, SPKObject)
@@ -133,7 +133,7 @@ namespace SPK
 		int renderingOptionsMask;
 		float alphaThreshold;
 
-		virtual  RenderBuffer* attachRenderBuffer(const Group& group) const;
+		inline virtual  RenderBuffer* attachRenderBuffer(const Group& group) const;
 
 		virtual  void init(const Particle& particle,DataSet* dataSet) const {};
 		virtual  void update(const Group& group,DataSet* dataSet) const {};

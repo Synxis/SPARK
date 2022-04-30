@@ -45,13 +45,13 @@ namespace SPK
 		*
 		* @param bouncingRatio : the bouncing ratio of this obstacle
 		*/
-		void setBouncingRatio(float bouncingRatio);
+		inline void setBouncingRatio(float bouncingRatio);
 
 			/**
 		* @brief Gets the bouncing ratio of this obstacle
 		* @return the bouncing ratio of this obstacle
 		*/
-		float getBouncingRatio() const;
+		inline float getBouncingRatio() const;
 
 		//////////////
 		// Friction //
@@ -64,13 +64,13 @@ namespace SPK
 		*
 		* @param friction : the friction of this obstacle
 		*/
-		void setFriction(float friction);
+		inline void setFriction(float friction);
 
 		/**
 		* @brief Gets the friction of this obstacle
 		* @return the friction of this obstacle
 		*/
-		float getFriction() const;
+		inline float getFriction() const;
 
 	public :
 		spark_description(Obstacle, ZonedModifier)

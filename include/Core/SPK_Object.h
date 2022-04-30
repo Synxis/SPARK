@@ -59,14 +59,14 @@ namespace SPK
 		* When the number of references reaches 0, the object is destroyed.
 		* @return the number of references
 		*/
-		unsigned int getNbReferences() const;
+		inline unsigned int getNbReferences() const;
 
 		/**
 		* Tells whether this object is shared or not
 		* During a deep copy, a referenced shared object will not be copied but only its reference will.
 		* @return true if the object is shared, false otherwise
 		*/
-		bool isShared() const;
+		inline bool isShared() const;
 
 		/**
 		* Sets whether this object is shareable or not
@@ -83,13 +83,13 @@ namespace SPK
 		* @brief Sets the name of this object
 		* @param name : the name
 		*/
-		void setName(const std::string& name);
+		inline void setName(const std::string& name);
 
 		/**
 		* @brief Gets the name of this object
 		* @return the name
 		*/
-		const std::string& getName() const;
+		inline const std::string& getName() const;
 
 		/**
 		* @brief Traverses this object to find an object with the given name

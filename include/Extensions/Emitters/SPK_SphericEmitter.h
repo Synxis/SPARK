@@ -78,7 +78,7 @@ namespace SPK
 		* @brief Gets the direction of this SphericEmitter
 		* @return the direction of this SphericEmitter
 		*/
-		const Vector3D& getDirection() const;
+		inline const Vector3D& getDirection() const;
 
 		/**
 		* @brief Gets the direction of this SphericEmitter
@@ -100,13 +100,13 @@ namespace SPK
 		* @brief Gets the minimum angle of this SphericEmitter
 		* @return the minimum angle of this SphericEmitter
 		*/
-		float getAngleMin() const;
+		inline float getAngleMin() const;
 
 		/**
 		* @brief Gets the maximum angle of this SphericEmitter
 		* @return the maximum angle of this SphericEmitter
 		*/
-		float getAngleMax() const;
+		inline float getAngleMax() const;
 
 	public :
 		spark_description(SphericEmitter, Emitter)

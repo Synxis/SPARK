@@ -34,8 +34,8 @@ namespace SPK
 			float radius = 1.0f,
 			const Vector3D& axis = Vector3D(0.0f,1.0f,0.0f));
 
-		void setHeight(float h);
-		void setRadius(float r);
+		inline void setHeight(float h);
+		inline void setRadius(float r);
 		float getHeight() const	{ return height; }
 		float getRadius() const	{ return radius; }
 

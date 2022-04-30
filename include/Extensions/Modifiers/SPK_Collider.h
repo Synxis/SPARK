@@ -79,7 +79,7 @@ namespace SPK
 		* @brief Gets the elasticity of the collisions
 		* @return the elasticity of the collisions
 		*/
-		float getElasticity() const;
+		inline float getElasticity() const;
 
 	public :
 		spark_description(Collider, Modifier)

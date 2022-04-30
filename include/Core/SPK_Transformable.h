@@ -36,14 +36,14 @@ namespace SPK
 		* @brief Gets the transform of this transformable
 		* @return the transform of this transformable
 		*/
-		Transform& getTransform();
+		inline Transform& getTransform();
 
 		/**
 		* @brief Gets the transform of this transformable
 		* This is the const version of getTransform()
 		* @return the transform of this transformable
 		*/
-		const Transform& getTransform() const;
+		inline const Transform& getTransform() const;
 
 		/**
 		* @brief Updates the transform of this transformable
@@ -55,12 +55,12 @@ namespace SPK
 		// Transform helpers //
 		///////////////////////
 		/// TODO: See Transform
-		void setTransformPosition(const Vector3D& pos);
-		const Vector3D& getTransformPosition() const;
-		void setTransformLookLH(const Vector3D& pos);
-		const Vector3D& getTransformLookLH() const;
-		void setTransformUp(const Vector3D& pos);
-		const Vector3D& getTransformUp() const;
+		inline void setTransformPosition(const Vector3D& pos);
+		inline const Vector3D& getTransformPosition() const;
+		inline void setTransformLookLH(const Vector3D& pos);
+		inline const Vector3D& getTransformLookLH() const;
+		inline void setTransformUp(const Vector3D& pos);
+		inline const Vector3D& getTransformUp() const;
 
 	public:
 		spark_description( Transformable, SPKObject )
@@ -99,14 +99,14 @@ namespace SPK
 		* @param tPos : the transformed position
 		* @param pos : the position to transform
 		*/
-		void transformPos(Vector3D& tPos,const Vector3D& pos);
+		inline void transformPos(Vector3D& tPos,const Vector3D& pos);
 
 		/**
 		* @brief Transforms a direction in this object's space
 		* @param tPos : the transformed direction
 		* @param pos : the direction to transform
 		*/
-		void transformDir(Vector3D& tDir,const Vector3D& dir);
+		inline void transformDir(Vector3D& tDir,const Vector3D& dir);
 
 	private :
 

@@ -52,13 +52,13 @@ namespace SPK
 		* @brief Sets the position of the point mass
 		* @param pos : the position
 		*/
-		void setPosition(const Vector3D& pos);
+		inline void setPosition(const Vector3D& pos);
 
 		/**
 		* @brief Gets the position of the point mass
 		* @return the position
 		*/
-		const Vector3D& getPosition() const;
+		inline const Vector3D& getPosition() const;
 
 		/**
 		* @brief Gets the transformed position of the point mass
@@ -79,13 +79,13 @@ namespace SPK
 		*
 		* @param mass : the mass
 		*/
-		void setMass(float mass);
+		inline void setMass(float mass);
 
 		/**
 		* @brief Gets the mass of the point mass
 		* @return the mass
 		*/
-		float getMass() const;
+		inline float getMass() const;
 
 		////////////
 		// Offset //
@@ -107,7 +107,7 @@ namespace SPK
 		* @brief Gets the offset of the point mass
 		* @return the offset
 		*/
-		float getOffset() const;
+		inline float getOffset() const;
 
 	public :
 		spark_description(PointMass, Modifier)
