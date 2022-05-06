@@ -452,8 +452,9 @@ int main(int argc, char *argv[])
 
 	SDL_Quit();
 
+#ifdef _WIN32
 	system("pause");
-
+#endif
 	return 0;
 }
 

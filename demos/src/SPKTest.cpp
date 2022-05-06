@@ -336,7 +336,10 @@ int main(int argc, char *argv[])
 	SPK_DUMP_MEMORY
 
 	SDL_Quit();
+
+#ifdef _WIN32
 	std::system("pause");
+#endif
 	
 	return 0;
 } 

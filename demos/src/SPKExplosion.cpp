@@ -639,7 +639,9 @@ int main(int argc, char *argv[])
 
 	SDL_Quit();
 
+#ifdef _WIN32
 	system("pause"); // Waits for the user to close the console
+#endif
 
 	return 0;
 }
