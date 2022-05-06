@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::IRR::IRRQuadRenderer> quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
 	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
-	quadRenderer->setTexture(driver->getTexture("res\\flare.bmp"));
+	quadRenderer->setTexture(driver->getTexture("res/flare.bmp"));
 	quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
 
 	SPK::Ref<SPK::Point> emitpt = SPK::Point::create();
