@@ -9,20 +9,80 @@
 
 # Project declaration
 # ###############################################
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.19)
 project(SPARK_Irrlicht)
-set(SPARK_IRRLICHT_LIB "" CACHE STRING "Store the name of the Irrlicht library file (release)")
-set(SPARK_IRRLICHT_LIB_DEBUG "" CACHE STRING "Store the name of the Irrlicht library file (debug)")
-set(SPARK_IRRLICHT_INCLUDE_DIR "" CACHE PATH "Store the path to the 'include' folder of Irrlicht")
-set(SPARK_IRRLICHT_LIB_DIR "" CACHE PATH "Store the path to the library folder of Irrlicht, ie 'lib/<config>'")
 
+include(../../cmake/UtilFunctions.cmake)
 
+set(SPARK_IRRLICHT_LIB              ""  CACHE FILEPATH "Store the full path of the Irrlicht library file")
+set(SPARK_IRRLICHT_INCLUDE_DIR      ""  CACHE PATH	 "Store the path to the 'include' folder of Irrlicht")
+set(SPARK_IRRLICHT_USE_STATIC_LIBS  OFF CACHE BOOL	 "Store whether to link statically to the Irrlicht library")
+
+get_property(isMulti GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
+if(${isMulti})
+	set(SPARK_IRRLICHT_LIB_DEBUG "" CACHE FILEPATH "Store the full path of the debug Irrlicht library file")
+endif()
+
+if(${SPARK_IRRLICHT_USE_STATIC_LIBS})
+	set(IRRLICHT_LIBRARY_LINKAGE "STATIC")
+else()
+	set(IRRLICHT_LIBRARY_LINKAGE "SHARED")
+endif()
+
+if(${isMulti} AND DEFINED SPARK_IRRLICHT_LIB_DEBUG)
+	set(ARGS_IRR "LIBRARY_DEBUG_FILEPATH" "${SPARK_IRRLICHT_LIB_DEBUG}")
+endif()
+
+create_imported_target(IMPORTED_TARGET_NAME "Irrlicht"
+					   LIBRARY_LINKAGE ${IRRLICHT_LIBRARY_LINKAGE}
+					   LIBRARY_FILEPATH ${SPARK_IRRLICHT_LIB}
+					   ${ARGS_IRR}
+					   INCLUDE_DIR ${SPARK_IRRLICHT_INCLUDE_DIR}
+)
+
+if(UNIX AND NOT APPLE)
+	find_package(X11 REQUIRED)
+endif()
+
+if(APPLE)
+	find_library(COCOA_LIB Cocoa REQUIRED)
+	find_library(IOKIT_LIB IOKit REQUIRED)
+endif()
+
+if(MINGW)
+	find_library(WINMM_LIB winmm REQUIRED)
+endif()
+
+if(UNIX AND NOT APPLE)
+	target_link_libraries(Irrlicht INTERFACE
+		X11::Xxf86vm
+		X11::X11
+	)
+endif()
+
+target_link_libraries(Irrlicht INTERFACE
+	OpenGL::GL
+)
+
+if(MINGW)
+	target_link_libraries(Irrlicht INTERFACE
+		${WINMM_LIB}
+	)
+endif()
+
+if(APPLE)
+	target_link_libraries(Irrlicht INTERFACE
+		${COCOA_LIB}
+		${IOKIT_LIB}
+	)
+endif()
 
 # Sources
 # ###############################################
-set(SPARK_DIR ../../..)
-get_filename_component(SPARK_DIR ${SPARK_DIR}/void REALPATH)
-get_filename_component(SPARK_DIR ${SPARK_DIR} PATH)
+#file(GLOB_RECURSE SRC_FILES
+#	${SPARK_DIR}/src/Rendering/Irrlicht/*.cpp
+#)
 file(GLOB_RECURSE SRC_FILES
 	${SPARK_DIR}/include/SPARK_IRR.h
 	${SPARK_DIR}/include/Rendering/Irrlicht/*.h
@@ -30,63 +90,62 @@ file(GLOB_RECURSE SRC_FILES
 )
 
 
-
 # Build step
 # ###############################################
-set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
-include_directories(${SPARK_DIR}/include)
-include_directories(${SPARK_IRRLICHT_INCLUDE_DIR})
-link_directories(${SPARK_IRRLICHT_LIB_DIR})
 if(${SPARK_STATIC_BUILD})
 	set(SPARK_OUTPUT_TYPE static)
-else()
-	add_definitions(-DSPK_IRR_EXPORT)
-	add_definitions(-DSPK_CORE_IMPORT)
-	set(SPARK_OUTPUT_TYPE dynamic)
-endif()
-link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE})
-if(${SPARK_STATIC_BUILD})
 	add_library(SPARK_Irrlicht STATIC ${SRC_FILES})
 else()
+	set(SPARK_OUTPUT_TYPE dynamic)
 	add_library(SPARK_Irrlicht SHARED ${SRC_FILES})
+	target_compile_definitions(SPARK_Irrlicht PRIVATE SPK_CORE_IMPORT SPK_IRR_EXPORT)
 endif()
-if(("${SPARK_IRRLICHT_LIB}" STREQUAL "") OR
-   ("${SPARK_IRRLICHT_LIB_DEBUG}" STREQUAL ""))
-	message("	You have to set both SPARK_IRRLICHT_LIB and SPARK_IRRLICHT_LIB_DEBUG for the Irrlicht build to work.
-	Ignore this message if you're not using Irrlicht.")
-else()
-	target_link_libraries(SPARK_Irrlicht
-		debug SPARK_debug
-		debug ${SPARK_IRRLICHT_LIB_DEBUG}
-		optimized SPARK
-		optimized ${SPARK_IRRLICHT_LIB}
-	)
+
+if(${SPARK_IRRLICHT_USE_STATIC_LIBS})
+	target_compile_definitions (SPARK_Irrlicht PRIVATE "_IRR_STATIC_LIB_")
 endif()
-if(MSVC)
-	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "/fp:fast")
-endif()
-set_target_properties(SPARK_Irrlicht PROPERTIES
-	OUTPUT_NAME SPARK_IRR
-	DEBUG_POSTFIX _debug
-	RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	LIBRARY_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	ARCHIVE_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	LIBRARY_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	LIBRARY_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+
+target_link_libraries(SPARK_Irrlicht
+	SPARK_Core
+	Irrlicht
 )
 
+if(MINGW)
+	# Don't prefix the DLL with 'lib'
+	set(CMAKE_SHARED_LIBRARY_PREFIX "")
+endif()
 
+if(MSVC)
+	set_target_properties(SPARK_Irrlicht PROPERTIES COMPILE_FLAGS "/fp:fast")
+endif()
 
+set_target_properties(SPARK_Irrlicht PROPERTIES
+	OUTPUT_NAME SPARK_IRR
+)
 
+if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+	set_target_properties(SPARK_Irrlicht PROPERTIES
+		DEBUG_POSTFIX _debug
+	)
+endif()
 
+if(${SPARK_USE_HARDCODED_RUNTIME_OUTPUT_DIRS})
+	set_target_properties(SPARK_Irrlicht PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		LIBRARY_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		ARCHIVE_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		LIBRARY_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		LIBRARY_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+	)
 
-
-
-
-
-
+	if (NOT ${SPARK_STATIC_BUILD})
+		add_custom_command(TARGET SPARK_Irrlicht POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:SPARK_Irrlicht> "${SPARK_DIR}/demos/bin"
+		)
+	endif()
+endif()
 

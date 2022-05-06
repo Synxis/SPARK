@@ -1,0 +1,27 @@
+[
+  {
+    "filename": "build/cmake/CMakeLists.txt",
+    "patches": [
+      {
+        "match_string": "target_include_directories(${t} PUBLIC $<INSTALL_INTERFACE:include>)",
+        "replace_string": "target_include_directories(${t} PUBLIC $<INSTALL_INTERFACE:include> PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/../../include>)"
+      },
+      {
+        "match_string": "if(NOT TARGET uninstall)",
+        "replace_string": "if(FALSE)"
+      },
+      {
+        "match_string": "set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)",
+        "replace_string": "#set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)"
+      },
+      {
+        "match_string": "set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)",
+        "replace_string": "#set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)"
+      },
+      {
+        "match_string": "set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)",
+        "replace_string": "#set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)"
+      }
+    ]
+  }
+]

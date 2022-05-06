@@ -9,16 +9,13 @@
 
 # Project declaration
 # ###############################################
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.19)
 project(Flakes)
 
 
 
 # Sources
 # ###############################################
-set(SPARK_DIR ../../..)
-get_filename_component(SPARK_DIR ${SPARK_DIR}/void REALPATH)
-get_filename_component(SPARK_DIR ${SPARK_DIR} PATH)
 set(SRC_FILES
 	${SPARK_DIR}/demos/src/SPKFlakes.cpp
 )
@@ -27,45 +24,50 @@ set(SRC_FILES
 
 # Build step
 # ###############################################
-set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
-include_directories(${SPARK_DIR}/include)
-include_directories(${SPARK_DIR}/demos/external/SDL/include)
-link_directories(${SPARK_DIR}/demos/external/SDL/lib)
-if(${DEMOS_USE_STATIC_LIBS})
-	link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/static)
-else()
-	add_definitions(-DSPK_IMPORT)
-	link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/dynamic)
-endif()
 add_executable(Flakes
 	${SRC_FILES}
 )
+
+if(MINGW)
+	target_link_libraries(Flakes mingw32)
+endif()
+
+if(MINGW OR MSVC)
+	target_link_libraries(Flakes SDL2::SDL2main)
+endif()
+
 target_link_libraries(Flakes
-	general opengl32.lib
-	general glu32.lib
-	general SDL.lib
-	general SDLmain.lib
-	debug SPARK_debug
-	debug SPARK_GL_debug
-	optimized SPARK
-	optimized SPARK_GL
-)
-set_target_properties(Flakes PROPERTIES
-	DEBUG_POSTFIX _debug
-	RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/demos/bin
-	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/demos/bin
-	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/demos/bin
+	SPARK_OpenGL
+	SDL2::SDL2
 )
 
 
+if(${SPARK_STATIC_BUILD})
+	if(MINGW)
+		# The '-static' flag is not required, it is simply
+		# set for ease of use when running the examples.
+		# The '-fstack-protector' is needed when using a
+		# recent mingw64 version due to the use of _FORTIFY_SOURCE.
+		target_link_options(Flakes PRIVATE "-static" "-fstack-protector")
+	endif()
+else()
+	target_compile_definitions(Flakes PRIVATE SPK_IMPORT)
 
+	if(UNIX AND NOT APPLE)
+		target_link_libraries(Flakes OpenGL::GLU)
+	endif()
+endif()
 
+if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+	set_target_properties(Flakes PROPERTIES DEBUG_POSTFIX _debug)
+else()
+	set_target_properties(Flakes PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
+endif()
 
-
-
-
-
-
-
-
-
+if(${SPARK_USE_HARDCODED_RUNTIME_OUTPUT_DIRS})
+	set_target_properties(Flakes PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/demos/bin
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/demos/bin
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/demos/bin
+	)
+endif()

@@ -1,3 +1,4 @@
+
 SPARK Particle Engine
 =====================
 
@@ -12,38 +13,60 @@ SPARK Particle Engine
 Build guide
 -----------
 
-Note:
+#### Building the SPARK library and the demos
 
-	${SPARK_DIR} refers to the folder where SPARK is installed.
+	git clone https://github.com/Synxis/SPARK
+	cd SPARK
+	mkdir build
+	cd build
+	cmake -DSPARK_BUILD_DEMOS:BOOL="1" ../projects
+	cmake --build . --config Release
 
+#### Running a demo
 
-Source directories:
+	cd SPARK/demos/bin
+	./Test_Simple (or just 'Test_Simple.exe' on Windows)
 
-	- For the engine : ${SPARK_DIR}/projects/engine
-	- For the demos : ${SPARK_DIR}/projects/demos
+#### Building the SPARK library with Irrlicht support
 
+	cmake -DSPARK_BUILD_DEMOS:BOOL="1" \
+		  -DSPARK_BUILD_IRRLICHT_MODULE:BOOL="1" \
+		  -DSPARK_IRRLICHT_LIB:FILEPATH="/path/to/the/irrlicht/lib/filename" \
+		  -DSPARK_IRRLICHT_INCLUDE_DIR:PATH="/path/to/the/folder/with/the/irrlicht/headers/"
 
-Recommended build directory:
+	cmake --build . --config Release
 
-	- For the engine : ${SPARK_DIR}/projects/build/engine
-	- For the demos : ${SPARK_DIR}/projects/build/demos
+#### Extra notes
 
+By default the compiled libraries and demos will be placed in:
 
-To build a project (engine or demos):
+        SPARK
+        ├── lib/
+        │   └── <system-name>@<generator>/
+        |       └── static/
+        |       └── dynamic/
+        └── demos/
+            └── bin/
 
-	First, you have to know how CMake works. If not, there are plenty of tutorials on the net.
-	When configuring projects for the first time, verify the variables which start with 'SPARK_',
-	of 'DEMOS_' if you configure the demos.
-	Note that SPARK release dlls are automatically copied to the 'demos/bin' folder.
+- *\<system-name>* is the name of your OS (ex: Windows)
+- *\<generator>* is the name of the generator used (ex: Visual Studio 10)
 
+Available cmake variables:
 
-Note:
+- `SPARK_USE_HARCODED_RUNTIME_OUTPUT_DIRS` if set to `FALSE` it will make cmake use the *build* directory to output all the results of the compilation instead of using the hardcoded directory layout above.
 
-	Libraries are put in the folder ${SPARK_DIR}/lib/<system-name>@<generator>/<build-type>
-	where:
-		<system-name> is the name of your OS (ex: Windows)
-		<generator> is the name of the generator used (ex: Visual Studio 10)
-		<build-type> is 'dynamic' or 'static', depending on the project settings. (see SPARK_STATIC_BUILD variable)
+- `SPARK_STATIC_BUILD` controls whether SPARK is built as a static or dynamic library.
 
-	Demos are put in ${SPARK_DIR}/demos/bin
+- `SPARK_IRRLICHT_USE_STATIC_LIBS` controls whether SPARK will be linked with a static or dynamic Irrlicht library.
 
+- `SPARK_IRRLICHT_DEBUG` is only available when using cmake with multi configuration generators. This variable sets the path to the file of the debug Irrlicht library. If using a visual studio generator without setting the `SPARK_IRRLICHT_DEBUG` variable the `Debug` configuration won't be available.
+Here's an example:
+
+		cmake -DSPARK_BUILD_DEMOS:BOOL="1" \
+			  -DSPARK_BUILD_IRRLICHT_MODULE:BOOL="1" \
+			  -DSPARK_IRRLICHT_LIB:FILEPATH="/path/to/the/irrlicht/release/lib/filename" \
+			  -DSPARK_IRRLICHT_LIB_DEBUG:FILEPATH="/path/to/the/irrlicht/debug/lib/filename" \
+			  -DSPARK_IRRLICHT_INCLUDE_DIR:PATH="/path/to/the/folder/with/the/irrlicht/headers/"
+
+		cmake --build . --config Release
+		cmake --build . --config Debug
