@@ -163,22 +163,28 @@ void drawBoundingBox(const SPK::System& system)
 int main(int argc, char *argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_WM_SetCaption("SPARK 2 test",NULL);
+	SDL_Window* window = SDL_CreateWindow("SPARK 2 test",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		800,
+		600,
+		SDL_WINDOW_OPENGL);
+
+	SDL_GL_CreateContext(window);
+
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);	// double buffering
 
 	// vsync
-	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL,0);
+	SDL_GL_SetSwapInterval(0);
 
 	// AA
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
 	
-	SDL_SetVideoMode(800,600,32,SDL_OPENGL);
-
-	SDL_Surface& screen = *SDL_GetVideoSurface();
-	int screenWidth = screen.w;
-	int screenHeight = screen.h;
-	float screenRatio = (float)screen.w / (float)screen.h;
+	int screenWidth;
+	int screenHeight;
+	SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+	float screenRatio = (float)screenWidth / (float)screenHeight;
 
 	// Loads particle texture
 	GLuint textureParticle;
@@ -292,7 +298,7 @@ int main(int argc, char *argv[])
 		system->renderParticles();
 		SPK::GL::GLRenderer::restoreGLStates();
 
-		SDL_GL_SwapBuffers();
+		SDL_GL_SwapWindow(window);
 
 		clock_t currentTick = clock();
 		deltaTime = (float)(currentTick - frameFPS.back()) / CLOCKS_PER_SEC;

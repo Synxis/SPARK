@@ -177,7 +177,7 @@ void drawBoundingBox(const SPK::System& system)
 }
 
 // Renders the scene
-void render()
+void render(SDL_Window* window)
 {
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -200,7 +200,7 @@ void render()
 		(*it)->renderParticles();
 	}
 
-	SDL_GL_SwapBuffers();
+	SDL_GL_SwapWindow(window);
 }
 
 // Creates the base system and returns its ID
@@ -463,24 +463,29 @@ int main(int argc, char *argv[])
 
 	// inits SDL
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_WM_SetCaption("SPARK Explosion demo",NULL);
+
+	SDL_Window* window = SDL_CreateWindow("SPARK Explosion demo",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		0, 0,
+		SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL);
+
+	SDL_GL_CreateContext(window);
+
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
 
 	// vsync
-	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL,0);
+	SDL_GL_SetSwapInterval(0);
 
-	SDL_SetVideoMode(0,0,32,SDL_OPENGL | SDL_FULLSCREEN);
 	SDL_ShowCursor(0);
-
-	SDL_Surface& screen = *SDL_GetVideoSurface();
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	// inits openGL
-	screenWidth = screen.w;
-	screenHeight = screen.h;
-	screenRatio = (float)screen.w / (float)screen.h;
+	SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+	screenRatio = (float)screenWidth / (float)screenHeight;
 	
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
-	glViewport(0,0,screen.w,screen.h);
+	glViewport(0,0,screenWidth,screenHeight);
 
 	// Loads particle texture
 	GLuint textureExplosion;
@@ -559,12 +564,12 @@ int main(int argc, char *argv[])
 			}
 
 			// Zoom in and out
-			if (event.type == SDL_MOUSEBUTTONDOWN)
+			if(event.type == SDL_MOUSEWHEEL)
 			{
-				if (event.button.button == SDL_BUTTON_WHEELDOWN)
-					camPosZ = min(10.0f,camPosZ + 0.5f);
-				if (event.button.button == SDL_BUTTON_WHEELUP)
-					camPosZ = max(0.5f,camPosZ - 0.5f);
+				if (event.wheel.y > 0)
+					camPosZ = fmax(0.5f,camPosZ - 0.5f);
+				if (event.wheel.y < 0)
+					camPosZ = fmax(0.5f,camPosZ - 0.5f);
 			}
 
 			if ((event.type == SDL_KEYDOWN)&&(event.key.keysym.sym == SDLK_F2))
@@ -617,7 +622,7 @@ int main(int argc, char *argv[])
 		}
 
 		// Renders scene
-		render();
+		render(window);
 
 		// Computes delta time
 		int time = SDL_GetTicks();

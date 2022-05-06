@@ -234,22 +234,29 @@ int main(int argc, char *argv[])
 {
 	// Inits SDL
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_WM_SetCaption("SPARK Collision 2 Demo",NULL);
+
+	SDL_Window* window = SDL_CreateWindow("SPARK Collision 2 Demo",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		0, 0,
+		SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL);
+
+	SDL_GL_CreateContext(window);
+
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
-	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL,0); // vsync
+	SDL_GL_SetSwapInterval(0);
 
-	SDL_SetVideoMode(0,0,32,SDL_OPENGL | SDL_FULLSCREEN);
 	SDL_ShowCursor(0);
-
-	SDL_Surface& screen = *SDL_GetVideoSurface();
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	// Inits openGL
-	int screenWidth = screen.w;
-	int screenHeight = screen.h;
-	float screenRatio = (float)screen.w / (float)screen.h;
+	int screenWidth;
+	int screenHeight;
+	SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+	float screenRatio = (float)screenWidth / (float)screenHeight;
 	
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
-	glViewport(0,0,screen.w,screen.h);
+	glViewport(0,0,screenWidth,screenHeight);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -436,7 +443,7 @@ int main(int argc, char *argv[])
 		particleSystem->renderParticles();
 		SPK::GL::GLRenderer::restoreGLStates();
 
-		SDL_GL_SwapBuffers();
+		SDL_GL_SwapWindow(window);
 
 		// Computes delta time
 		clock_t currentTick = clock();
