@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 		// Renders scene
 		smgr->drawAll();
 
-		irr::core::stringw infos; infos+="FPS: "; infos+=driver->getFPS(); infos+=" - Nb Particles: "; infos+=system->getNbParticles();
+		irr::core::stringw infos; infos+="FPS: "; infos+=driver->getFPS(); infos+=" - Nb Particles: "; infos+=static_cast<unsigned int>(system->getNbParticles());
         guienv->getBuiltInFont()->draw(infos.c_str(),irr::core::rect<irr::s32>(0,0,170,20),irr::video::SColor(255,255,255,255));
 
 		driver->endScene();
