@@ -79,9 +79,14 @@ namespace IO
 		void put32(int32 i)
 		{
 			if (USE_LITTLE_ENDIANS)
+			{
 				put(reinterpret_cast<char*>(&i),4);
+			}
 			else
-				put(reinterpret_cast<char*>(swap32(i)),4);
+			{
+				int32 swapped = swap32(i);
+				put(reinterpret_cast<char*>(&swapped),4);
+			}
 		}
 
 		////////////////////////////
