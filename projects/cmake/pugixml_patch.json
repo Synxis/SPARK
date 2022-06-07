@@ -1,0 +1,11 @@
+[
+  {
+    "filename": "CMakeLists.txt",
+    "patches": [
+      {
+        "match_string": "include(CTest)",
+        "replace_string": "enable_testing()"
+      }
+    ]
+  }
+]

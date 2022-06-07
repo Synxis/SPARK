@@ -5,21 +5,20 @@
 #                                               #
 # ############################################# #
 
-
+include(../../cmake/UtilFunctions.cmake)
 
 # Project declaration
 # ###############################################
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.19)
 project(SPARK_Core)
-set(SPARK_STATIC_BUILD OFF CACHE BOOL "Store whether SPARK is built as a static library (ON) or a dynamic one OFF)")
 
-
+find_package(pugixml QUIET)
+if(NOT pugixml_FOUND)
+	fetch_Pugixml()
+endif()
 
 # Sources
 # ###############################################
-set(SPARK_DIR ../../..)
-get_filename_component(SPARK_DIR ${SPARK_DIR}/void REALPATH)
-get_filename_component(SPARK_DIR ${SPARK_DIR} PATH)
 
 file(GLOB_RECURSE TMP_SRC_FILES
 	${SPARK_DIR}/include/Core/*.h
@@ -54,40 +53,67 @@ source_group(Headers FILES
 	${SPARK_DIR}/include/SPARK_Core.h
 )
 
-
-
 # Build step
 # ###############################################
-set(SPARK_GENERATOR "(${CMAKE_SYSTEM_NAME}@${CMAKE_GENERATOR})")
-include_directories(${SPARK_DIR}/include)
-include_directories(${SPARK_DIR}/external/pugixml/src)
-link_directories(${SPARK_DIR}/lib/${SPARK_GENERATOR}/external/pugixml)
+
 if(${SPARK_STATIC_BUILD})
 	set(SPARK_OUTPUT_TYPE static)
 	add_library(SPARK_Core STATIC ${SRC_FILES})
+
+	target_include_directories(SPARK_Core PUBLIC
+		${SPARK_DIR}/include
+	)
 else()
-	add_definitions(-DSPK_CORE_EXPORT)
 	set(SPARK_OUTPUT_TYPE dynamic)
 	add_library(SPARK_Core SHARED ${SRC_FILES})
+
+	target_include_directories(SPARK_Core PUBLIC
+		${SPARK_DIR}/include
+	)
+
+	target_compile_definitions(SPARK_Core PRIVATE SPK_CORE_EXPORT)
 endif()
+
+if(MINGW)
+	# Don't prefix the DLL with 'lib'
+	set(CMAKE_SHARED_LIBRARY_PREFIX "")
+	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "-Wa,-mbig-obj")
+endif()
+
 if(MSVC)
-	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "/fp:fast")
+	set_target_properties(SPARK_Core PROPERTIES COMPILE_FLAGS "/fp:fast /bigobj")
 endif()
+
 target_link_libraries(SPARK_Core
-	debug pugixml_d
-	optimized pugixml
-)
-set_target_properties(SPARK_Core PROPERTIES
-	OUTPUT_NAME SPARK
-	DEBUG_POSTFIX _debug
-	RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	LIBRARY_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	ARCHIVE_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	LIBRARY_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	LIBRARY_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
-	ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+	PUGIXML::PUGIXML
 )
 
+set_target_properties(SPARK_Core PROPERTIES
+	OUTPUT_NAME SPARK
+)
+
+if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+	set_target_properties(SPARK_Core PROPERTIES
+		DEBUG_POSTFIX _debug
+	)
+endif()
+
+if(${SPARK_USE_HARDCODED_RUNTIME_OUTPUT_DIRS})
+	set_target_properties(SPARK_Core PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		LIBRARY_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		ARCHIVE_OUTPUT_DIRECTORY ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		LIBRARY_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		LIBRARY_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+		ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SPARK_DIR}/lib/${SPARK_GENERATOR}/${SPARK_OUTPUT_TYPE}
+	)
+
+	if (NOT ${SPARK_STATIC_BUILD})
+		add_custom_command(TARGET SPARK_Core POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:SPARK_Core> "${SPARK_DIR}/demos/bin"
+		)
+	endif()
+endif()
