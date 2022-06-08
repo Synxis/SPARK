@@ -81,7 +81,11 @@ namespace IRR
 		switch(option)
 		{
 		case RENDERING_OPTION_DEPTH_WRITE :
+#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 8
 			material.ZWriteEnable = enable;
+#else
+			material.ZWriteEnable = enable ? irr::video::EZW_AUTO : irr::video::EZW_OFF;
+#endif
 			break;
 
 		case RENDERING_OPTION_ALPHA_TEST :
