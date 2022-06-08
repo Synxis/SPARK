@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 	SPK::Ref<SPK::IRR::IRRQuadRenderer> quadRenderer = SPK::IRR::IRRQuadRenderer::create(device);
 	quadRenderer->setBlendMode(SPK::BLEND_MODE_ADD);
 	quadRenderer->enableRenderingOption(SPK::RENDERING_OPTION_DEPTH_WRITE,false);
-	quadRenderer->setTexture(driver->getTexture("res\\flare.bmp"));
+	quadRenderer->setTexture(driver->getTexture("res/flare.bmp"));
 	quadRenderer->setTexturingMode(SPK::TEXTURE_MODE_2D);
 
 	SPK::Ref<SPK::Emitter> emitter1 = SPK::RandomEmitter::create(SPK::Point::create());
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 		// Renders scene
 		smgr->drawAll();
 
-		irr::core::stringw infos; infos+="FPS: "; infos+=driver->getFPS(); infos+=" - Nb Particles: "; infos+=system->getNbParticles();
+		irr::core::stringw infos; infos+="FPS: "; infos+=driver->getFPS(); infos+=" - Nb Particles: "; infos+=static_cast<unsigned int>(system->getNbParticles());
         guienv->getBuiltInFont()->draw(infos.c_str(),irr::core::rect<irr::s32>(0,0,170,20),irr::video::SColor(255,255,255,255));
 
 		driver->endScene();
