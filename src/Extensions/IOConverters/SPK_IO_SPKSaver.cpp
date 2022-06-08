@@ -108,7 +108,7 @@ namespace IO
 		template<typename T>
 		void storeValue(const std::vector<Ref<T> >& value, Buffer& buffer)
 		{
-			buffer << value.size();
+			buffer << static_cast<unsigned int>(value.size());
 			for(unsigned int t = 0; t < value.size(); t++)
 				buffer << saver->context->refId(value[t].get());
 		}
@@ -142,7 +142,7 @@ namespace IO
 				unsigned int pos = buffer.getPosition();
 				buffer.setPosition(nbAttrPos);
 				buffer << nbAttrs;
-				buffer << (pos - buffer.getPosition() - 4);
+				buffer << (pos - static_cast<unsigned int>(buffer.getPosition()) - 4);
 				buffer.setPosition(pos);
 			}
 
@@ -236,7 +236,7 @@ namespace IO
 		// Header
 		context->buffer << SPKFormatVariables::MAGIC_NUMBER
 			<< SPKFormatVariables::VERSION
-			<< objRef.size();
+			<< static_cast<unsigned int>(objRef.size());
 		context->nbConnectionPosition = context->buffer.getPosition();
 		context->buffer << (unsigned int)0; // Number of connections will be known in the 2nd phase
 		context->buffer << (unsigned int)0; // Data-length is not already known
@@ -273,7 +273,7 @@ namespace IO
 
 		context->buffer.setPosition(context->nbConnectionPosition);
 		context->buffer << context->nbConnections;
-		context->buffer << (context->buffer.getSize() - context->buffer.getPosition() - 4);
+		context->buffer << static_cast<unsigned int>(context->buffer.getSize() - context->buffer.getPosition() - 4);
 		context->os.write(context->buffer.getData(), context->buffer.getSize());
 
 		SPK_DELETE(context);
