@@ -596,7 +596,7 @@ namespace SPK
 	template<typename T>
 	inline void GraphInterpolator<T>::interpolateEntry(T& result,const InterpolatorEntry<T>& entry,float ratio) const
 	{
-		interpolateParam(result,entry.y0,entry.y1,ratio);
+		this->interpolateParam(result,entry.y0,entry.y1,ratio);
 	}
 
 	template<typename T>
@@ -647,7 +647,7 @@ namespace SPK
 
 			interpolateEntry(y0, previousEntry, ratioY);
 			interpolateEntry(y1, nextEntry, ratioY);
-			interpolateParam(data, y0, y1, ratioX);
+			this->interpolateParam(data, y0, y1, ratioX);
 		}
 	}
 
