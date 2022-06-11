@@ -78,13 +78,13 @@ namespace GL
 		*
 		* @param nbSamples : the number of samples to construct the trails
 		*/
-		void setNbSamples(size_t nbSamples);
+		void setNbSamples(int nbSamples);
 
 		/**
 		* @brief Gets the number of samples per trail
 		* @return the number of samples per trail
 		*/
-		size_t getNbSamples() const;
+        int getNbSamples() const;
 
 		//////////////
 		// duration //
@@ -129,13 +129,18 @@ namespace GL
 		* @brief Sets the color components of degenerated lines
 		* @param color : the color of the degenerated lines
 		*/
-		void setDegeneratedLines(Color color);
+		void setDegeneratedLines(const Color& color);
+        const Color& getDegeneratedLines()const;
 
 		virtual void enableBlending(bool blendingEnabled);
 
 	public :
 		spark_description(GLLineTrailRenderer, GLRenderer)
 		(
+            spk_attribute(int, nbsamples, setNbSamples, getNbSamples);
+            spk_attribute(float, duration, setDuration, getDuration);
+            spk_attribute(float, width, setWidth, getWidth);
+            spk_attribute(Color, degeneratedlines, setDegeneratedLines, getDegeneratedLines);
 		);
 
 	protected :
@@ -178,7 +183,7 @@ namespace GL
 		return SPK_NEW(GLLineTrailRenderer,nbSamples,duration,width);
 	}
 
-	inline size_t GLLineTrailRenderer::getNbSamples() const
+	inline int GLLineTrailRenderer::getNbSamples() const
 	{
 		return nbSamples;
 	}
@@ -198,10 +203,14 @@ namespace GL
 		return width;
 	}
 
-	inline void GLLineTrailRenderer::setDegeneratedLines(Color color)
+	inline void GLLineTrailRenderer::setDegeneratedLines(const Color& color)
 	{
 		degeneratedColor = color;
 	}	
+    inline const Color& GLLineTrailRenderer::getDegeneratedLines()const
+    {
+        return degeneratedColor;
+    }
 }}
 
 #endif

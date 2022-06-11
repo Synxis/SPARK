@@ -53,11 +53,17 @@ namespace GL
 		// Setters //
 		/////////////
 
+        /**
+        * @brief Enables or disables the AlphaToCoverage(A2C) of this GLRenderer
+        * @param enableAlphaToCoverage true to enable the A2C, false to disable it
+        */
+        void enableAlphaToCoverage(bool a2c);
+
 		/**
 		* @brief Enables or disables the blending of this GLRenderer
 		* @param blendingEnabled true to enable the blending, false to disable it
 		*/
-		virtual  void enableBlending(bool blendingEnabled);
+		/*virtual*/  void enableBlending(bool blendingEnabled);
 
 		/**
 		* @brief Sets the blending functions of this GLRenderer
@@ -70,9 +76,19 @@ namespace GL
 		void setBlendingFunctions(GLuint src,GLuint dest);
 		virtual void setBlendMode(BlendMode blendMode);
 
+
+        void setTextureBlending(GLuint textureBlending);
+
+
 		/////////////
 		// Getters //
 		/////////////
+
+        /**
+        * @brief Tells whether A2C is enabled for this GLRenderer
+        * @return true if blending is enabled, false if it is disabled
+        */
+        bool isAlphaToCoverage() const;
 
 		/**
 		* @brief Tells whether blending is enabled for this GLRenderer
@@ -85,12 +101,18 @@ namespace GL
 		* @return the source blending function of this GLRenderer
 		*/
 		GLuint getSrcBlendingFunction() const;
+        void setSrcBlendingFunction(GLuint i) { srcBlending = i; }
 
 		/**
 		* @brief Gets the destination blending function of this GLRenderer
 		* @return the source destination function of this GLRenderer
 		*/
 		GLuint getDestBlendingFunction() const;
+        void setDestBlendingFunction(GLuint i) { destBlending = i; }
+
+        
+        GLuint getTextureBlending() const;
+
 
 		///////////////
 		// Interface //
@@ -117,6 +139,11 @@ namespace GL
 	public :
 		spark_description(GLRenderer, Renderer)
 		(
+            spk_attribute(bool, blendingEnabled, enableBlending, isBlendingEnabled);
+            spk_attribute(bool, alphaToCoverageEnabled, enableAlphaToCoverage, isAlphaToCoverage);
+            spk_attribute(GLuint, srcBlending, setSrcBlendingFunction, getSrcBlendingFunction);
+            spk_attribute(GLuint, destBlending, setDestBlendingFunction, getDestBlendingFunction);
+            spk_attribute(GLuint, textureBlending, setTextureBlending, getTextureBlending);
 		);
 
 	protected :
@@ -154,14 +181,25 @@ namespace GL
 		bool blendingEnabled;
 		GLuint srcBlending;
 		GLuint destBlending;
+
+        bool alphaToCoverageEnabled;
+
+        GLuint textureBlending;
 	};
 
 	inline GLRenderer::GLRenderer(bool NEEDS_DATASET) :
 		Renderer(NEEDS_DATASET),
 		blendingEnabled(false),
+        alphaToCoverageEnabled(false),
 		srcBlending(GL_SRC_ALPHA),
-		destBlending(GL_ONE_MINUS_SRC_ALPHA)
+		destBlending(GL_ONE_MINUS_SRC_ALPHA),
+        textureBlending(GL_MODULATE)
 	{}
+
+    inline void GLRenderer::enableAlphaToCoverage(bool a2c)
+    {
+        this->alphaToCoverageEnabled = a2c;
+    }
 
 	inline void GLRenderer::enableBlending(bool blendingEnabled)
 	{
@@ -172,6 +210,11 @@ namespace GL
 	{
 		srcBlending = src;
 		destBlending = dest;
+	}
+
+	inline bool GLRenderer::isAlphaToCoverage() const
+	{
+		return alphaToCoverageEnabled;
 	}
 
 	inline bool GLRenderer::isBlendingEnabled() const
@@ -189,6 +232,8 @@ namespace GL
 		return destBlending;
 	}
 
+#define GL_SAMPLE_ALPHA_TO_COVERAGE_ARB   0x809E
+
 	inline void GLRenderer::initBlending() const
 	{
 		if (blendingEnabled)
@@ -198,6 +243,16 @@ namespace GL
 		}
 		else
 			glDisable(GL_BLEND);
+
+
+        if (alphaToCoverageEnabled)
+        {
+            glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE_ARB);
+        }
+        else
+        {
+            glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE_ARB);
+        }
 	}
 
 	inline void GLRenderer::initRenderingOptions() const
@@ -211,9 +266,25 @@ namespace GL
 		else
 			glDisable(GL_ALPHA_TEST);
 
+        // depth test
+        if (isRenderingOptionEnabled(RENDERING_OPTION_DEPTH_TEST))
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
+
 		// depth write
 		glDepthMask(isRenderingOptionEnabled(RENDERING_OPTION_DEPTH_WRITE));
 	}
+
+    inline void GLRenderer::setTextureBlending(GLuint textureBlending)
+    {
+        this->textureBlending = textureBlending;
+    }
+    inline GLuint GLRenderer::getTextureBlending() const
+    {
+        return textureBlending;
+    }
+
 }}
 
 #endif

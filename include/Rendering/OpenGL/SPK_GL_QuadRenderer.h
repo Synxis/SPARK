@@ -63,13 +63,35 @@ namespace GL
 		// Setters //
 		/////////////
 
-		virtual bool setTexturingMode(TextureMode mode);
+		/*virtual*/ void setTexturingMode(TextureMode mode);
+        void setAtlasDimensions(int nbX, int nbY)
+        {
+            textureAtlasNbX = nbX;
+            textureAtlasNbY = nbY;
+            textureAtlasW = 1.0f / nbX;
+            textureAtlasH = 1.0f / nbY;
+        }
+        void setScale(float scaleX, float scaleY) { this->scaleX = scaleX; this->scaleY = scaleY; }
+
+        void setLookOrientation(LookOrientation lookOrientation) { this->lookOrientation = lookOrientation; }
+        void setUpOrientation(UpOrientation upOrientation) { this->upOrientation = upOrientation; }
+        void setLockedAxis(LockedAxis lockedAxis) { this->lockedAxis = lockedAxis; }
 
 		void setTexture(GLuint textureIndex);
 
 		/////////////
 		// Getters //
 		/////////////
+
+        TextureMode getTexturingMode() const { return texturingMode; }
+        int getAtlasDimensionX() const { return textureAtlasNbX; }
+        int getAtlasDimensionY() const { return textureAtlasNbY; }
+        float getScaleX() const { return scaleX; }
+        float getScaleY() const { return scaleY; }
+
+        LookOrientation getLookOrientation() const { return lookOrientation; }
+        UpOrientation getUpOrientation() const { return upOrientation; }
+        LockedAxis getLockedAxis() const { return lockedAxis; }
 
 		/**
 		* @brief Gets the texture of this GLQuadRenderer
@@ -80,6 +102,15 @@ namespace GL
 	public :
 		spark_description(GLQuadRenderer, GLRenderer)
 		(
+            spk_attribute(TextureMode, texturingMode, setTexturingMode, getTexturingMode);
+
+            spk_attribute(Pair<float>, scale, setScale, getScaleX, getScaleY);
+            spk_attribute(Pair<int>, atlasdimensions, setAtlasDimensions, getAtlasDimensionX, getAtlasDimensionY);
+
+            spk_attribute(LookOrientation, lookorientation, setLookOrientation, getLookOrientation);
+            spk_attribute(UpOrientation, uporientation, setUpOrientation, getUpOrientation);
+            spk_attribute(LockedAxis, lockedaxis, setLockedAxis, getLockedAxis);
+
 		);
 
 	private :
@@ -138,7 +169,10 @@ namespace GL
 		renderBuffer.setNextVertex(particle.position() - quadSide() - quadUp());	// bottom left vertex
 		renderBuffer.setNextVertex(particle.position() + quadSide() - quadUp());	// bottom right vertex
 		
-		renderBuffer.skipNextColors(3);
+		//renderBuffer.skipNextColors(3);
+		renderBuffer.setNextColor(particle.getColor());
+		renderBuffer.setNextColor(particle.getColor());
+		renderBuffer.setNextColor(particle.getColor());
 		renderBuffer.setNextColor(particle.getColor());
 	}
 
@@ -163,16 +197,24 @@ namespace GL
 	{
 		float textureIndex = particle.getParam(PARAM_TEXTURE_INDEX);
 
-		renderBuffer.skipNextTexCoords(2);
+		//renderBuffer.skipNextTexCoords(2);
+		renderBuffer.setNextTexCoord(textureIndex);
+		renderBuffer.setNextTexCoord(textureIndex);
 		renderBuffer.setNextTexCoord(textureIndex);
 		
-		renderBuffer.skipNextTexCoords(2);
+		//renderBuffer.skipNextTexCoords(2);
+		renderBuffer.setNextTexCoord(textureIndex);
+		renderBuffer.setNextTexCoord(textureIndex);
 		renderBuffer.setNextTexCoord(textureIndex);
 
-		renderBuffer.skipNextTexCoords(2);
+		//renderBuffer.skipNextTexCoords(2);
+		renderBuffer.setNextTexCoord(textureIndex);
+		renderBuffer.setNextTexCoord(textureIndex);
 		renderBuffer.setNextTexCoord(textureIndex);
 
-		renderBuffer.skipNextTexCoords(2);
+		//renderBuffer.skipNextTexCoords(2);
+		renderBuffer.setNextTexCoord(textureIndex);
+		renderBuffer.setNextTexCoord(textureIndex);
 		renderBuffer.setNextTexCoord(textureIndex);
 	}
 

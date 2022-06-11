@@ -56,7 +56,7 @@ namespace SPK
 		* @brief Sets the width of this LineRenderBehavior
 		* @param width : the width of this LineRenderBehavior
 		*/
-		virtual  void setWidth(float width);
+		void setWidth(float width);
 
 		/////////////
 		// Getters //
