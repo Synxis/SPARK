@@ -97,12 +97,12 @@ namespace GL
 		if (worldSize) 
 		{
 #ifndef SPK_GL_NO_EXT
-			// derived size = size * sqrt(1 / (A + B * distance + C * distance²))
+			// derived size = size * sqrt(1 / (A + B * distance + C * distance^2))
 			const float POINT_SIZE_CURRENT = 32.0f;
 			const float POINT_SIZE_MIN = 1.0f;
 			const float POINT_SIZE_MAX = 1024.0f;
 			const float sqrtC = POINT_SIZE_CURRENT / (group.getGraphicalRadius() * worldScale * 2.0f * pixelPerUnit);
-			const float QUADRATIC_WORLD[3] = {0.0f,0.0f,sqrtC * sqrtC}; // A = 0; B = 0; C = (POINT_SIZE_CURRENT / (size * pixelPerUnit))²
+			const float QUADRATIC_WORLD[3] = {0.0f,0.0f,sqrtC * sqrtC}; // A = 0; B = 0; C = (POINT_SIZE_CURRENT / (size * pixelPerUnit))^2
 			glPointParameterfvEXT(GL_DISTANCE_ATTENUATION_EXT,QUADRATIC_WORLD);
 			glPointSize(POINT_SIZE_CURRENT);
 			glPointParameterfEXT(GL_POINT_SIZE_MIN_EXT,POINT_SIZE_MIN);
