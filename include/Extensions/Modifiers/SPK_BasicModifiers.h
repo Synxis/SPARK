@@ -30,8 +30,8 @@ namespace SPK
 
 		static  Ref<Gravity> create(const Vector3D& value = Vector3D());
 
-		void setValue(const Vector3D& value);
-		const Vector3D& getValue() const;
+		inline void setValue(const Vector3D& value);
+		inline const Vector3D& getValue() const;
 		const Vector3D& getTransformedValue() const;
 
 	public :

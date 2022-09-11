@@ -81,13 +81,13 @@ namespace SPK
 		* @brief Gets the minimum number of particles to spawn
 		* @return the minimum number of particles to spawn
 		*/
-		unsigned int getMinNb() const;
+		inline unsigned int getMinNb() const;
 
 		/**
 		* @brief Gets the maximum number of particles to spawn
 		* @return the maximum number of particles to spawn
 		*/
-		unsigned int getMaxNb() const;
+		inline unsigned int getMaxNb() const;
 
 		//////////////////
 		// Base emitter //
@@ -106,7 +106,7 @@ namespace SPK
 		* If the base emitter is modified, a call to resetPool() will allow the changes to take effects
 		* @return the base emitter
 		*/
-		const Ref<Emitter>& getEmitter() const;
+		inline const Ref<Emitter>& getEmitter() const;
 
 		/////////////////
 		// Group index //
@@ -118,13 +118,13 @@ namespace SPK
 		* Note that setting the group index to the index of the group which owns the spawn particle action may result in infinitely growing group.
 		* @param index : the index of the group in the parent system in which to spawn particles
 		*/
-		void setTargetGroup(const Ref<Group>& group);
+		inline void setTargetGroup(const Ref<Group>& group);
 
 		/**
 		* @brief Gets the index of the group within the parent system in which to spawn particles
 		* @return the index of the group in which to spawn particles
 		*/
-		const Ref<Group>& getTargetGroup() const;
+		inline const Ref<Group>& getTargetGroup() const;
 
 		///////////////
 		// Interface //

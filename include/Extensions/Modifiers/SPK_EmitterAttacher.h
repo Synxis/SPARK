@@ -38,16 +38,16 @@ namespace SPK
 
 		~EmitterAttacher();
 
-		void setEmitter(const Ref<Emitter>& emitter);
-		const Ref<Emitter>& getEmitter() const;
+		inline void setEmitter(const Ref<Emitter>& emitter);
+		inline const Ref<Emitter>& getEmitter() const;
 
-		void setTargetGroup(const Ref<Group>& group);
-		const Ref<Group>& getTargetGroup() const;
+		inline void setTargetGroup(const Ref<Group>& group);
+		inline const Ref<Group>& getTargetGroup() const;
 
-		void enableEmitterOrientation(bool o);
-		void enableEmitterRotation(bool r);
-		bool isEmitterOrientationEnabled() const;
-		bool isEmitterRotationEnabled() const;
+		inline void enableEmitterOrientation(bool o);
+		inline void enableEmitterRotation(bool r);
+		inline bool isEmitterOrientationEnabled() const;
+		inline bool isEmitterRotationEnabled() const;
 
 	public :
 		spark_description(EmitterAttacher, Modifier)

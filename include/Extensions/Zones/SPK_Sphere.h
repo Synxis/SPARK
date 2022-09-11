@@ -35,7 +35,7 @@ namespace SPK
 		////////////
 
 		void setRadius(float radius);
-		float getRadius() const;
+		inline float getRadius() const;
 
 		///////////////
 		// Interface //

@@ -58,38 +58,38 @@ namespace SPK
 
 	public :
 
-		static Ref<Group> create(size_t capacity = 100);
+		inline static Ref<Group> create(size_t capacity = 100);
 		~Group();
 
-		bool isInitialized() const;
+		inline bool isInitialized() const;
 
 		void setLifeTime(float minLife,float maxLife);
-		void setImmortal(bool immortal);
-		void setStill(bool still);
+		inline void setImmortal(bool immortal);
+		inline void setStill(bool still);
 
 		void setColorInterpolator(const Ref<ColorInterpolator>& interpolator);
-		const Ref<ColorInterpolator>& getColorInterpolator() const;
+		inline const Ref<ColorInterpolator>& getColorInterpolator() const;
 
 		void setParamInterpolator(Param param,const Ref<FloatInterpolator>& interpolator);
-		const Ref<FloatInterpolator>& getParamInterpolator(Param param) const;
+		inline const Ref<FloatInterpolator>& getParamInterpolator(Param param) const;
 
-		void setScaleInterpolator(const Ref<FloatInterpolator>& interpolator);
-		void setMassInterpolator(const Ref<FloatInterpolator>& interpolator);
-		void setAngleInterpolator(const Ref<FloatInterpolator>& interpolator);
-		void setTextureIndexInterpolator(const Ref<FloatInterpolator>& interpolator);
-		void setRotationSpeedInterpolator(const Ref<FloatInterpolator>& interpolator);
-		const Ref<FloatInterpolator>& getScaleInterpolator() const;
-		const Ref<FloatInterpolator>& getMassInterpolator() const;
-		const Ref<FloatInterpolator>& getAngleInterpolator() const;
-		const Ref<FloatInterpolator>& getTextureIndexInterpolator() const;
-		const Ref<FloatInterpolator>& getRotationSpeedInterpolator() const;
+		inline void setScaleInterpolator(const Ref<FloatInterpolator>& interpolator);
+		inline void setMassInterpolator(const Ref<FloatInterpolator>& interpolator);
+		inline void setAngleInterpolator(const Ref<FloatInterpolator>& interpolator);
+		inline void setTextureIndexInterpolator(const Ref<FloatInterpolator>& interpolator);
+		inline void setRotationSpeedInterpolator(const Ref<FloatInterpolator>& interpolator);
+		inline const Ref<FloatInterpolator>& getScaleInterpolator() const;
+		inline const Ref<FloatInterpolator>& getMassInterpolator() const;
+		inline const Ref<FloatInterpolator>& getAngleInterpolator() const;
+		inline const Ref<FloatInterpolator>& getTextureIndexInterpolator() const;
+		inline const Ref<FloatInterpolator>& getRotationSpeedInterpolator() const;
 
-		float getMinLifeTime() const;
-		float getMaxLifeTime() const;
-		bool isImmortal() const;
-		bool isStill() const;
+		inline float getMinLifeTime() const;
+		inline float getMaxLifeTime() const;
+		inline bool isImmortal() const;
+		inline bool isStill() const;
 
-		bool isEnabled(Param param) const;
+		inline bool isEnabled(Param param) const;
 
 		size_t getNbParticles() const;
 		size_t getCapacity() const;
@@ -102,35 +102,35 @@ namespace SPK
 
 		void addEmitter(const Ref<Emitter>& emitter);
 		void removeEmitter(const Ref<Emitter>& emitter);
-		void removeAllEmitters();
-		const Ref<Emitter>& getEmitter(size_t index) const;
-		size_t getNbEmitters() const;
+		inline void removeAllEmitters();
+		inline const Ref<Emitter>& getEmitter(size_t index) const;
+		inline size_t getNbEmitters() const;
 
 		void addModifier(const Ref<Modifier>& modifier);
 		void removeModifier(const Ref<Modifier>& modifier);
 		void removeAllModifiers();
-		const Ref<Modifier>& getModifier(size_t index) const;
-		size_t getNbModifiers() const;
+		inline const Ref<Modifier>& getModifier(size_t index) const;
+		inline size_t getNbModifiers() const;
 
 		void setRenderer(const Ref<Renderer>& renderer);
-		const Ref<Renderer>& getRenderer() const;
+		inline const Ref<Renderer>& getRenderer() const;
 
-		void enableDistanceComputation(bool distanceComputation);
-		bool isDistanceComputationEnabled() const;
+		inline void enableDistanceComputation(bool distanceComputation);
+		inline bool isDistanceComputationEnabled() const;
 
-		void enableSorting(bool sorting);
-		bool isSortingEnabled() const;
+		inline void enableSorting(bool sorting);
+		inline bool isSortingEnabled() const;
 
-		const void* getColorAddress() const;
-		const void* getPositionAddress() const;
-		const void* getVelocityAddress() const;
-		const void* getParamAddress(Param param) const;
+		inline const void* getColorAddress() const;
+		inline const void* getPositionAddress() const;
+		inline const void* getVelocityAddress() const;
+		inline const void* getParamAddress(Param param) const;
 
-		void setRadius(float radius);
+		inline void setRadius(float radius);
 		void setGraphicalRadius(float radius);
 		void setPhysicalRadius(float radius);
-		float getGraphicalRadius() const;
-		float getPhysicalRadius() const;
+		inline float getGraphicalRadius() const;
+		inline float getPhysicalRadius() const;
 
 		/**
 		* @brief Gets a Vector3D holding the minimum coordinates of the AABB of the Group.
@@ -139,7 +139,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the minimum coordinates of the AABB of the Group
 		*/
-		const Vector3D& getAABBMin() const;
+		inline const Vector3D& getAABBMin() const;
 
 		/**
 		* @brief Gets a Vector3D holding the maximum coordinates of the AABB of the Group.
@@ -148,7 +148,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the maximum coordinates of the AABB of the Group
 		*/
-		const Vector3D& getAABBMax() const;
+		inline const Vector3D& getAABBMax() const;
 
 		///////////////////
 		// Add Particles //
@@ -176,7 +176,7 @@ namespace SPK
 		* @param position : the position where the Particles will be added
 		* @param velocity : the velocity of the Particles
 		*/
-		void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity);
+		inline void addParticles(unsigned int nb,const Vector3D& position,const Vector3D& velocity);
 
 		/**
 		* @brief Adds some Particles to this Group
@@ -292,7 +292,7 @@ namespace SPK
 
 		void flushBufferedParticles();
 
-		Ref<System> getSystem() const;
+		inline Ref<System> getSystem() const;
 
 		/////////////
 		// Actions //
@@ -303,10 +303,10 @@ namespace SPK
 		*
 		*/
 		void setBirthAction(const Ref<Action>& action);
-		const Ref<Action>& getBirthAction() const;
+		inline const Ref<Action>& getBirthAction() const;
 
 		void setDeathAction(const Ref<Action>& action);
-		const Ref<Action>& getDeathAction() const;
+		inline const Ref<Action>& getDeathAction() const;
 
 		//////////////////////
 		// Advanced methods //
@@ -334,25 +334,25 @@ namespace SPK
 		* @brief Gets the data set used by the interpolator of the given parameter
 		* @return the data set or NULL if the interpolator does not use data set or does not exist
 		*/
-		DataSet* getParamInterpolatorDataSet(Param param);
+		inline DataSet* getParamInterpolatorDataSet(Param param);
 
 		/**
 		* @brief Gets the data set used by the color interpolator
 		* @return the data set or NULL if the color interpolator does not use data set or does not exist
 		*/
-		DataSet* getColorInterpolatorDataSet();
+		inline DataSet* getColorInterpolatorDataSet();
 
 		/**
 		* @brief Gets the data set used by the renderer
 		* @return the data set or NULL if the renderer does not use data set or does not exist
 		*/
-		DataSet* getRendererDataSet();
+		inline DataSet* getRendererDataSet();
 
 		/**
 		* @brief Gets the render buffer
 		* @return the render buffer or NULL if the group does not use a render buffer
 		*/
-		RenderBuffer* getRenderBuffer();
+		inline RenderBuffer* getRenderBuffer();
 
 		/**
 		* @brief Gets the octree

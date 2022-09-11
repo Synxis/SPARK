@@ -71,7 +71,7 @@ namespace SPK
 		* @brief Gets the normal of this Plane
 		* @return the normal of this Plane
 		*/
-		const Vector3D& getNormal() const;
+		inline const Vector3D& getNormal() const;
 
 		/**
 		* @brief Gets the transformed normal of this Plane

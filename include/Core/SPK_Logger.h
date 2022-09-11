@@ -159,7 +159,7 @@ namespace SPK
 		*
 		* @param enabled : true to enable the logger, false to disable it
 		*/
-		void setEnabled(bool enabled);
+		inline void setEnabled(bool enabled);
 
 		/**
 		* @brief Sets the priority level of the logger
@@ -169,7 +169,7 @@ namespace SPK
 		*
 		* @param priorityLevel : the priority level of the logger
 		*/
-		void setPriorityLevel(LogPriority priorityLevel);
+		inline void setPriorityLevel(LogPriority priorityLevel);
 
 		/**
 		* @brief Sets the inner stream of the logger
@@ -179,7 +179,7 @@ namespace SPK
 		*
 		* @param stream : the inner stream of the logger
 		*/
-		void setStream(std::ostream& stream);
+		inline void setStream(std::ostream& stream);
 
 		/**
 		* @brief Sets the prefix flag of the logger
@@ -190,7 +190,7 @@ namespace SPK
 		*
 		* @param prefixFlag : the prefix flag of the logger 
 		*/
-		void setPrefixFlag(int prefixFlag);
+		inline void setPrefixFlag(int prefixFlag);
 
 		/////////////
 		// Getters //
@@ -200,13 +200,13 @@ namespace SPK
 		* @brief Tells whether the logger is enabled or not
 		* @return true if the logger is enabled, false if it is disabled
 		*/
-		bool isEnabled() const;
+		inline bool isEnabled() const;
 
 		/**
 		* @brief Gets the priority level of the logger
 		* @return the priority level of the logger
 		*/
-		LogPriority getPriorityLevel() const;
+		inline LogPriority getPriorityLevel() const;
 
 		/**
 		* @brief Gets the stream of the logger
@@ -226,7 +226,7 @@ namespace SPK
 		* @brief Gets the prefix flag of the logger
 		* @return the prefix flag of the logger
 		*/
-		int getPrefixFlag() const;
+		inline int getPrefixFlag() const;
 		
 		///////////////
 		// Interface //
@@ -241,10 +241,10 @@ namespace SPK
 		* @param priority : the priority level of the entry
 		* @param entry : the entry to log in
 		*/
-		void addEntry(LogPriority priority,const std::string& entry);
+		inline void addEntry(LogPriority priority,const std::string& entry);
 
 		/** @brief Flushes the logger (Immediately appends pending entries to the inner stream) */
-		void flush();
+		inline void flush();
 
 		//////////////////
 		// Nested class //

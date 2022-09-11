@@ -66,7 +66,7 @@ namespace SPK
 		// Constructor/Desctructor //
 		/////////////////////////////
 
-		static Ref<System> create(bool initialize = true);
+		inline static Ref<System> create(bool initialize = true);
 		~System();
 
 		////////////////////////////
@@ -76,7 +76,7 @@ namespace SPK
 		/**
 		* @brief Adds a controller to the system
 		*/
-		void addController(const Ref<Controller>& ctrl);
+		inline void addController(const Ref<Controller>& ctrl);
 
 		/**
 		* @brief Removes a controller from the system
@@ -86,17 +86,17 @@ namespace SPK
 		/**
 		* @brief Removes all controllers in the system
 		*/
-		void removeAllControllers();
+		inline void removeAllControllers();
 
 		/**
 		* @brief Returns the i-th controller
 		*/
-		const Ref<Controller>& getController(size_t i) const;
+		inline const Ref<Controller>& getController(size_t i) const;
 
 		/**
 		* @brief Returns the number of controllers in the system
 		*/
-		size_t getNbControllers() const;
+		inline size_t getNbControllers() const;
 
 		///////////////////////
 		// Groups management //
@@ -128,20 +128,20 @@ namespace SPK
 		/**
 		* @brief Removes all groups in this system
 		*/
-		void removeAllGroups();
+		inline void removeAllGroups();
 
 		/**
 		* @brief Gets the group at index
 		* @param index : the index of the group to get
 		* @return the group at index
 		*/
-		const Ref<Group>& getGroup(size_t index) const;
+		inline const Ref<Group>& getGroup(size_t index) const;
 
 		/**
 		* @brief Gets the number of groups in the system
 		* @return the number of groups in the system
 		*/
-		size_t getNbGroups() const;
+		inline size_t getNbGroups() const;
 
 		/**
 		* @brief Gets the number of particles in the system
@@ -179,13 +179,13 @@ namespace SPK
 		* @brief Enables or disables the computation of the axis aligned bounding box for this System
 		* @param AABB : true to enable the computing of the AABB of this System, false to disable it
 		*/
-		void enableAABBComputation(bool AABB);
+		inline void enableAABBComputation(bool AABB);
 
 		/**
 		* @brief Tells whether the computation of the axis aligned bouding box is enabled
 		* @return true if the computation of the AABB is enabled, false if it is disabled
 		*/
-		bool isAABBComputationEnabled() const;
+		inline bool isAABBComputationEnabled() const;
 
 		/**
 		* @brief Gets a Vector3D holding the minimum coordinates of the AABB of this System.
@@ -194,7 +194,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the minimum coordinates of the AABB of this System
 		*/
-		const Vector3D& getAABBMin() const;
+		inline const Vector3D& getAABBMin() const;
 
 		/**
 		* @brief Gets a Vector3D holding the maximum coordinates of the AABB of this System.
@@ -203,7 +203,7 @@ namespace SPK
 		*
 		* @return a Vector3D holding the maximum coordinates of the AABB of this System
 		*/
-		const Vector3D& getAABBMax() const;
+		inline const Vector3D& getAABBMax() const;
 
 		/////////////////////
 		// Camera position //
@@ -218,13 +218,13 @@ namespace SPK
 		*
 		* @param cameraPosition the camera position
 		*/
-		void setCameraPosition(const Vector3D& cameraPosition);
+		inline void setCameraPosition(const Vector3D& cameraPosition);
 
 		/**
 		* @brief Gets the camera position
 		* @return the camera position
 		*/
-		const Vector3D& getCameraPosition();
+		inline const Vector3D& getCameraPosition();
 
 		///////////////
 		// Step Mode //
@@ -244,7 +244,7 @@ namespace SPK
 		* @param useClampStep : true to use a clamp value on the step, false not to
 		* @param clamp : the clamp value
 		*/
-		static void setClampStep(bool useClampStep,float clamp = 1.0f);
+		inline static void setClampStep(bool useClampStep,float clamp = 1.0f);
 
 		/**
 		* @brief Uses a constant step to update the systems
@@ -257,7 +257,7 @@ namespace SPK
 		* 
 		* @param constantStep : the value of the step
 		*/
-		static void useConstantStep(float constantStep);
+		inline static void useConstantStep(float constantStep);
 
 		/**
 		* @brief Uses an adaptive step to update the systems
@@ -273,7 +273,7 @@ namespace SPK
 		* @param minStep : the minimal time step
 		* @param maxStep : the maximal time step
 		*/
-		static void useAdaptiveStep(float minStep,float maxStep);
+		inline static void useAdaptiveStep(float minStep,float maxStep);
 
 		/**
 		* @brief Uses the real step to update the systems
@@ -284,13 +284,13 @@ namespace SPK
 		* This mode is the simpler and the one that allows best performance on low end systems.<br>
 		* However the update may be inaccurate (due to too big deltaTime) and it performs badly with frame rate variation.
 		*/
-		static void useRealStep();
+		inline static void useRealStep();
 
 		/**
 		* @brief Gets the current step mode
 		* @return the current step mode
 		*/
-		static StepMode getStepMode();
+		inline static StepMode getStepMode();
 
 		//////////
 		// Misc //
@@ -302,10 +302,10 @@ namespace SPK
 		* A system is active if at least one of its inner groups is active
 		* A group is active if it has at least one particle or one active emitter
 		*/
-		bool isActive() const;
+		inline bool isActive() const;
 
 		void initialize();
-		bool isInitialized() const;
+		inline bool isInitialized() const;
 
 		virtual Ref<SPKObject> findByName(const std::string& name);
 		
