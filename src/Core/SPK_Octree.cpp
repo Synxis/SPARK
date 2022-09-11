@@ -211,6 +211,6 @@ namespace SPK
 		for (int x = minIndexX; x <= maxIndexX; ++x)
 			for (int y = minIndexY; y <= maxIndexY; ++y)
 				for (int z = minIndexZ; z <= maxIndexZ; ++z)
-					addToCell(parent.children[(x << 2) | (y << 1) | z],particleIndex,maxLevel);
+					addToCell(cells[parentIndex].children[(x << 2) | (y << 1) | z],particleIndex,maxLevel);
 	}
 }
