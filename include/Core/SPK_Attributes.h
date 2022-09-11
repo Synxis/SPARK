@@ -295,7 +295,7 @@ namespace SPK
 
 	public:
 		template<int n>
-		struct Fields : public sAttr::template spkField<n>
+		struct Fields : public sAttr::template spkField<SPK::meta::CountWrapper<n>>
 		{
 		};
 
